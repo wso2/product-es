@@ -8,15 +8,10 @@
     }
 
     var aid = request.getParameter('asset'),
-            space = user.userSpace(),
-            configs = space.get('userAssets');
-
-    configs = configs ? parse(configs) : {};
-    if (!configs.gadget) {
-        configs.gadget = {};
-    }
-    configs.gadget[aid] = true;
-    space.put('userAssets', stringify(configs));
+            registry = user.userRegistry();
+    registry.put(userSpace() + '/userAssets/' + type + '/' + aid, {
+        collection: true
+    });
     response.sendRedirect(request.getParameter('destination'));
 })();
 %>

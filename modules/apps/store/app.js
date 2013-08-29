@@ -42,9 +42,9 @@ var registry=new carbon.registry.Registry(server,{
 server.init(pubConfig);
 
 var user = require('/modules/user.js');
-user.init(pubConfig);
+//user.init(pubConfig);
 
-var registry = server.systemRegistry();
+var registry = server.systemRegistry(-1234);
 
 var rxtManager=new rxt_management.RxtManager(registry);
 
@@ -78,6 +78,7 @@ ruleParser.init();
 
 var modelManager=new ext_mng.ModelManager({parser:parser,adapterManager:adapterManager});
 
+log.info('========================================');
 application.put(publisherConfig.app.MODEL_MANAGER,modelManager);
 
 
@@ -101,15 +102,20 @@ caramel.configs({
     }*/
 });
 
+/*
 var configs = require('/store.js').config();
 var server = require('/modules/server.js');
 
 server.init(configs);
 
 var user = require('/modules/user.js');
-user.init(configs);
+//user.init(-1234, configs);
+user.init(1, configs);
 
 var store = require('/modules/store.js');
-store.init({
+store.init(-1234, {
 
 });
+store.init(1, {
+
+});*/

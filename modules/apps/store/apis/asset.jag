@@ -50,28 +50,16 @@ response.addHeader("Content-Type", "application/json");
                 }));
             }
         }
-    } 
+    }
 
-if (matcher.match('/{context}/apis/remove')) {
-    aid = request.getParameter('aid');
-    type = request.getParameter('type');
-
-        space = require('/modules/user.js').userSpace(),
-        configs = space.get('userAssets');
-
-    configs = configs ? parse(configs) : {};
-        
-        if(Object.keys(configs[type]).length > 1){
-            delete configs[type][aid];
-            }else{
-                delete configs[type];
-                }
-        
-    space.put('userAssets', stringify(configs));
+    if (matcher.match('/{context}/apis/remove')) {
+        var user = require('/modules/user.js'),
+                registry = user.userRegistry();
+        aid = request.getParameter('aid');
+        type = request.getParameter('type');
+        registry.remove(userSpace() + '/userAssets/' + type + '/' + aid);
         return;
-    }   	
-
-    else {
+    } else {
         //response.sendError(404, 'API Endpoint Not Found');
     }
 })();

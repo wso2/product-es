@@ -164,10 +164,10 @@ var populateSites = function () {
     lastUpdated = new Date().getTime();
 };
 
-populate();
-populateBooks();
-populateSites();
-addSSOConfig();
+//populate();
+//populateBooks();
+//populateSites();
+//addSSOConfig();
 /*
  setInterval(function () {
  //TEMP fix for task not clearing properly during server shutdown

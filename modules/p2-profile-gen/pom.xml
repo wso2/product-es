@@ -190,15 +190,15 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}
                                 </featureArtifactDef-->
-                                <!--featureArtifactDef>
+                                <!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.core.server.feature:${carbon.platform.version}
-                                </featureArtifactDef-->
-                                <!--featureArtifactDef>
+                                </featureArtifactDef>-->
+                                <!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.mgt.core.feature:${stratos.version}
-                                </featureArtifactDef-->
-                                <!--featureArtifactDef>
+                                </featureArtifactDef>-->
+                                <!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.mgt.server.feature:${stratos.version}
-                                </featureArtifactDef-->
+                                </featureArtifactDef>-->
                             </featureArtifacts>
 
                         </configuration>
@@ -332,18 +332,18 @@
                                     <id>org.wso2.carbon.stratos.deployment.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature-->
-                                <!--feature>
+                                <!--<feature>
                                     <id>org.wso2.carbon.core.server.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature-->
-                                <!--feature>
+                                </feature>-->
+                                <!--<feature>
                                     <id>org.wso2.carbon.tenant.mgt.core.feature.group</id>
                                     <version>${stratos.version}</version>
-                                </feature-->
-                                <!--feature>
+                                </feature>-->
+                                <!--<feature>
                                     <id>org.wso2.carbon.tenant.mgt.server.feature.group</id>
                                     <version>${stratos.version}</version>
-                                </feature-->
+                                </feature>-->
                             </features>
 
                         </configuration>
