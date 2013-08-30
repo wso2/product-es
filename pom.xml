@@ -73,11 +73,11 @@
 
     <properties>
         <ues.version>1.0.0</ues.version>
-        <carbon.kernal.version>4.1.0</carbon.kernal.version>
-        <carbon.platform.version>4.1.0</carbon.platform.version>
+        <carbon.kernal.version>4.2.0</carbon.kernal.version>
+        <carbon.platform.version>4.2.0</carbon.platform.version>
 
         <!-- jaggery versions -->
-        <jaggery.feature.version>0.9.0-SNAPSHOT</jaggery.feature.version>
+        <jaggery.feature.version>0.9.0.ALPHA4.wso2v1</jaggery.feature.version>
 
         <!-- patch versions -->
         <patch.version.401>4.0.1</patch.version.401>
@@ -91,7 +91,7 @@
 		<patch.version.411>4.1.1</patch.version.411>
 		<patch.version.412>4.1.2</patch.version.412>
 		<patch.version.413>4.1.3</patch.version.413>
-        <carbon.p2.plugin.version>1.5.1</carbon.p2.plugin.version>
+        <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<stratos.version>2.1.0</stratos.version>
         <stratos.version.212>2.1.2</stratos.version.212>
 
