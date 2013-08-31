@@ -4,7 +4,7 @@
 
 var caramel;
 ( function() {
-	var gadgets, sites,ebooks, paging, count, current, total, loggedUser, popularAssets,
+	var gadgets, sites,books, paging, count, current, total, loggedUser, popularAssets,
             recent = false,
             type = 'gadget',
             options = {},
@@ -41,9 +41,9 @@ var caramel;
             type: 'site'
         }, paging);
 
-        ebooks = store.search({
+        books = store.search({
             query: query,
-            type: 'ebook'
+            type: 'book'
         }, paging);
 
     } else if (fields) {
@@ -62,29 +62,28 @@ var caramel;
         gadgets = store.search(options, paging);
         options.type = 'site';
         sites = store.search(options, paging);
-        options.type = 'ebook';
-        ebooks = store.search(options, paging);
     } else if (tag) {
         gadgets = store.tagged('gadget', tag, paging);
         sites = store.tagged('site', tag, paging);
-        ebooks = store.tagged('ebook', tag, paging);
+        books = store.tagged('book', tag, paging);
     } else {
         recent = true;
         gadgets = store.assets('gadget', paging);
         sites = store.assets('site', paging);
-        ebooks = store.assets('ebook', paging);
+        books = store.assets('book', paging);
     }
 	recentGadgets = store.recentAssets('gadget', 3);
 	recentSites = store.recentAssets('site', 3);
-	recentEBooks = store.recentAssets('ebook', 3);
-	recentAssets = recentGadgets.concat(recentSites,recentEBooks);
+	recentBooks = store.recentAssets('book', 3);
+	recentAssets = recentGadgets.concat(recentSites,recentBooks);
 
 	if(!(query || fields)) {
 	popularGadgets = store.popularAssets('gadget');
 	popularSites = store.popularAssets('site');
-	popularEBooks = store.popularAssets('ebook');
-	popularAssets = popularGadgets.concat(popularSites,popularEBooks);
+	popularBooks = store.popularAssets('book');
+	popularAssets = popularGadgets.concat(popularSites,popularBooks);
 	}
+
     var rxtAttributes = require('modules/util.js').getRXTAttributes("gadget");
 
     caramel.render({
@@ -108,7 +107,7 @@ var caramel;
 			recentAssets : {
 				gadget : gadgets,
 				site : sites,
-                ebook : ebooks
+                book : books
 			},
 			popularAssets : popularAssets,
             recent : recent

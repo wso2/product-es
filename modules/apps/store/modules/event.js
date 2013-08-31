@@ -6,6 +6,8 @@ var SERVER_EVENTS = 'server.events';
  */
 var callbacks = function () {
     var cbs = application.get(SERVER_EVENTS);
+    var log = new Log();
+    log.info('***************************** - ' + cbs instanceof Object);
     if (cbs) {
         return cbs;
     }
@@ -66,7 +68,7 @@ var emit = function (event) {
     group.forEach(function (fn) {
         try {
             log.info('executing callback');
-            fn.apply(null, args);
+            fn.apply(this, args);
             log.info('executed callback');
         } catch(e) {
             log.error(e);

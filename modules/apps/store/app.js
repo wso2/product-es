@@ -102,7 +102,6 @@ caramel.configs({
     }*/
 });
 
-/*
 var configs = require('/store.js').config();
 var server = require('/modules/server.js');
 
@@ -118,4 +117,4 @@ store.init(-1234, {
 });
 store.init(1, {
 
-});*/
+});

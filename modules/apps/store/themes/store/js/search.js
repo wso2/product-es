@@ -36,13 +36,13 @@ $(function () {
 
                 });
 
-                $("#top-asset-slideshow-ebook").carouFredSel({
+                $("#top-asset-slideshow-book").carouFredSel({
                     items: 4,
                     width: "100%",
                     infinite: false,
                     auto: false,
                     circular: false,
-                    pagination: "#top-asset-slideshow-pag-ebook"
+                    pagination: "#top-asset-slideshow-pag-book"
 
                 });
                 mouseStop();

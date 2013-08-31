@@ -85,7 +85,6 @@ $(function() {
 
 	$('.icon-gadget').addClass('icon-cog');
 	$('.icon-site').addClass('icon-globe');
-    $('.icon-ebook').addClass('icon-book');
 
 	$('#sso-login').click(function() {
 		$('#sso-login-form').submit();
@@ -96,14 +95,6 @@ $(function() {
 		window.location = url;
 	});
 
-<<<<<<< HEAD
-=======
-    $('.store-menu > li > ul > li > a').click(function(){
-        var url = $(this).attr('href');
-        window.location = url;
-    });
-	
->>>>>>> 1d4907b90d0ae77c723478a1b150faa458aca863
 	$(".dropdown-menu").niceScroll();
 
 	$(".dropdown-menu").mouseover(function() {

@@ -21,6 +21,7 @@ var log = new Log();
     };
 
     var search = function (that, options) {
+        log.info(options);
         if (options.tag) {
             var registry = that.registry,
                 tag = options.tag;
@@ -75,9 +76,6 @@ var log = new Log();
         this.type = type;
         this.username = registry.username;
         Packages.org.wso2.carbon.governance.api.util.GovernanceUtils.loadGovernanceArtifacts(registry.registry);
-        var log = new Log();
-        log.info(type);
-        log.info(registry.exists('/_system'));
         this.manager = new carbon.registry.ArtifactManager(registry, type);
         this.sorter = new Sorter(registry);
     };

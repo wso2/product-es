@@ -4,145 +4,144 @@ var SYSTEM_REGISTRY = 'system.registry';
 
 var ANONYMOUS_REGISTRY = 'anonymous.registry';
 
-var USER_MANAGER = 'user.manager';
+var SERVER_USER_MANAGER = 'server.usermanager';
 
 var SERVER_OPTIONS = 'server.options';
 
 var SERVER_EVENTS = 'server.events';
 
-var TENANT_CONFIGS = 'tenant.configs';
-
-/**
- * Initializes the server for the first time. This should be called when app is being deployed.
- * @param options
- */
 var init = function (options) {
     var carbon = require('carbon'),
-        event = require('/modules/event.js'),
-        srv = new carbon.server.Server({
+        server = new carbon.server.Server({
             tenanted: options.tenanted,
-            url: options.server.https
+            url: options.server.https + '/admin'
         });
-    application.put(SERVER, srv);
+    application.put(SERVER, server);
     application.put(SERVER_OPTIONS, options);
-
-    application.put(TENANT_CONFIGS, {});
-
-    event.on('tenantLoad', function (tenantId) {
-        var carbon = require('carbon'),
-            config = configs(tenantId);
-        //log.info('tenantLoad : ' + tenantId);
-        //loads tenant's system registry
-        config[SYSTEM_REGISTRY] = new carbon.registry.Registry(server(), {
-            system: true,
-            tenantId: tenantId
-        });
-
-        //loads tenant's anon registry
-        config[ANONYMOUS_REGISTRY] = new carbon.registry.Registry(server(), {
-            tenantId: tenantId
-        });
-
-        //loads tenant's user manager
-        config[USER_MANAGER] = new carbon.user.UserManager(server(), tenantId);
-    });
-
-    event.on('tenantUnload', function (tenantId) {
-        var config = configs(tenantId);
-        delete config[tenantId];
-    });
-
-    event.on('tenantCreate', function (tenantId) {
-        var config = configs();
-        //log.info('tenantCreate : ' + tenantId);
-        config[tenantId] = {};
-    });
-
-    event.on('login', function (tenantId, user) {
-        //we check the existence of user manager in the application ctx and
-        //decide whether tenant has been already loaded.
-        /*log.info('login : ' + tenantId + ' User : ' + JSON.stringify(user));
-         if (application.get(tenantId + USER_MANAGER)) {
-         //return;
-         }
-         event.emit('tenantCreate', tenantId);
-         event.emit('tenantLoad', tenantId);*/
-        var carbon = require('carbon'),
-            server = require('/modules/server.js'),
-            loginManager = carbon.server.osgiService('org.wso2.carbon.core.services.callback.LoginSubscriptionManagerService'),
-            configReg = server.systemRegistry(tenantId).registry.getChrootedRegistry("/_system/config");
-        loginManager.triggerEvent(configReg, user.username, tenantId);
-    });
 };
 
-/**
- * Returns server options object.
- * @return {Object}
- */
-var options = function () {
-    return application.get(SERVER_OPTIONS);
-};
-
-/**
- * Returns the server instance.
- * @return {Object}
- */
-var server = function () {
-    return application.get(SERVER);
-};
-
-/**
- * Checks whether server runs on multi-tenanted mode.
- * @return {*}
- */
 var tenanted = function () {
     return options().tenanted;
 };
 
+
 /**
- * Loads the tenant configs object or the tenant config of the given tenant.
- * @param tenantId
- * @return {*}
+ * Fetches callback object of this module from the application context.
  */
-var configs = function (tenantId) {
-    var config = application.get(TENANT_CONFIGS);
-    if (!tenantId) {
-        return config;
+var callbacks = function() {
+    var cbs = application.get(SERVER_EVENTS);
+    if(cbs) {
+        return cbs;
     }
-    return config[tenantId];
+    cbs = {};
+    application.put(SERVER_EVENTS, cbs);
+    return cbs;
 };
 
 /**
- * Returns the system registry of the given tenant.
- * @param tenantId
- * @return {Object}
+ * Fetches specified event object from the application context.
+ * @param event
+ * @return {*|Array}
  */
+var events = function(event) {
+    var cbs = callbacks();
+    return cbs[event] || (cbs[event] = []);
+};
+
+/**
+ * Registers an event listener in the server.
+ * @param event
+ * @param fn
+ * @return {*}
+ */
+var on = function (event, fn) {
+    var group = events(event);
+    group.push(fn);
+    return fn;
+};
+
+/**
+ * Removes specified event callback from the listeners.
+ * If this is called without fn, then all events will be removed.
+ * @param event
+ * @param fn callback function used during the on() method
+ */
+var off = function (event, fn) {
+    var index, cbs,
+        group = events(event);
+    if (fn) {
+        index = group.indexOf(fn);
+        group.splice(index, 1);
+        return;
+    }
+    cbs = callbacks();
+    delete cbs[event];
+};
+
+/**
+ * Executes event callbacks of the specified event by passing data.
+ * @param event
+ * @param data
+ */
+var emit = function (event, data) {
+    var group = events(event);
+    group.forEach(function (fn) {
+        fn(data);
+    });
+};
+
+var options = function () {
+    return application.get(SERVER_OPTIONS);
+};
+
 var systemRegistry = function (tenantId) {
-    var carbon = require('carbon');
-    return configs(tenantId)[SYSTEM_REGISTRY] || new carbon.registry.Registry(server(), {
+    var carbon,
+        key = tenantId + SYSTEM_REGISTRY,
+        registry = application.get(key);
+    if (registry) {
+        return registry;
+    }
+    carbon = require('carbon');
+    registry = new carbon.registry.Registry(server(), {
         system: true,
         tenantId: tenantId
     });
+    application.put(key, registry);
+    return registry;
 };
 
-/**
- * Returns the anonymous registry of the given tenant.
- * @param tenantId
- * @return {Object}
- */
 var anonRegistry = function (tenantId) {
-    var carbon = require('carbon');
-    return configs(tenantId)[ANONYMOUS_REGISTRY] || new carbon.registry.Registry(server(), {
+    var carbon,
+        key = tenantId + ANONYMOUS_REGISTRY,
+        registry = application.get(key);
+    if (registry) {
+        return registry;
+    }
+    carbon = require('carbon');
+    registry = new carbon.registry.Registry(server(), {
         tenantId: tenantId
     });
+    application.put(key, registry);
+    return registry;
 };
 
-/**
- * Returns the user manager of the given tenant.
- * @param tenantId
- * @return {*}
- */
-var userManager = function (tenantId) {
-    var carbon = require('carbon');
-    return configs(tenantId)[USER_MANAGER] || new carbon.user.UserManager(server(), tenantId);
+var server = function () {
+    return application.get(SERVER);
 };
+
+var userManager = function (tenantId) {
+    var um, carbon, key;
+    if (!tenantId) {
+        return application.get(SERVER_USER_MANAGER);
+    }
+    key = tenantId + SERVER_USER_MANAGER;
+    um = application.get(key);
+    if (um) {
+        //return um;
+    }
+    carbon = require('carbon');
+    um = new carbon.user.UserManager(server(), tenantId);
+    application.put(key, um);
+    return um;
+};
+

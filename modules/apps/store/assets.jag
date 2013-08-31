@@ -1,7 +1,7 @@
 <%
 var caramel;
 (function () {
-    var assets, paging, count, current, total, loggedUser, sso, url,mainPage,subPage, tenantId,
+    var assets, paging, count, current, total, loggedUser, sso, url,mainPage,subPage,
             options = {},
             log = new Log(),
             user = require('/modules/user.js'),
@@ -10,7 +10,6 @@ var caramel;
             site = require('/modules/site.js'),
             tag = request.getParameter('tag'),
             query = request.getParameter('query'),
-            domain = request.getParameter('tenant'),
             fields = request.getParameter('fields'),
             ssoUser = session.get('LOGGED_IN_USER'),
             ssoLogin = require('/modules/sso-login.js');
@@ -21,9 +20,6 @@ var caramel;
 
     loggedUser = (sso && ssoUser) ? {username: ssoUser} : user.current();
 
-    //TODO: NEED TO FIX THIS
-    tenantId = domain;
-
     url = '/assets/' + type + '/?' + (tag ? 'tag=' + tag + '&' : '') + (query ? 'query=' + query + '&' : '');
 
    // log.info("LOGGED_IN_USER (store) " + session.get('LOGGED_IN_USER'));
@@ -33,7 +29,7 @@ var caramel;
     mainPage = type;
     
     if (tag) {
-        total = store.assetCount(tenantId, type, {
+        total = store.assetCount(type, {
             tag: tag
         });
         subPage  = '/ Tag: "' + tag + '"'; 
@@ -42,21 +38,21 @@ var caramel;
             return;
         }
         assets = function () {
-            return store.tagged(tenantId, type, tag, paging);
+            return store.tagged(type, tag, paging);
         };
     } else if (query) {
         options = {
             type: type,
             query: query
         };
-        total = store.assetCount(tenantId, type, options);
+        total = store.assetCount(type, options);
         subPage = '/ Search: "' + query + '"';
         if (paging.start > total || paging.start < 0) {
             response.sendError(404, 'Requested page cannot be found');
             return;
         }
         assets = function () {
-            return store.search(tenantId, options, paging);
+            return store.search(options, paging);
         };
     } else if (fields) {
         var parts, param, params, value;
@@ -76,23 +72,23 @@ var caramel;
                 query += (param + '=' + params[param]);
             }
         }
-        total = store.assetCount(tenantId, type, options);
+        total = store.assetCount(type, options);
         subPage = '/ Search: "' + query + '"';
         if (paging.start > total || paging.start < 0) {
             response.sendError(404, 'Requested page cannot be found');
             return;
         }
         assets = function () {
-            return store.search(tenantId, options, paging);
+            return store.search(options, paging);
         };
     } else {
-        total = store.assetCount(tenantId, type);
+        total = store.assetCount(type);
         if (paging.start > total || paging.start < 0) {
             response.sendError(404, 'Requested page cannot be found');
             return;
         }
         assets = function () {
-            return store.assets(tenantId, type, paging);
+            return store.assets(type, paging);
         }
     }
 
@@ -119,12 +115,12 @@ var caramel;
 		},
         type: type,
         /*tag: tag,*/
-        tags: function () {
+        /*tags: function () {
             return [{
                 url: '/assets/' + type + '/?tag=',
-                data: store.tags(tenantId, type)
+                data: store.tags(type)
             }];
-        },
+        },*/
         assets: assets(),
         paging: {
             url:  url + 'sort=' + paging.sort + '&page=',
@@ -139,7 +135,7 @@ var caramel;
             url: url + 'sort='
         },
         recentAssets: function () {
-            return store.recentAssets(tenantId, type);
+            return store.recentAssets(type);
         }
     });
 }());

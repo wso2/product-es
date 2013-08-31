@@ -11,13 +11,11 @@ var USER_ROLE_PREFIX = 'private_';
 /**
  * Initializes the user environment for the specified tenant. If it is already initialized, then will be skipped.
  */
-var init = function (options) {
-    var event = require('/modules/event.js');
-    event.on('tenantCreate', function (tenantId) {
+var init = function () {
+    var server = require('/modules/server.js');
+    server.on('tenantCreate', function (tenantId) {
         var role, roles,
-            server = require('/modules/server.js'),
-            um = server.userManager(tenantId),
-            options = server.options();
+            um = server.userManager(tenantId);
         roles = options.roles;
         for (role in roles) {
             if (roles.hasOwnProperty(role)) {
@@ -35,37 +33,17 @@ var init = function (options) {
         //application.put(key, options);
     });
 
-    event.on('tenantLoad', function (tenantId) {
-
-    });
-
-    event.on('tenantUnload', function (tenantId) {
-
-    });
-
-    event.on('login', function (tenantId, user) {
-        session.put(USER, user);
-        session.put(USER_REGISTRY, new carbon.registry.Registry(server.server(), {
-            username: user.username,
-            tenantId: tenantId
-        }));
-        session.put(USER_SPACE, userSpace(user.username));
-    });
-
-    event.on('logout', function () {
-        session.remove(USER);
-        session.remove(USER_SPACE);
-        session.remove(USER_REGISTRY);
+    server.on('tenantLoad', function(tenantId) {
+        application.put(tenantId + USER_OPTIONS, require('/store.js').config())
     });
 };
 
 /**
- * Returns user options of the tenant.
+ * @deprecated
  * @return {Object}
  */
 var options = function (tenantId) {
-    var server = require('/modules/server.js');
-    return server.configs(tenantId)[USER_OPTIONS];
+    return application.get(tenantId + USER_OPTIONS);
 };
 
 /**
@@ -75,28 +53,18 @@ var options = function (tenantId) {
  * @return {boolean}
  */
 var login = function (username, password) {
-    var user, perm, perms, actions, i, length, um, opts, config,
-        log = new Log(),
+    var user, perm, perms, actions, i, length, um, opts,
         authorized = false,
         carbon = require('carbon'),
-        event = require('/modules/event.js'),
         server = require('/modules/server.js'),
         serv = server.server(),
         usr = carbon.server.tenantUser(username);
     if (!serv.authenticate(username, password)) {
         return false;
     }
-
-    //load the tenant if it hasn't been loaded yet.
-    if (!server.configs(usr.tenantId)) {
-        event.emit('tenantCreate', usr.tenantId);
-    }
-    if (!server.configs(usr.tenantId)[USER_OPTIONS]) {
-        event.emit('tenantLoad', usr.tenantId);
-    }
-
+    //TODO: using same config for each tenant ??
+    init(usr.tenantId, require('/store.js').config());
     opts = options(usr.tenantId);
-    //log.info(usr.tenantId);
     um = server.userManager(usr.tenantId);
     user = um.getUser(usr.username);
     perms = opts.permissions.login;
@@ -116,7 +84,13 @@ var login = function (username, password) {
     if (!authorized) {
         return false;
     }
-    event.emit('login', usr.tenantId, usr);
+    onLogin(usr.tenantId, usr.username);
+    session.put(USER, new carbon.user.User(um, usr.username));
+    session.put(USER_REGISTRY, new carbon.registry.Registry(serv, {
+        username: usr.username,
+        tenantId: usr.tenantId
+    }));
+    session.put(USER_SPACE, userSpace(usr.username));
     //TODO: ??
     if (opts.login) {
         opts.login(user, password, session);
@@ -126,13 +100,13 @@ var login = function (username, password) {
 
 /**
  * Checks whether the logged in user has permission to the specified action.
- * @param user
  * @param permission
  * @param action
  * @return {*}
  */
-var isAuthorized = function (user, permission, action) {
-    var server = require('/modules/server.js'),
+var isAuthorized = function (permission, action) {
+    var user = current(),
+        server = require('/modules/server.js'),
         um = server.userManager(user.tenantId);
     return um.getUser(user.username).isAuthorized(permission, action);
 };
@@ -140,7 +114,7 @@ var isAuthorized = function (user, permission, action) {
 /**
  * Returns the user's registry space. This should be called once with the username,
  * then can be called without the username.
- * @param username ruchira
+ * @param username
  * @return {*}
  */
 var userSpace = function (username) {
@@ -167,24 +141,24 @@ var userRegistry = function () {
  * Logs out the currently logged in user.
  */
 var logout = function () {
-    var user = current(),
-        opts = options(user.tenantId);
+    var opts = options(),
+        user = current();
     if (opts.logout) {
         opts.logout(user, session);
     }
-    event.emit('logout', user.tenantId, user);
+    session.remove(USER);
+    session.remove(USER_SPACE);
+    session.remove(USER_REGISTRY);
 };
 
 /**
  * Checks whether the specified username already exists.
- * @param username ruchira@ruchira.com(multi-tenanted) or ruchira
+ * @param username
  * @return {*}
  */
 var userExists = function (username) {
-    var server = require('/modules/server.js'),
-        carbon = require('carbon'),
-        usr = carbon.server.tenantUser(username);
-    return server.userManager(usr.tenantId).userExists(usr.username);
+    var server = require('/modules/server.js');
+    return server.userManager().userExists(username);
 };
 
 var privateRole = function (username) {
@@ -194,15 +168,12 @@ var privateRole = function (username) {
 var register = function (username, password) {
     var user, role, id, perms, r, p,
         server = require('/modules/server.js'),
-        carbon = require('carbon'),
-        event = require('/modules/event.js'),
-        usr = carbon.server.tenantUser(username),
-        um = server.userManager(usr.tenantId),
-        opts = options(usr.tenantId);
-    um.addUser(usr.username, password, opts.userRoles);
-    user = um.getUser(usr.username);
-    role = privateRole(usr.username);
-    id = userSpace(usr.username);
+        um = server.userManager(),
+        opts = options();
+    um.addUser(username, password, opts.userRoles);
+    user = um.getUser(username);
+    role = privateRole(username);
+    id = userSpace(username);
     perms = {};
     perms[id] = [
         'http://www.wso2.org/projects/registry/actions/get',
@@ -221,7 +192,6 @@ var register = function (username, password) {
     if (opts.register) {
         opts.register(user, password, session);
     }
-    event.emit('userRegister', usr.tenantId, user);
     login(username, password);
 };
 
@@ -239,14 +209,13 @@ var current = function () {
 var loginWithSAML = function (username) {
     var user, perm, perms, actions, i, length,
         authorized = false,
+        opts = options(),
         carbon = require('carbon'),
-        usr = carbon.server.tenantUser(username),
-        opts = options(usr.tenantId),
         server = require('/modules/server.js'),
-        event = require('/modules/event.js'),
-        um = server.userManager(usr.tenantId);
+        serv = server.server(),
+        um = server.userManager();
 
-    user = um.getUser(usr.username);
+    user = um.getUser(username);
     perms = opts.permissions.login;
     L1:
         for (perm in perms) {
@@ -264,7 +233,12 @@ var loginWithSAML = function (username) {
     if (!authorized) {
         return false;
     }
-    event.emit('login', usr.tenantId, user);
+    session.put(USER, new carbon.user.User(um, username));
+    session.put(USER_REGISTRY, new carbon.registry.Registry(serv, {
+        username: username,
+        tenantId: carbon.server.tenantId()
+    }));
+    session.put(USER_SPACE, userSpace(username));
     if (opts.login) {
         opts.login(user, "", session);
     }
@@ -278,4 +252,13 @@ var loginWithSAML = function (username) {
     um.authorizeRole(privateRole(username), permission);
 
     return true;
+};
+
+//TODO: move this into a separate module
+var onLogin = function (tenantId, username) {
+    var carbon = require('carbon'),
+        server = require('/modules/server.js'),
+        loginManager = carbon.server.osgiService('org.wso2.carbon.core.services.callback.LoginSubscriptionManagerService'),
+        configReg = server.systemRegistry(tenantId).registry.getChrootedRegistry("/_system/config");
+    loginManager.triggerEvent(configReg, username, tenantId);
 };
