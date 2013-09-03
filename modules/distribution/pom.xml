@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.common</artifactId>
-            <version>${patch.version.413}</version>
+			 <version>${carbon.platform.version}</version>
         </dependency>
     </dependencies>
 
