@@ -46,7 +46,6 @@
                 <exclude>**/org.wso2.carbon.identity.relyingparty.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/org.wso2.carbon.identity.user.registration.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/log4j.properties</exclude>
-                <exclude>**/bundles.info</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -206,13 +205,6 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>src/repository/components/configuration/org.eclipse.equinox.simpleconfigurator</directory>
-            <outputDirectory>wso2store-${pom.version}/repository/components/configuration/org.eclipse.equinox.simpleconfigurator/</outputDirectory>
-            <includes>
-                <include>*/**</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>src/bin</directory>
             <outputDirectory>wso2store-${pom.version}/bin/</outputDirectory>
             <includes>
@@ -220,7 +212,7 @@
             </includes>
             <fileMode>644</fileMode>
         </fileSet>
-        <fileSet>
+        <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.1.0-0001</directory>
             <outputDirectory>wso2store-${pom.version}/repository/components/patches/</outputDirectory>
             <includes>
@@ -233,7 +225,7 @@
             <includes>
                 <include>**/patch0002/*.*</include>
             </includes>
-        </fileSet>
+        </fileSet-->
     </fileSets>
 
     <dependencySets>
@@ -251,14 +243,7 @@
             <includes>
                 <include>javax.el:el-api:jar</include>
             </includes>
-        </dependencySet>
-
-        <dependencySet>
-            <outputDirectory>wso2store-${pom.version}/repository/components/dropins</outputDirectory>
-            <includes>
-                <include>org.wso2.carbon:org.wso2.carbon.registry.common:jar</include>
-            </includes>
-        </dependencySet>
+        </dependencySet>      
 
         <dependencySet>
             <outputDirectory>wso2store-${pom.version}/repository/deployment/client/modules
