@@ -1,10 +1,10 @@
 <%
-
-var SAMLSSOProviderConstants = Packages.org.wso2.carbon.identity.sso.saml.ui.SAMLSSOProviderConstants,
+							
+var SAMLSSOProviderConstants = Packages.org.wso2.carbon.identity.sso.saml.common.SAMLSSOProviderConstants,
         SAMLSSOService = Packages.org.wso2.carbon.identity.sso.saml.SAMLSSOService,
         MultitenantConstants = Packages.org.wso2.carbon.utils.multitenancy.MultitenantConstants,
         SAMLSSOAuthnReqDTO = Packages.org.wso2.carbon.identity.sso.saml.dto.SAMLSSOAuthnReqDTO,
-        LogoutRequestSender = Packages.org.wso2.carbon.identity.sso.saml.ui.logout.LogoutRequestSender,
+        LogoutRequestSender = Packages.org.wso2.carbon.identity.sso.saml.logout.LogoutRequestSender,
         req = request, assertionConsumerURL, samlResp,
         relayState = req.getParameter(String(SAMLSSOProviderConstants.RELAY_STATE)),
         username = req.getParameter(String(SAMLSSOProviderConstants.USERNAME)),
@@ -16,8 +16,10 @@ var SAMLSSOProviderConstants = Packages.org.wso2.carbon.identity.sso.saml.ui.SAM
         rpSessionId = req.getParameter(String(MultitenantConstants.SSO_AUTH_SESSION_ID)),
         TypesLogoutDTO = Packages.org.wso2.carbon.identity.sso.saml.stub.types.SingleLogoutRequestDTO,
         LogoutDTO = Packages.org.wso2.carbon.identity.sso.saml.dto.SingleLogoutRequestDTO,
+        authenticated = true,
+        log = new Log(),
         action = request.getParameter('action');
-log = new Log();
+
 
 (function () {
     var registerUser = function (username, password) {
@@ -42,9 +44,11 @@ log = new Log();
 
     var handleSAMLRequest = function (ssoTokenID, samlRequest, relayState, authMode) {
         var ssoService = new SAMLSSOService();
-        var signInRespDTO = ssoService.validateRequest(samlRequest, "", ssoTokenID, rpSessionId, authMode);
+        var isPost=false;
+        var signInRespDTO = ssoService.validateRequest(samlRequest, "", ssoTokenID, rpSessionId, authMode,isPost);
         session.put('signInRespDTO', signInRespDTO);
         session.put('relayState', relayState);
+
 
         // If it is a login request.
         if (!signInRespDTO.isLogOutReq()) {
@@ -97,8 +101,10 @@ log = new Log();
 
     var handleAuthentication = function () {
         var ssoService = new SAMLSSOService();
-        var authRespDTO = ssoService.authenticate(populateAuthnReqDTO(), ssoTokenID);
+        var authRespDTO = ssoService.authenticate(populateAuthnReqDTO(), ssoTokenID,authenticated,authMode);
+        
         if (authRespDTO.isSessionEstablished()) { // authenticated
+       // 	authenticated = true;        
             sendResponse(relayState, authRespDTO.getRespString(), authRespDTO.getAssertionConsumerURL(), authRespDTO.getSubject());
         } else {
             session.put('error', {error: true, type: 'loginError', msg: 'Authentication Failure, invalid username or password'});
