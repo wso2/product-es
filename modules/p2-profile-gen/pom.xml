@@ -121,6 +121,14 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${stratos.version}
                                 </featureArtifactDef>
+								<!-- feature for org.wso2.carbon.ui.taglibs.Paginator -  for i18n paginator -->
+								<!--featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.claim.mgt.ui.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+								<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.xacml.ui.feature:${carbon.platform.version}
+                                </featureArtifactDef-->
+								<!-- End for feature for i18n paginator -->
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${patch.version.402}
                                 </featureArtifactDef>
@@ -266,6 +274,16 @@
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
+								<!-- feature for org.wso2.carbon.ui.taglibs.Paginator -  for i18n paginator -->
+								<!--feature>
+                                    <id>org.wso2.carbon.identity.xacml.ui.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+								<feature>
+                                    <id>org.wso2.carbon.claim.mgt.ui.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature-->
+								<!-- End for feature for i18n paginator -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.core.feature.group</id>
                                     <version>${carbon.platform.version}</version>
