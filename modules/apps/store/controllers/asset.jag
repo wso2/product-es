@@ -16,6 +16,8 @@ require('/modules/store.js').exec(function (ctx) {
 
     caramel = require('caramel');
 
+    log.info('Entered asset detail page');
+
     matcher.match('/{context}' + configs.assetsUrlPrefix + '/{type}/{aid}');
     aid = matcher.elements().aid;
     title = store.assetLinks(type).title;

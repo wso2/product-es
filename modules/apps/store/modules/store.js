@@ -6,7 +6,35 @@ var TENANT_STORE = 'tenant.store';
 
 var STORE_CONFIG_PATH = '/_system/config/store/configs/store.json';
 
-var TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+var STORE_TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+var APIM_TAGS_QUERY_PATH="/_system/config/repository/components/org.wso2.carbon.registry/queries/tag-summary";
+
+
+
+var STORE_TAG_QUERY="SELECT RT.REG_TAG_ID FROM REG_RESOURCE_TAG RT ORDER BY RT.REG_TAG_ID";
+var APIM_TAG_QUERY="SELECT"
++"    '/_system/governance/repository/components/org.wso2.carbon.governance' AS MOCK_PATH, "
++"    RT.REG_TAG_NAME AS TAG_NAME,  "
++"    COUNT(RT.REG_TAG_NAME) AS USED_COUNT "
++" FROM    REG_RESOURCE_TAG RRT, "
++"    REG_TAG RT,"
++"    REG_RESOURCE R, "
++"    REG_RESOURCE_PROPERTY RRP, "
++"    REG_PROPERTY RP "
++" WHERE    RT.REG_ID = RRT.REG_TAG_ID "
++"    AND R.REG_MEDIA_TYPE = 'application/vnd.wso2-api+xml' "
++"    AND RRT.REG_VERSION = R.REG_VERSION "
++"    AND RRP.REG_VERSION = R.REG_VERSION "
++"    AND RP.REG_NAME = 'STATUS' "
++"    AND RRP.REG_PROPERTY_ID = RP.REG_ID "
++"    AND (RP.REG_VALUE !='DEPRECATED' "
++"    AND RP.REG_VALUE !='CREATED' "
++"    AND RP.REG_VALUE !='BLOCKED' "
++"    AND RP.REG_VALUE !='RETIRED') "
++" GROUP BY    RT.REG_TAG_NAME";
+
+var TAG_QUERY=STORE_TAG_QUERY;
+var TAGS_QUERY_PATH=STORE_TAGS_QUERY_PATH;
 
 //TODO: read from tenant config
 var ASSETS_PAGE_SIZE = 'assetsPageSize';
@@ -45,13 +73,25 @@ var init = function (options) {
             content: JSON.stringify(config),
             mediaType: 'application/json'
         });
-        system.put(TAGS_QUERY_PATH, {
+
+
+        /*system.put(TAGS_QUERY_PATH, {
             content: 'SELECT RT.REG_TAG_ID FROM REG_RESOURCE_TAG RT ORDER BY RT.REG_TAG_ID',
             mediaType: 'application/vnd.sql.query',
             properties: {
                 resultType: 'Tags'
             }
+        });  */
+
+        //Place the tag query during the tentant create
+        system.put(TAGS_QUERY_PATH, {
+            content: TAG_QUERY,
+            mediaType: 'application/vnd.sql.query',
+            properties: {
+                resultType: 'Tags'
+            }
         });
+
         roles = config.roles;
         for (role in roles) {
             if (roles.hasOwnProperty(role)) {
@@ -162,7 +202,9 @@ var assetManager = function (type, reg) {
         azzet = require('/modules/asset.js'),
         path = ASSETS_EXT_PATH + type + '/asset.js',
         manager = new azzet.Manager(reg, type);
+
     if (new File(path).isExists() && (asset = require(path)).hasOwnProperty('assetManager')) {
+
         manager = asset.assetManager(manager);
     }
     return manager;
@@ -325,9 +367,13 @@ Store.prototype.tags = function (type) {
         registry = this.registry || this.servmod.anonRegistry(this.tenantId),
         tagz = [],
         tz = {};
+
+
     tags = registry.query(TAGS_QUERY_PATH);
+
     length = tags.length;
     if (type == undefined) {
+
         for (i = 0; i < length; i++) {
             tag = tags[i].split(';')[1].split(':')[1];
             count = tz[tag];
@@ -335,8 +381,11 @@ Store.prototype.tags = function (type) {
             tz[tag] = count;
         }
     } else {
+
         for (i = 0; i < length; i++) {
+
             assetType = tags[i].split(';')[0].split('/')[3];
+
             if (assetType != undefined) {
                 if (assetType.contains(type)) {
                     tag = tags[i].split(';')[1].split(':')[1];
@@ -369,6 +418,7 @@ Store.prototype.tags = function (type) {
      }
      }
      */
+
     return tagz;
 };
 
@@ -430,7 +480,6 @@ Store.prototype.assets = function (type, paging) {
 
     var assetz = this.assetManager(type).search(options, newPaging);
 
-
     for (i = 0; i < assetz.length; i++) {
         assetz[i].indashboard = this.isuserasset(assetz[i].id, type);
     }
@@ -453,9 +502,15 @@ Store.prototype.tagged = function (type, tag, paging) {
     var length;
 
     //options['tag'] = tag;
-    //options = obtainViewQuery(options);
+
+    //Some asssets may not have a lifecycleState attribute, therefore the query is obtained
+    //from the obtainViewQuery function
+    options = obtainViewQuery(options);
+    options['tag']=tag;
+
+
     //TODO move this LCState to config
-    options = {"tag": tag, "lifecycleState": ["published"]};
+    //options = {"tag": tag, "lifecycleState": ["published"]};
 
     assets = this.assetManager(type).search(options, paging);
 
@@ -660,7 +715,7 @@ Store.prototype.rxtManager = function (type, session) {
 
 var LIFECYCLE_STATE_PROPERTY = 'lcState';
 var DEFAULT_ASSET_VIEW_STATE = 'Published'; //Unless specified otherwise, assets are always visible when Published
-
+var DEFAULT_LC_ATTRIBUTE_NAME= LIFECYCLE_STATE_PROPERTY;
 /*
  The function creates a query object to be used in the Manager.search
  based on the visibleIn property of the store.json.
@@ -671,11 +726,11 @@ var obtainViewQuery = function (options) {
 
     var storeConfig = require('/config/store.json').lifeCycleBehaviour;
     var visibleStates = storeConfig.visibleIn || DEFAULT_ASSET_VIEW_STATE;
+    var attributeName= storeConfig.lcAttributeName || DEFAULT_LC_ATTRIBUTE_NAME;
 
-    options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
-
-    log.debug('options: ' + stringify(options));
-
+    //options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
+    //Changed the query to check for overview_status as opposed to lifecycle state
+    options[attributeName]=visibleStates;
 
     return options;
 }

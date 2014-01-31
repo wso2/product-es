@@ -1,0 +1,8 @@
+<%
+  print('Hello World');
+
+  var Contextualizer=require('/modules/contextualizer/contextualizer.js').Contextualizer;
+
+  var contextualizer=new Contextualizer({path:'/modules'});
+
+%>

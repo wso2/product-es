@@ -6,10 +6,10 @@
                     <div class="slide">
                         {{#attributes}}
                             <div class="asset-banner">
-                                <img src="{{images_banner}}">
+                                <img src="/store/themes/store/img/defaults/banner.jpg">
                             </div>
                         	<div class="asset-intro-box">
-                            	<div><img src="{{images_thumbnail}}"></div>
+                            	<div><img src="{{overview_thumbnail}}"></div>
                             	<div class="asset-intro-inner">
 	                            	<h3><span>{{overview_name}}</span>
 	                               		<small>{{overview_version}}</small>
@@ -64,7 +64,7 @@
                                                 <i class="icon-bookmark store-bookmark-icon"></i>
                                             {{/if}}
                                             <a href="{{url "/assets"}}/{{../type}}/{{../id}}"><img
-                                                    src="{{#if images_thumbnail}}{{images_thumbnail}}{{/if}}"></a>
+                                                    src="{{#if overview_thumbnail}}{{overview_thumbnail}}{{/if}}"></a>
                                         </div>
                                     </a>
 

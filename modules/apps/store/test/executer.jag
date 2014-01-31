@@ -1,0 +1,4 @@
+<%
+require("test").cola.run();
+        
+%>

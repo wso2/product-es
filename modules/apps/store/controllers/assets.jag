@@ -18,6 +18,8 @@ require('/modules/store.js').exec(function (ctx) {
 
     caramel = require('caramel');
 
+
+
     url = '/assets/' + type + '/?' + (tag ? 'tag=' + tag + '&' : '') + (query ? 'query=' + query + '&' : '');
 
     paging = store.assetsPaging(request);
