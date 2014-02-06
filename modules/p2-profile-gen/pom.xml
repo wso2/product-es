@@ -88,7 +88,15 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${patch.version.421}
                                 </featureArtifactDef>
-                                <featureArtifactDef>caramel:caramel.feature:${caramel.feature.version}
+                                <featureArtifactDef>caramel:caramel.feature:${caramel.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:event.feature:${event.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:login.feature:${login.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:permission.feature:${permission.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:registration.feature:${registration.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:sso.feature:${sso.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:store.feature:${store.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:ues.feature:${ues.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>handlebars:handlebars.feature:${handlebars.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.platform.version}
@@ -232,6 +240,38 @@
                                 <feature>
                                     <id>caramel.feature.group</id>
                                     <version>${caramel.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>handlebars.feature.group</id>
+                                    <version>${handlebars.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>event.feature.group</id>
+                                    <version>${event.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>login.feature.group</id>
+                                    <version>${login.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>permission.feature.group</id>
+                                    <version>${permission.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>registration.feature.group</id>
+                                    <version>${registration.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>sso.feature.group</id>
+                                    <version>${sso.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>store.feature.group</id>
+                                    <version>${store.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>ues.feature.group</id>
+                                    <version>${ues.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>

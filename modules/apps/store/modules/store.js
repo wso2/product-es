@@ -31,7 +31,7 @@ var merge = function (def, options) {
 
 var init = function (options) {
     //addRxtConfigs(tenantId);
-    var event = require('/modules/event.js');
+    var event = require('event');
 
     event.on('tenantCreate', function (tenantId) {
         var role, roles,

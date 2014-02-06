@@ -227,12 +227,6 @@
                                 <resource>
                                     <directory>../../</directory>
                                     <includes>
-                                        <include>jaggery-modules/**</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>../../</directory>
-                                    <includes>
                                         <include>distribution/src/repository/**</include>
                                     </includes>
                                 </resource>
