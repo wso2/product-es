@@ -100,6 +100,33 @@
                                     caramel:${caramel.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
+                                    handlebars:${handlebars.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    markdown:${markdown.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    event:${event.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    login:${login.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    permission:${permission.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    registration:${registration.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    sso:${sso.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    store:${store.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    ues:${ues.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
                                     org.wso2.carbon.registry.associations.dependencies:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
@@ -161,7 +188,7 @@
                                     org.wso2.carbon.cassandra:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.cassandra-jdbc-1.1.1.server:4.0.1
+                                    org.wso2.carbon.cassandra-jdbc-1.2.5.server:4.2.0
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.databridge.datapublisher:4.2.1

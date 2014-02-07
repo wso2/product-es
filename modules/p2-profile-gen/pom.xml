@@ -88,15 +88,26 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${patch.version.421}
                                 </featureArtifactDef>
-                                <featureArtifactDef>caramel:caramel.feature:${caramel.feature.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:event.feature:${event.feature.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:login.feature:${login.feature.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:permission.feature:${permission.feature.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:registration.feature:${registration.feature.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:sso.feature:${sso.feature.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:store.feature:${store.feature.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:ues.feature:${ues.feature.version}</featureArtifactDef>
+                                <featureArtifactDef>caramel:caramel.feature:${caramel.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:event.feature:${event.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:login.feature:${login.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:permission.feature:${permission.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.store:registration.feature:${registration.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:sso.feature:${sso.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:store.feature:${store.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store:ues.feature:${ues.feature.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>handlebars:handlebars.feature:${handlebars.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>markdown:markdown.feature:${markdown.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.platform.version}
@@ -163,7 +174,7 @@
                                     org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.cassandra-jdbc-1.1.1.server.feature:4.0.1
+                                    org.wso2.carbon:org.wso2.carbon.cassandra-jdbc-1.2.5.server.feature:4.2.0
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:4.2.1
@@ -246,6 +257,10 @@
                                     <version>${handlebars.feature.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>markdown.feature.group</id>
+                                    <version>${markdown.feature.version}</version>
+                                </feature>
+                                <feature>
                                     <id>event.feature.group</id>
                                     <version>${event.feature.version}</version>
                                 </feature>
@@ -316,11 +331,15 @@
 
                                 <!-- sso -->
                                 <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group</id>
+                                    <id>
+                                        org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group
+                                    </id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.application.authentication.framework.server.feature.group</id>
+                                    <id>
+                                        org.wso2.carbon.identity.application.authentication.framework.server.feature.group
+                                    </id>
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
@@ -364,8 +383,8 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.cassandra-jdbc-1.1.1.server.feature.group</id>
-                                    <version>4.0.1</version>
+                                    <id>org.wso2.carbon.cassandra-jdbc-1.2.5.server.feature.group</id>
+                                    <version>4.2.0</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
