@@ -19,8 +19,9 @@
 								
 								{{#if this.isOptions}}							
                                     <select id="{{this.name}}" class="span8 selectpicker" name='{{this.name}}'>
-                                    {{#each ../../categorySelect}}
-                                        <option {{#if this.sel}}selected{{/if}}>{{this.cat}}</option>
+                                        <option selected>{{this.optionData.selected}}</option>
+                                    {{#each this.optionData.options}}
+                                        <option>{{this}}</option>
                                     {{/each}}
                                     </select>
                                 {{else}}
