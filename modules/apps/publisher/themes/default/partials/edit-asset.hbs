@@ -1,4 +1,5 @@
 <div class='content-div'>
+{{dump .}}
 	<div class="row-fluid">
 		<div class="span12 asset-view-container" >
 			<div id='msg-container-recent-activity'></div>
@@ -19,8 +20,9 @@
 								
 								{{#if this.isOptions}}							
                                     <select id="{{this.name}}" class="span8 selectpicker" name='{{this.name}}'>
-                                    {{#each ../../categorySelect}}
-                                        <option {{#if this.sel}}selected{{/if}}>{{this.cat}}</option>
+                                        <option selected>{{this.optionData.selected}}</option>
+                                    {{#each this.optionData.options}}
+                                        <option>{{this}}</option>
                                     {{/each}}
                                     </select>
                                 {{else}}
