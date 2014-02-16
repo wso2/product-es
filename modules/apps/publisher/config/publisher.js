@@ -8,7 +8,7 @@ var config;
             localIP = process.getProperty('server.host'),
             httpPort = process.getProperty('http.port'),
             httpsPort = process.getProperty('https.port');
-            carbonLocalIP=process.getProperty('carbon.local.ip');
+         var carbonLocalIP=process.getProperty('carbon.local.ip');
 
         pinch(config, /^/, function (path, key, value) {
             if ((typeof value === 'string') && value.indexOf('%https.host%') > -1) {

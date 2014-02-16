@@ -10,8 +10,8 @@
             relayState = (referer ? referer : '/store'),
             encodedSAMLAuthRequest = sso.client.getEncodedSAMLAuthRequest(dataConfi.ssoConfiguration.issuer),
             log = new Log(),
-            postUrl = "https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
-
+            postUrl =dataConfi.ssoConfiguration.identityProviderURL; //"https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
+            log.info('Login URL: '+postUrl);
     if (!session.get("Loged")) {
         %>
 
