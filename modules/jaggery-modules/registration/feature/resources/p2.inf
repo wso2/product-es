@@ -1,5 +1,5 @@
 instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../modules); \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../modules/registration); \
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/registration_${feature.version}/module/,target:${installFolder}/../../../modules/registration,overwrite:false);\
-org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/registration_${feature.version}/module);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.store.registration_${feature.version}/module/,target:${installFolder}/../../../modules/registration,overwrite:false);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.store.registration_${feature.version}/module);\

@@ -26,7 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ues.module.feature</artifactId>
+    <artifactId>ues.feature</artifactId>
     <packaging>pom</packaging>
     <name>ues Module - Feature</name>
 
@@ -83,11 +83,8 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>ues</id>
+                            <id>org.wso2.store.ues</id>
                             <propertiesFile>etc/feature.properties</propertiesFile>
-                            <importFeatures>
-                                <importFeatureDef>handlebars:${handlebars.version}</importFeatureDef>
-                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>
@@ -117,7 +114,6 @@
     <properties>
         <carbon.p2.plugin.version>1.5</carbon.p2.plugin.version>
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
-        <handlebars.version>${project.version}</handlebars.version>
     </properties>
 
     <pluginRepositories>

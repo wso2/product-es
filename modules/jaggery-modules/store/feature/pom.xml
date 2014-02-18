@@ -83,10 +83,10 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>store</id>
+                            <id>org.wso2.store.store</id>
                             <propertiesFile>etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>event:${event.feature.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.store.event:${event.feature.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
@@ -117,7 +117,6 @@
     <properties>
         <carbon.p2.plugin.version>1.5</carbon.p2.plugin.version>
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
-        <handlebars.version>${project.version}</handlebars.version>
         <event.feature.version>1.0.0-SNAPSHOT</event.feature.version>
     </properties>
 

@@ -21,7 +21,7 @@
 
     <parent>
         <groupId>org.wso2.store</groupId>
-        <artifactId>sso-module-parent</artifactId>
+        <artifactId>sso-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -83,11 +83,8 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>sso</id>
+                            <id>org.wso2.store.sso</id>
                             <propertiesFile>etc/feature.properties</propertiesFile>
-                            <importFeatures>
-                                <importFeatureDef>handlebars:${handlebars.version}</importFeatureDef>
-                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>
@@ -117,7 +114,6 @@
     <properties>
         <carbon.p2.plugin.version>1.5</carbon.p2.plugin.version>
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
-        <handlebars.version>${project.version}</handlebars.version>
     </properties>
 
     <pluginRepositories>
