@@ -1,10 +1,13 @@
+/**
+ * Description: The following script is used to create an asset.It uses the form manager
+ *              to manage the input fields
+ *
+ */
 $(function () {
+
     var formManager = new FormManager('form-asset-create');
 
-
-    console.log(JSON.stringify(formManager.formMap));
-    console.log(JSON.stringify(formManager.fieldMap));
-
+    //Initialize the plugins
     formManager.init();
 
     $('#btn-create-asset').on('click', function () {
@@ -29,6 +32,10 @@ $(function () {
         return msg;
     }
 
+    /**
+     * The method calls the add asset api to create a new asset
+     * @param formData
+     */
     var postData = function (formData) {
         var type = $('#meta-asset-type').val();
 

@@ -1,3 +1,6 @@
+/**
+ * Description: The following script contains a set of commonly used plug-ins
+ */
 $(function(){
 
     /**
@@ -25,12 +28,9 @@ $(function(){
     }
 
     ReadOnlyField.prototype.init=function(element){
-
+         // $('#'+element.id).
     };
 
-    ReadOnlyField.prototype.validate=function(element){
-
-    };
 
     /**
      *
