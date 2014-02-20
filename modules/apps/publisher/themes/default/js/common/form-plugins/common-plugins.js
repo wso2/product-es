@@ -28,7 +28,7 @@ $(function(){
     }
 
     ReadOnlyField.prototype.init=function(element){
-         // $('#'+element.id).
+          $('#'+element.id).attr('disabled',true);
     };
 
 
