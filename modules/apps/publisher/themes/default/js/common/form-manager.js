@@ -197,8 +197,10 @@ $(function () {
 
             if (plugin[action]) {
                 console.log('Element: ' + (elementMap.id || 'form') + 'action: ' + action + ' by plugin: ' + index);
-                result = plugin[action](elementMap) || {};
-                output.push(result);
+                result = plugin[action](elementMap);
+                if(result){
+                    output.push(result);
+                }
             }
 
         }

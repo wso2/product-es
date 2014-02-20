@@ -1,5 +1,4 @@
 <div class="content-div">
-
     <div class="row-fluid">
         <div class="span12 asset-view-container">
             <div class="widget wlightblue">
@@ -19,14 +18,14 @@
                                 {{#if this.isTextBox}}
                                 	{{#if isReadOnly}}
                                 		<input type="hidden" name='{{this.name}}' value='{{this.value}}'/>
-                                		<input id='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed" data-use-plugins="TextFieldValueExtractor,ReadOnlyField" {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
+                                		<input id='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed" data-use-plugins="TextFieldValueExtractor,ReadOnlyField" data-ready-only="{{this.isReadOnly}}"/>
                                 	{{else}}
-                                		<input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed"  data-use-plugins='RequiredField,PrintValueToConsole,TextFieldValueExtractor' data-ready-only='{{this.isReadOnly}}' data-required='{{this.isRequired}}' {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
+                                		<input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed"  data-use-plugins='RequiredField,TextFieldValueExtractor' data-ready-only='{{this.isReadOnly}}' data-required='{{this.isRequired}}' />
                                 	{{/if}}
                                     
                                 {{/if}}
                                 {{#if this.isOptions}}
-                                    <select id="{{this.name}}"  class="span8 selectpicker fm-managed" name='{{this.name}}' data-use-plugins="TextFieldValueExtractor,ReadOnlyField">
+                                    <select id="{{this.name}}"  class="span8 selectpicker fm-managed" name='{{this.name}}' data-use-plugins="TextFieldValueExtractor">
                                     {{#each this.valueList}}
                                         <option>{{this}}</option>
                                     {{/each}}
@@ -44,7 +43,7 @@
                                 				</div>
                                 				<div class="tbl-upload-cell">
                                 					<button class="btn btn-upload">Browse</button>
-                                   					<input class='fm-managed' id='{{this.name}}' type='file' name='{{this.name}}' data-use-plugins="DefaultFileUploadPlugin"/>
+                                   					<input class='fm-managed' id='{{this.name}}' type='file' name='{{this.name}}' data-use-plugins="DefaultFileUploadPlugin,RequiredField" data-required='{{this.isRequired}}'/>
                                 				</div>
                                 			</div>
                                 		</div>
@@ -53,9 +52,6 @@
                                 {{/if}}
                                 {{#if this.isOptionsText}}
                                     <div id="{{this.name}}" name='{{this.name}}' class="options-text" data-add-button="Add {{this.label}}" data-selected="" data-options="{{this.valueList}}" ></div>
-                                {{/if}}
-                               	{{#if this.isRequired}}
-                                <span class="label-required">*</span>
                                 {{/if}}
                             </div>
                         </div>

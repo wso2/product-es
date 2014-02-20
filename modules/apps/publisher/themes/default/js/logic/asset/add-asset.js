@@ -11,6 +11,16 @@ $(function () {
     formManager.init();
 
     $('#btn-create-asset').on('click', function () {
+        //Perform validations
+        var report=formManager.validate();
+
+        //Display the errors
+        if(report.failed){
+            var msg=processClientErrorReport(report.form.fields);
+            showAlert(msg,'error');
+            return;
+        }
+
         var formData = formManager.getFormData();//formManager.validate();
         postData(formData);
     });
@@ -26,6 +36,23 @@ $(function () {
 
             for (var item in report[index]) {
                 msg += report[index][item] + "<br>";
+            }
+        }
+
+        return msg;
+    }
+
+    /*
+     The function is used to build a report message indicating the errors in the form
+     @report: The report to be processed
+     @return: An html string containing the validation issues
+     */
+    var processClientErrorReport=function (report) {
+        var msg = '';
+        for (var index in report) {
+
+            for (var item in report[index]) {
+                msg += report[index][item].msg + "<br>";
             }
         }
 
