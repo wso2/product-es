@@ -1,5 +1,5 @@
 var PAGE_SIZE = 12;
-var API_URL = '/store/apis/';
+var API_URL = '/store/apis/v2/';
 
 var prefs = new gadgets.Prefs();
 var type = prefs.getString('type') || 'gadget';
@@ -36,7 +36,7 @@ jQuery.validator.addMethod("url2", function (value, element, param) {
 var toFade = [];
 var assets;
 var currantPage;
-var isMyAssetsShown = true;
+var isMyAssetsShown = false;
 var tabSwitched = false;
 var tagToBeLoaded = null;
 var queryToBeLoaded = null;
@@ -105,10 +105,7 @@ $(function () {
         assets[i] = null;
         if (asset) {
             $.ajax({
-                url: API_URL + 'asset/' + type,
-                data: {
-                    id: asset.path
-                },
+                url: API_URL + 'assets/' + type + '/' + asset.id,
                 success: function (data) {
                     var JqDiv = $(div);
                     JqDiv.html(assetTmpl(data));
@@ -146,7 +143,7 @@ $(function () {
     var loadPages = function (query, tag) {
         var data = query ? {query:query} : {};
         $.ajax({
-            url: API_URL + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'asset/' + type)),
+            url: API_URL + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'assets/' + type)) + '?start=0&count=100',
             data: data,
             success: function (data) {
                 toFade = [];

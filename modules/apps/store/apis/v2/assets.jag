@@ -71,19 +71,12 @@ require('/modules/store.js').exec(function (ctx) {
         }
     }
 
-    if (matcher.match('/{context}/apis/{version}/assets/{type}/{provider}/{+name}/{+ver}') ||
-            matcher.match('/{context}/apis/{version}/assets/{type}/{provider}/{+name}/{+ver}/')) {
+    if (matcher.match('/{context}/apis/{version}/assets/{type}/{id}') ||
+            matcher.match('/{context}/apis/{version}/assets/{type}/{id}/')) {
         elems = matcher.elements();
         type = elems.type;
         man = manager(type);
-        options = {
-            attributes: {
-                overview_name: elems.name,
-                overview_provider: elems.provider,
-                overview_version: elems.ver
-            }
-        };
-        asset = one(man, options);
+        asset = man.get(elems.id);
         if (!asset) {
             print({ error: "no matching asset found" });
             return;

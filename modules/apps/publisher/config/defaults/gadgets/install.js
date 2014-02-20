@@ -63,6 +63,10 @@ var installer = function () {
         artifact['attributes']['images_thumbnail'] = context.assetPath +context.bundle.getName()+ '/thumbnail.jpg';
         artifact['attributes']['images_banner'] = context.assetPath + context.bundle.getName()+'/banner.jpg';
         artifact['attributes']['overview_createdtime'] = now;
+        //TODO : fix following paths to have proper urls
+        log.info(context.bundle.getName() + ' >>>> ' + artifact.name);
+        artifact['attributes']['overview_dataformat'] = '/config/defaults/gadgets/' + context.bundle.getName() + '/datasource/data-format.json';
+        artifact['attributes']['overview_chartoptions'] = '/config/defaults/gadgets/' + context.bundle.getName() + '/config/chart-options.json';
 
 
 
