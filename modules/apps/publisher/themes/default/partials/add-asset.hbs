@@ -8,7 +8,7 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
-                    <form  class="form-horizontal" id="form-asset-create" action="/publisher/asset/gadget" method="POST" enctype="multipart/form-data" >
+                    <form  class="form-horizontal" id="form-asset-create" enctype="multipart/form-data" >
                         {{#each data.fields}}
                         <div class="control-group">
                             <b><label class="control-label">{{this.label}} 
@@ -19,21 +19,21 @@
                                 {{#if this.isTextBox}}
                                 	{{#if isReadOnly}}
                                 		<input type="hidden" name='{{this.name}}' value='{{this.value}}'/>
-                                		<input id='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed" {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
+                                		<input id='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed" data-use-plugins="TextFieldValueExtractor" {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
                                 	{{else}}
                                 		<input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed"  data-use-plugins='RequiredField,PrintValueToConsole,TextFieldValueExtractor' data-ready-only='{{this.isReadOnly}}' data-required='{{this.isRequired}}' {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
                                 	{{/if}}
                                     
                                 {{/if}}
                                 {{#if this.isOptions}}
-                                    <select id="{{this.name}}"  class="span8 selectpicker" name='{{this.name}}'>
+                                    <select id="{{this.name}}"  class="span8 selectpicker fm-managed" name='{{this.name}}' data-use-plugins="TextFieldValueExtractor">
                                     {{#each this.valueList}}
                                         <option>{{this}}</option>
                                     {{/each}}
                                     </select>
                                 {{/if}}
                                 {{#if this.isTextArea}}
-                                    <textarea id='{{this.name}}' value='{{this.value}}' class="span8" name='{{this.name}}'></textarea>
+                                    <textarea id='{{this.name}}' value='{{this.value}}' class="span8 fm-managed" name='{{this.name}}'data-use-plugins="TextFieldValueExtractor"></textarea>
                                 {{/if}}
                                 {{#if this.isFile}}
                                 	<div class="span8">
@@ -44,7 +44,7 @@
                                 				</div>
                                 				<div class="tbl-upload-cell">
                                 					<button class="btn btn-upload">Browse</button>
-                                   					<input class='fm-managed' id='{{this.name}}' type='file' name='{{this.name}}'/>
+                                   					<input class='fm-managed' id='{{this.name}}' type='file' name='{{this.name}}' data-use-plugins="DefaultFileUploadPlugin"/>
                                 				</div>
                                 			</div>
                                 		</div>
@@ -64,13 +64,13 @@
 						<div class="control-group">
 							<b><label class="control-label">Tags: </label></b>
 							<div class="controls">
-								<input type='text' id='tag-container' name='tag-container'>
+								<input type='text' id='tag-container' class='fm-managed' name='tag-container' data-field-name='tags' data-use-plugins="TagPlugin" data-tag-api='/publisher/api/tag/'>
 							</div>
 						</div>
 						
 						
                         <div id="saveButtons" class="form-actions">
-                        	<button id="btn-create-asset" class="btn btn-primary" name="addNewAssetButton">Create</button>
+                        	<input type='button' id="btn-create-asset" class="btn btn-primary" name="addNewAssetButton">Create</button>
                       		<button class="btn" type="reset">Reset</button>
 			                <input type="hidden" value="{{shortName}}" name="{{shortName}}" id="meta-asset-type">
                         </div>

@@ -60,19 +60,19 @@ $(function () {
     Manager.prototype.validate = function () {
         var validationReport = {};
         validationReport.form = {};
-        validationReport.failed=false;
+        validationReport.failed = false;
         validationReport.form.fields = {};
         validationReport.form.errors = invokePluginAction(this.formMap, PLUGIN_ACTION_VALIDATE);
-        var validationErrors=[];
+        var validationErrors = [];
 
         //Attempt to validate all fields
         for (var fieldName in this.fieldMap) {
-            validationErrors= invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_VALIDATE);
+            validationErrors = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_VALIDATE);
 
             //Only add to the report if there is a message
-            if(validationErrors.length>0){
-                validationReport.failed=true;
-                validationReport.form.fields[fieldName]=validationErrors;
+            if (validationErrors.length > 0) {
+                validationReport.failed = true;
+                validationReport.form.fields[fieldName] = validationErrors;
             }
         }
 
@@ -87,16 +87,58 @@ $(function () {
 
         var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA);
 
-        console.log(JSON.stringify(result));
+        data = formatData(data, result);
 
         for (var fieldName in this.fieldMap) {
             result = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_GET_DATA);
-
-            console.log(JSON.stringify(result));
+            data = formatData(data, result);
         }
 
         return data;
     };
+
+    /**
+     * The method returns a FormData object containing the data of all managed fields
+     * @returns A FormData object containing the information of the fields
+     */
+    Manager.prototype.getFormData = function () {
+        var data = this.getData();
+        var formData = new FormData();
+
+        for (var key in data) {
+            formData.append(key, data[key]);
+        }
+
+        return formData;
+    };
+
+    /**
+     * The function is used to format the data provided
+     * @param result
+     * @param data
+     */
+    var formatData = function (result, data) {
+        var elements = [];
+        var item;
+
+        //Check if the passed data is in the form of an array
+        if (data instanceof Array) {
+            elements = data;
+        }
+        else {
+            elements.push(data);
+        }
+
+        //Go through all elements in the data object
+        for (var index in elements) {
+            item = elements[index];
+            for (var key in item) {
+                result[key] = item[key];
+            }
+        }
+
+        return result;
+    }
 
     /**
      * The function takes an element (field or form) and then creates instances of
@@ -147,14 +189,14 @@ $(function () {
      */
     var invokePluginAction = function (elementMap, action) {
         var plugin;
-        var result={};
-        var output=[];
+        var result = {};
+        var output = [];
 
         for (var index in elementMap.plugins) {
             plugin = elementMap.plugins[index];
 
             if (plugin[action]) {
-                console.log('Element: ' + (elementMap.id||'form')+ 'action: '+action+' by plugin: ' + index);
+                console.log('Element: ' + (elementMap.id || 'form') + 'action: ' + action + ' by plugin: ' + index);
                 result = plugin[action](elementMap) || {};
                 output.push(result);
             }

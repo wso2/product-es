@@ -67,10 +67,20 @@ $(function(){
          })
     };
 
-    console.log('Installing plugins..');
+    function DefaultFileUploadPlugin(){
+
+    }
+
+    DefaultFileUploadPlugin.prototype.getData=function(element){
+       var file= $('#'+element.id).get('0').files[0];
+       var data={};
+        data[element.id]=file;
+        return data;
+    }
 
     FormManager.register('RequiredField',RequiredField);
     FormManager.register('ReadOnlyField',ReadOnlyField);
     FormManager.register('TextFieldValueExtractor',TextFieldValueExtractor);
     FormManager.register('PrintValueToConsole',PrintValueToConsole);
+    FormManager.register('DefaultFileUploadPlugin',DefaultFileUploadPlugin);
 });
