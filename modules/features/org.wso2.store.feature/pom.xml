@@ -106,25 +106,25 @@
                                     org.jaggeryjs.modules.markdown:${markdown.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.event:${event.feature.version}
+                                    org.wso2.store.modules.event:${event.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.login:${login.feature.version}
+                                    org.wso2.store.modules.login:${login.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.permission:${permission.feature.version}
+                                    org.wso2.store.modules.permission:${permission.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.registration:${registration.feature.version}
+                                    org.wso2.store.modules.registration:${registration.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.sso:${sso.feature.version}
+                                    org.wso2.store.modules.sso:${sso.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.store:${store.feature.version}
+                                    org.wso2.store.modules.store:${store.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.ues:${ues.feature.version}
+                                    org.wso2.store.modules.ues:${ues.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.registry.associations.dependencies:${carbon.platform.version}

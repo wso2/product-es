@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.store</groupId>
+        <groupId>org.wso2.store.modules</groupId>
         <artifactId>store-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -83,10 +83,10 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.store.store</id>
+                            <id>org.wso2.store.modules.store</id>
                             <propertiesFile>etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.store.event:${event.feature.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.store.modules.event:${event.feature.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

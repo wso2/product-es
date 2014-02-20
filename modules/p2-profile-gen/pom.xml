@@ -90,20 +90,19 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:caramel.feature:${caramel.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:event.feature:${event.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:event.feature:${event.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:login.feature:${login.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:login.feature:${login.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:permission.feature:${permission.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:permission.feature:${permission.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.store:registration.feature:${registration.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:registration.feature:${registration.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:sso.feature:${sso.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:sso.feature:${sso.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:store.feature:${store.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:store.feature:${store.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:ues.feature:${ues.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:ues.feature:${ues.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
                                 </featureArtifactDef>
@@ -261,31 +260,31 @@
                                     <version>${markdown.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.event.feature.group</id>
+                                    <id>org.wso2.store.modules.event.feature.group</id>
                                     <version>${event.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.login.feature.group</id>
+                                    <id>org.wso2.store.modules.login.feature.group</id>
                                     <version>${login.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.permission.feature.group</id>
+                                    <id>org.wso2.store.modules.permission.feature.group</id>
                                     <version>${permission.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.registration.feature.group</id>
+                                    <id>org.wso2.store.modules.registration.feature.group</id>
                                     <version>${registration.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.sso.feature.group</id>
+                                    <id>org.wso2.store.modules.sso.feature.group</id>
                                     <version>${sso.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.store.feature.group</id>
+                                    <id>org.wso2.store.modules.store.feature.group</id>
                                     <version>${store.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.ues.feature.group</id>
+                                    <id>org.wso2.store.modules.ues.feature.group</id>
                                     <version>${ues.feature.version}</version>
                                 </feature>
                                 <feature>
