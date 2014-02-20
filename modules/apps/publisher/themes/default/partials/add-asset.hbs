@@ -49,9 +49,9 @@
                                 {{#if this.isTextBox}}
                                 	{{#if isReadOnly}}
                                 		<input type="hidden" name='{{this.name}}' value='{{this.value}}'/>
-                                		<input id='{{this.name}}' type='text' value='{{this.value}}'  class="span8" {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
+                                		<input id='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed" {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
                                 	{{else}}
-                                		<input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}'  class="span8" {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
+                                		<input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed" data-ready-only='{{this.isReadOnly}}' data-required='{{this.isRequired}}' {{#if isReadOnly}} disabled="true" {{/if}} {{#if this.isRequired}} required{{/if}}/>
                                 	{{/if}}
                                     
                                 {{/if}}
