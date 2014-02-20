@@ -6,17 +6,21 @@
 var FormManager = {};
 
 
-var formManagerLogic = (function () {
+$(function () {
 
     var FORM_MANAGER_DIRECTIVE = '.fm-managed';
 
     var USE_PLUGINS = 'usePlugins';
     var PLUGIN_ACTION_VALIDATE = 'validate';
+    var PLUGIN_ACTION_ISHANDLED = 'isHandled';
+    var PLUGIN_ACTION_GET_DATA = 'getData';
+    var PLUGIN_ACTION_INIT = 'init';
 
+    var globalPlugins = {};
 
     function Manager(formId) {
         this.formId = formId;
-        this.pluginMap = {}; //The list of all the registered plugins
+        this.pluginMap = globalPlugins; //The list of all the registered plugins
         this.fieldMap = {};
         this.formMap = {};
 
@@ -31,8 +35,8 @@ var formManagerLogic = (function () {
      * Manager
      * @param plugin The plug-in to be registered
      */
-    Manager.prototype.register = function (name, plugin) {
-        plugin[name] = plugin;
+    var register = function (name, plugin) {
+        globalPlugins[name] = plugin;
     };
 
     /**
@@ -55,16 +59,43 @@ var formManagerLogic = (function () {
      */
     Manager.prototype.validate = function () {
         var validationReport = {};
-        validationReport.form={};
-        validationReport.form.fields={};
+        validationReport.form = {};
+        validationReport.failed=false;
+        validationReport.form.fields = {};
         validationReport.form.errors = invokePluginAction(this.formMap, PLUGIN_ACTION_VALIDATE);
+        var validationErrors=[];
 
         //Attempt to validate all fields
-        for(var fieldName in this.fieldMap){
-               validationReport.form.fields[fieldName]=invokePluginAction(this.fieldMap[fieldName],PLUGIN_ACTION_VALIDATE);
+        for (var fieldName in this.fieldMap) {
+            validationErrors= invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_VALIDATE);
+
+            //Only add to the report if there is a message
+            if(validationErrors.length>0){
+                validationReport.failed=true;
+                validationReport.form.fields[fieldName]=validationErrors;
+            }
         }
 
         return validationReport;
+    };
+
+    /**
+     * The method is used to extract data from all of the fields in the form into one object
+     */
+    Manager.prototype.getData = function () {
+        var data = {};
+
+        var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA);
+
+        console.log(JSON.stringify(result));
+
+        for (var fieldName in this.fieldMap) {
+            result = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_GET_DATA);
+
+            console.log(JSON.stringify(result));
+        }
+
+        return data;
     };
 
     /**
@@ -74,21 +105,35 @@ var formManagerLogic = (function () {
      * @param pluginMap The map of plugins available to the form manager
      */
     var initElement = function (elementMap, pluginMap) {
-        var pluginsToUse = elementMap.meta[USE_PLUGINS] || [];
+        var pluginsToUse = elementMap.meta[USE_PLUGINS] || '';
+        pluginsToUse = pluginsToUse.split(',');
         var plugins = getPlugins(pluginsToUse, pluginMap);
         var instance;
+        var isHandled = true;
 
+        console.log('Installing plugins for element: ' + elementMap.id);
         for (var index in plugins) {
             instance = new plugins[index]();
 
             //Check if the plugin can handle the element
-            if (instance.isHandled(elementMap)) {
-                instance.init(elementMap);
-                //Create an instance of the plugin for this element
-                elementMap.plugins(new plugins[index]());
+            if (instance[PLUGIN_ACTION_ISHANDLED]) {
+                isHandled = instance.isHandled(elementMap);
+            }
+
+            //Check if the element is handled
+            if (isHandled) {
+                console.log('Plugin: ' + index + ' applied to element: ' + elementMap.id);
+                //Check if there is an init method
+                if (instance[PLUGIN_ACTION_INIT]) {
+                    instance.init(elementMap);
+                    console.log('Plugin: ' + index + ' init method called');
+                }
+
+                //Add the plugin instance to the field
+                elementMap.plugins.push(instance);
             }
             else {
-                console.log('Plugin: ' + index + ' does not support the provided element');
+                console.log('Plugin: ' + index + ' does not support the provided element: ' + elementMap.id);
             }
         }
 
@@ -102,14 +147,14 @@ var formManagerLogic = (function () {
      */
     var invokePluginAction = function (elementMap, action) {
         var plugin;
-        var result;
-        var output;
+        var result={};
+        var output=[];
 
         for (var index in elementMap.plugins) {
             plugin = elementMap.plugins[index];
 
-            if (plugin.hasOwnProperty(action)) {
-                console.log('Element: ' + JSON.stringify(elementMap) + ' validated by plugin: ' + index);
+            if (plugin[action]) {
+                console.log('Element: ' + (elementMap.id||'form')+ 'action: '+action+' by plugin: ' + index);
                 result = plugin[action](elementMap) || {};
                 output.push(result);
             }
@@ -154,7 +199,11 @@ var formManagerLogic = (function () {
 
         for (var index in pluginNames) {
             name = pluginNames[index];
-            ref.push(plugins[name]);
+
+            if (plugins.hasOwnProperty(name)) {
+                ref.push(plugins[name]);
+            }
+
         }
 
         return ref;
@@ -195,5 +244,6 @@ var formManagerLogic = (function () {
 
 
     FormManager = Manager;
+    FormManager.register = register;
 
 }());
