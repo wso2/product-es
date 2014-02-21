@@ -151,12 +151,13 @@ $(function () {
         pluginsToUse = pluginsToUse.split(',');
         var plugins = getPlugins(pluginsToUse, pluginMap);
         var instance;
-        var isHandled = true;
+        var isHandled;
 
         console.log('Installing plugins for element: ' + elementMap.id);
         for (var index in plugins) {
-            instance = new plugins[index]();
 
+            instance = new plugins[index]();
+            isHandled=true;
             //Check if the plugin can handle the element
             if (instance[PLUGIN_ACTION_ISHANDLED]) {
                 isHandled = instance.isHandled(elementMap);
