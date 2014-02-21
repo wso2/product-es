@@ -106,7 +106,7 @@ $(function () {
 
     DatePickerPlugin.prototype.getData=function(element){
          var data={};
-         data[element.id]=element.value; //TODO: Change the returned value
+         data[element.id]=$('#'+element.id).val(); //TODO: Change the returned value
          return data;
     }
 
