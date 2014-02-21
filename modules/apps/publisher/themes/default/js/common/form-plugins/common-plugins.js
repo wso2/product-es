@@ -99,12 +99,14 @@ $(function () {
     }
 
     DatePickerPlugin.prototype.init=function(element){
-
+    	var e = '#' + element.id;
+    	var format = element.meta.dateFormat;
+    	$(e).datepick({dateFormat: format});
     };
 
     DatePickerPlugin.prototype.getData=function(element){
          var data={};
-         data[element.id]='2014-12-03'; //TODO: Change the returned value
+         data[element.id]=element.value; //TODO: Change the returned value
          return data;
     }
 
