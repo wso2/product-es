@@ -17,8 +17,8 @@ $(function () {
      * @param element
      * @returns True if the plug-in should be applied else false
      */
-    RequiredField.prototype.isHandled=function(element){
-        var isRequired=element.meta.required?element.meta.required:false;
+    RequiredField.prototype.isHandled = function (element) {
+        var isRequired = element.meta.required ? element.meta.required : false;
         return isRequired;
     };
 
@@ -87,16 +87,47 @@ $(function () {
         var data = {};
         data[element.id] = file;
         return data;
+    };
+
+    function FileUpdatePlugin() {
+
     }
+
+    FileUpdatePlugin.prototype.init = function (element) {
+        var isRequired = element.meta.required ? element.meta.required : false;
+        if (isRequired) {
+            $('#' + element.id).after('<span class="label-required">*</span>');
+            $('#' + element.id).attr('required', 'true');
+        }
+    }
+
+
+    /**
+     * The method will check if the user has uploaded a file,if not then the original file
+     * will be returned
+     * @param element The file element to be operated on
+     * @returns
+     */
+    FileUpdatePlugin.prototype.getData = function (element) {
+        var file = $('#' + element.id).get('0').files[0];
+        var data = {};
+        //Check if there is a file,if not set it to the original file
+        if (!file) {
+            file = element.meta.originalFile;
+        }
+        data[element.id] = file;
+        return data;
+    };
 
 
     /**
      * The DatePickPlugin is used to render date fields
      * @constructor
      */
-    function DatePickerPlugin(){
+    function DatePickerPlugin() {
 
     }
+
 
     DatePickerPlugin.prototype.init=function(element){
     	var e = '#' + element.id;
@@ -110,10 +141,23 @@ $(function () {
          return data;
     }
 
+    function FormMetaReader() {
+
+    }
+
+    FormMetaReader.prototype.init = function (element) {
+        var assetId = $('#' + element.id).data('assetId') || null;
+        var assetType = $('#' + element.id).data('assetType') || null;
+
+        element.meta.assetId = assetId;
+        element.meta.assetType = assetType;
+    }
+
     FormManager.register('RequiredField', RequiredField);
     FormManager.register('ReadOnlyField', ReadOnlyField);
     FormManager.register('TextFieldValueExtractor', TextFieldValueExtractor);
     FormManager.register('PrintValueToConsole', PrintValueToConsole);
     FormManager.register('DefaultFileUploadPlugin', DefaultFileUploadPlugin);
-    FormManager.register('DatePickerPlugin',DatePickerPlugin);
+    FormManager.register('DatePickerPlugin', DatePickerPlugin);
+    FormManager.register('FileUpdatePlugin', FileUpdatePlugin);
 });
