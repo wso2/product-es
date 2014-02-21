@@ -287,7 +287,6 @@ $(function () {
         formMap.fields = fieldMap;
     };
 
-
     FormManager = Manager;
     FormManager.register = register;
 

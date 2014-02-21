@@ -24,6 +24,10 @@
                                 	{{/if}}
                                     
                                 {{/if}}
+                                {{#if this.isDate}}
+                                        <input type='text' id='{{this.name}}' name='{{this.name}}' value='{{this.value}}' class='fm-managed' data-ready-only='{{this.isReadOnly}}' data-required="{{this.isRequired}}" data-use-plugins="RequiredField,DatePickerPlugin"
+                                                data-date-format='yy-mm-dd' >
+                                {{/if}}
                                 {{#if this.isOptions}}
                                     <select id="{{this.name}}"  class="span8 selectpicker fm-managed" name='{{this.name}}' data-use-plugins="TextFieldValueExtractor">
                                     {{#each this.valueList}}

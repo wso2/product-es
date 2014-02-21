@@ -89,9 +89,29 @@ $(function () {
         return data;
     }
 
+
+    /**
+     * The DatePickPlugin is used to render date fields
+     * @constructor
+     */
+    function DatePickerPlugin(){
+
+    }
+
+    DatePickerPlugin.prototype.init=function(element){
+
+    };
+
+    DatePickerPlugin.prototype.getData=function(element){
+         var data={};
+         data[element.id]='2014-12-03'; //TODO: Change the returned value
+         return data;
+    }
+
     FormManager.register('RequiredField', RequiredField);
     FormManager.register('ReadOnlyField', ReadOnlyField);
     FormManager.register('TextFieldValueExtractor', TextFieldValueExtractor);
     FormManager.register('PrintValueToConsole', PrintValueToConsole);
     FormManager.register('DefaultFileUploadPlugin', DefaultFileUploadPlugin);
+    FormManager.register('DatePickerPlugin',DatePickerPlugin);
 });
