@@ -99,7 +99,7 @@ $(function () {
             dataType:'json',
             success:function(response){
             },
-            error:function(){
+            error:function(e){
                 createMessage(MSG_CONTAINER,ERROR_CSS,'Unable to add the selected tag.');
             }
         });
