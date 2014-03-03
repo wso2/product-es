@@ -99,13 +99,15 @@
                                 {{/if}}
 
                                 {{#if this.isOptionsText}}
-                                <div id="{{this.name}}" name='{{this.name}}' class="options-text"
+                                <div id="{{this.name}}" name='{{this.name}}' class="options-text fm-managed"
                                      data-add-button="Add {{this.label}}" data-selected="{{this.value}}"
-                                     data-options="{{this.valueList}}"></div>
+                                     data-options="{{this.valueList}}"
+                                     data-use-plugins="OptionsText"></div>
                                 {{/if}}
 
                                 {{#if this.isUnboundTable}}
                                 {{>unbound-table this}}
+
                                 {{/if}}
 
                             </div>
