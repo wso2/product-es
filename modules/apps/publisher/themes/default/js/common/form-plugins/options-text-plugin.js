@@ -76,7 +76,7 @@ $(function () {
     };
 
     /**
-     * The function renders a single table row
+     * The function renders a single empty table row
      * @param table
      */
     var createNewOptionTableRow = function (table, element) {
@@ -84,6 +84,12 @@ $(function () {
         createRow(table, selectData, '');
     };
 
+    /**
+     * The function renders a row that has already been created.It obtains the data of the already created
+     * row from the selected data attribute
+     * @param table  The table in which the new row will be created
+     * @param element The field which is managed by the plugin
+     */
     var createExistingTableRow = function (table, element) {
         var data = getExistingRows(table, element);
         var selectionOptions = getDataForNewRow(element);
