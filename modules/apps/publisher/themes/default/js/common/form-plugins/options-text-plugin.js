@@ -30,7 +30,6 @@ $(function () {
     var compiledTextfieldLayout = Handlebars.compile(optionsTextfieldLayout);
 
     function OptionsText() {
-
     }
 
     /**
@@ -40,7 +39,6 @@ $(function () {
      */
     OptionsText.prototype.init = function (element) {
         var compiledTemplate = compiledOptionMasterLayout({id: element.id, addButtonName: element.meta.addButton});
-
 
         //Add the basic template
         $('#' + element.id).html(compiledTemplate);
@@ -55,7 +53,7 @@ $(function () {
         });
 
         //Add any rows for existing data
-        createExistingTableRow(table,element);
+        createExistingTableRow(table, element);
     };
 
 
@@ -82,51 +80,49 @@ $(function () {
      * @param table
      */
     var createNewOptionTableRow = function (table, element) {
-        /*var row = table.insertRow(-1);
-         var cellSelect = row.insertCell(CELL_INDEX_SELECT);
-         var cellText = row.insertCell(CELL_INDEX_TEXT);
-         var cellButton = row.insertCell(CELL_INDEX_BUTTON);      */
         var selectData = getDataForNewRow(element);
-
         createRow(table, selectData, '');
-
-        /*cellSelect.innerHTML = compiledSelectLayout(selectData);
-         cellText.innerHTML = compiledTextfieldLayout({selectedText: ''});
-         cellButton.innerHTML = compiledDeleteButtonLayout();
-
-         //Connect the delete button which will remove the current row
-         $(cellButton).on(BUTTON_ACTIVATE_EVENT, function (event) {
-         var rowIndex = event.currentTarget.parentNode.rowIndex;
-         var tableNode = event.currentTarget.parentNode.parentNode;
-
-         tableNode.deleteRow(rowIndex);
-         });*/
     };
 
-    var createExistingTableRow=function(table,element){
-         var data=getExistingRows(table,element);
-         var selectionOptions=getDataForNewRow(element);
+    var createExistingTableRow = function (table, element) {
+        var data = getExistingRows(table, element);
+        var selectionOptions = getDataForNewRow(element);
 
-         for(var index in data){
-             selectionOptions.selectedOption=data[index].selected;
-             createRow(table,selectionOptions,data[index].text);
-         }
+        for (var index in data) {
+            selectionOptions.selectedOption = data[index].selected;
+            createRow(table, selectionOptions, data[index].text);
+        }
     };
 
+    /**
+     * The function creates an object with all existing option text rows.
+     * The exisitng rows are read from the selected data attribute and should contain data in a csv list
+     * with each element been a key value pair (selection and text)
+     * @param table
+     * @param element
+     * @returns {Array}
+     */
     var getExistingRows = function (table, element) {
         var selected = element.meta.selected;
         selected = selected.split(',');
         var entry;
-        var data=[];
+        var data = [];
 
-        for(var index in selected){
-             entry=selected[index].split(':');
-             data.push({selected:entry[0],text:entry[1]});
+        for (var index in selected) {
+            entry = selected[index].split(':');
+            data.push({selected: entry[0], text: entry[1]});
         }
 
         return data;
     };
 
+    /**
+     * The function creates an empty row in the provided table and fills it with the
+     * data provided
+     * @param table The table in which the new row will be created
+     * @param selectData The select options
+     * @param selectText The text to be placed
+     */
     var createRow = function (table, selectData, selectText) {
         var row = table.insertRow(-1);
         var cellSelect = row.insertCell(CELL_INDEX_SELECT);
@@ -166,6 +162,11 @@ $(function () {
         return data;
     };
 
+    /**
+     * The function collects all user entered data into one object
+     * @param element
+     * @returns An array of strings containing the inputs for the rows as selection: text
+     */
     var getUserEnteredData = function (element) {
         var table = $(getTableId(element))[0];
         var row;
@@ -180,6 +181,11 @@ $(function () {
         return data.join(',');
     };
 
+    /**
+     * The function obtains all of the  user entered data for a given row
+     * @param row  A single row
+     * @returns A string representation of the contents of the row (e.g. form of selection: text)
+     */
     var getDataInRow = function (row) {
         var cellSelection = row.cells[CELL_INDEX_SELECT];
         var cellText = row.cells[CELL_INDEX_TEXT];
@@ -200,7 +206,7 @@ $(function () {
 
     /**
      * The function will obtain all of the values that have been selected by the user
-     * @returns {{}}
+     * @returns A data object containing the input of the user for the managed field
      */
     OptionsText.prototype.getData = function (element) {
         var data = {};
