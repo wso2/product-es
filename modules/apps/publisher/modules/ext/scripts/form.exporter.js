@@ -45,12 +45,17 @@ var module = function () {
      * An unbounded table is treated as one single field containing
      * @param table
      * @param fieldArray
-     * @param template
+     * @param template   The template used to render an asset
      */
     var addUnboundTable = function (table, fieldArray, template) {
         var tableTemplate=template.getTable(table.name);
         if (tableTemplate.maxoccurs == 'unbounded') {
             log.info('We have an unbounded table!');
+
+            var data={};
+            data['isUnboundTable']=true;
+            data['name']=table.name;
+            data['fields']=[];          //The fields contained with the unbounded table
         }
     };
 
