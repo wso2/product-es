@@ -40,10 +40,26 @@ var module = function () {
 
     };
 
+    /**
+     * The function is used to support unbounded tables
+     * An unbounded table is treated as one single field containing
+     * @param table
+     * @param fieldArray
+     * @param template
+     */
+    var addUnboundTable = function (table, fieldArray, template) {
+        var tableTemplate=template.getTable(table.name);
+        if (tableTemplate.maxoccurs == 'unbounded') {
+            log.info('We have an unbounded table!');
+        }
+    };
+
     /*
      * Go through each table and extract field data
      */
     function fillFields(table, fieldArray, template) {
+
+        addUnboundTable(table, fieldArray, template);
 
         //var username=obtainUserNameFromSession();
         //log.debug('logged in user: '+username);
@@ -73,7 +89,7 @@ var module = function () {
                 data['isTextArea'] = (fieldTemplate.type == 'text-area') ? true : false;
                 data['isOptions'] = (fieldTemplate.type == 'options') ? true : false;
                 data['isOptionsText'] = (fieldTemplate.type == 'option-text') ? true : false;
-                data['isDate']=(fieldTemplate.type=='date')?true:false;
+                data['isDate'] = (fieldTemplate.type == 'date') ? true : false;
 
                 data['isReadOnly'] = (fieldTemplate.meta.readOnly) ? fieldTemplate.meta.readOnly : false;
                 data['isEditable'] = (fieldTemplate.meta.editable) ? fieldTemplate.meta.editable : false;
@@ -83,7 +99,7 @@ var module = function () {
 
                 data['valueList'] = csvToArray(fieldTemplate.value || '');
 
-                buildOptionsObject(field,fieldTemplate,data);
+                buildOptionsObject(field, fieldTemplate, data);
 
                 fieldArray.push(data);
             }
