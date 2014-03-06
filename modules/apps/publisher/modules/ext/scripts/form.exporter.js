@@ -95,7 +95,11 @@ var module = function () {
             log.info('Composite: ' + stringify(data));
 
             fieldArray.push(data);
+
+            return true;
         }
+
+        return false;
     };
 
     /**
@@ -131,7 +135,10 @@ var module = function () {
      */
     function fillFields(table, fieldArray, template) {
 
-        addUnboundTable(table, fieldArray, template);
+        //Handle unbounded table seperately
+        if(addUnboundTable(table, fieldArray, template)){
+            return;
+        }
 
         //var username=obtainUserNameFromSession();
         //log.debug('logged in user: '+username);

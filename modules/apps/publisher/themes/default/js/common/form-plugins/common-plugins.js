@@ -139,7 +139,7 @@ $(function () {
          var data={};
          data[element.id]=$('#'+element.id).val(); //TODO: Change the returned value
          return data;
-    }
+    };
 
     function FormMetaReader() {
 
@@ -151,7 +151,27 @@ $(function () {
 
         element.meta.assetId = assetId;
         element.meta.assetType = assetType;
+    };
+
+    /**
+     * The function gathers normalizes the data from one multiple rows
+     * to a column level
+     * It collects all data from a row and organizes it based the column,
+     * @constructor
+     */
+    function UnboundDataCompiler(){
+
     }
+
+    UnboundDataCompiler.prototype.getData=function(element,data){
+        //Check in the data for property that matches the target
+
+        //If it exists then extract the data and delete it
+
+        //Place the data into a property with target
+
+    };
+
 
     FormManager.register('RequiredField', RequiredField);
     FormManager.register('ReadOnlyField', ReadOnlyField);
@@ -160,4 +180,5 @@ $(function () {
     FormManager.register('DefaultFileUploadPlugin', DefaultFileUploadPlugin);
     FormManager.register('DatePickerPlugin', DatePickerPlugin);
     FormManager.register('FileUpdatePlugin', FileUpdatePlugin);
+    FormManager.register('UnboundDataCompiler',UnboundDataCompiler);
 });

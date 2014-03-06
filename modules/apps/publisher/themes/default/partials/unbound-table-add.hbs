@@ -1,26 +1,33 @@
-{{dump .}}
- <table id='{{this.name}}' data-use-plugins="UnboundTablePlugin" data-columns="{{this.columnNames}}">
-     <thead>
-       {{#each this.columnLabels}}
-          <th>
-              {{this}}
-          </th>
-       {{/each}}
-     </thead>
-     <tbody>
-        <tr>
-            {{#each this.fields}}
-            <td>
-            <div class="control-group">
-                <div class="controls">
+<div id='{{this.name}}-controls'></div>
+<table id='{{this.name}}' class='table fm-managed' data-use-plugins="UnboundTablePlugin" data-columns="{{this.columnNames}}">
+
+    <thead>
+    {{#each this.columnLabels}}
+    <th>
+        {{this}}
+    </th>
+
+    {{/each}}
+    <!--Reserved for actions-->
+    <th></th>
+    </thead>
+    <tbody>
+    <tr>
+        {{#each this.fields}}
+        <td>
+            <div>
+                <div>
                     {{#if this.isTextBox}}
                     {{#if isReadOnly}}
                     <input type="hidden" name='{{this.name}}' value='{{this.value}}'/>
                     <input id='{{this.name}}' type='text' value='{{this.value}}' class="span8 fm-managed"
-                           data-use-plugins="TextFieldValueExtractor,ReadOnlyField" data-ready-only="{{this.isReadOnly}}"/>
+                           data-use-plugins="TextFieldValueExtractor,ReadOnlyField"
+                           data-ready-only="{{this.isReadOnly}}"/>
                     {{else}}
-                    <input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}' class="span8 fm-managed"
-                           data-use-plugins='RequiredField,TextFieldValueExtractor' data-ready-only='{{this.isReadOnly}}'
+                    <input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}'
+                           class="span8 fm-managed"
+                           data-use-plugins='RequiredField,TextFieldValueExtractor'
+                           data-ready-only='{{this.isReadOnly}}'
                            data-required='{{this.isRequired}}'/>
                     {{/if}}
 
@@ -62,13 +69,19 @@
                     </div>
                     {{/if}}
                     {{#if this.isOptionsText}}
-                    <div id="{{this.name}}" name='{{this.name}}' class="options-text" data-add-button="Add {{this.label}}"
+                    <div id="{{this.name}}" name='{{this.name}}' class="options-text"
+                         data-add-button="Add {{this.label}}"
                          data-selected="" data-options="{{this.valueList}}"></div>
                     {{/if}}
                 </div>
             </div>
-            {{/each}}
-            </td>
-        </tr>
-     </tbody>
- </table>
+        </td>
+        {{/each}}
+
+        <!--Reserved for any actions-->
+        <td>
+            Action!
+        </td>
+    </tr>
+    </tbody>
+</table>

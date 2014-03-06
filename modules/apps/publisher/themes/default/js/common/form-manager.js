@@ -85,12 +85,12 @@ $(function () {
     Manager.prototype.getData = function () {
         var data = {};
 
-        var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA);
+        var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA,data);
 
         data = formatData(data, result);
 
         for (var fieldName in this.fieldMap) {
-            result = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_GET_DATA);
+            result = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_GET_DATA,data);
             data = formatData(data, result);
         }
 
@@ -188,7 +188,7 @@ $(function () {
      * @param elementMap
      * @param action
      */
-    var invokePluginAction = function (elementMap, action) {
+    var invokePluginAction = function (elementMap, action,data) {
         var plugin;
         var result = {};
         var output = [];
@@ -198,7 +198,7 @@ $(function () {
 
             if (plugin[action]) {
                 console.log('Element: ' + (elementMap.id || 'form') + 'action: ' + action + ' by plugin: ' + index);
-                result = plugin[action](elementMap);
+                result = plugin[action](elementMap,data);
                 if(result){
                     output.push(result);
                 }
