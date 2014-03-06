@@ -10,10 +10,16 @@
                     <form  class="form-horizontal" id="form-asset-create" enctype="multipart/form-data" >
                         {{#each data.fields}}
                         <div class="control-group">
+
+                            <!--Support for unbounded tables-->
+                            {{#if this.isUnboundTable}}
+                                   This is an unbounded table!!
+                            {{else}}
                             <b><label class="control-label">{{this.label}} 
                             	
                                 :</label>
                             </b>
+                            {{/if}}
                             <div class="controls">
                                 {{#if this.isTextBox}}
                                 	{{#if isReadOnly}}
@@ -56,6 +62,9 @@
                                 {{/if}}
                                 {{#if this.isOptionsText}}
                                     <div id="{{this.name}}" name='{{this.name}}' class="options-text" data-add-button="Add {{this.label}}" data-selected="" data-options="{{this.valueList}}" ></div>
+                                {{/if}}
+                                {{#if this.isUnboundTable}}
+                                     {{>unbound-table-add this}}
                                 {{/if}}
                             </div>
                         </div>

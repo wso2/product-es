@@ -48,16 +48,83 @@ var module = function () {
      * @param template   The template used to render an asset
      */
     var addUnboundTable = function (table, fieldArray, template) {
-        var tableTemplate=template.getTable(table.name);
+        var tableTemplate = template.getTable(table.name);
+        var field;
+        var fieldTemplate;
+        var fieldToOutput;
+
         if (tableTemplate.maxoccurs == 'unbounded') {
             log.info('We have an unbounded table!');
 
-            var data={};
-            data['isUnboundTable']=true;
-            data['name']=table.name;
-            data['fields']=[];          //The fields contained with the unbounded table
+            var data = {};
+            data['isUnboundTable'] = true;
+            data['name'] = table.name;
+            data['fields'] = [];          //The fields contained with the unbounded table
+            data['isRequired'] = false;
+            data['isTextBox'] = false;
+            data['isTextArea'] = false;
+            data['isOptions'] = false;
+            data['isOptionsText'] = false;
+            data['isDate'] = false;
+
+            data['isReadOnly'] = false;
+            data['isEditable'] = true;
+            data['isFile'] = false;
+            data['columnLabels']=[];
+            data['columnNames']=[];
+
+
+            //Go through all the fields in the table
+            for (var key in table.fields) {
+
+                fieldToOutput={};
+                field = table.fields[key];
+                fieldTemplate = template.getField(table.name, field.name);
+
+                data.columnLabels.push(fieldTemplate.label);
+                data.columnNames.push(fieldTemplate.name);
+
+                log.info('Field: ' + stringify(field));
+                log.info('Field template: ' + stringify(fieldTemplate));
+
+                fillFieldToOutput(fieldToOutput, field, fieldTemplate, table);
+
+                data.fields.push(fieldToOutput);
+            }
+
+            log.info('Composite: ' + stringify(data));
+
+            fieldArray.push(data);
         }
     };
+
+    /**
+     * The function will create a composite data object based on a field template
+     * and a field instance.
+     * @param data  The object which will be the composite representation of the field and the field template
+     * @param field The field instance to be inspected
+     * @param fieldTemplate  The template of the field
+     */
+    var fillFieldToOutput = function (data, field, fieldTemplate, table) {
+        data['name'] = table.name + '_' + field.name;
+        data['label'] = (fieldTemplate.label) ? fieldTemplate.label : field.name;
+        data['isRequired'] = (fieldTemplate.required) ? true : false;
+        data['isTextBox'] = (fieldTemplate.type == 'text') ? true : false;
+        data['isTextArea'] = (fieldTemplate.type == 'text-area') ? true : false;
+        data['isOptions'] = (fieldTemplate.type == 'options') ? true : false;
+        data['isOptionsText'] = (fieldTemplate.type == 'option-text') ? true : false;
+        data['isDate'] = (fieldTemplate.type == 'date') ? true : false;
+
+        data['isReadOnly'] = (fieldTemplate.meta.readOnly) ? fieldTemplate.meta.readOnly : false;
+        data['isEditable'] = (fieldTemplate.meta.editable) ? fieldTemplate.meta.editable : false;
+        data['isFile'] = (fieldTemplate.type == 'file') ? true : false;
+
+        data['value'] = field.value;
+
+        data['valueList'] = csvToArray(fieldTemplate.value || '');
+
+        buildOptionsObject(field, fieldTemplate, data);
+    }
 
     /*
      * Go through each table and extract field data
