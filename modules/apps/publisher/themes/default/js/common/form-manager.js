@@ -146,6 +146,21 @@ $(function () {
         console.log(this.fieldMap);
     };
 
+    Manager.prototype.removeDynamicElement=function(domElement){
+        var fieldsToRemove=[];
+
+        $(domElement).find('.fm-managed').each(function(){
+            var fieldId=this.id;
+            fieldsToRemove.push(fieldId);
+        });
+
+        //Remove all properties for the given field id
+        for(var index in fieldsToRemove){
+            console.log('Removing field: '+fieldsToRemove[index]);
+            delete this.fieldMap[fieldsToRemove[index]];
+        }
+    };
+
     var addToFieldMap=function(newFields,fieldMap){
        for(var index in newFields){
            fieldMap[index]=newFields[index];

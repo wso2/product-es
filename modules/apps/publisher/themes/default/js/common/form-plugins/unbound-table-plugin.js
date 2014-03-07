@@ -61,8 +61,10 @@ $(function () {
                 alert('Delete clicked for new row');
 
                 var item = $(this)[0];
-                console.log(item.parentNode.parentNode);
-                table.deleteRow(item.parentNode);
+                $(item).closest('tr').remove();
+                PageFormContainer.getInstance().removeDynamicElement(item.parentNode.parentNode);
+                // console.log(item.parentNode.parentNode);
+                // table.deleteRow(item.parentNode);
             });
         }
     };
@@ -220,7 +222,7 @@ $(function () {
         var fieldName = getUnboundFieldName(key);
 
         //Add the index
-        return fieldName +UNBOUND_KEY+ index;
+        return fieldName + UNBOUND_KEY + index;
     };
 
     FormManager.register('UnboundTablePlugin', UnboundTablePlugin);
