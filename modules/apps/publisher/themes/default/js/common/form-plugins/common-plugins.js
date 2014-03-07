@@ -164,7 +164,7 @@ $(function () {
     }
 
     UnboundDataCompiler.prototype.getData = function (element, data) {
-        alert('Data compiler called');
+        //alert('Data compiler called');
 
         for (var key in data) {
             //If it is an unbounded field
