@@ -127,7 +127,7 @@ var module = function () {
                 var clonedField = cloneField(data.fields[fieldIndex]);
                 clonedField.value = fieldValue;
                 //Give a unique name so the name can be used as an id
-                clonedField.name = clonedField.name + '' + index;
+                clonedField.name = clonedField.name + 'ubField' + index;
                 fieldRow.push(clonedField);
             }
 
@@ -223,6 +223,7 @@ var module = function () {
         var fieldMap = [];
 
         for (var index in data.fields) {
+            data.fields[index].name=data.fields[index].name+'ubField0';
             fieldRow.push(data.fields[index]);
         }
 

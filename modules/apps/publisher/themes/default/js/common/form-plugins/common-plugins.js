@@ -129,16 +129,16 @@ $(function () {
     }
 
 
-    DatePickerPlugin.prototype.init=function(element){
-    	var e = '#' + element.id;
-    	var format = element.meta.dateFormat;
-    	$(e).datepick({dateFormat: format});
+    DatePickerPlugin.prototype.init = function (element) {
+        var e = '#' + element.id;
+        var format = element.meta.dateFormat;
+        $(e).datepick({dateFormat: format});
     };
 
-    DatePickerPlugin.prototype.getData=function(element){
-         var data={};
-         data[element.id]=$('#'+element.id).val(); //TODO: Change the returned value
-         return data;
+    DatePickerPlugin.prototype.getData = function (element) {
+        var data = {};
+        data[element.id] = $('#' + element.id).val(); //TODO: Change the returned value
+        return data;
     };
 
     function FormMetaReader() {
@@ -159,13 +159,56 @@ $(function () {
      * It collects all data from a row and organizes it based the column,
      * @constructor
      */
-    function UnboundDataCompiler(){
+    function UnboundDataCompiler() {
 
     }
 
-    UnboundDataCompiler.prototype.getData=function(element,data){
+    UnboundDataCompiler.prototype.getData = function (element, data) {
+        alert('Data compiler called');
 
+        for (var key in data) {
+            //If it is an unbounded field
+            if (isUnboundField(key)) {
+                var fieldName = getUnboundFieldName(key);
 
+                //Check if an entry exists
+                if (!data.hasOwnProperty(fieldName)) {
+                    data[fieldName] = [];
+                }
+
+                data[fieldName].push(data[key]);
+                delete data[key];
+            }
+        }
+
+        console.log(data);
+
+    };
+
+    var UNBOUND_KEY = 'ubField';
+
+    var getUnboundFieldName = function (key) {
+        //Check for the presence of the unbound identifier
+        if (key.indexOf(UNBOUND_KEY)<0) {
+            return key;
+        }
+
+        var removePoint = key.indexOf(UNBOUND_KEY);
+        var lengthToRemove = UNBOUND_KEY.length;
+
+        var newKey = key.substring(0, removePoint);
+        return newKey;
+    };
+
+    /**
+     * The function checks whether the key indicates an unbounded field
+     * @param key
+     */
+    var isUnboundField = function (key) {
+        if (key.indexOf(UNBOUND_KEY) >= 0) {
+            return true;
+        }
+        return false;
     };
 
 
@@ -176,5 +219,5 @@ $(function () {
     FormManager.register('DefaultFileUploadPlugin', DefaultFileUploadPlugin);
     FormManager.register('DatePickerPlugin', DatePickerPlugin);
     FormManager.register('FileUpdatePlugin', FileUpdatePlugin);
-    FormManager.register('UnboundDataCompiler',UnboundDataCompiler);
+    FormManager.register('UnboundDataCompiler', UnboundDataCompiler);
 });

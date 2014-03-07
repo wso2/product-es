@@ -85,14 +85,17 @@ $(function () {
     Manager.prototype.getData = function () {
         var data = {};
 
-        var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA,data);
-
-        data = formatData(data, result);
+       // var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA,data);
+       // data = formatData(data, result);
 
         for (var fieldName in this.fieldMap) {
             result = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_GET_DATA,data);
             data = formatData(data, result);
         }
+
+        //Invoke the form level plugins after the field level plugins
+        var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA,data);
+        data = formatData(data, result);
 
         return data;
     };

@@ -20,7 +20,7 @@ $(function () {
         var assetType=formManager.formMap.meta.assetType;
         var formData=formManager.getFormData();
 
-        updateAsset(assetId,assetType,formData);
+        //updateAsset(assetId,assetType,formData);
     });
 
     /*

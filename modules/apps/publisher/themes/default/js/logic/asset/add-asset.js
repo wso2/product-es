@@ -24,7 +24,7 @@ $(function () {
         }
 
         var formData = formManager.getFormData();//formManager.validate();
-        postData(formData);
+        //postData(formData);
     });
 
     /*
