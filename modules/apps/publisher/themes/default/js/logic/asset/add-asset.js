@@ -10,16 +10,18 @@ $(function () {
     //Initialize the plugins
     formManager.init();
 
+    PageFormContainer.setInstance(formManager);
+
     $('#btn-create-asset').on('click', function () {
 
         console.log(formManager.getData());
         //Perform validations
-        var report=formManager.validate();
+        var report = formManager.validate();
 
         //Display the errors
-        if(report.failed){
-            var msg=processClientErrorReport(report.form.fields);
-            showAlert(msg,'error');
+        if (report.failed) {
+            var msg = processClientErrorReport(report.form.fields);
+            showAlert(msg, 'error');
             return;
         }
 
@@ -32,7 +34,7 @@ $(function () {
      @report: The report to be processed
      @return: An html string containing the validation issues
      */
-    var processErrorReport=function (report) {
+    var processErrorReport = function (report) {
         var msg = '';
         for (var index in report) {
 
@@ -49,7 +51,7 @@ $(function () {
      @report: The report to be processed
      @return: An html string containing the validation issues
      */
-    var processClientErrorReport=function (report) {
+    var processClientErrorReport = function (report) {
         var msg = '';
         for (var index in report) {
 
@@ -71,12 +73,12 @@ $(function () {
         $.ajax({
             url: '/publisher/asset/' + type,
             type: 'POST',
-            processData:false,
-            contentType:false,
-            dataType:'json',
-            data:formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            data: formData,
             success: function (response) {
-                var result =response;
+                var result = response;
 
                 //Check if the asset was added
                 if (result.ok) {

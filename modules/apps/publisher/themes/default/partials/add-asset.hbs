@@ -7,13 +7,20 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
-                    <form  class="form-horizontal" id="form-asset-create" enctype="multipart/form-data" >
+                    <form  class="form-horizontal" id="form-asset-create" enctype="multipart/form-data" data-use-plugins="UnboundDataCompiler" >
                         {{#each data.fields}}
                         <div class="control-group">
-                            <b><label class="control-label">{{this.label}} 
-                            	
+
+                            <!--Support for unbounded tables-->
+                            {{#if this.isUnboundTable}}
+
+                            {{else}}
+                            <b><label class="control-label">{{this.label}}
+
                                 :</label>
                             </b>
+                            {{/if}}
+
                             <div class="controls">
                                 {{#if this.isTextBox}}
                                 	{{#if isReadOnly}}
@@ -22,7 +29,7 @@
                                 	{{else}}
                                 		<input id='{{this.name}}' name='{{this.name}}' type='text' value='{{this.value}}'  class="span8 fm-managed"  data-use-plugins='RequiredField,TextFieldValueExtractor' data-ready-only='{{this.isReadOnly}}' data-required='{{this.isRequired}}' />
                                 	{{/if}}
-                                    
+
                                 {{/if}}
                                 {{#if this.isDate}}
                                         <input type='text' id='{{this.name}}' name='{{this.name}}' value='{{this.value}}' class='fm-managed' data-ready-only='{{this.isReadOnly}}' data-required="{{this.isRequired}}" data-use-plugins="RequiredField,DatePickerPlugin"
@@ -51,11 +58,14 @@
                                 				</div>
                                 			</div>
                                 		</div>
-                                		
+
                                 	</div>
                                 {{/if}}
                                 {{#if this.isOptionsText}}
                                     <div id="{{this.name}}" name='{{this.name}}' class="options-text" data-add-button="Add {{this.label}}" data-selected="" data-options="{{this.valueList}}" ></div>
+                                {{/if}}
+                                {{#if this.isUnboundTable}}
+                                     {{>unbound-table this}}
                                 {{/if}}
                             </div>
                         </div>
@@ -67,8 +77,8 @@
 								<input type='text' id='tag-container' class='fm-managed' name='tag-container' data-field-name='tags' data-use-plugins="TagPlugin" data-tag-api='/publisher/api/tag/'>
 							</div>
 						</div>
-						
-						
+
+
                         <div id="saveButtons" class="form-actions">
                         	<input type='button' id="btn-create-asset" class="btn btn-primary" name="addNewAssetButton" value='{{t "Create"}}'>
                       		<button class="btn" type="reset">{{t "Reset"}}</button>
@@ -76,7 +86,7 @@
                         </div>
                     </form>
                 </div>
-             
+
             </div>
 	    </div>
     </div>
