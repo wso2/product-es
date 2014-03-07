@@ -164,11 +164,7 @@ $(function () {
     }
 
     UnboundDataCompiler.prototype.getData=function(element,data){
-        //Check in the data for property that matches the target
 
-        //If it exists then extract the data and delete it
-
-        //Place the data into a property with target
 
     };
 

@@ -44,23 +44,25 @@ $(function () {
                 $(getElementInCell(cell)).on('click', function () {
                     alert('Delete clicked');
 
-                    table.deleteRow(cell.parentNode);
+                    //table.deleteRow(cell.parentNode);
                 });
             }
         }
     };
 
     var populateDeleteButton = function (table, rowIndex) {
-        var cell=getCellAtXY(table,rowIndex,getDeleteButtonCellIndex(table));
+        var cell = getCellAtXY(table, rowIndex, getDeleteButtonCellIndex(table));
 
-        if(cell){
+        if (cell) {
             $(cell).html('');
             $(cell).html(deleteButtonTemplate);
 
-            $(getElementInCell(cell)).on('click',function(){
+            $(getElementInCell(cell)).on('click', function () {
                 alert('Delete clicked for new row');
 
-                table.deleteRow(cell.parentNode);
+                var item = $(this)[0];
+                console.log(item.parentNode.parentNode);
+                //table.deleteRow(item.parentNode);
             });
         }
     };
@@ -90,7 +92,7 @@ $(function () {
             //table.insertRow()
             $(table).append(clonedRow);
 
-            populateDeleteButton(table,table.rows.length-1);
+            populateDeleteButton(table, table.rows.length - 1);
 
             generateUniqueIdsForCellContents(table, clonedRow, table.rows.length);
         });
@@ -174,11 +176,11 @@ $(function () {
             var cell = row.cells[index];
             var element = getElementInCell(cell).children[0];
 
-            if ((element)&&(element.id)) {
+            if ((element) && (element.id)) {
                 var existingId = element.id;
-                element.value='';
+                element.value = '';
                 var justName = existingId.split(0, existingId.length - 1);
-                var newName=justName+'-'+key;
+                var newName = justName + '-' + key;
                 element.id = newName;
             }
 
