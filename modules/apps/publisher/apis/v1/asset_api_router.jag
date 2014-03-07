@@ -204,13 +204,15 @@ if(context.post['images_banner'] instanceof Array){
 
         dataInjector.inject(artifact,DataInjectorModes.DISPLAY);
 
+        log.info(request.getAllParameters());
+
         msg['ok']=true;
         msg['message']='asset updated';
         msg['asset']=artifact;
         print(msg);
 
     } catch (e) {
-        log.debug('The asset ' + id + ' could not be updated.The following exception was thrown: ' + e);
+        log.info('The asset ' + id + ' could not be updated.The following exception was thrown: ' + e);
         response.sendError(404, 'The asset ' + id + ' could not be updated.Please check the server logs.');
     }
 });

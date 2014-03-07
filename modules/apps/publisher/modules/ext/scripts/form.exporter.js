@@ -182,6 +182,10 @@ var module = function () {
         if (field.value instanceof Array) {
             count = field.value.length;
         }
+        else{
+            //Check if the value is a csv
+            count=field.value.split(',').length;
+        }
 
         return count;
     };
@@ -206,8 +210,16 @@ var module = function () {
             }
         }
         else {
-            //Normal field
-            result = field.value;
+            //Check if csv
+            var valueArray = field.value.split(',');
+
+            if(valueArray[index]){
+                result=valueArray[index];
+            }
+            else{
+                result=valueArray;
+            }
+
         }
 
         return result;
