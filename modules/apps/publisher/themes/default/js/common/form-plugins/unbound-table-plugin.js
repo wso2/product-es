@@ -50,8 +50,19 @@ $(function () {
         }
     };
 
-    var populateDeleteButton = function (table, row) {
+    var populateDeleteButton = function (table, rowIndex) {
+        var cell=getCellAtXY(table,rowIndex,getDeleteButtonCellIndex(table));
 
+        if(cell){
+            $(cell).html('');
+            $(cell).html(deleteButtonTemplate);
+
+            $(getElementInCell(cell)).on('click',function(){
+                alert('Delete clicked for new row');
+
+                table.deleteRow(cell.parentNode);
+            });
+        }
     };
 
     /**
@@ -79,7 +90,9 @@ $(function () {
             //table.insertRow()
             $(table).append(clonedRow);
 
-            generateUniqueIdsForCellContents(table, clonedRow, table.rows.length + 1);
+            populateDeleteButton(table,table.rows.length-1);
+
+            generateUniqueIdsForCellContents(table, clonedRow, table.rows.length);
         });
     };
 
@@ -104,7 +117,7 @@ $(function () {
     var getDeleteButtonCellIndex = function (table) {
 
         //Check if there are any cells
-        if ((table.rows) && (table.rows.cells)) {
+        if ((!table.rows) && (!table.rows[0].cells)) {
             console.log('Table is empty');
             return 0;
         }
