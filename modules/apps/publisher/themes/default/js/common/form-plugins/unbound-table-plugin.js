@@ -42,9 +42,10 @@ $(function () {
                 $(cell).html(deleteButtonTemplate);
 
                 $(getElementInCell(cell)).on('click', function () {
-                    alert('Delete clicked');
 
-                    //table.deleteRow(cell.parentNode);
+                   // var item = $(this)[0];
+                   // $(item).closest('tr').remove();
+                   // PageFormContainer.getInstance().removeDynamicElement(item.parentNode.parentNode);
                 });
             }
         }
