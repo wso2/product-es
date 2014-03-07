@@ -168,7 +168,7 @@ var module = function () {
     };
 
     /**
-     * The function inspects the value of a field to determine the number of invidual values it contains
+     * The function inspects the value of a field to determine the number of individual values it contains
      * @param field
      * @returns The number of values contained within the field
      */
