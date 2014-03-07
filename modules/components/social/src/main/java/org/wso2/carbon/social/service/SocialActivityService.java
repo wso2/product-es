@@ -15,7 +15,7 @@ public interface SocialActivityService {
 
     String publish(NativeObject activity);
 
-    String[] listActivities(String contextId);
+    String[] listActivities(String contextId, String tenant);
 
     double getRating(String targetId, String tenant);
 

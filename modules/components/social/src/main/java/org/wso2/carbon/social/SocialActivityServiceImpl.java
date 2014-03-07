@@ -24,8 +24,8 @@ public class SocialActivityServiceImpl implements SocialActivityService {
     }
 
     @Override
-    public String[] listActivities(String contextId) {
-        List<Activity> activities = activityBrowser.listActivitiesChronologically(contextId, null);
+    public String[] listActivities(String contextId, String tenant) {
+        List<Activity> activities = activityBrowser.listActivitiesChronologically(contextId, tenant);
         String[] serializedActivities = new String[activities.size()];
         for (int i = 0; i < activities.size(); i++) {
             serializedActivities[i] = activities.get(i).toString();
