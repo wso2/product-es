@@ -204,8 +204,6 @@ if(context.post['images_banner'] instanceof Array){
 
         dataInjector.inject(artifact,DataInjectorModes.DISPLAY);
 
-        log.info(request.getAllParameters());
-
         msg['ok']=true;
         msg['message']='asset updated';
         msg['asset']=artifact;

@@ -109,6 +109,10 @@ var module = function () {
         //var rows = data.fields[0].value.length;
         var rows = getFieldWithMostValues(data);
 
+        log.info('Date from artifact manager');
+        log.info(stringify(data.fields));
+        log.info('****************************');
+
         //If there are no rows then create an empty row
         if(rows==0){
             createEmptyRow(data);
@@ -211,6 +215,7 @@ var module = function () {
         }
         else {
             //Check if csv
+
             var valueArray = field.value.split(',');
 
             if(valueArray[index]){
