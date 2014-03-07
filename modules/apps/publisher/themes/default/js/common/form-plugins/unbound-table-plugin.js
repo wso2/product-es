@@ -22,7 +22,7 @@ $(function () {
         populateAddButton(table, element);
 
         //Add a delete button to each row
-        addDeleteButtons(table);
+        // addDeleteButtons(table);
     };
 
 
@@ -62,7 +62,7 @@ $(function () {
 
                 var item = $(this)[0];
                 console.log(item.parentNode.parentNode);
-                //table.deleteRow(item.parentNode);
+                table.deleteRow(item.parentNode);
             });
         }
     };
@@ -95,6 +95,8 @@ $(function () {
             populateDeleteButton(table, table.rows.length - 1);
 
             generateUniqueIdsForCellContents(table, clonedRow, table.rows.length);
+
+            PageFormContainer.getInstance().addDynamicElement(clonedRow);
         });
     };
 
@@ -179,12 +181,46 @@ $(function () {
             if ((element) && (element.id)) {
                 var existingId = element.id;
                 element.value = '';
-                var justName = existingId.split(0, existingId.length - 1);
-                var newName = justName + '-' + key;
-                element.id = newName;
+
+                element.id = createUnboundFieldName(existingId, key);
             }
 
         }
+    };
+
+    var UNBOUND_KEY = 'ubField';
+
+    var getUnboundFieldName = function (key) {
+        //Check for the presence of the unbound identifier
+        if (key.indexOf(UNBOUND_KEY) < 0) {
+            return key;
+        }
+
+        var removePoint = key.indexOf(UNBOUND_KEY);
+        var lengthToRemove = UNBOUND_KEY.length;
+
+        var newKey = key.substring(0, removePoint);
+        return newKey;
+    };
+
+    /**
+     * The function checks whether the key indicates an unbounded field
+     * @param key
+     */
+    var isUnboundField = function (key) {
+        if (key.indexOf(UNBOUND_KEY) >= 0) {
+            return true;
+        }
+        return false;
+    };
+
+    var createUnboundFieldName = function (key, index) {
+
+        //Extract the unbound field name
+        var fieldName = getUnboundFieldName(key);
+
+        //Add the index
+        return fieldName +UNBOUND_KEY+ index;
     };
 
     FormManager.register('UnboundTablePlugin', UnboundTablePlugin);

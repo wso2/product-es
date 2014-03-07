@@ -4,7 +4,7 @@
  * Created Date: 16/2/2014
  */
 var FormManager = {};
-
+var PageFormContainer = {};
 
 $(function () {
 
@@ -85,16 +85,16 @@ $(function () {
     Manager.prototype.getData = function () {
         var data = {};
 
-       // var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA,data);
-       // data = formatData(data, result);
+        // var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA,data);
+        // data = formatData(data, result);
 
         for (var fieldName in this.fieldMap) {
-            result = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_GET_DATA,data);
+            result = invokePluginAction(this.fieldMap[fieldName], PLUGIN_ACTION_GET_DATA, data);
             data = formatData(data, result);
         }
 
         //Invoke the form level plugins after the field level plugins
-        var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA,data);
+        var result = invokePluginAction(this.formMap, PLUGIN_ACTION_GET_DATA, data);
         data = formatData(data, result);
 
         return data;
@@ -113,6 +113,43 @@ $(function () {
         }
 
         return formData;
+    };
+
+    /**
+     * The function will allow a dynamic element to be added to the manager
+     * @param element The dynamic element to be added
+     */
+    Manager.prototype.addDynamicElement = function (domElement) {
+
+        var newFieldMap = {};
+
+        $(domElement).find('.fm-managed').each(function () {
+            var fieldId = this.id;
+            newFieldMap[fieldId] = {};
+            newFieldMap[fieldId].id = this.id;
+            newFieldMap[fieldId].name = this.name;
+            newFieldMap[fieldId].value = this.value || '';
+            newFieldMap[fieldId].meta = $('#' + fieldId).data() || {};
+            newFieldMap[fieldId].plugins = [];
+        });
+
+        console.log(newFieldMap);
+
+        //Initialize the plugins
+        for (var index in newFieldMap) {
+            initElement(newFieldMap[index], this.pluginMap);
+        }
+
+        //Add them to the field Map
+        addToFieldMap(newFieldMap,this.fieldMap);
+
+        console.log(this.fieldMap);
+    };
+
+    var addToFieldMap=function(newFields,fieldMap){
+       for(var index in newFields){
+           fieldMap[index]=newFields[index];
+       }
     };
 
     /**
@@ -160,7 +197,7 @@ $(function () {
         for (var index in plugins) {
 
             instance = new plugins[index]();
-            isHandled=true;
+            isHandled = true;
             //Check if the plugin can handle the element
             if (instance[PLUGIN_ACTION_ISHANDLED]) {
                 isHandled = instance.isHandled(elementMap);
@@ -191,7 +228,7 @@ $(function () {
      * @param elementMap
      * @param action
      */
-    var invokePluginAction = function (elementMap, action,data) {
+    var invokePluginAction = function (elementMap, action, data) {
         var plugin;
         var result = {};
         var output = [];
@@ -201,8 +238,8 @@ $(function () {
 
             if (plugin[action]) {
                 console.log('Element: ' + (elementMap.id || 'form') + 'action: ' + action + ' by plugin: ' + index);
-                result = plugin[action](elementMap,data);
-                if(result){
+                result = plugin[action](elementMap, data);
+                if (result) {
                     output.push(result);
                 }
             }
@@ -292,5 +329,15 @@ $(function () {
 
     FormManager = Manager;
     FormManager.register = register;
+
+    var formManagerInstance = null;
+
+    PageFormContainer.setInstance = function (instance) {
+        formManagerInstance = instance;
+    };
+
+    PageFormContainer.getInstance = function () {
+        return formManagerInstance;
+    };
 
 }());

@@ -3,6 +3,8 @@ $(function () {
 
     formManager.init();
 
+    PageFormContainer.setInstance(formManager);
+
     $('#editAssetButton').on('click', function () {
         var data = formManager.getData();
         var report = formManager.validate();
