@@ -11,11 +11,20 @@
                 </div>
                 <div class="widget-content">
                     <form class="form-horizontal" id='form-asset-edit' data-asset-id='{{this.artifact.id}}'
-                          data-asset-type='{{this.artifact.type}}' data-use-plugins="FormMetaReader,UnboundDataCompiler">
+                          data-asset-type='{{this.artifact.type}}'
+                          data-use-plugins="FormMetaReader,UnboundDataCompiler">
                         {{#each data.fields}}
 
                         <div class="control-group">
-                            <b><label class="control-label">{{this.label}}:</label></b>
+                            <!--Support for unbounded tables-->
+                            {{#if this.isUnboundTable}}
+
+                            {{else}}
+                            <b><label class="control-label">{{this.label}}
+
+                                :</label>
+                            </b>
+                            {{/if}}
 
                             <div class="controls">
 

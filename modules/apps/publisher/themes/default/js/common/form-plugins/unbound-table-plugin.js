@@ -2,7 +2,7 @@ $(function () {
 
     var ADD_BUTTON_ID = '-add-row';
     var addButtonTemplate = "<input class='btn' id='{{id}}-add-row' type='button' value='Add'>";
-    var deleteButtonTemplate = "<input class='btn btn-danger' type='button'  value='Delete'>";
+    var deleteButtonTemplate = "<input class='btn-danger' type='button'  value='Delete'>";
     var compiledButtonTemplate = Handlebars.compile(addButtonTemplate);
 
     var DELETE_BUTTON_CELL_OFFSET = 1;
@@ -22,7 +22,7 @@ $(function () {
         populateAddButton(table, element);
 
         //Add a delete button to each row
-        // addDeleteButtons(table);
+        addDeleteButtons(table);
     };
 
 
