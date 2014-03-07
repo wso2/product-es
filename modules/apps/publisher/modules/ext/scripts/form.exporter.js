@@ -54,8 +54,6 @@ var module = function () {
         var fieldToOutput;
 
         if (tableTemplate.maxoccurs == 'unbounded') {
-            log.info('We have an unbounded table!');
-
             var data = {};
             data['isUnboundTable'] = true;
             data['name'] = table.name;
@@ -84,15 +82,10 @@ var module = function () {
                 data.columnLabels.push(fieldTemplate.label);
                 data.columnNames.push(fieldTemplate.name);
 
-                log.info('Field: ' + stringify(field));
-                log.info('Field template: ' + stringify(fieldTemplate));
-
                 fillFieldToOutput(fieldToOutput, field, fieldTemplate, table);
 
                 data.fields.push(fieldToOutput);
             }
-
-            log.info('Composite: ' + stringify(data));
 
             create2DFields(data);
 
@@ -105,26 +98,35 @@ var module = function () {
     };
 
     /**
-     * The function creates a 2d map of the fields
+     * The function creates a 2d map of the fields so it can be rendered
+     * easily in a tabular form
      * @param data
      */
     var create2DFields = function (data) {
         var fieldMap = [];
         var fieldRow;
 
-        var rows = data.fields[0].value.length;
+        //var rows = data.fields[0].value.length;
+        var rows = getFieldWithMostValues(data);
 
-        log.info('Rows: ' + rows);
+        //If there are no rows then create an empty row
+        if(rows==0){
+            createEmptyRow(data);
+            return;
+        }
 
         for (var index = 0; index < rows; index++) {
+
             fieldRow = [];
 
+            //Populate a cloned field instance for each column of the row
             for (var fieldIndex in data.fields) {
-                log.info('Field index: '+fieldIndex);
 
-                var fieldValue = data.fields[fieldIndex].value[index];
+                //var fieldValue = data.fields[fieldIndex].value[index];
+                var fieldValue = getValueAtIndex(data.fields[fieldIndex], index);
                 var clonedField = cloneField(data.fields[fieldIndex]);
                 clonedField.value = fieldValue;
+                //Give a unique name so the name can be used as an id
                 clonedField.name = clonedField.name + '' + index;
                 fieldRow.push(clonedField);
             }
@@ -142,6 +144,92 @@ var module = function () {
         }
 
         return clone;
+    };
+
+    /**
+     * The function locates the field with the most number of values
+     * @param data
+     * @returns The field which has the most number of values,else the first field
+     */
+    var getFieldWithMostValues = function (data) {
+        var maxField = data.fields[0];
+        var numValues;
+        for (var index in data.fields) {
+
+            //All fields will contain atleast one value (including the empty fields)
+            numValues = getNumOfValues(data.fields[index]);
+
+            if (getNumOfValues(maxField) < numValues) {
+                maxField = data.fields[index];
+            }
+        }
+
+        return getNumOfValues(maxField);
+    };
+
+    /**
+     * The function inspects the value of a field to determine the number of invidual values it contains
+     * @param field
+     * @returns The number of values contained within the field
+     */
+    var getNumOfValues = function (field) {
+        var count = 0;
+
+        if (!field.value) {
+            return count;
+        }
+
+        if (field.value instanceof Array) {
+            count = field.value.length;
+        }
+
+        return count;
+    };
+
+    /**
+     * The function safely obtains a value at a given index of a field value.If the field is not
+     * an array then the immediate value is returned.If the field value is an array then the value
+     * at the provided index is returned after a boundary check
+     * @param field A field instance with a value
+     * @param index The index of the value in the value array
+     * @returns The value of the index at specified index if it is an array,else the immediate value of the field
+     */
+    var getValueAtIndex = function (field, index) {
+        var result = ''; //We return an empty value by default
+
+        //Check if the field value is an array
+        if (field.value instanceof Array) {
+
+            //Determine if the index is within the bounds of the array
+            if (field.value.length >= index) {
+                result = field.value[index];
+            }
+        }
+        else {
+            //Normal field
+            result = field.value;
+        }
+
+        return result;
+    };
+
+
+    /**
+     * The function creates an empty field row
+     * @param data
+     */
+    var createEmptyRow = function (data) {
+        var fieldRow = [];
+        var fieldMap = [];
+
+        for (var index in data.fields) {
+            fieldRow.push(data.fields[index]);
+        }
+
+        fieldMap.push(fieldRow);
+
+        data.fields = fieldMap;
+
     };
 
     /**
