@@ -19,7 +19,7 @@ $(function () {
         var table = $(getTableId(element))[0];
 
         //Add the add row button to the table
-        //populateAddButton(table,element);
+        populateAddButton(table, element);
 
         //Add a delete button to each row
         addDeleteButtons(table);
@@ -35,7 +35,7 @@ $(function () {
         for (var index = 1; index < table.rows.length; index++) {
 
             //Get the cell which will have the delete button
-            var cell = getCellAtXY(table,index,getDeleteButtonCellIndex(table));
+            var cell = getCellAtXY(table, index, getDeleteButtonCellIndex(table));
 
             //If the designated cell exists add the delete button
             if (cell) {
@@ -48,6 +48,10 @@ $(function () {
                 });
             }
         }
+    };
+
+    var populateDeleteButton = function (table, row) {
+
     };
 
     /**
@@ -64,15 +68,18 @@ $(function () {
 
             var table = getTable(element);
 
-            var row = table.rows[1];
+            var row = table.rows[2];
 
-            var clonedRow = $(row).clone();
+            var clonedRow = $(row).clone()[0];
 
-            populateDeleteButton(row);
+            //populateDeleteButton(row);
+
+            //table.insertRow(clonedRow);
 
             //table.insertRow()
             $(table).append(clonedRow);
 
+            generateUniqueIdsForCellContents(table, clonedRow, table.rows.length + 1);
         });
     };
 
@@ -97,7 +104,7 @@ $(function () {
     var getDeleteButtonCellIndex = function (table) {
 
         //Check if there are any cells
-        if ((table.rows)&&(table.rows.cells)) {
+        if ((table.rows) && (table.rows.cells)) {
             console.log('Table is empty');
             return 0;
         }
@@ -142,6 +149,28 @@ $(function () {
         return $(cell).children()[0];
     };
 
+
+    /**
+     * The function generates a unique id for each cell element in a row
+     * @param row
+     * @param index
+     */
+    var generateUniqueIdsForCellContents = function (table, row, key) {
+        //Get all cells
+        for (var index = 0; index < row.cells.length; index++) {
+            var cell = row.cells[index];
+            var element = getElementInCell(cell).children[0];
+
+            if ((element)&&(element.id)) {
+                var existingId = element.id;
+                element.value='';
+                var justName = existingId.split(0, existingId.length - 1);
+                var newName=justName+'-'+key;
+                element.id = newName;
+            }
+
+        }
+    };
 
     FormManager.register('UnboundTablePlugin', UnboundTablePlugin);
 }());

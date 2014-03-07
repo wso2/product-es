@@ -1,28 +1,34 @@
 <div id='{{this.name}}-controls'>
 
 </div>
-        {{dump .}}
+{{dump .}}
 <table id='{{this.name}}' class='table fm-managed' data-use-plugins="UnboundTablePlugin"
        data-columns="{{this.columnNames}}">
 
-    <thead>
-    {{#each this.columnLabels}}
-    <th>
-        {{this}}
-    </th>
-
-    {{/each}}
-
-    <th></th>
-    </thead>
-    <tbody>
-
-    {{#each this.fields}}
+    <!--Headings-->
     <tr>
+        {{#each this.columnLabels}}
+        <th>
+            {{this}}
+        </th>
+
+        {{/each}}
+
+        <th>
+            <!--An empty header for the actions-->
+        </th>
+    <tr>
+
+    <!--- Field rows-->
+
+        {{#each this.fields}}
+    <tr>
+
+        <!--Field columns-->
         {{#each this}}
         <td>
             <!--The field should be rendered here -->
-             {{> fields this}}
+            {{> fields this}}
         </td>
         {{/each}}
 
@@ -32,6 +38,6 @@
         </td>
     </tr>
     {{/each}}
-    </tbody>
+
 </table>
 
