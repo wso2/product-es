@@ -70,14 +70,14 @@ var module = function () {
             data['isReadOnly'] = false;
             data['isEditable'] = true;
             data['isFile'] = false;
-            data['columnLabels']=[];
-            data['columnNames']=[];
+            data['columnLabels'] = [];
+            data['columnNames'] = [];
 
 
             //Go through all the fields in the table
             for (var key in table.fields) {
 
-                fieldToOutput={};
+                fieldToOutput = {};
                 field = table.fields[key];
                 fieldTemplate = template.getField(table.name, field.name);
 
@@ -94,12 +94,54 @@ var module = function () {
 
             log.info('Composite: ' + stringify(data));
 
+            create2DFields(data);
+
             fieldArray.push(data);
 
             return true;
         }
 
         return false;
+    };
+
+    /**
+     * The function creates a 2d map of the fields
+     * @param data
+     */
+    var create2DFields = function (data) {
+        var fieldMap = [];
+        var fieldRow;
+
+        var rows = data.fields[0].value.length;
+
+        log.info('Rows: ' + rows);
+
+        for (var index = 0; index < rows; index++) {
+            fieldRow = [];
+
+            for (var fieldIndex in data.fields) {
+                log.info('Field index: '+fieldIndex);
+
+                var fieldValue = data.fields[fieldIndex].value[index];
+                var clonedField = cloneField(data.fields[fieldIndex]);
+                clonedField.value = fieldValue;
+                clonedField.name = clonedField.name + '' + index;
+                fieldRow.push(clonedField);
+            }
+
+            fieldMap.push(fieldRow);
+        }
+
+        data.fields = fieldMap;
+    };
+
+    var cloneField = function (field) {
+        var clone = {};
+        for (var key in field) {
+            clone[key] = field[key];
+        }
+
+        return clone;
     };
 
     /**
@@ -136,7 +178,7 @@ var module = function () {
     function fillFields(table, fieldArray, template) {
 
         //Handle unbounded table seperately
-        if(addUnboundTable(table, fieldArray, template)){
+        if (addUnboundTable(table, fieldArray, template)) {
             return;
         }
 
