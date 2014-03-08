@@ -27,7 +27,7 @@
     {{/if}}
     {{#if this.isTextArea}}
     <textarea id='{{this.name}}' value='{{this.value}}' class="span10 fm-managed" name='{{this.name}}'
-              data-use-plugins="TextFieldValueExtractor"></textarea>
+              data-use-plugins="TextFieldValueExtractor">{{this.value}}</textarea>
     {{/if}}
     {{#if this.isFile}}
     <div class="span8">
