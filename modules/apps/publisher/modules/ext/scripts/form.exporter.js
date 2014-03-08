@@ -276,7 +276,7 @@ var module = function () {
         data['valueList'] = csvToArray(fieldTemplate.value || '');
 
         buildOptionsObject(field, fieldTemplate, data);
-    }
+    };
 
     /*
      * Go through each table and extract field data
@@ -322,7 +322,9 @@ var module = function () {
                 data['isEditable'] = (fieldTemplate.meta.editable) ? fieldTemplate.meta.editable : false;
                 data['isFile'] = (fieldTemplate.type == 'file') ? true : false;
 
-                data['value'] = field.value;
+                log.info(field.name+' = '+stringify(field.value));
+
+                data['value'] = getNormalizedValue(field);//field.value;
 
                 data['valueList'] = csvToArray(fieldTemplate.value || '');
 
@@ -335,6 +337,17 @@ var module = function () {
 
         return fieldArray;
     }
+
+    var getNormalizedValue=function(field){
+        var value=field.value;
+
+        //Check if the value is an array
+        if(field.value instanceof Array){
+            value=field.value.join(',');
+        }
+
+        return value;
+    };
 
     /*
      The function obtains the currently logged in user from the session
