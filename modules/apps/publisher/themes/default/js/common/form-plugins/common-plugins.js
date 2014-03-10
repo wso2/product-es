@@ -106,7 +106,6 @@ $(function () {
      * The method will check if the user has uploaded a file,if not then the original file
      * will be returned
      * @param element The file element to be operated on
-     * @returns
      */
     FileUpdatePlugin.prototype.getData = function (element) {
         var file = $('#' + element.id).get('0').files[0];
@@ -153,6 +152,7 @@ $(function () {
         element.meta.assetType = assetType;
     };
 
+
     /**
      * The function gathers normalizes the data from one multiple rows
      * to a column level
@@ -162,6 +162,7 @@ $(function () {
     function UnboundDataCompiler() {
 
     }
+
 
     UnboundDataCompiler.prototype.getData = function (element, data) {
         //alert('Data compiler called');

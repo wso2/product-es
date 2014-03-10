@@ -27,7 +27,7 @@
     {{/if}}
     {{#if this.isTextArea}}
     <textarea id='{{this.name}}' value='{{this.value}}' class="span10 fm-managed" name='{{this.name}}'
-              data-use-plugins="TextFieldValueExtractor"></textarea>
+              data-use-plugins="TextFieldValueExtractor">{{this.value}}</textarea>
     {{/if}}
     {{#if this.isFile}}
     <div class="span8">
@@ -48,7 +48,9 @@
     </div>
     {{/if}}
     {{#if this.isOptionsText}}
-    <div id="{{this.name}}" name='{{this.name}}' class="options-text span10" data-add-button="Add {{this.label}}"
-         data-selected="" data-options="{{this.valueList}}"></div>
+    <div id="{{this.name}}" name='{{this.name}}' class="options-text fm-managed"
+         data-add-button="Add {{this.label}}" data-selected="{{this.value}}"
+         data-options="{{this.valueList}}"
+         data-use-plugins="OptionsText"></div>
     {{/if}}
 </div>
