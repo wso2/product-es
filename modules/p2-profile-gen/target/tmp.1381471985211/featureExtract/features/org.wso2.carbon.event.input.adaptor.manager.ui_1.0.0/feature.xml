@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.carbon.event.input.adaptor.manager.ui" label="WSO2 Carbon - Event Adaptor Manager UI Feature" provider-name="%providerName" version="1.0.0">
+  <description>This feature contains the bundles required for event.input adaptor manager functionality</description>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <plugin id="org.wso2.carbon.event.input.adaptor.manager.stub" unpack="false" version="1.0.0"/>
+  <plugin id="org.wso2.carbon.event.input.adaptor.manager.ui" unpack="false" version="1.0.0"/>
+  <require>
+    <import feature="org.wso2.carbon.core" match="equivalent" version="4.2.0"/>
+  </require>
+</feature>

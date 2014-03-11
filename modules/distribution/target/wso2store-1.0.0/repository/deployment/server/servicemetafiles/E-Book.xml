@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="E-Book" successfullyAdded="true">
+    <service name="E-Book" exposedAllTransports="false" serviceDeployedTime="1381473668628" successfullyAdded="true">
+        <operation name="getE-Book">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/ebook/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="updateE-Book">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/ebook/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="deleteE-Book">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/ebook/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="addE-Book">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/ebook/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getE-BookArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/ebook/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getE-BookDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/ebook/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="E-BookSoap12Binding">
+                <operation name="getE-Book"/>
+                <operation name="updateE-Book"/>
+                <operation name="deleteE-Book"/>
+                <operation name="addE-Book"/>
+                <operation name="getE-BookArtifactIDs"/>
+                <operation name="getE-BookDependencies"/>
+            </binding>
+            <binding name="E-BookSoap11Binding">
+                <operation name="getE-Book"/>
+                <operation name="updateE-Book"/>
+                <operation name="deleteE-Book"/>
+                <operation name="addE-Book"/>
+                <operation name="getE-BookArtifactIDs"/>
+                <operation name="getE-BookDependencies"/>
+            </binding>
+            <binding name="E-BookHttpBinding">
+                <operation name="getE-Book"/>
+                <operation name="updateE-Book"/>
+                <operation name="deleteE-Book"/>
+                <operation name="addE-Book"/>
+                <operation name="getE-BookArtifactIDs"/>
+                <operation name="getE-BookDependencies"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.2.0" type="engagedModules"/>
+        <module name="pagination" version="4.2.0" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

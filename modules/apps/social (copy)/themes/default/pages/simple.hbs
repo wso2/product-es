@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="{{url "/themes/default/css/bootstrap.min.css"}}" type="text/css" rel="stylesheet"/>
+		<link href="{{url "/themes/default/css/jquery.rating.css"}}" type="text/css" rel="stylesheet"/>
+		<link href="{{url "/themes/default/css/styles.css"}}" type="text/css" rel="stylesheet"/>
+		<link href="{{url "/themes/default/css/font-awesome.min.css"}}" rel="stylesheet">
+		<link href="{{url "/themes/default/css/font-awesome-ie7.min.css"}}" rel="stylesheet">
+		{{css .}}
+	</head>
+	<body>
+		<div class="container-fluid com-container">
+			{{include body}}
+			{{include stream}}
+		</div>
+		{{js .}}
+	</body>
+</html>

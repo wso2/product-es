@@ -1,39 +1,63 @@
-<div class="row com-add">
+<div class="row-fluid com-add">
 
-<!--
-	<div class="com-left">
-		<img class="img-avatar" src="{{url "/themes/default/img/avatar.png"}}">
-	</div>-->
+	<div class="span12 com-body-cont">
+		<ul class="nav nav-tabs" id="tabs-wall">
+			<li class="active">
+				<a href="#tab-review"><i class="icon icon-comment"></i> Review</a>
+			</li>
+			<li>
+				<a href="#tab-bug"><i class="icon icon-bug"></i> Bug</a>
+			</li>
+			<li>
+				<a href="#tab-question"><i class="icon icon-question-sign"></i> Question</a>
+			</li>
+			<li>
+				<a href="#tab-idea"><i class="icon icon-lightbulb"></i> Idea</a>
+			</li>
+		</ul>
 
-	<div class="com-body-cont">
-		<form method="post" id="com-form-post" />
-		<div class="clear com-body-wrapper">
-			<textarea id="com-body"></textarea>
-		</div>
-		<div class="row">
-			<div class="com-rating-user">
-				<span>Rate this asset</span>
-				<span class="user-rating" data-rating="2">
-					<input class="auto-submit-star" name="star2" type="radio" class="star"
-					value="1"/>
-					<input class="auto-submit-star" name="star2" type="radio" class="star"
-					value="2"/>
-					<input class="auto-submit-star" name="star2" type="radio" class="star"
-					value="3"/>
-					<input class="auto-submit-star" name="star2" type="radio" class="star"
-					value="4"/>
-					<input class="auto-submit-star" name="star2" type="radio" class="star"
-					value="5"/>
-				</span>
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab-review">
+				<form method="post" id="com-form-post">
+					<div class="row-fluid clear com-body-wrapper">
+						<textarea id="com-body" class="span12"></textarea>
+					</div>
+					<div class="row-fluid">
+						<div class="span6 com-rating-user">
+							<span>Rate this asset</span>
+							<span class="user-rating" data-rating="2">
+								<input class="auto-submit-star" name="star2" type="radio" class="star"
+								value="1"/>
+								<input class="auto-submit-star" name="star2" type="radio" class="star"
+								value="2"/>
+								<input class="auto-submit-star" name="star2" type="radio" class="star"
+								value="3"/>
+								<input class="auto-submit-star" name="star2" type="radio" class="star"
+								value="4"/>
+								<input class="auto-submit-star" name="star2" type="radio" class="star"
+								value="5"/>
+							</span>
+						</div>
+						<div class="span6 txt-right com-post-as">
+							<div class="com-alert"></div>
+							<button id="btn-post">
+								Post Review
+							</button>
+
+						</div>
+					</div>
+				</form>
 			</div>
-			<div class="txt-right com-post-as">
-				<div class="com-alert"></div>
-				<button id="btn-post">
-					Post Review
-				</button>
-
+			<div class="tab-pane" id="tab-bug">
+				...
+			</div>
+			<div class="tab-pane" id="tab-question">
+				...
+			</div>
+			<div class="tab-pane" id="tab-idea">
+				...
 			</div>
 		</div>
-		</form>
+
 	</div>
 </div>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="org.wso2.carbon.event.input.adaptor.manager.admin" successfullyAdded="true">
+    <service name="InputEventAdaptorManagerAdminService" serviceDocumentation="InputEventAdaptorManagerAdminService" exposedAllTransports="false" serviceDeployedTime="1381473667363" successfullyAdded="true">
+        <operation name="editInactiveInputEventAdaptorConfiguration">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getActiveInputEventAdaptorConfiguration">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="undeployActiveInputEventAdaptorConfiguration">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="undeployInactiveInputEventAdaptorConfiguration">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getAllActiveInputEventAdaptorConfiguration">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getInputEventAdaptorProperties">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="deployInputEventAdaptorConfiguration">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getAllInputEventAdaptorTypeNames">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="setStatisticsEnabled">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="editActiveInputEventAdaptorConfiguration">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="setTracingEnabled">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getInactiveInputEventAdaptorConfigurationContent">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getActiveInputEventAdaptorConfigurationContent">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getAllInactiveInputEventAdaptorConfigurationFile">
+            <parameter name="AuthorizationAction" locked="true">
+                /permission/admin/manage/eventAdaptorManager
+            </parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="InputEventAdaptorManagerAdminServiceSoap12Binding">
+                <operation name="editInactiveInputEventAdaptorConfiguration"/>
+                <operation name="undeployActiveInputEventAdaptorConfiguration"/>
+                <operation name="getActiveInputEventAdaptorConfiguration"/>
+                <operation name="undeployInactiveInputEventAdaptorConfiguration"/>
+                <operation name="getInputEventAdaptorProperties"/>
+                <operation name="getAllActiveInputEventAdaptorConfiguration"/>
+                <operation name="deployInputEventAdaptorConfiguration"/>
+                <operation name="getAllInputEventAdaptorTypeNames"/>
+                <operation name="setStatisticsEnabled"/>
+                <operation name="editActiveInputEventAdaptorConfiguration"/>
+                <operation name="getInactiveInputEventAdaptorConfigurationContent"/>
+                <operation name="setTracingEnabled"/>
+                <operation name="getActiveInputEventAdaptorConfigurationContent"/>
+                <operation name="getAllInactiveInputEventAdaptorConfigurationFile"/>
+            </binding>
+            <binding name="InputEventAdaptorManagerAdminServiceSoap11Binding">
+                <operation name="editInactiveInputEventAdaptorConfiguration"/>
+                <operation name="undeployActiveInputEventAdaptorConfiguration"/>
+                <operation name="getActiveInputEventAdaptorConfiguration"/>
+                <operation name="undeployInactiveInputEventAdaptorConfiguration"/>
+                <operation name="getInputEventAdaptorProperties"/>
+                <operation name="getAllActiveInputEventAdaptorConfiguration"/>
+                <operation name="deployInputEventAdaptorConfiguration"/>
+                <operation name="getAllInputEventAdaptorTypeNames"/>
+                <operation name="setStatisticsEnabled"/>
+                <operation name="editActiveInputEventAdaptorConfiguration"/>
+                <operation name="getInactiveInputEventAdaptorConfigurationContent"/>
+                <operation name="setTracingEnabled"/>
+                <operation name="getActiveInputEventAdaptorConfigurationContent"/>
+                <operation name="getAllInactiveInputEventAdaptorConfigurationFile"/>
+            </binding>
+            <binding name="InputEventAdaptorManagerAdminServiceHttpBinding">
+                <operation name="editInactiveInputEventAdaptorConfiguration"/>
+                <operation name="undeployActiveInputEventAdaptorConfiguration"/>
+                <operation name="getActiveInputEventAdaptorConfiguration"/>
+                <operation name="undeployInactiveInputEventAdaptorConfiguration"/>
+                <operation name="getInputEventAdaptorProperties"/>
+                <operation name="getAllActiveInputEventAdaptorConfiguration"/>
+                <operation name="deployInputEventAdaptorConfiguration"/>
+                <operation name="getAllInputEventAdaptorTypeNames"/>
+                <operation name="setStatisticsEnabled"/>
+                <operation name="editActiveInputEventAdaptorConfiguration"/>
+                <operation name="getInactiveInputEventAdaptorConfigurationContent"/>
+                <operation name="setTracingEnabled"/>
+                <operation name="getActiveInputEventAdaptorConfigurationContent"/>
+                <operation name="getAllInactiveInputEventAdaptorConfigurationFile"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.2.0" type="engagedModules"/>
+        <parameter name="adminService" locked="true">true</parameter>
+        <parameter name="ServiceClass" locked="false">
+            org.wso2.carbon.event.input.adaptor.manager.admin.internal.InputEventAdaptorManagerAdminService
+        </parameter>
+        <parameter name="AuthorizationAction" locked="false">
+            /permission/admin/manage/eventAdaptorManager
+        </parameter>
+        <parameter name="hiddenService" locked="true">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

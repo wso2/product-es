@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="Gadget" successfullyAdded="true">
+    <service name="Gadget" exposedAllTransports="false" serviceDeployedTime="1381473668731" successfullyAdded="true">
+        <operation name="updateGadget">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/gadget/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getGadgetArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/gadget/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getGadget">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/gadget/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="addGadget">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/gadget/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getGadgetDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/gadget/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="deleteGadget">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/gadget/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="GadgetHttpBinding">
+                <operation name="updateGadget"/>
+                <operation name="getGadgetArtifactIDs"/>
+                <operation name="getGadget"/>
+                <operation name="addGadget"/>
+                <operation name="getGadgetDependencies"/>
+                <operation name="deleteGadget"/>
+            </binding>
+            <binding name="GadgetSoap12Binding">
+                <operation name="updateGadget"/>
+                <operation name="getGadgetArtifactIDs"/>
+                <operation name="getGadget"/>
+                <operation name="addGadget"/>
+                <operation name="getGadgetDependencies"/>
+                <operation name="deleteGadget"/>
+            </binding>
+            <binding name="GadgetSoap11Binding">
+                <operation name="updateGadget"/>
+                <operation name="getGadgetArtifactIDs"/>
+                <operation name="getGadget"/>
+                <operation name="addGadget"/>
+                <operation name="getGadgetDependencies"/>
+                <operation name="deleteGadget"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.2.0" type="engagedModules"/>
+        <module name="pagination" version="4.2.0" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

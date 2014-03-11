@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="Site" successfullyAdded="true">
+    <service name="Site" exposedAllTransports="false" serviceDeployedTime="1381473669161" successfullyAdded="true">
+        <operation name="deleteSite">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/site/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getSiteDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/site/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getSiteArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/site/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="updateSite">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/site/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="addSite">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/site/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getSite">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/site/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="SiteSoap12Binding">
+                <operation name="deleteSite"/>
+                <operation name="getSiteDependencies"/>
+                <operation name="getSiteArtifactIDs"/>
+                <operation name="updateSite"/>
+                <operation name="addSite"/>
+                <operation name="getSite"/>
+            </binding>
+            <binding name="SiteSoap11Binding">
+                <operation name="deleteSite"/>
+                <operation name="getSiteDependencies"/>
+                <operation name="getSiteArtifactIDs"/>
+                <operation name="updateSite"/>
+                <operation name="addSite"/>
+                <operation name="getSite"/>
+            </binding>
+            <binding name="SiteHttpBinding">
+                <operation name="deleteSite"/>
+                <operation name="getSiteDependencies"/>
+                <operation name="getSiteArtifactIDs"/>
+                <operation name="updateSite"/>
+                <operation name="addSite"/>
+                <operation name="getSite"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.2.0" type="engagedModules"/>
+        <module name="pagination" version="4.2.0" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

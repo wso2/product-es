@@ -26,12 +26,7 @@ a, a:visited, a:active {
     color: #229A55;
     text-decoration: none;
 }
-.row {
-    clear: both;
-    /*  display: table-row;*/
-    position: relative;
-    margin-top: 8px;
-}
+
 .clear {
     clear: both;
     display: block;
@@ -63,8 +58,7 @@ button:hover {
     text-align: right;
 }
 .com-container {
-    display: table;
-    width: 100%;
+   
 }
 
 .com-add {
@@ -93,11 +87,8 @@ button:hover {
 #com-body {
     font-size: 14px;
     min-height: 80px;
-    width: 100%;
 }
-.com-body-wrapper {
-    padding-right: 7px;
-}
+
 .com-rating-user {
     float: left;
     width: 200px;
@@ -201,6 +192,9 @@ button:hover {
     margin-bottom: 20px;
     margin-top: 17px;
 }
+.com-sort ul{
+    margin-left:0;
+}
 .com-sort ul li {
     display: inline;
     margin-right: 7px;
@@ -223,27 +217,6 @@ button:hover {
     display: inline-block;
     margin-bottom: 4px;
     vertical-align: top;
-}
-.icon {
-    background: url('../img/sprite.png');
-    width: 16px;
-    height: 16px;
-    display: inline-block;
-}
-.icon-thumbs-up.selected{
-   background-position:-16px 0;
-}
-.icon-thumbs-down.selected{
-   background-position:-16px -26px;
-}
-.icon-thumbs-up {
-    background-position: -32px 0px;
-}
-.icon-thumbs-down {
-    background-position: -32px -26px;
-}
-.icon-flag {
-    background-position: 0px -52px;
 }
 
 .img-avatar {
@@ -293,4 +266,30 @@ button:hover {
 
 .com-sort-hidden{
     display:none;
+}
+
+#tabs-wall .icon-comment{
+    color:#F39C12;
+}
+#tabs-wall .icon-bug{
+    color:#E74C3C;
+}
+#tabs-wall .icon-question-sign{
+    color:#229A55;
+}
+#tabs-wall .icon-lightbulb{
+    color:#409EDD;
+}
+#tabs-wall li a{
+    color:#333;
+    text-transform:uppercase;
+    font-size: 12px;
+    font-weight:bold;
+    letter-spacing: .5px;
+}
+#tabs-wall li a.active{
+    background:#F7F9F9;
+}
+.tab-content{
+    background:#F7F9F9;
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.carbon.event.statistics" label="WSO2 Carbon - Event Statistics Feature" provider-name="%providerName" version="1.0.0">
+  <description>This feature contains the bundles required for Event Statistics functionality</description>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <includes id="org.wso2.carbon.event.statistics.server" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.statistics.ui" optional="false" version="1.0.0"/>
+</feature>

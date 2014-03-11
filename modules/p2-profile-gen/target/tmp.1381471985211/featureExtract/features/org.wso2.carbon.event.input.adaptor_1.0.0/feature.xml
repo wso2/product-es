@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.carbon.event.input.adaptor" label="WSO2 Carbon - Event Input Adaptor Aggregator Feature" provider-name="%providerName" version="1.0.0">
+  <description>This feature contains the bundles required Input event adaptor functionality</description>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <require>
+    <import feature="org.wso2.carbon.core" match="equivalent" version="4.2.0"/>
+  </require>
+  <includes id="org.wso2.carbon.event.input.adaptor.server" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.input.adaptor.jms.server" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.input.adaptor.email.server" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.input.adaptor.wsevent.local.server" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.input.adaptor.wsevent.server" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.input.adaptor.wso2event.server" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.input.adaptor.manager.ui" optional="false" version="1.0.0"/>
+  <includes id="org.wso2.carbon.event.input.adaptor.manager.server" optional="false" version="1.0.0"/>
+</feature>

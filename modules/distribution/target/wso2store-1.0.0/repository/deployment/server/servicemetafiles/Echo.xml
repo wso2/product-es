@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="Echo" hashValue="1ec8ae1cf8b3c9d7acc7c55e487d38a9" successfullyAdded="true">
+    <service name="echo" serviceDocumentation="echo" exposedAllTransports="false" serviceDeployedTime="1381473656965" successfullyAdded="true">
+        <operation name="echoStringArrays">
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="echoOMElement">
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="echoInt">
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="throwAxisFault">
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="echoString">
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="echoHttpBinding">
+                <operation name="echoStringArrays"/>
+                <operation name="echoOMElement"/>
+                <operation name="echoInt"/>
+                <operation name="throwAxisFault"/>
+                <operation name="echoString"/>
+            </binding>
+            <binding name="echoSoap11Binding">
+                <operation name="echoStringArrays"/>
+                <operation name="echoOMElement"/>
+                <operation name="echoInt"/>
+                <operation name="throwAxisFault"/>
+                <operation name="echoString"/>
+            </binding>
+            <binding name="echoSoap12Binding">
+                <operation name="echoStringArrays"/>
+                <operation name="echoOMElement"/>
+                <operation name="echoInt"/>
+                <operation name="throwAxisFault"/>
+                <operation name="echoString"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.2.0" type="engagedModules"/>
+        <parameter name="ServiceClass" locked="true">org.wso2.carbon.core.services.echo.Echo</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+        <association destinationPath="/repository/transports/http/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

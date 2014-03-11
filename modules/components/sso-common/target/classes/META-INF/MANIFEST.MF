@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1392979887648
+Build-Jdk: 1.6.0_32
+Built-By: praveena
+Bundle-Description: WSO2 Enterprise Store
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.wso2.store.sso.common
+Bundle-SymbolicName: org.wso2.store.sso.common
+Bundle-Version: 1.1.0
+Created-By: Apache Maven Bundle Plugin
+DynamicImport-Package: *
+Export-Package: org.wso2.store.sso.common.builders;uses:="org.wso2.store
+ .sso.common.util,org.joda.time,org.opensaml.xml,org.opensaml.saml2.core
+ ,org.opensaml.saml2.core.impl,org.opensaml.common,javax.xml.namespace";
+ version="1.1.0",org.wso2.store.sso.common.util;uses:="org.apache.common
+ s.logging,org.opensaml.xml.util,org.opensaml.xml.signature,javax.xml.pa
+ rsers,org.w3c.dom,javax.xml.namespace,org.w3c.dom.bootstrap,org.w3c.dom
+ .ls,org.wso2.carbon.utils.multitenancy,org.opensaml,org.wso2.carbon.cor
+ e.util,org.opensaml.xml.io,org.opensaml.saml2.core,org.opensaml.xml,org
+ .opensaml.xml.security.credential,org.opensaml.xml.security.x509,javax.
+ crypto";version="1.1.0",org.wso2.store.sso.common.constants;version="1.
+ 1.0"
+Import-Package: javax.crypto,javax.xml.namespace,javax.xml.parsers,org.a
+ pache.commons.logging;version="[1.1,2)",org.joda.time;version="[2.4,3)"
+ ,org.opensaml;version="[2.4,3)",org.opensaml.common;version="[2.4,3)",o
+ rg.opensaml.saml2.core;version="[2.4,3)",org.opensaml.saml2.core.impl;v
+ ersion="[2.4,3)",org.opensaml.xml;version="[2.4,3)",org.opensaml.xml.io
+ ;version="[2.4,3)",org.opensaml.xml.security.credential;version="[2.4,3
+ )",org.opensaml.xml.security.x509;version="[2.4,3)",org.opensaml.xml.si
+ gnature;version="[2.4,3)",org.opensaml.xml.util;version="[2.4,3)",org.w
+ 3c.dom,org.w3c.dom.bootstrap,org.w3c.dom.ls,org.wso2.carbon.core.util;v
+ ersion="[4.2,5)",org.wso2.carbon.utils.multitenancy;version="[4.2,5)"
+Tool: Bnd-1.50.0

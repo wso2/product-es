@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="Schema" successfullyAdded="true">
+    <service name="Schema" exposedAllTransports="false" serviceDeployedTime="1381473668946" successfullyAdded="true">
+        <operation name="deleteSchema">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/schema/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getSchema">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/schema/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getSchemaArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/schema/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="updateSchema">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/schema/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="addSchema">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/schema/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getSchemaDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/schema/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="SchemaSoap12Binding">
+                <operation name="deleteSchema"/>
+                <operation name="getSchema"/>
+                <operation name="getSchemaArtifactIDs"/>
+                <operation name="updateSchema"/>
+                <operation name="addSchema"/>
+                <operation name="getSchemaDependencies"/>
+            </binding>
+            <binding name="SchemaSoap11Binding">
+                <operation name="deleteSchema"/>
+                <operation name="getSchema"/>
+                <operation name="getSchemaArtifactIDs"/>
+                <operation name="updateSchema"/>
+                <operation name="addSchema"/>
+                <operation name="getSchemaDependencies"/>
+            </binding>
+            <binding name="SchemaHttpBinding">
+                <operation name="deleteSchema"/>
+                <operation name="getSchema"/>
+                <operation name="getSchemaArtifactIDs"/>
+                <operation name="updateSchema"/>
+                <operation name="addSchema"/>
+                <operation name="getSchemaDependencies"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.2.0" type="engagedModules"/>
+        <module name="pagination" version="4.2.0" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

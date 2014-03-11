@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="Policy" successfullyAdded="true">
+    <service name="Policy" exposedAllTransports="false" serviceDeployedTime="1381473668834" successfullyAdded="true">
+        <operation name="getPolicyArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/policy/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="updatePolicy">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/policy/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="deletePolicy">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/policy/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="addPolicy">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/policy/add</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getPolicyDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/policy/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <operation name="getPolicy">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/policy/list</parameter>
+            <module name="addressing" version="4.2.0" type="engagedModules"/>
+            <module name="pagination" version="4.2.0" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="PolicySoap11Binding">
+                <operation name="getPolicyArtifactIDs"/>
+                <operation name="updatePolicy"/>
+                <operation name="deletePolicy"/>
+                <operation name="addPolicy"/>
+                <operation name="getPolicyDependencies"/>
+                <operation name="getPolicy"/>
+            </binding>
+            <binding name="PolicySoap12Binding">
+                <operation name="getPolicyArtifactIDs"/>
+                <operation name="updatePolicy"/>
+                <operation name="deletePolicy"/>
+                <operation name="addPolicy"/>
+                <operation name="getPolicyDependencies"/>
+                <operation name="getPolicy"/>
+            </binding>
+            <binding name="PolicyHttpBinding">
+                <operation name="getPolicyArtifactIDs"/>
+                <operation name="updatePolicy"/>
+                <operation name="deletePolicy"/>
+                <operation name="addPolicy"/>
+                <operation name="getPolicyDependencies"/>
+                <operation name="getPolicy"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.2.0" type="engagedModules"/>
+        <module name="pagination" version="4.2.0" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>
