@@ -160,17 +160,32 @@ routeManager.register('DELETE','publisher','/publisher/api/lifecycle/checklistit
 });
 
 routeManager.register('PUT', 'publisher', '/publisher/api/lifecycle/{action}/{type}/{id}', function (context) {
+  var shortName = context.params.type;
+  var action = context.params.action;
+  var id = context.params.id;
+  var comment = context.content.comment;
 
-    var shortName = context.params.type;
-    var action = context.params.action;
-    var id = context.params.id;
+  var artifactManager = rxtManager.getArtifactManager(shortName);
 
-    var artifactManager = rxtManager.getArtifactManager(shortName);
+  var commentNeeded = require('/config/ext/' + shortName + '.json').behavior.lifecycle_change_comment_required === 'true';
 
+  if (!comment && commentNeeded) {
+    response.sendError(400, 'This change requires that you insert a comment');
+  } else {
     try {
         var artifact = artifactManager.get(id);
         log.debug('Calling promoteLifecycleState for action : '+action);
         artifactManager.promoteLifecycleState(action,artifact);
+
+        if(comment) {
+          var lcHistory = artifactManager.getLifecycleHistory(artifact);
+          var lcHistoryXML=new XML(lcHistory.content);
+          lcHistoryJSON=utility.xml.convertE4XtoJSON(lcHistoryXML);
+          var newChangeOrder = lcHistoryJSON.item[0].order;
+
+          require('/modules/comment.js').addLifecycleComment(artifactManager, id, comment, newChangeOrder);
+        }
+
         var msg={};
         msg['status']='ok';
         print(msg);
@@ -179,7 +194,7 @@ routeManager.register('PUT', 'publisher', '/publisher/api/lifecycle/{action}/{ty
         log.debug('The asset with id: '+id+' could not be found.The following exception was thrown: '+e);
         response.sendError(404,'The asset with id: '+id+' could not be found.Please refer to the server log.');
     }
-
+  }
 });
 
 /*
@@ -304,6 +319,7 @@ routeManager.register('GET','publisher','/publisher/api/lifecycle/information/hi
 
 
        var historyRes=artifactManager.getLifecycleHistory(artifact);
+       var historyComments=require('/modules/comment.js').getLifecycleComments(artifactManager, artifact);
 
        var json={};
 
@@ -314,6 +330,11 @@ routeManager.register('GET','publisher','/publisher/api/lifecycle/information/hi
            json=utility.xml.convertE4XtoJSON(xml);
 
        }
+
+      // attach comments to history items if they exist
+      json.item.forEach(function(item) {
+        item.comment = historyComments[item.order] || ''
+      });
 
        print(json);
 
