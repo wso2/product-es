@@ -1,39 +1,43 @@
+<a href="#" id="search-dropdown-arrow"><i class="icon-sort-down"></i></a>
+<input type="text" class="span12" id="search" placeholder="Search">
+<a id="search-button" class=""> <i class="icon-search"></i> </a>
+<!-- dropdown -->
+<div id="search-dropdown-cont">
+    <a href="#" id="search-dropdown-close"><i class="icon-remove"></i></a>
 
-					<a href="#" id="search-dropdown-arrow"><i class="icon-sort-down"></i></a>
-					<input type="text" class="span12" id="search" placeholder="Search">
-					<a id="search-button" class=""> <i class="icon-search"></i> </a>
+    <!--
+    <label>Label 1</label>
+    <input type="text" class="span12" class="search-dropdown-inp" placeholder="Author">-->
 
-					<!-- dropdown -->
-					<div id="search-dropdown-cont">
-						<a href="#" id="search-dropdown-close"><i class="icon-remove"></i></a>
+    {{#if isTopAssets}}
+    {{#each search.searchFields}}
+    {{#if this.search}}
+    {{>search-field this}}
+    <!--
+    <div>
+        <label>{{field_label}}</label>
+        <input type="text" class="span12" id="{{field_name}}" name="{{field_name}}" placeholder="">
+    </div>
+    -->
+    {{/if}}
+    {{/each}}
 
-						<!--
-						<label>Label 1</label>
-						<input type="text" class="span12" class="search-dropdown-inp" placeholder="Author">-->
+    {{else}}
+    {{#each search.searchFields}}
+    {{> search-field this}}
+    <!--
+    <div>
+        <label>{{field_label}}</label>
+        <input type="text" class="span12" id="{{field_name}}" name="{{field_name}}" placeholder="">
+    </div>
+    -->
+    {{/each}}
 
-						{{#if isTopAssets}}
-						{{#each search.searchFields}}
-						{{#if this.search}}
-						<div>
-							<label>{{field_label}}</label>
-							<input type="text" class="span12" id="{{field_name}}" name="{{field_name}}" placeholder="">
-						</div>
-						{{/if}}
-						{{/each}}
+    {{/if}}
 
-						{{else}}
-						{{#each search.searchFields}}
-						<div>
-							<label>{{field_label}}</label>
-							<input type="text" class="span12" id="{{field_name}}" name="{{field_name}}" placeholder="">
-						</div>
-						{{/each}}
+    <button id="search-button2" class="btn span3">
+        <i class="icon-search"></i>
+    </button>
 
-						{{/if}}
-
-						<button id="search-button2" class="btn span3">
-							<i class="icon-search"></i>
-						</button>
-
-					</div>
+</div>
 				

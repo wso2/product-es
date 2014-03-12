@@ -114,9 +114,9 @@ $(function () {
      };
      */
 
-	var buildParams = function(query) {
-	    return 'query=' + query;
-	};
+    var buildParams = function (query) {
+        return 'query=' + query;
+    };
 
     var search = function () {
         var url, searchVal = $('#search').val();
@@ -193,19 +193,19 @@ $(function () {
         }
 
     })
-    .click(function(e){
-            $(this).animate({width:'500px'}, 100);
+        .click(function (e) {
+            $(this).animate({width: '500px'}, 100);
             e.stopPropagation();
         })
-    /*
-    .blur(function(){
-             $(this).animate({width:'100%'});
-        })*/
-    
+        /*
+         .blur(function(){
+         $(this).animate({width:'100%'});
+         })*/
+
     ;
-    
-    $(document).click(function(){
-    	 $('#search').animate({width:'100%'});
+
+    $(document).click(function () {
+        $('#search').animate({width: '100%'});
     });
     /*
      $('#search').blur(function(){
@@ -281,11 +281,11 @@ $(function () {
         e.stopPropagation();
     });
 
-	 $('#search-dropdown-cont').find('input').keypress(function(e){
-	 	if(e.keyCode == 13){
-	 		$('#search-button2').trigger('click');
-	 	}
-	 });
+    $('#search-dropdown-cont').find('input').keypress(function (e) {
+        if (e.keyCode == 13) {
+            $('#search-button2').trigger('click');
+        }
+    });
     /*
      $('#search').keypress(function (e) {
      if (e.keyCode === 13) {
@@ -352,31 +352,59 @@ $(function () {
 
         $('#search-dropdown-cont').children('div').each(function () {
             var $this = $(this);
-            if ($('#search').val().length > 0) {
-                if ($this.find('input').val().length > 0) {
-                    $('#search').val($('#search').val() + ' ' + $this.find('input').attr('name') + ':"' + $this.find('input').val() + '"');
+            var data=getValue($this);
+            if (data.value.length > 0) {
+                if (data.value.length > 0) {
+                    $('#search').val($('#search').val() + ' ' + data.name + ':"' + data.value + '"');
                 }
             } else {
-                if ($this.find('input').val().length > 0) {
-                    $('#search').val($this.find('input').attr('name') + ':"' + $this.find('input').val() + '"');
+                if (data.value.length > 0) {
+                    $('#search').val(data.name + ':"' + data.value + '"');
                 }
             }
 
         });
 
-    }
+    };
+
+    /**
+     * The function obtains the value of a field given form regardless of whether
+     * it is an input field or a select field
+     * @param element The jquery element which encapsulates the elemnt in which the
+     * input field resides
+     *
+     */
+    var getValue = function (element) {
+        var field = $(element).find('input'); //Try locate an input field
+        var data = {};
+        data.value = '';
+
+
+        //If there is no input field check for a select
+        if (!field[0]) {
+            field = $(element).find('select');
+        }
+
+        //Check if a field exists  and obtain the value
+        if (field) {
+            data.name=field.attr('name');
+            data.value = field.val();
+        }
+
+        return data;
+    };
 
     $('#search-button2').click(function () {
         $('#search').val('');
-        
+
         makeQuery();
         if ($('#search').val() == '') return;
         search();
         $('#search-dropdown-cont input').val('');
         return false;
     });
-    
+
     $('#container-search').affix({
-       offset: { top: $('.navbar').offset().top + 80}
-   });
+        offset: { top: $('.navbar').offset().top + 80}
+    });
 });
