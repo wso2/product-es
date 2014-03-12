@@ -190,37 +190,44 @@ $(function() {
 	 lifecycle button
 	 @action: The action for the button
 	 */
-	function buttonClickLogic(action) {
-		$.ajax({
-			url : '/publisher/api/lifecycle/' + action + '/' + asset + '/' + id,
-			type : 'PUT',
-			success : function(response) {
-				var actionName = action.toLowerCase();
-				actionName += 'd';
-				showAlert('Asset was ' + actionName + ' successfully.', 'success');
-				$.ajax({
-					url : '/publisher/api/lifecycle/' + asset + '/' + id,
-					type : 'GET',
-					success : function(response) {
-						//Convert the response to a JSON object
-						var statInfo = JSON.parse(response);
+	function buttonClickLogic(action, comment) {
+      $.ajax({
+        url : '/publisher/api/lifecycle/' + action + '/' + asset + '/' + id,
+        type : 'PUT',
+        data: JSON.stringify({'comment': comment}),
+        contentType: 'application/json',
 
-						$('#state').html(statInfo.state);
-						$('#view-lifecyclestate').html(statInfo.state);
-						//disableActions(statInfo.actions);
-						buildCheckList(asset, id);
-						buildLCGraph();
-						buildHistory(asset, id);
-					},
-					error : function(response) {
-						$('#state').html('Error obtaining life-cycle state of asset.');
-					}
-				});
-			},
-			error : function(response) {
-				showAlert(action + ' operation failed', 'error');
-			}
-		});
+        success : function(response) {
+          var actionName = action.toLowerCase();
+          actionName += 'd';
+          showAlert('Asset was ' + actionName + ' successfully.', 'success');
+          $.ajax({
+            url : '/publisher/api/lifecycle/' + asset + '/' + id,
+            type : 'GET',
+            success : function(response) {
+              //Convert the response to a JSON object
+              var statInfo = JSON.parse(response);
+
+              $('#state').html(statInfo.state);
+              $('#view-lifecyclestate').html(statInfo.state);
+              //disableActions(statInfo.actions);
+              buildCheckList(asset, id);
+              buildLCGraph();
+              buildHistory(asset, id);
+            },
+            error : function(response) {
+              $('#state').html('Error obtaining life-cycle state of asset.');
+            }
+          });
+        },
+        error : function(response) {
+          if(response.status === 400) {
+            showAlert('You need to insert a comment for this change.', 'error');
+          } else {
+            showAlert(action + ' operation failed', 'error');
+          }
+        }
+      });
 	}
 
 	/*
@@ -262,19 +269,29 @@ $(function() {
 		window.changeState = function(className){
 			var thisState = className;
 				if (isClickable(thisState)) {
-					//console.log(getAction(thisState));
-					var action = getAction(thisState);
-					//alert(action);
-					buttonClickLogic(action);
+          $('#commentModal').data('state', thisState).modal('show');
 				} else {
 					showAlert('Invalid operation', 'error');
 				}
 		}
-		
-		$('circle').click(function(e) {
-			changeState($(this).attr('class'));
-		});
-	}
+  }
+
+	$('circle').click(function(e) {
+		changeState($(this).attr('class'));
+	});
+
+  $('#commentModalSave').click(function (e) {
+    e.preventDefault();
+    $('#commentModal').modal('hide');
+
+    var thisState = $('#commentModal').data('state');
+    var action = getAction(thisState);
+
+    var comment = $('#commentModalText').val();
+    $('#commentModalText').val('');
+
+    buttonClickLogic(action, comment);
+  });
 
 	/*
 	 The function is used to build the representation of the check list.
@@ -349,7 +366,9 @@ $(function() {
 		for (var itemIndex in items) {
 			output += '<tr>';
 			output += '<td><span class="dateFull"> ' + items[itemIndex].timestamp + '</span></td>';
-			output += '<td><b>' + items[itemIndex].user + '</b> changed the asset from ' + items[itemIndex].state + ' to ' + items[itemIndex].targetState + '</td>';
+			output += '<td><b>' + items[itemIndex].user + '</b> changed the asset from ' + items[itemIndex].state + ' to ' + items[itemIndex].targetState;
+      output += items[itemIndex].comment ? '<blockquote>' + items[itemIndex].comment + '</blockquote>' : '';
+      output += '</td>'
 			output += '</tr>';
 		}
 
@@ -428,7 +447,7 @@ $(function() {
 		//var curState = $('circle[data-currentstate=true]').attr('class');
 		//var curState = 'Published';
 		var curState = $('#state').text();
-		
+
 		var rawMap = sugyama.getRawMap();
 		if (rawMap[curState][state] == 1) {
 			return true;
@@ -436,14 +455,14 @@ $(function() {
 			return false;
 		}
 	}
-	
+
 
 	function getTransitions() {
 		var i = 0;
 		var transitions;
 		//var curState = $('circle[data-currentstate=true]').attr('class');
 		var curState = $('#state').text();
-		
+
 		for (var index in keys) {
 			if (keys[index] == curState) {
 				break;
