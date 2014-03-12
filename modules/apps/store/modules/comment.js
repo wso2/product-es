@@ -11,18 +11,18 @@
  return comment;
  };*/
 
-var getComments = function (rid, start, count) {
-    var comments,
-        store = require('/config/store.js').config(),
-        registry = require('/modules/store.js').systemRegistry();
-    comments = registry.comments(rid);
-    return comments;
+var getComments = function(rid, start, count) {
+  var comments,
+    store = require('/config/store.js').config(),
+    registry = require('/modules/store.js').systemRegistry();
+  comments = registry.comments(rid);
+  return comments;
 };
 
-var addComment = function (rid, comment) {
-    var registry = require('/modules/store.js').systemRegistry();
-    registry.comment(rid, comment);
-    return registry.comments(rid);
+var addComment = function(rid, comment) {
+  var registry = require('/modules/store.js').systemRegistry();
+  registry.comment(rid, comment);
+  return registry.comments(rid);
 };
 
 /*
