@@ -9,11 +9,12 @@
 </div>
 {{/unless}}
 
-<div class="row-fluid com-stream">
-	<div class="span12">
-		<div class="row-fluid com-sort {{#unless reviews}}com-sort-hidden{{/unless}}">
-			<ul>
-				<li>
+<div class="com-separator">
+	<hr>
+	<div class="btn-group com-sort-order pull-right com-sort {{#unless reviews}}com-sort-hidden{{/unless}}">
+		<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> Newest <i class="icon icon-angle-down"></i> </a>
+		<ul class="dropdown-menu">
+			<li>
 					<a href="#" id="newest">Newest</a>
 				</li>
 				<li>
@@ -22,19 +23,39 @@
 				<li>
 					<a href="#" class="selected">Popular</a>
 				</li>
-			</ul>
-		</div>
+		</ul>
+	</div>
+	<div class="btn-group">
+		<button class="btn">
+			<i class="icon icon-comment"></i>
+		</button>
+		<button class="btn">
+			<i class="icon icon-bug"></i>
+		</button>
+		<button class="btn">
+			<i class="icon icon-question-sign"></i>
+		</button>
+		<button class="btn">
+			<i class="icon icon-lightbulb"></i>
+		</button>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="row-fluid com-stream">
+	<div class="span12">
+		
 		<div class="row-fluid" id="stream">
 			<div class="span12">
-			{{#if reviews}}
-			{{#each reviews}}
-			{{> activity}}
-			{{/each}}
-			{{else}}
-			<p class="com-first-review">
-				Be the first one to review!
-			</p>
-			{{/if}}
+				{{#if reviews}}
+				{{#each reviews}}
+				{{> activity}}
+				{{/each}}
+				{{else}}
+				<p class="com-first-review">
+					Be the first one to review!
+				</p>
+				{{/if}}
 			</div>
 		</div>
 	</div>

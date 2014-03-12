@@ -1,4 +1,4 @@
-<div class="row-fluid com-review" data-target-id="{{id}}">
+<div class="row-fluid com-activity com-review" data-target-id="{{id}}">
    <!--
     <div class="com-left">
            <img class="img-avatar" src="{{url "/themes/default/img/avatar.png"}}">
@@ -6,13 +6,16 @@
    
     <div class="com-right span12">
         <div class="clear">
-            <strong class="com-author">{{actor.id}}</strong>
-            <div class="com-rating">
+        	<div class="com-rating">
                 <div class="com-rating-{{object.rating}}star"></div>
             </div>
+           
+            
             <p>
                 {{object.content}}
             </p>
+            <br>
+             <p class="com-author">{{actor.id}}</p>
         </div>
         <div class="row-fluid">
 

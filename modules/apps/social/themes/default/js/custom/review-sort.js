@@ -35,7 +35,7 @@ var redrawReviews = function (sortBy, callback) {
                 console.log(iLike);
                 str += template(review);
             }
-            $stream.html(str);
+            $stream.find('div:eq(0)').html(str);
             callback && callback();
             adjustHeight();
         });

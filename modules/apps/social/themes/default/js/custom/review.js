@@ -85,7 +85,7 @@ $btn.click(function (e) {
                         activity.actor = {id: user};
                         usingTemplate(function (template) {
                             var newComment = template(activity);
-                            $stream.prepend(newComment);
+                            //$stream.find('div:eq(0)').prepend(newComment);
                             successCallback && successCallback();
                         });
                     }
