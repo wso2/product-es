@@ -1,13 +1,23 @@
 <%
-    var pipe=require('pipe');
-    var pipeCommon=require('pipe-common');
-    var router=require('router');
+var pipe = require('pipe');
+var pipeCommon = require('pipe-common');
+var router = require('router');
 
-    pipe.plug(pipeCommon.bodyParser);
-    pipe.plug(pipeCommon.queryParser);
-    pipe.plug(router);
-    pipe.plug(pipeCommon.errHandler);
+pipe.plug(pipeCommon.bodyParser);
+pipe.plug(pipeCommon.queryParser);
+pipe.plug(router);
+pipe.plug(pipeCommon.errHandler);
 
 
-    pipe.resolve(request,response,session);
+// pipe.resolve(request,response,session);
+
+var fiber = require('/modules/fiber.js').fiber;
+//var fLogger = require('/extensions/fiber-plugins/fiber-logger.js').logger;
+//fiber.plugin(fLogger);
+
+fiber.register('/extensions/global/assets');
+
+fiber.list('assets');
+fiber.init();
+
 %>
