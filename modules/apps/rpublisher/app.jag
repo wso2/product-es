@@ -1,0 +1,13 @@
+<%
+    var pipe=require('pipe');
+    var pipeCommon=require('pipe-common');
+    var router=require('router');
+
+    pipe.plug(pipeCommon.bodyParser);
+    pipe.plug(pipeCommon.queryParser);
+    pipe.plug(router);
+    pipe.plug(pipeCommon.errHandler);
+
+
+    pipe.resolve(request,response,session);
+%>
