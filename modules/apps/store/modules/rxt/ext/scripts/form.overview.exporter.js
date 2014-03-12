@@ -51,7 +51,7 @@ var module=function(){
                     var searchBool = (field.meta.search == "true");
 
                     var search=searchBool||false;
-                    log.info(stringify(field));
+                    //log.info(stringify(field));
                     var data={};
                     data.isOptions=(field.type=='options')?true:false;
                     data.field_name=field.name;
@@ -60,7 +60,7 @@ var module=function(){
                     data.search=search;
                     buildOptionsObject(field,data);
 
-                    log.info(stringify(field));
+                    //log.info(stringify(field));
                     fields.push(data);
                 }
             }

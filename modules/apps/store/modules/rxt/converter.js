@@ -14,7 +14,7 @@ var rxt_converter = function () {
     var log = new Log();
 
     function XmlConversionProcess(options) {
-        log.info('Init xml conversion process');
+
         this.xmlDocument = null;
         this.rxtTemplate = new rxt_domain.RxtTemplate();
         this.mnger = null;
@@ -25,7 +25,7 @@ var rxt_converter = function () {
     }
 
     XmlConversionProcess.prototype.execute = function (xmlDocument, rxtTemplate) {
-        log.info('Starting execution');
+
         if (xmlDocument) {
             this.xmlDocument = xmlDocument;
         }
@@ -33,7 +33,7 @@ var rxt_converter = function () {
         if (rxtTemplate) {
             this.rxtTemplate = rxtTemplate;
         }
-        log.info('Executing');
+
         this.instrList.execute(this);
         return this.rxtTemplate;
     }
@@ -145,8 +145,6 @@ var rxt_converter = function () {
     mnger.registerHandler(new Handler({ tag: 'content', fn: function (context) {
         var content = context.xmlDocument.content;
 
-        log.info('Reading content');
-
 
         for each(var table
         in
@@ -165,8 +163,7 @@ var rxt_converter = function () {
         )
             {
 
-                //log.info('Field' + field);
-                //log.info('Field Name ' + field['name'].@label);
+
                 var objField = new rxt_domain.Field();
 
                 //Fill the current field
@@ -222,7 +219,6 @@ var rxt_converter = function () {
         return value;
     }
 
-    log.info('Init');
     var instr = new InstrList({ instr: ['head', 'ui', 'content'] });
 
 
