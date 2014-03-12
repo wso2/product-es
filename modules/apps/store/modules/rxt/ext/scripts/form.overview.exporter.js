@@ -60,7 +60,7 @@ var module=function(){
                     data.search=search;
                     buildOptionsObject(field,data);
 
-                    log.info(stringify(data));
+                    log.info(stringify(field));
                     fields.push(data);
                 }
             }
