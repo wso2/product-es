@@ -14,6 +14,7 @@ This document will be broken down into the following sections;
 
 #Dependencies
 The app depends on the following Jaggery modules;
+
 1. pipe
 2. pipe-commons
 3. entity
@@ -22,6 +23,7 @@ The app depends on the following Jaggery modules;
 
 #Structure of the app
 The app directory is broken down into several sub directories;
+
 1. config
 2. themes
 
