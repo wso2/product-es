@@ -122,6 +122,9 @@
         <caramel.feature.version>1.1.0-SNAPSHOT</caramel.feature.version>
         <handlebars.feature.version>1.0.0-SNAPSHOT</handlebars.feature.version>
         <markdown.feature.version>1.0.0-SNAPSHOT</markdown.feature.version>
+        <carbon.feature.version>1.0.0-SNAPSHOT</carbon.feature.version>
+        <process.feature.version>1.0.0-SNAPSHOT</process.feature.version>
+        <uuid.feature.version>1.0.0-SNAPSHOT</uuid.feature.version>
         <event.feature.version>1.0.0-SNAPSHOT</event.feature.version>
         <login.feature.version>1.0.0-SNAPSHOT</login.feature.version>
         <permission.feature.version>1.0.0-SNAPSHOT</permission.feature.version>

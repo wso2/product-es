@@ -108,6 +108,12 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:markdown.feature:${markdown.feature.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:carbon.feature:${carbon.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:process.feature:${process.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:uuid.feature:${uuid.feature.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.platform.version}
                                 </featureArtifactDef>
@@ -258,6 +264,18 @@
                                 <feature>
                                     <id>org.jaggeryjs.modules.markdown.feature.group</id>
                                     <version>${markdown.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.jaggeryjs.modules.carbon.feature.group</id>
+                                    <version>${carbon.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.jaggeryjs.modules.process.feature.group</id>
+                                    <version>${process.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.jaggeryjs.modules.uuid.feature.group</id>
+                                    <version>${uuid.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.event.feature.group</id>
