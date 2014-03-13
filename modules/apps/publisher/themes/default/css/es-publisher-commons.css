@@ -21,14 +21,14 @@ body {
     height: 100%;
     background: url(../img/header-bg.gif) repeat-x left -10px #ecf0f1;
 }
-a:focus, a:active{
+a:focus, a:active {
     outline: none;
 }
 input, button, select, textarea {
     font: 13px/1.531 'Lato', sans-serif;
 }
 
-input[type="file"]  {
+input[type="file"] {
     display: none;
 }
 
@@ -309,11 +309,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     background-position: left -18px;
 }
 
-
 /*
-.copyright-note a.logo-wso2:hover {
-    background-position: left -18px;
-}*/
+ .copyright-note a.logo-wso2:hover {
+ background-position: left -18px;
+ }*/
 
 .publisher-left-nav {
     width: 200px;
@@ -439,7 +438,7 @@ label, input, button, select, textarea {
 }
 .publisher-left {
     background: #F7F9F9;
-     border-right: 1px solid #DADADA;
+    border-right: 1px solid #DADADA;
 }
 .content-area-cont {
     background: #fff;
@@ -458,7 +457,7 @@ label, input, button, select, textarea {
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 .publisher-right {
-    
+
     min-height: 500px !important;
     float: right !important;
     position: relative;
@@ -526,8 +525,13 @@ label, input, button, select, textarea {
     text-shadow: 0 1px 1px rgba(255, 252, 176, 0.76);
 }
 .dateFull {
-    white-space: nowrap;
+   font-size: 13px;
     margin-right: 16px;
+    opacity: 0.8;
+    white-space: nowrap;
+}
+.dateFull i{
+    margin-right: 10px;
 }
 .list-asset-table img {
     max-width: 30px;
@@ -596,29 +600,29 @@ td.asset-listing-btn {
 .badge {
     background: none;
 }
-.lc-state-Created{
-    color:#88DAFF
+.lc-state-Created {
+    color: #88DAFF
 }
-.lc-state-In-Review{
-    color:#FFD300
+.lc-state-In-Review {
+    color: #FFD300
 }
-.lc-state-Published{
-    color:#4ECF00
+.lc-state-Published {
+    color: #4ECF00
 }
-.lc-state-Unpublished{
-    color:#CCCCCC
+.lc-state-Unpublished {
+    color: #CCCCCC
 }
-.lc-state-Retired{
-    color:#6F6F6F
+.lc-state-Retired {
+    color: #6F6F6F
 }
-.lc-state-Deprecated{
-    color:#CCCCCC
+.lc-state-Deprecated {
+    color: #CCCCCC
 }
-.lc-state-Approved{
-    color:#F98707
+.lc-state-Approved {
+    color: #F98707
 }
-.lc-state-Rejected{
-    color:#FB7E66
+.lc-state-Rejected {
+    color: #FB7E66
 }
 .block-green {
     background: none repeat scroll 0 0 #74B749;
@@ -980,10 +984,10 @@ span.title {
     font-size: 12px;
     font-weight: bold;
     margin-left: 11px;
-     padding: 0 4px;
+    padding: 0 4px;
     text-transform: uppercase;
     margin-top: 6px;
-      background: none repeat scroll 0 0 #FFBE6B;
+    background: none repeat scroll 0 0 #FFBE6B;
     border-radius: 4px 4px 4px 4px;
 }
 
@@ -1072,8 +1076,8 @@ span.title {
     width: 100%;
     border: 1px solid #ccc;
 }
-#form-asset-create .tbl-upload{
-    border:none;
+#form-asset-create .tbl-upload {
+    border: none;
 }
 .tbl-upload-row {
     display: table-row;
@@ -1095,8 +1099,6 @@ span.title {
     display: inline-block;
     height: 30px;
 }
-
-
 
 td.tbl-upload-preview {
     position: relative;
@@ -1142,7 +1144,6 @@ td.tbl-upload-preview .lbl-url {
 }
 #form-asset-create .icon-ban-circle {
     color: red;
-
 }
 #form-asset-create .icon-ok, #form-asset-create .icon-ban-circle {
     margin-left: -18px;
@@ -1175,10 +1176,10 @@ circle:hover {
     padding: 3px 5px;
 }
 
-.table th, .table td{
+.table th, .table td {
     vertical-align: middle;
 }
-.asset-being-added{
+.asset-being-added {
     display: none;
 }
 .asset-being-added:after {
@@ -1190,46 +1191,46 @@ circle:hover {
     position: absolute;
     width: 100%;
 }
-.asset-being-added .row-fluid{
-     height: 51px;
+.asset-being-added .row-fluid {
+    height: 51px;
     line-height: 51px;
 }
-.asset-being-added .span2{
+.asset-being-added .span2 {
     text-align: right;
 }
-.asset-being-added .span10 .icon-ok-circle{
-color:#229A55;
+.asset-being-added .span10 .icon-ok-circle {
+    color: #229A55;
 }
-.asset-being-added .span10 span{
- margin-left: 7px;
+.asset-being-added .span10 span {
+    margin-left: 7px;
 }
-.asset-being-added .span2 .icon-refresh{
+.asset-being-added .span2 .icon-refresh {
     margin-right: 28px;
-    opacity:.5;
-}
-.lifecycle{
-    position:relative;
-}
-.lifecycle-tip{
-    position:absolute;
-    bottom:0;
-    right:20px;
     opacity: .5;
 }
-.tbl-upload-inner label{
-    display:none;
+.lifecycle {
+    position: relative;
+}
+.lifecycle-tip {
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+    opacity: .5;
+}
+.tbl-upload-inner label {
+    display: none;
 }
 
 .row-white {
     background: #FFFFFF;
     border: 1px solid #DDDDDD;
 }
-.container-footer > div{
-     border-color:#ccc;
-    border-width:0 1px 1px 1px;
+.container-footer > div {
+    border-color: #ccc;
+    border-width: 0 1px 1px 1px;
 }
 .row-footer {
-   
+
     padding: 15px 0;
     color: #7f8c8d;
     background: #FFFFFF;
@@ -1253,17 +1254,71 @@ color:#229A55;
     color: #229a55;
     text-decoration: none;
 }
-.row-footer .span6 >span{
-    margin-left:20px;
+.row-footer .span6 > span {
+    margin-left: 20px;
 }
-.txt-right{
+.txt-right {
     text-align: right;
 }
-@media all and (min-width:768px){
-    .publisher-left {
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    top: 0;
+
+.lifecycle-comment .arrow {
+    border-width: 11px;
+     top: -16px;
+     left: 22px;
+    margin-left: -11px;
+    border-bottom-color: #999;
+    border-bottom-color: rgba(0, 0, 0, 0.25);
+    border-top-width: 0;
 }
+
+.lifecycle-comment .arrow, .lifecycle-comment .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+.lifecycle-comment .arrow:after {
+    top: 1px;
+    margin-left: -10px;
+    border-bottom-color: #F7F7F7;
+    border-top-width: 0;
+}
+
+.lifecycle-comment .arrow:after {
+    border-width: 8px;
+    content: "";
+}
+
+.lifecycle-comment .arrow, .lifecycle-comment .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+.lifecycle-comment p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.lifecycle-comment {
+    background: none repeat scroll 0 0 #F7F9F9;
+    border: 1px solid #DDDDDD;
+    margin-top: 11px;
+    padding: 8px;
+    position: relative;
+    text-align: left;
+    white-space: normal;
+    margin-bottom: 5px;
+}
+
+@media all and (min-width: 768px) {
+    .publisher-left {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        top: 0;
+    }
 }
