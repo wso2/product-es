@@ -15,14 +15,19 @@ var module = (function () {
     var EXCEPTION_NOT_A_DIR = 'The provided path does not point to a directory';
     var EVENT_ALL = '*';
 
-    function Extension() {
+    function Extension(options) {
         this.name = '';
         this.version = '';
         this.main = '';
         this.consumes = [];
+        this.children = [];
         this.provides = [];
-        this.path='';
+        this.init = [];      //The list of all files that should be required automatically when this extension is loaded
+        this.path = '';
         this.subDirs = []; //The map of all sub directories
+
+        var options = options || {};
+        utils.reflection.copyProps(options, this);
     }
 
     function EventMap() {
@@ -50,7 +55,7 @@ var module = (function () {
      * @param action The action to act on
      */
     EventMap.prototype.emit = function (target, action, context) {
-        log.info('Executing event for: '+target+':'+action );
+        log.info('Executing event for: ' + target + ':' + action);
         executeEvents(target, action, context, this.map);
         executeEvents(EVENT_ALL, action, context, this.map)
         executeEvents(EVENT_ALL, EVENT_ALL, context, this.map);
@@ -79,7 +84,7 @@ var module = (function () {
         this.plugins = [];
         this.events = new EventMap();
         this.dependencyMap = new DependencyMap();
-        this.extensions = {}; //The map of extensions
+        this.packages = {}; //The map of extensions
     }
 
     /**
@@ -90,34 +95,22 @@ var module = (function () {
         plugin(this, options);
     };
 
+    Fiber.prototype.readConfig = function (configJSON) {
+        //Go through all packages
+        var packages = configJSON.packages || [];
+
+        for (var index in packages) {
+
+            this.register(packages[index]);
+        }
+    };
+
     /**
      * The function is used to register an extension
      * @param extension
      */
     Fiber.prototype.register = function (extensionPath) {
-        var dir = new File(extensionPath);
-
-        //Check if the provided path points to a directory
-        if (!dir.isDirectory()) {
-            throw EXCEPTION_NOT_A_DIR;
-        }
-
-        //Check for an extension.json file
-        var configFile = utils.file.getFileInDir(dir, EXTENSION_CONFIG_FILE);
-
-        //Do nothing if the extension file is not present in the directory
-        if (!configFile) {
-            log.warn('Extension configuration file missing in directory: ' + dir.getName());
-            return;
-        }
-
-        var extension = processExtensionConfigFile(extensionPath + '/' + configFile.getName());
-        extension.path=extensionPath;
-        this.extensions[extension.name] = extension;
-
-        processExtensionDirectory(dir, extension, this);
-
-        processDependencyMap(extension, this.dependencyMap);
+        registerPackage(extensionPath, this.dependencyMap, this.packages, null);
     };
 
     Fiber.prototype.list = function (extensionName) {
@@ -125,21 +118,130 @@ var module = (function () {
     };
 
     /**
-     * The function goes through all the extensions that are activated and then starts them up
+     * The function goes through all the extensions that are registered  and then starts them up.
+     *
      */
     Fiber.prototype.init = function (context) {
-        var extension;
-
-        for (var index in this.extensions) {
-            extension = this.extensions[index];
-            this.dependencyMap.invoke(extension.name, function (item) {
-                log.info('Invoking main.js of ' + item.name);
-                item.ref={};
-            });
-
+        for (var key in this.packages) {
+            initPackage(this.dependencyMap, this.packages[key], this.packages);
         }
     };
 
+    /**
+     * The function will read the contents of the provided path and then
+     * load the location as an extension
+     * @param path
+     */
+    var registerPackage = function (path, dm, packages, rootPackage) {
+        var dir = new File(path);
+
+        log.info('Scanning path: ' + path);
+
+        if (!dir.isDirectory()) {
+            log.warn('Dir: ' + dir.getName() + ' not a directory.Path: ' + path);
+            return;
+            //throw EXCEPTION_NOT_A_DIR;
+        }
+
+        log.info('Attempting to register package: ' + path);
+
+        //Check if the directory contains a package json
+        var packageConfig = utils.file.getFileInDir(dir, EXTENSION_CONFIG_FILE);
+
+        //Do nothing if this is not a configuration file
+        if (!packageConfig) {
+            log.warn('Directory not a package and will be skipped. Directory:' + dir.getName());
+            return;
+        }
+
+        //Create a package instance
+        var instance = getPackage(packageConfig, path);
+
+        //Set the path to the package
+        instance.path = path;//getRelativePath(dir, path);
+
+        //Load the dependencies
+        dm.add(instance.name, (instance.consumes || []));
+
+        if (!rootPackage) {
+            log.info(instance.name + ' is a root level package.');
+            packages[instance.name] = instance;
+        }
+        else {
+            log.info(instance.name + ' child of parent: ' + rootPackage.name);
+            packages[rootPackage.name][instance.name] = instance;
+        }
+
+        //Initialize the child packages
+        initChildren(instance, dm, packages);
+    };
+
+    /**
+     * The function will recursively initialize a given package instance
+     * and its children
+     * @param instance
+     */
+    var initPackage = function (dm, instance, packages) {
+
+        dm.invoke(instance.name, function (item) {
+
+            //Execute the main js file if it is present
+            executeMain(instance);
+
+            //Perform any init operations
+            //executeInit(instance);
+
+            //Initialize any children
+            //var childPackages = packages[instance.name];
+
+            for (var key in instance.childPackages) {
+                //initPackage(dm, childPackages[key], packages);
+            }
+
+        });
+    };
+
+    /**
+     * The main.js file in a package will be executed if one is present
+     * @param packageInstance The package to be initialized
+     */
+    var executeMain = function (packageInstance) {
+        if (packageInstance.main) {
+            log.info('Requiring main ' + packageInstance.path + '/' + packageInstance.main);
+            //require(packageInstance.path + '/' + packageInstance.main);
+        }
+    };
+
+    var executeInit = function (packageInstance) {
+        var current;
+
+        for (var index in packageInstance.init) {
+            current = packageInstance.init[index];
+            require(packageInstance.path + '/' + current);
+        }
+    };
+
+    /**
+     * The package will load any child packages
+     * @param packageInstance
+     */
+    var initChildren = function (packageInstance, dm, packages) {
+        var child;
+        for (var index in packageInstance.children) {
+            child = packageInstance.children[index];
+            registerPackage('/' + packageInstance.path + '/' + child, dm, packages, packageInstance);
+        }
+    };
+
+    var getPackage = function (file, path) {
+        var configPath = getRelativePath(file, path);
+        var configJSON = require(configPath);
+        return new Extension(configJSON);
+    };
+
+    var getRelativePath = function (dir, path) {
+        return path + '/' + dir.getName();
+    };
 
     var processDependencyMap = function (extension, dm) {
         log.info('Registering extension')
