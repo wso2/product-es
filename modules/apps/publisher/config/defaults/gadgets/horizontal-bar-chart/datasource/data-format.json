@@ -1,0 +1,8 @@
+{
+    "dataColumns": [
+        "Y-Axis", "X-Axis"
+    ],
+    "dataLabels":[
+        "Y-Axis Label", "X-Axis Label"
+    ]
+}

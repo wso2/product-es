@@ -1,4 +1,3 @@
-//refer flot api to know what each option does http://flot.googlecode.com/svn/trunk/API.txt
 {
     "legend": {
         "show": true,

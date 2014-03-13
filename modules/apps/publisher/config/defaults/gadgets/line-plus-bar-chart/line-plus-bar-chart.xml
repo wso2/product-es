@@ -12,10 +12,10 @@
               display_name="Data Source"
               default_value="/portal/gadgets/line-plus-bar-chart/datasource/dataFile2.jag">
     </UserPref>
-    <UserPref name="options"
+    <!--UserPref name="options"
               display_name="Chart Options"
               default_value="/portal/gadgets/line-plus-bar-chart/js/options-line-plus-bar.js">
-    </UserPref>
+    </UserPref-->
     <UserPref name="updateGraph"
               display_name="Update Interval (s)"
               default_value="No">
@@ -28,20 +28,17 @@
 	<title>Line Plus Bar Chart</title>
 	<link href="css/flot-graph.css" rel="stylesheet" type="text/css">
 	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<script language="javascript" type="text/javascript" src="js/flot/excanvas.min.js"></script>
-	<script language="javascript" type="text/javascript" src="js/flot/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script>
+	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="js/bootstrap.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.navigate.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
-	<script language="javascript" type="text/javascript" src="js/flot-chart-core.js"></script>
-	<script language="javascript" type="text/javascript">
-        var prefs = new gadgets.Prefs();
-        var src =  pref.getString("options");
-        document.write('<' + 'script language="javascript" src="' + src + '"' +
-                   ' type="text/javascript"><' + '/script>');
-    </script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.tickrotor.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.axislabels.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/flot-chart-core.js"></script>
+
 </head>
 
 <body>

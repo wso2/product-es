@@ -1,5 +1,5 @@
 var PAGE_SIZE = 12;
-var API_URL = '/store/apis/v2/';
+var API_URL = '/store/apis/';
 
 var prefs = new gadgets.Prefs();
 var type = prefs.getString('type') || 'gadget';
@@ -36,7 +36,7 @@ jQuery.validator.addMethod("url2", function (value, element, param) {
 var toFade = [];
 var assets;
 var currantPage;
-var isMyAssetsShown = false;
+var isMyAssetsShown = true;
 var tabSwitched = false;
 var tagToBeLoaded = null;
 var queryToBeLoaded = null;
@@ -105,7 +105,10 @@ $(function () {
         assets[i] = null;
         if (asset) {
             $.ajax({
-                url: API_URL + 'assets/' + type + '/' + asset.id,
+                url: API_URL + 'asset/' + type,
+                data: {
+                    id: asset.path
+                },
                 success: function (data) {
                     var JqDiv = $(div);
                     JqDiv.html(assetTmpl(data));
@@ -123,12 +126,18 @@ $(function () {
             func(p);
         });
     };
+    var deselectGadget = function () {
+       $('.select-btn').text('Select Gadget').removeClass('active');
+       console.log("Gadget deselected");
+    };
 
     var fireEvent = function (e) {
         var target = $(e.target);
         if (target.hasClass('select-btn')) {
             var event = jQuery.Event('assetSelect');
             $(document).trigger(event, $(e.target).parents('.asset-box').data());
+            $('.select-btn').text('Select Gadget').removeClass('active');
+            target.text('Gadget Selected').addClass('active');
         } else if (target.hasClass('btn-browse')) {
             STORE_TAB.click();
         }
@@ -143,7 +152,7 @@ $(function () {
     var loadPages = function (query, tag) {
         var data = query ? {query:query} : {};
         $.ajax({
-            url: API_URL + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'assets/' + type)) + '?start=0&count=100',
+            url: API_URL + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'asset/' + type)),
             data: data,
             success: function (data) {
                 toFade = [];
@@ -275,6 +284,7 @@ $(function () {
 
     //exposing function to global scope.
     window.addListener = addListener;
+    window.deselectGadget = deselectGadget;
 
     parent['onShowAssetLoad'] && parent['onShowAssetLoad']();
 });
