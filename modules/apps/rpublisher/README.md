@@ -53,6 +53,17 @@ Any folder can become a package provided it has the following json file;
 
 The above two properties are the only properties that you need to define a package.
 
+You can also define a package to consume another package;
+
+```json
+  {
+    "name":"child_package_name",
+    "version":"1.0.0",
+    "description":"This_is_a_child_package",
+    "consumes":["package_name"]
+  }
+```
+
 ####Organizing your package
 
 
@@ -69,7 +80,7 @@ When a package is read the package management script will read any sub folders d
 ```
 
 #Adding your own asset
-The Publisher can be configured to support any asset type defined by an RXT file. All new assets must be placed inside the packages/globals/extensions
+The Publisher can be configured to support any asset type defined by an RXT file. All new assets must be placed inside the packages/globals/extensions directory.
 
 #Customizing the Publisher for a tenant
 The Publisher can be configured with tenant specific customizations.All tenant specific customizations should be placed in the packages/tenants directory.
@@ -77,7 +88,9 @@ The Publisher can be configured with tenant specific customizations.All tenant s
 ###How does it work?
 When the Publisher loads for a given tenant, the app will look for a directory with the tenant id.If one is present then any packages specified in this directory are loaded.
 
-####Adding something new
+####Adding functionality
+The Publisher can be augmented with new functionality on a per tenant basis.
+
 If you need to customize the Publisher on a per tenant basis then this logic should be placed in the /packages/tenant/{your_tenant_id} directory.
 
 ####Overriding a global functionality
