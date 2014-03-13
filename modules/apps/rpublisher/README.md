@@ -82,6 +82,20 @@ Although you are free to add any directory within the package the following name
 3. themes
 4. modules
 5. widgets
+6. api
+
+#####routes
+The routes folder should contain any custom routes that are provided by the package.
+
+#####config
+The config folder should contain any configuration files used by the package.If you wish to append any configurations for an existing config file used by the level a json file with the same name must be created.
+
+#####themes
+The themes folder is used for the following scenarios;
+1. The view and resource files related to a route or widget added by the package
+2. Any views overridden by the package
+
+This will be discussed in a later section.
 
 ####How does a package work?
 When a package is read the package management script will read any sub folders defined in the directory and trigger predefined logic based on the folder name.You can define your own logic to execute when a package is read by ;
@@ -111,3 +125,7 @@ If you need to customize the Publisher on a per tenant basis then this logic sho
 
 ####Overriding a global functionality
 A tenant customization can also change the way a global customization could work for a 
+
+
+#Theming
+
