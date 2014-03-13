@@ -2,7 +2,6 @@
     <Module>
     <ModulePrefs title="Stacked Chart"
                  author="WSO2 Gadget Server"
-                 category="Templates"
                  height="230"
                  scrolling="true"
                  tags="charts,stacked,visualization"
@@ -10,7 +9,11 @@
      </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="../../portal/apis/flot-data-files/dataFile1.jag">
+              default_value="/portal/gadgets/stacked-chart/datasource/dataFile1.jag">
+    </UserPref>
+    <UserPref name="options"
+              display_name="Chart Options"
+              default_value="/portal/gadgets/stacked-chart/js/options-stack.js">
     </UserPref>
     <UserPref name="updateGraph"
               display_name="Update Interval (s)"
@@ -22,18 +25,23 @@
  <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Bar Chart</title>
-	<link href="../../themes/portal/css/flot-graph.css" rel="stylesheet" type="text/css">
-	<link href="../../themes/portal/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<script language="javascript" type="text/javascript" src="../../js/flot/excanvas.min.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/bootstrap.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.selection.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.stack.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.navigate.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.resize.js"></script>
-	<script language="javascript" type="text/javascript" src="js/options-stack.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot-chart-core.js"></script>
+	<link href="css/flot-graph.css" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<script language="javascript" type="text/javascript" src="js/flot/excanvas.min.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="js/bootstrap.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.stack.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.navigate.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot-chart-core.js"></script>
+	<script language="javascript" type="text/javascript">
+        var prefs = new gadgets.Prefs();
+        var src =  pref.getString("options");
+        document.write('<' + 'script language="javascript" src="' + src + '"' +
+                   ' type="text/javascript"><' + '/script>');
+    </script>
 	<style type="text/css">
 		
 	</style>
