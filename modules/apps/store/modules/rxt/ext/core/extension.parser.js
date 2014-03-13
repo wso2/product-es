@@ -95,6 +95,8 @@ var extension_parser=function(){
 	 */
 	Parser.prototype.processRxt=function(rxtTemplate)
 	{
+        //log.info(rxtTemplate.shortName);
+
 		var extTemplate=new ext_domain.ExtTemplate(rxtTemplate.shortName);
 		extTemplate.applyTo=rxtTemplate.shortName;
 		extTemplate.shortName=rxtTemplate.shortName;
@@ -109,16 +111,16 @@ var extension_parser=function(){
 			
 			for each(var field in table.fieldsArray)
 			{
+                //log.info(stringify(field));
 				var extField=new ext_domain.Field();
 				extField.name=field.name.name;
-				extField.label=field.name.getLabel();
+				extField.label=getLabel(field);//getLabel();
 				extField.table=extTable.name;
 				extField.type=field.type;
 				extField.required=field.required;
 
 				extField.value=getCsvValues(field.values);
-				
-				extTable.fields.push(extField);
+             	extTable.fields.push(extField);
 			}
 			
 			extTemplate.tables.push(extTable);
@@ -126,7 +128,11 @@ var extension_parser=function(){
 		//print('number of templates '+this.templates.length);
 		this.templates.push(extTemplate);
 	}
-	
+
+
+    var getLabel=function(field){
+        return (field.name.label.toString()=='')?field.name.name:field.name.label;
+    }
 	/*
 	 * Converts an array to a csv
 	 */

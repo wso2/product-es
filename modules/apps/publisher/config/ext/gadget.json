@@ -165,5 +165,9 @@
 
         }
 
+    },
+
+    "behavior": {
+      "lifecycle_change_comment_required": "true"
     }
 }
