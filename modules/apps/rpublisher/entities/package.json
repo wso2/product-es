@@ -1,0 +1,8 @@
+{
+    "name":"entities",
+    "version":"1.0.0",
+    "require":[
+            "schemas/Asset.js",
+            "schemas/User.js"
+    ]
+}

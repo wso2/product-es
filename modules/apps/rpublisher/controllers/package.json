@@ -1,0 +1,5 @@
+{
+    "name":"controllers",
+    "version":"1.0.0",
+    "require":["asset.js","assets.js","topassets.js"]
+}

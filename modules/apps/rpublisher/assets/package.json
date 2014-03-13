@@ -1,0 +1,6 @@
+{
+    "name":"assets",
+    "version":"1.0.0",
+    "main":"main.js",
+    "children":["ebook","gadget","site"]
+}

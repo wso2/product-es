@@ -1,0 +1,14 @@
+{
+
+    "packages":[
+        "services",
+        "configs",
+        "components",
+        "apis",
+        "assets",
+        "controllers",
+        "entities",
+        "extensions"
+    ]
+
+}

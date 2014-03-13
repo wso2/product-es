@@ -12,12 +12,18 @@ pipe.plug(pipeCommon.errHandler);
 // pipe.resolve(request,response,session);
 
 var fiber = require('/modules/fiber.js').fiber;
-//var fLogger = require('/extensions/fiber-plugins/fiber-logger.js').logger;
-//fiber.plugin(fLogger);
+var fLogger = require('/plugins/fiber-plugins/fiber-logger.js').logger;
+var fiberRouteRegister=require('/plugins/fiber-plugins/fiber-route-register.js').fiberRouteRegister;
 
-fiber.register('/extensions/global/assets');
+//Attach the fiber plugins
+fiber.plugin(fLogger);
+fiber.plugin(fiberRouteRegister);
 
-fiber.list('assets');
+fiber.register('/packages/global/default/assets');
+
+//fiber.list('assets');
 fiber.init();
+
+pipe.resolve(request,response,session);
 
 %>

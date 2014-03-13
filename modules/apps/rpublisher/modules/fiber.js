@@ -21,6 +21,7 @@ var module = (function () {
         this.main = '';
         this.consumes = [];
         this.provides = [];
+        this.path='';
         this.subDirs = []; //The map of all sub directories
     }
 
@@ -111,7 +112,7 @@ var module = (function () {
         }
 
         var extension = processExtensionConfigFile(extensionPath + '/' + configFile.getName());
-
+        extension.path=extensionPath;
         this.extensions[extension.name] = extension;
 
         processExtensionDirectory(dir, extension, this);
