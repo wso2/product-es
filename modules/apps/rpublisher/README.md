@@ -1,5 +1,6 @@
 #Introduction
 The Publisher app is the asset management arm of the Enterprise Store.It allows an asset publisher and administrators to;
+
 1. To create instances of new assets
 2. To update instances of existing assets
 2. Manage the lifecycle states of the assets
@@ -10,6 +11,7 @@ This document highlights the basic structure of the app along with some of the b
 
 #Contents
 This document will be broken down into the following sections;
+
 1.Structure of the app
 
 #Dependencies
