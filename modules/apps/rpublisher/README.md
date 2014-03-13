@@ -64,8 +64,24 @@ You can also define a package to consume another package;
   }
 ```
 
-####Organizing your package
+The package script initializes logic of this package after the parent package.This allows tenant packages to override global routes.
 
+If you need more granualrity as to how your package is started up, then you can also define;
+
+```json
+   "main":"main.js"
+```
+
+The file defined by the main property will be executed when your package is read for the first time.
+
+####Organizing your package
+Although you are free to add any directory within the package the following names are reserved;
+
+1. routes
+2. config
+3. themes
+4. modules
+5. widgets
 
 ####How does a package work?
 When a package is read the package management script will read any sub folders defined in the directory and trigger predefined logic based on the folder name.You can define your own logic to execute when a package is read by ;
