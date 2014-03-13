@@ -1,7 +1,6 @@
 {
     "name":"components",
     "version":"1.0.0",
-    "main":"main.js",
     "children":["assetDetailsCmp",
                 "assetsListCmp",
                 "moreAssetsCmp",

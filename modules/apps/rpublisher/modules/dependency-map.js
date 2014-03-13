@@ -60,6 +60,11 @@ var DependencyMap = {};
     GenericDependencyMap.prototype.invoke = function (target, cb) {
         var dependency = this.get(target);
 
+        if(!dependency){
+            log.warn('Could locate dependency: '+target);
+            return;
+        }
+
         for (var index in dependency.dependants) {
 
             recursiveCallback(dependency.dependants[index], cb, this);

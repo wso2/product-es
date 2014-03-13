@@ -122,8 +122,9 @@ var module = (function () {
      *
      */
     Fiber.prototype.init = function (context) {
+        //log.info(this.packages);
         for (var key in this.packages) {
-            initPackage(this.dependencyMap, this.packages[key], this.packages);
+            initPackage(this.dependencyMap, this.packages[key]._instance, this.packages);
         }
     };
 
@@ -165,11 +166,13 @@ var module = (function () {
 
         if (!rootPackage) {
             log.info(instance.name + ' is a root level package.');
-            packages[instance.name] = instance;
+            packages[instance.name]={};
+            packages[instance.name]._instance = instance;
         }
         else {
             log.info(instance.name + ' child of parent: ' + rootPackage.name);
-            packages[rootPackage.name][instance.name] = instance;
+            packages[rootPackage.name][instance.name]={};
+            packages[rootPackage.name][instance.name]._instance = instance;
         }
 
         //Initialize the child packages
@@ -182,7 +185,10 @@ var module = (function () {
      * @param instance
      */
     var initPackage = function (dm, instance, packages) {
-
+        if(!instance){
+            return;
+        }
+        log.info('Initializing package: '+instance.name);
         dm.invoke(instance.name, function (item) {
 
             //Execute the main js file if it is present
@@ -192,10 +198,11 @@ var module = (function () {
             //executeInit(instance);
 
             //Initialize any children
-            //var childPackages = packages[instance.name];
-
-            for (var key in instance.childPackages) {
-                //initPackage(dm, childPackages[key], packages);
+            var childPackages = packages[instance.name];
+            // log.info(packages[instance.name]);
+            for (var key in childPackages) {
+                //log.info('Child package: '+key);
+                initPackage(dm, childPackages[key]._instance, packages);
             }
 
         });
@@ -208,7 +215,7 @@ var module = (function () {
     var executeMain = function (packageInstance) {
         if (packageInstance.main) {
             log.info('Requiring main ' + packageInstance.path + '/' + packageInstance.main);
-            //require(packageInstance.path + '/' + packageInstance.main);
+            require(packageInstance.path + '/' + packageInstance.main);
         }
     };
 
