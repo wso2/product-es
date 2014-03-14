@@ -1,7 +1,6 @@
 {
 
     "packages":[
-        "services",
         "configs",
         "components",
         "apis",

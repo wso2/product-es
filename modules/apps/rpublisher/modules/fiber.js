@@ -3,7 +3,8 @@
  * It will allow you to define your app as a set of extensions.
  * "Everything is an extension "
  */
-var fiber = {};
+var createApp = {};
+var getApp = {};
 
 var module = (function () {
 
@@ -12,8 +13,7 @@ var module = (function () {
     var DependencyMap = require('/modules/dependency-map.js').DependencyMap;
 
     var EXTENSION_CONFIG_FILE = 'package.json'; //The configuration file for the directory
-    var EXCEPTION_NOT_A_DIR = 'The provided path does not point to a directory';
-    var EVENT_ALL = '*';
+
 
     function Extension(options) {
         this.name = '';
@@ -30,61 +30,21 @@ var module = (function () {
         utils.reflection.copyProps(options, this);
     }
 
-    function EventMap() {
-        this.map = {};
-        this.map[EVENT_ALL] = {};
-    }
-
-    EventMap.prototype.on = function (target, action, cb) {
-        //Check if the target is not present
-        if (!this.map.hasOwnProperty(target)) {
-            this.map[target] = {};
-        }
-
-        //Check if the action is present
-        if (!this.map[target].hasOwnProperty(action)) {
-            this.map[target][action] = [];
-        }
-
-        this.map[target][action].push(cb);
-    };
-
-    /**
-     * The function emits the registered events base don the provided action and target
-     * @param target The target of the event
-     * @param action The action to act on
-     */
-    EventMap.prototype.emit = function (target, action, context) {
-        log.info('Executing event for: ' + target + ':' + action);
-        executeEvents(target, action, context, this.map);
-        executeEvents(EVENT_ALL, action, context, this.map)
-        executeEvents(EVENT_ALL, EVENT_ALL, context, this.map);
-    };
-
-    var executeEvents = function (target, action, context, map) {
-        if (!map.hasOwnProperty(target)) {
-            return;
-        }
-
-        if (!map[target].hasOwnProperty(action)) {
-            return;
-
-        }
-
-        var events = map[target][action];
-
-        //Go through all the events
-        for (var index in events) {
-            events[index](context);
-        }
-    };
-
-
-    function Fiber() {
+    function Fiber(fnGetAppContext) {
         this.plugins = [];
-        this.events = new EventMap();
         this.dependencyMap = new DependencyMap();
         this.packages = {}; //The map of extensions
+        this.app = {};
+
+        fnGetAppContext(this.app);
+
+        this.services = new ServiceMap();
+        this.components = new ServiceMap();
+    }
+
+    var setServices = function (fiber) {
+        fiber.app.services = new ServiceMap();
+        fiber.app.components = new ServiceMap();
     }
 
     /**
@@ -128,6 +88,32 @@ var module = (function () {
         }
     };
 
+    Fiber.prototype.chain = function (data, components, req, res, session) {
+        executeChain(data, components, req, res, session,this);
+    };
+
+    var executeChain = function (data, components,req,res,session,fiber) {
+        var genericPipe = new utils.patterns.GenericPipe();
+        //Get the list of components
+        var compList = components.split(',');
+        var compName;
+        var component;
+        for (var index in compList) {
+            compName = compList[index];
+            //Get the component
+            component =fiber.components.get(compName);
+            if (!component) {
+                log.warn('Component: ' + compName + ' could not be found.');
+            }
+            else {
+                //omponent.handle(data);
+                genericPipe.plug(component);
+            }
+        }
+
+        genericPipe.resolve(data,req,res,session);
+    };
+
     /**
      * The function will read the contents of the provided path and then
      * load the location as an extension
@@ -144,7 +130,6 @@ var module = (function () {
             //throw EXCEPTION_NOT_A_DIR;
         }
 
-        log.info('Attempting to register package: ' + path);
 
         //Check if the directory contains a package json
         var packageConfig = utils.file.getFileInDir(dir, EXTENSION_CONFIG_FILE);
@@ -165,13 +150,13 @@ var module = (function () {
         dm.add(instance.name, (instance.consumes || []));
 
         if (!rootPackage) {
-            log.info(instance.name + ' is a root level package.');
-            packages[instance.name]={};
+            //log.info(instance.name + ' is a root level package.');
+            packages[instance.name] = {};
             packages[instance.name]._instance = instance;
         }
         else {
-            log.info(instance.name + ' child of parent: ' + rootPackage.name);
-            packages[rootPackage.name][instance.name]={};
+            //log.info(instance.name + ' child of parent: ' + rootPackage.name);
+            packages[rootPackage.name][instance.name] = {};
             packages[rootPackage.name][instance.name]._instance = instance;
         }
 
@@ -185,17 +170,17 @@ var module = (function () {
      * @param instance
      */
     var initPackage = function (dm, instance, packages) {
-        if(!instance){
+        if (!instance) {
             return;
         }
-        log.info('Initializing package: '+instance.name);
+        //log.info('Initializing package: ' + instance.name);
         dm.invoke(instance.name, function (item) {
 
             //Execute the main js file if it is present
             executeMain(instance);
 
             //Perform any init operations
-            //executeInit(instance);
+            executeInit(instance);
 
             //Initialize any children
             var childPackages = packages[instance.name];
@@ -250,61 +235,63 @@ var module = (function () {
         return path + '/' + dir.getName();
     };
 
-    var processDependencyMap = function (extension, dm) {
-        log.info('Registering extension')
-        dm.add(extension.name, extension.consumes);
-    };
-
-    /**
-     * The function reads the extension file provided and creates an extension object
-     * @param file The extension configuration file
-     */
-    var processExtensionConfigFile = function (file) {
-        //Read the file
-        var conf = require(file);
-        var extension = new Extension();
-        utils.reflection.copyProps(conf, extension);
-
-        return extension;
-    };
-
-    /**
-     * The function processes the contents of an extension directory
-     * @param dir
-     * @param fiber
-     */
-    var processExtensionDirectory = function (dir, extension, fiber) {
-
-        //Read all directories within an extension folder
-        var subDirs = utils.file.getAllSubDirs(dir);
-        var target;
-        var action = 'init';
-
-        for (var index in subDirs) {
-            target = subDirs[index].getName();
-            extension.subDirs.push(subDirs[index].getName());
-            fiber.events.emit(target, action, buildContext(target, action, subDirs[index], extension));
-        }
-    };
-
-    /**
-     * The function is used to construct a context object which is used to construct the object that
-     * is provided to plugins
-     * @param target
-     * @param action
-     * @param dir
-     * @param extension
-     * @returns {{target: *, action: *, dir: *, extension: *}}
-     */
-    var buildContext = function (target, action, dir, extension) {
-        return{
-            target: target,
-            action: action,
-            dir: dir,
-            extension: extension
-        };
+    function ServiceMap() {
+        this.services = {};
+        this.dm = new DependencyMap();
     }
 
-    fiber = new Fiber();
+    ServiceMap.prototype.register = function (serviceName, service, dependentServices) {
+
+        if (!this.services.hasOwnProperty(serviceName)) {
+            this.services[serviceName] = {};
+        }
+
+        this.services[serviceName].source = service;
+        this.services[serviceName].instance = null;
+
+        //Record the dependency
+        this.dm.add(serviceName, dependentServices || []);
+    };
+
+    ServiceMap.prototype.get = function (serviceName) {
+
+        //this.dm.invoke(serviceName, function (item) {
+        //   log.info(stringify(item));
+        //});
+        log.info('Returning instance of ' + serviceName);
+        if (!this.services.hasOwnProperty(serviceName)) {
+            return null;
+        }
+
+        return new this.services[serviceName].source();
+    };
+
+    var instance;
+    var createAppLogic = function (config, cb) {
+        instance;
+        // instance = session.get('FIBER_APP');
+        //if (!instance) {
+        //Check if an app is in the session and return it
+        instance = new Fiber(cb);
+        instance.readConfig(config);
+        //session.put('FIBER_APP', instance);
+        //  }
+
+        return instance;
+    };
+
+    var getAppLogic = function () {
+
+        //var instance = session.get('FIBER_APP');
+
+        if (!instance) {
+            throw 'There is no app';
+        }
+
+        return instance;
+    };
+
+    createApp = createAppLogic;
+    getApp = getAppLogic;
 
 }());
