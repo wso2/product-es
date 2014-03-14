@@ -3,6 +3,7 @@
     <ModulePrefs title="Line Chart"
                  author="WSO2 Gadget Server"
                  height="230"
+                 category="Templates"
                  scrolling="true" tags="charts,line,visualization,data,analytics"
                  description="A generic Line Chart gadget, that takes a json datasource as an input. It can be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained">
      </ModulePrefs>

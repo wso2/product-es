@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
     <ModulePrefs title="WSO2 Architecture List Discussion"
-                 height="350"
+                 height="350"  category="WSO2"
                  description="This is a sample gadget that is shipped with the store. This gadget visualizes the frequency of mails and popular mail senders in WSO2 Architecture mailing list"
                  tags="charts,wso2,visualization">
         <Require feature="pubsub-2">
