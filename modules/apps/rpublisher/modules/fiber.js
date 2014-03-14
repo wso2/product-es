@@ -40,6 +40,7 @@ var module = (function () {
 
         this.services = new ServiceMap();
         this.components = new ServiceMap();
+        this.genericPipe = new utils.patterns.GenericPipe();
     }
 
     var setServices = function (fiber) {
@@ -88,11 +89,53 @@ var module = (function () {
         }
     };
 
-    Fiber.prototype.chain = function (data, components, req, res, session) {
-        executeChain(data, components, req, res, session,this);
+    /**
+     * The function is used to plugin a plugin to a chain
+     * @param components
+     */
+    Fiber.prototype.chain = function (components) {
+        //Component string
+        if (components instanceof String) {
+            locateComponent(component, this);
+        }
+        else if (components instanceof Array) {
+            locateComponents(components, this);
+        }
+        else if ((components instanceof Function) || (component instanceof Object)) {
+            this.genericPipe.plug(component);
+        }
+        else {
+            log.warn('The component type ' + (typeof components) + ' cannot be plugged into the chain');
+        }
+
     };
 
-    var executeChain = function (data, components,req,res,session,fiber) {
+    Fiber.prototype.resolve = function (data, req, res, session) {
+
+        this.genericPipe.resolve(data, req, res, session);
+        //Reset the pipe to a new chain
+        this.genericPipe = new utils.patterns.GenericPipe();
+    };
+
+
+    var locateComponent = function (componentName, fiber) {
+        var component = fiber.components.get(componentName);
+        if (!component) {
+            log.warn('Component: ' + componentName + ' could not be found.');
+            return;
+        }
+        else {
+            fiber.genericPipe.plug(component);
+        }
+    };
+
+    var locateComponents = function (componentArray, fiber) {
+        for (var index in componentArray) {
+            locateComponent(componentArray[index], fiber);
+        }
+    };
+
+    var executeChain = function (data, components, req, res, session, fiber) {
         var genericPipe = new utils.patterns.GenericPipe();
         //Get the list of components
         var compList = components.split(',');
@@ -101,7 +144,7 @@ var module = (function () {
         for (var index in compList) {
             compName = compList[index];
             //Get the component
-            component =fiber.components.get(compName);
+            component = fiber.components.get(compName);
             if (!component) {
                 log.warn('Component: ' + compName + ' could not be found.');
             }
@@ -111,7 +154,7 @@ var module = (function () {
             }
         }
 
-        genericPipe.resolve(data,req,res,session);
+        genericPipe.resolve(data, req, res, session);
     };
 
     /**
