@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-	<ModulePrefs title="Electric Power Consumption" description="Electric power consumption (kWh per capita)" height="350" tags="charts,electric,climate,visualization">
+	<ModulePrefs title="Electric Power Consumption"  category="Google" description="Electric power consumption (kWh per capita)" height="350" tags="charts,electric,climate,visualization">
 		<Require feature="pubsub-2">
 			<Param name="topics">
 				<![CDATA[

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-	<ModulePrefs title="CO2 Gas Emission" height="350" description="A greenhouse gas (CO2) emission to an atmosphere " tags="charts,climate,visualization">
+	<ModulePrefs title="CO2 Gas Emission" height="350"  category="Google" description="A greenhouse gas (CO2) emission to an atmosphere " tags="charts,climate,visualization">
 		<Require feature="pubsub-2">
 			<Param name="topics">
 				<![CDATA[

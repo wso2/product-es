@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-	<ModulePrefs title="Energy Use" description="Energy use (kg of oil equivalent per capita)" height="350" tags="charts,energy,visualization">
+	<ModulePrefs title="Energy Use"  category="Google" description="Energy use (kg of oil equivalent per capita)" height="350" tags="charts,energy,visualization">
 		<Require feature="pubsub-2">
 			<Param name="topics">
 				<![CDATA[

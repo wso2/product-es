@@ -322,7 +322,7 @@ var module = function () {
                 data['isEditable'] = (fieldTemplate.meta.editable) ? fieldTemplate.meta.editable : false;
                 data['isFile'] = (fieldTemplate.type == 'file') ? true : false;
 
-                log.info(field.name+' = '+stringify(field.value));
+                //log.info(field.name+' = '+stringify(field.value));
 
                 data['value'] = getNormalizedValue(field);//field.value;
 
