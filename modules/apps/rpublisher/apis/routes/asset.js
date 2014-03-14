@@ -8,28 +8,15 @@ router.app.get('/asset/:type/:id', function (req, res, session) {
     fiber.getApp().
         chain('c1').
         chain('c2').
+        chain(['c3', 'c4']).
         chain(function (context, handlers) {
-            var log=new Log();
-            log.info('This is come logic');
+            var log = new Log();
+            log.info('This is some logic');
         }).
         resolve(data, req, res, session);
 
-    //var data=fiber.getApp().start(req, res, session).chain('c1').chain('c2').chain('c3');
-
-    var data = app.chain('c1', 'c2', 'cn', req, res, ses);
-
-    var data = app.chain(['c1', 'c2', 'cn'], req, res, ses);
-
-    app.chain('c1').chain('c2').chain('c3').chain(function (req, res) {
-
-    });
-
-    app.chain(require('/foo.js')).chain(require('/bar.js'));
-    app.chain('foo.js').chain(require('/bar.js'));
-
     res.render(data);
     //print('EDIT asset page');
-
 });
 
 router.app.get('/asset/:type', function () {
