@@ -94,20 +94,25 @@ var module = (function () {
      * @param components
      */
     Fiber.prototype.chain = function (components) {
+        var type = typeof components;
         //Component string
-        if (components instanceof String) {
-            locateComponent(component, this);
-        }
-        else if (components instanceof Array) {
+        if (type == 'string') {
+            components = components.split(',');
             locateComponents(components, this);
         }
-        else if ((components instanceof Function) || (component instanceof Object)) {
-            this.genericPipe.plug(component);
+        else if ((type == 'function') || (type == 'object')) {
+            this.genericPipe.plug(components);
         }
         else {
             log.warn('The component type ' + (typeof components) + ' cannot be plugged into the chain');
         }
 
+        return this;
+    };
+
+    Fiber.prototype.finally = function (components) {
+        this.genericPipe.finally(components);
+        return this;
     };
 
     Fiber.prototype.resolve = function (data, req, res, session) {
@@ -298,10 +303,6 @@ var module = (function () {
 
     ServiceMap.prototype.get = function (serviceName) {
 
-        //this.dm.invoke(serviceName, function (item) {
-        //   log.info(stringify(item));
-        //});
-        log.info('Returning instance of ' + serviceName);
         if (!this.services.hasOwnProperty(serviceName)) {
             return null;
         }

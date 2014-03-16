@@ -9,13 +9,13 @@ pipe.plug(pipeCommon.queryParser);
 
 
 
-var log=new Log();
+var log = new Log();
 var fiber = require('/modules/fiber.js');
 
 fiber.createApp(require('/app.json'),function(app){
-     log.info('Initializing');
-     app.router=require('router');
-}).init();
+ log.info('Initializing');
+ app.router=require('router');
+ }).init();
 
 pipe.plug(fiber.getApp().app.router);
 pipe.plug(pipeCommon.errHandler);
@@ -56,11 +56,13 @@ gp.plug(function (context, handlers) {
 
 gp.plug(function (err, context, handlers) {
     log.info('error: ' + stringify(err));
-}); */
+});*/
+
+
 
 /*gp.plug(function(context,handlers){
-   log.info('End.');
-});*/
+ log.info('End.');
+ });*/
 
 //gp.resolve({},request,response,session);
 

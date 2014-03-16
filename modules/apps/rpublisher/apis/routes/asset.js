@@ -8,10 +8,13 @@ router.app.get('/asset/:type/:id', function (req, res, session) {
     fiber.getApp().
         chain('c1').
         chain('c2').
-        chain(['c3', 'c4']).
+        chain('c3,c4').
         chain(function (context, handlers) {
             var log = new Log();
             log.info('This is some logic');
+        }).
+        finally(function(){
+            log.info('Final logic!');
         }).
         resolve(data, req, res, session);
 
@@ -25,4 +28,4 @@ router.app.get('/asset/:type', function () {
 
 });
 
-res.pipe(createUser).error(createUserError).pipe(sendEmail).pipe(someOtherFun);
+
