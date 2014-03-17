@@ -46,6 +46,7 @@ Each of the above folders is considered a package.A package is simply some piece
 
 #Start up flow
 The app goes through the following steps when it is initialized;
+
 1. The fiber script will look for a package.json file in the root directory to determine which packages need to be deployed (if a package.json file is not found a warning will be given and the app will not load)
 2. The fiber script will scan all packages defined in the package.json file and create a map of all available packages and sub packages
 3. It will then step through each package and deploy the files defined in the require property
