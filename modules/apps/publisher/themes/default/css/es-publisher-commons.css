@@ -1314,6 +1314,24 @@ circle:hover {
     margin-bottom: 5px;
 }
 
+.ul.token-input-list-facebook{
+    width:65%;
+}
+
+.options-table td:last-child {
+    width:80px;
+    text-align: right;
+}
+.options-table td:last-child .btn{
+    width:80px;
+}
+.options-table td > *{
+    width: 100%;
+    box-sizing:border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+     height: 32px;
+}
 @media all and (min-width: 768px) {
     .publisher-left {
         bottom: 0;
