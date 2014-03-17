@@ -22,112 +22,32 @@ The app depends on the following Jaggery modules;
 3. entity
 4. router
 5. utils
+6. caramel-view-engine
+7. fiber
 
 #Structure of the app
-The app directory is broken down into several sub directories;
+The Publisher app structure is broken down into several folders;
 
-1. configs
-2. themes
-3. modules
-4. packages
-5. i18n
+1.apis
+2.assets
+3.components
+4.configs
+5.controllers
+6.entities
+7.extensions
+8.i18n
+9.modules
+10.plugins
+11.tenants
+12.themes
+13.package.json
 
-We will be taking a look at the purpose of each sub directory in more detail in the next few sections.
+Each of the above folders is considered a package.A package is simply some piece of logic that needs to be activated when an app is initialized.
 
-#Packages
-Packages are bits of self contained logic and resources that provided or override some functionality of the application.There are two distinct types of packages;
+#Start up flow
+The app goes through the following steps when it is initialized;
+1. The fiber script will look for a package.json file in the root directory to determine which packages need to be deployed (if a package.json file is not found a warning will be given and the app will not load)
+2. The fiber script will scan all packages defined in the package.json file and create a map of all available packages and sub packages
+3. It will then step through each package and deploy the files defined in the require property
 
-1.Global
-2.Tenant
-
-The Global packages define any features that are 
-
-###Structure of a Package
-Any folder can become a package provided it has the following json file;
-
-```json
-  {
-    "name":"package_name",
-    "version":"1.0.0",
-    "description":"Purpose_of_your_app"
-  }
-```
-
-The above two properties are the only properties that you need to define a package.
-
-You can also define a package to consume another package;
-
-```json
-  {
-    "name":"child_package_name",
-    "version":"1.0.0",
-    "description":"This_is_a_child_package",
-    "consumes":["package_name"]
-  }
-```
-
-The package script initializes logic of this package after the parent package.This allows tenant packages to override global routes.
-
-If you need more granualrity as to how your package is started up, then you can also define;
-
-```json
-   "main":"main.js"
-```
-
-The file defined by the main property will be executed when your package is read for the first time.
-
-####Organizing your package
-Although you are free to add any directory within the package the following names are reserved;
-
-1. routes
-2. config
-3. themes
-4. modules
-5. widgets
-6. api
-
-#####routes
-The routes folder should contain any custom routes that are provided by the package.
-
-#####config
-The config folder should contain any configuration files used by the package.If you wish to append any configurations for an existing config file used by the level a json file with the same name must be created.
-
-#####themes
-The themes folder is used for the following scenarios;
-1. The view and resource files related to a route or widget added by the package
-2. Any views overridden by the package
-
-This will be discussed in a later section.
-
-####How does a package work?
-When a package is read the package management script will read any sub folders defined in the directory and trigger predefined logic based on the folder name.You can define your own logic to execute when a package is read by ;
-
-```javascript
-  var myPackageReader=function(fiber,options){
-  
-    fiber.events.on('routes','init',function(context){
-    });
-    
-  };
-```
-
-#Adding your own asset
-The Publisher can be configured to support any asset type defined by an RXT file. All new assets must be placed inside the packages/globals/extensions directory.
-
-#Customizing the Publisher for a tenant
-The Publisher can be configured with tenant specific customizations.All tenant specific customizations should be placed in the packages/tenants directory.
-
-###How does it work?
-When the Publisher loads for a given tenant, the app will look for a directory with the tenant id.If one is present then any packages specified in this directory are loaded.
-
-####Adding functionality
-The Publisher can be augmented with new functionality on a per tenant basis.
-
-If you need to customize the Publisher on a per tenant basis then this logic should be placed in the /packages/tenant/{your_tenant_id} directory.
-
-####Overriding a global functionality
-A tenant customization can also change the way a global customization could work for a 
-
-
-#Theming
 
