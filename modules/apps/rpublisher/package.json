@@ -1,0 +1,7 @@
+{
+    "subPackages": ["apis",
+        "controllers",
+        "assets",
+        "components",
+        "extensions"]
+}
