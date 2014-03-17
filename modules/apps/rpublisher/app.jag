@@ -13,8 +13,9 @@ var pipeCommon=require('pipe-common');
 
 
 pipe.plug(pipeCommon.bodyParser);
-pipe.plug(pipeCommon.queryParser);
+pipe.plug(pipeCommon.queryParser());
 pipe.plug(fiber.app.context.router);
+pipe.plug(pipeCommon.errHandler);
 
 
 pipe.resolve(request,response,session);
