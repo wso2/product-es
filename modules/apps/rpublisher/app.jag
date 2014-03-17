@@ -1,6 +1,7 @@
 <%
-var fiber = require('/modules/sfiber.js');
+var fiber = require('fiber');
 var log=new Log();
+
 //var router=require('router');
 fiber.app.init(function (context) {
     context.router=require('router');
@@ -15,7 +16,6 @@ pipe.plug(pipeCommon.bodyParser);
 pipe.plug(pipeCommon.queryParser);
 pipe.plug(fiber.app.context.router);
 
-log.info(fiber.app.context.router.routes);
 
 pipe.resolve(request,response,session);
 

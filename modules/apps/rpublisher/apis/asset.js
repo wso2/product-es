@@ -3,11 +3,11 @@ var router = require('router');
 var log=new Log();
 log.info('Registering asset');
 
-router.app.get('/asset/:type/:id', function (req, res, session) {
-    var fiber = require('/modules/sfiber.js');
+router.app.get('/api/asset/:type/:id', function (req, res, session) {
+    var fiber = require('fiber');
     var data = {};
 
-    fiber.component.
+    fiber.app.components.
         chain('c1').
         chain('c2').
         chain('c3,c4').
@@ -20,7 +20,6 @@ router.app.get('/asset/:type/:id', function (req, res, session) {
         resolve(data, req, res, session);
 
     res.render(data);
-    //print('EDIT asset page');
 });
 
 router.app.get('/asset/:type', function () {
