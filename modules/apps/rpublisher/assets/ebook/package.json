@@ -1,0 +1,5 @@
+{
+    "name":"ebook",
+    "version":"1.0.0",
+    "require":["apis/asset.js","controllers/asset.js"]
+}

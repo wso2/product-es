@@ -1,0 +1,5 @@
+{
+    "name": "components",
+    "version": "1.0.0",
+    "require":["c1.js","c2.js"]
+}
