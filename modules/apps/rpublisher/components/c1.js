@@ -1,6 +1,6 @@
-var fiber = require('/modules/fiber.js');
+var fiber = require('/modules/sfiber.js');
 
-fiber.getApp().components.register('c1', function () {
+fiber.app.components.register('c1', function () {
 
     var handle = function (context, handlers) {
         context.data.c1 = 'c1';

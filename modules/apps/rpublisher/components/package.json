@@ -1,5 +1,5 @@
 {
     "name": "components",
     "version": "1.0.0",
-    "init":["c1.js","c2.js"]
+    "require":["c1.js","c2.js"]
 }

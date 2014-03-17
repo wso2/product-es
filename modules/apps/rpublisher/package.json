@@ -1,0 +1,6 @@
+{
+    "subPackages": ["apis",
+        "assets",
+        "components",
+        "extensions"]
+}

@@ -1,30 +1,50 @@
 <%
-var pipe = require('pipe');
-var pipeCommon = require('pipe-common');
-//var router = require('router');
+var fiber = require('/modules/sfiber.js');
+var log=new Log();
+//var router=require('router');
+fiber.app.init(function (context) {
+    context.router=require('router');
+});
+
+var pipe=require('pipe');
+var pipeCommon=require('pipe-common');
+
+
 
 pipe.plug(pipeCommon.bodyParser);
 pipe.plug(pipeCommon.queryParser);
+pipe.plug(fiber.app.context.router);
+
+log.info(fiber.app.context.router.routes);
+
+pipe.resolve(request,response,session);
+
+//fiber.recursiveIterate(new File('/assets'));
+
+/*
+ var pipe = require('pipe');
+ var pipeCommon = require('pipe-common');
+ //var router = require('router');
+
+ pipe.plug(pipeCommon.bodyParser);
+ pipe.plug(pipeCommon.queryParser);
 
 
+ var log = new Log();
+ var fiber = require('/modules/fiber.js');
 
-
-var log = new Log();
-var fiber = require('/modules/fiber.js');
-
-fiber.createApp(require('/app.json'),function(app){
+ fiber.createApp(require('/app.json'),function(app){
  log.info('Initializing');
  app.router=require('router');
  }).init();
 
-pipe.plug(fiber.getApp().app.router);
-pipe.plug(pipeCommon.errHandler);
+ pipe.plug(fiber.getApp().app.router);
+ pipe.plug(pipeCommon.errHandler);
+ pipe.final(function(req,res,session){
+ log.info('********End of Request*************');
+ });
 
-pipe.final(function(req,res,session){
-    log.info('********End of Request*************');
-});
-
-pipe.resolve(request,response,session);
+ pipe.resolve(request,response,session);      */
 
 //var m=fiber.getApp().services.services;
 //log.info(stringify(m));
@@ -36,31 +56,31 @@ pipe.resolve(request,response,session);
 //pipe.resolve(request,response,session);
 
 /*var patterns = require('utils').patterns;
-var log = new Log();
+ var log = new Log();
 
-var gp = new patterns.GenericPipe();
+ var gp = new patterns.GenericPipe();
 
-gp.plug(function (context, handlers) {
-    log.info('This is a test');
-    handlers();
-});
+ gp.plug(function (context, handlers) {
+ log.info('This is a test');
+ handlers();
+ });
 
-var simplePlugin = {
-    handle: function (context, handlers) {
-        log.info('Simple plugin');
-        handlers();
-    }
-}
+ var simplePlugin = {
+ handle: function (context, handlers) {
+ log.info('Simple plugin');
+ handlers();
+ }
+ }
 
-gp.plug(simplePlugin);
-gp.plug(function (context, handlers) {
-    log.info('This is the end unless we throw an error');
-    handlers();//{code:100,msg:'test'});
-});
+ gp.plug(simplePlugin);
+ gp.plug(function (context, handlers) {
+ log.info('This is the end unless we throw an error');
+ handlers();//{code:100,msg:'test'});
+ });
 
-gp.plug(function (err, context, handlers) {
-    log.info('error: ' + stringify(err));
-});*/
+ gp.plug(function (err, context, handlers) {
+ log.info('error: ' + stringify(err));
+ });*/
 
 
 

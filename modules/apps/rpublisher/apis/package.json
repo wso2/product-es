@@ -1,6 +1,6 @@
 {
     "name":"apis",
     "version":"1.0.0",
-    "init":["routes/asset.js","routes/assets.js"]
+    "require":["routes/asset.js","routes/assets.js"]
 
 }
