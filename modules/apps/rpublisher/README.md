@@ -42,6 +42,7 @@ The Publisher app structure is broken down into several folders;
 12.themes
 13.package.json
 
+
 Each of the above folders is considered a package.A package is simply some piece of logic that needs to be activated when an app is initialized.
 
 #Start up flow
