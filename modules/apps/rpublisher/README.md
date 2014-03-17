@@ -27,7 +27,6 @@ The app depends on the following Jaggery modules;
 
 #Structure of the app
 The Publisher app structure is broken down into several folders;
-
 1.apis
 2.assets
 3.components
