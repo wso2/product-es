@@ -1,24 +1,55 @@
 <%
 var fiber = require('fiber');
-var log=new Log();
+var log = new Log();
 
 //var router=require('router');
-fiber.app.init(function (context) {
-    context.router=require('router');
+/*fiber.app.init(function (context) {
+ context.router=require('router');
+ });
+
+ var pipe=require('pipe');
+ var pipeCommon=require('pipe-common');
+
+
+
+ pipe.plug(pipeCommon.bodyParser);
+ pipe.plug(pipeCommon.queryParser());
+ pipe.plug(fiber.app.context.router);
+ pipe.plug(pipeCommon.errHandler);
+ */
+
+//pipe.resolve(request,response,session);
+var entity = require('/modules/entity.js');
+require('/entities/schemas/Asset.js');
+var Asset = entity.model('Asset');
+var asset = new Asset({
+    name: "John",
+    attributes: {
+        overview_name: "pet"
+    }
 });
 
-var pipe=require('pipe');
-var pipeCommon=require('pipe-common');
+log.info(asset);
+log.info(asset.toJSON());
+
+asset.save();
 
 
+//log.info(Object.keys(from));
+//log.info(Object.keys(from.attributes));
+//log.info(from.attributes.constructor.name);
+//log.info(from.id.constructor.name);
+//log.info(from.test.constructor.name);
+//log.info('Is id a nested object?'+isNestedObject(from.id));
+//log.info('Is attributes a nested object?'+isNestedObject(from.attributes));
 
-pipe.plug(pipeCommon.bodyParser);
-pipe.plug(pipeCommon.queryParser());
-pipe.plug(fiber.app.context.router);
-pipe.plug(pipeCommon.errHandler);
+//utils.reflection.copyAllPropKeys(from, to);
+//utils.reflection.copyPublicPropValues(from2, to2);
 
-
-pipe.resolve(request,response,session);
+//utils.reflection.recursiveCopyPropValues(from2,to2);
+//log.info(stringify(to));
+//log.info('*********');
+//log.info(stringify(to2));
 
 //fiber.recursiveIterate(new File('/assets'));
 
