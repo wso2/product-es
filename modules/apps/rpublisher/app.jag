@@ -19,7 +19,7 @@ var log = new Log();
  */
 
 //pipe.resolve(request,response,session);
-var entity = require('/modules/entity.js');
+var entity = require('entity');
 require('/entities/schemas/Asset.js');
 var Asset = entity.model('Asset');
 var asset = new Asset({

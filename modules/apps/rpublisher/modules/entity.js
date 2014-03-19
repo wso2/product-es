@@ -244,13 +244,11 @@ var schema = {};
      */
     var resolveDefaultValidations = function (fieldSchema) {
         if (fieldSchema.required) {
-            log.info('Adding required field validator');
             fieldSchema.validations.push({msg: 'Required field', validator: requiredFieldValidator});
         }
     };
 
     var requiredFieldValidator = function (fieldSchema, fieldValue) {
-        log.info('Checking required field');
         if ((!fieldValue) || (fieldValue == '')) {
             return false;
         }
@@ -264,19 +262,14 @@ var schema = {};
      * @returns {*}
      */
     EntitySchema.prototype.field = function (fieldName) {
-        /* for (var key in this.props) {
-         if (key == fieldName) {
-         return this.props[key];
-         }
-         }*/
+
         var field = null;
 
         for (var key in this.props) {
             field = recurseLocateField(this.props, fieldName, key)
 
+            //Stop the search if the field was located
             if (field) {
-                log.info('Located field');
-                log.info(field);
                 return field;
             }
         }
@@ -449,8 +442,6 @@ var schema = {};
             log.info('Performing validations');
 
             for (var key in schema.props) {
-                //key = schema.props[index];
-                log.info('key: '+key);
                 recurseDoValidate(entity, schema.props, key, {});
             }
             next();
@@ -467,7 +458,6 @@ var schema = {};
      * @param errors
      */
     var recurseDoValidate = function (entity, props, key, errors) {
-        log.info('sub '+stringify(props[key]));
         if (isFieldType(props[key])) {
             validateField(props[key], entity[key], key, errors);
         }
@@ -519,6 +509,8 @@ var schema = {};
         }
     };
 
+    var ERR_ARITY=3;
+    var HANDLER_ARITY=2;
     /**
      * The function executes each plugin in an array of plug-ins while
      * giving plug-in the option to continue to the next or stop processing
@@ -532,15 +524,31 @@ var schema = {};
 
         var index = 0;
 
-        var next = function () {
+        var next = function (err) {
             var plugin = plugins[index];
             index++;
 
-            if (plugins.length < index) {
+            if(!plugin){
+                log.warn('End of plugin chain');
                 return;
             }
-            else {
-                return plugin(entity, next);
+
+            if(err){
+                //Check if the current plugin can handle errors
+                if(plugin.length==ERR_ARITY){
+                    plugin(err,entity,next);
+                }
+                else{
+                    next(err);
+                }
+            }
+            else{
+                if(plugin.length==HANDLER_ARITY){
+                    plugin(entity,next);
+                }
+                else{
+                    next();
+                }
             }
         };
 
@@ -561,8 +569,6 @@ var schema = {};
 
             //utils.reflection.copyProps(options, this);
             utils.reflection.copyAllPropValues(options, this);
-
-            log.info('Schema ' + schema.meta.name);
 
             //Bind the methods to the object
             for (var index in schema.methods) {
