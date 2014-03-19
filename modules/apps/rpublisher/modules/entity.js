@@ -453,31 +453,6 @@ var schema = {};
                 log.info('key: '+key);
                 recurseDoValidate(entity, schema.props, key, {});
             }
-
-            //Go through each field and invoke the validations
-            /*for (var key in schema.props) {
-
-             log.info('Validating ' + key + '= ' + entity[key]);
-
-             var validations = schema.props[key].validations;
-
-             //Execute all validators defined in the
-             for (var index in validations) {
-
-             var isFailed = validations[index].validator(entity[key], schema.props[key]);
-
-             //Record the error
-             if (isFailed) {
-
-             if (!errors[key]) {
-             errors[key] = {};
-             }
-
-             errors[key].value = entity[key];
-             errors[key].message = validations[index].msg;
-             }
-             }
-             } */
             next();
             log.info('Finished validating....');
             log.info(errors);
