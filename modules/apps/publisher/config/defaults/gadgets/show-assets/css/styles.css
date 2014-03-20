@@ -61,7 +61,7 @@ h1, h2, h3, h4 {
     text-shadow: none;
     padding:2px 5px;
 }
-.asset-box .select-btn:hover {
+.asset-box .select-btn:hover , .asset-box .select-btn.active {
     background: #16A085;
     color: #FFFFFF;
 }
@@ -140,15 +140,16 @@ h1, h2, h3, h4 {
 }
 
 #inp-search-gadget {
-    margin: 3px 10px 4px;
-    transition: width 0.2s ease 0s;
-    float: right;
-    height: 30px;
+    height: 38px;
+    margin: 23px -4px 0;
+  
 }
 
+/*
 #inp-search-gadget:focus {
     width: 90%;
-}
+}*/
+
 
 .modal-header {
     background: url('../img/banner-bg-pattern.jpg') #16a085;
@@ -202,9 +203,11 @@ h1, h2, h3, h4 {
     height: 73%;
 }
 .tag-box a {
-    background: none repeat scroll 0 0 #FCFCFC;
+  background: none repeat scroll 0 0 #FCFCFC;
     border: 1px solid #CACACA;
     color: #626262;
+    font-size: 13px;
+    font-weight: bold;
     padding: 5px;
 }
 .tag-box {
@@ -236,8 +239,8 @@ h1, h2, h3, h4 {
 
 .page-num-list {
     background: none repeat scroll 0 0 #FFFFFF;
-    top: 68px;
-    right: 9px;
+    top: 3px;
+    right: -7px;
     text-align: center;
     position: fixed;
     font-size: 16px;
@@ -324,7 +327,7 @@ h1, h2, h3, h4 {
 .icon-tags {
     background-position: 0 -131px;
     padding-left: 24px;
-    font-size: 16px;
+    font-size: 13px;
     padding-top: 4px;
 }
 .asset-byUrl .select-btn {
@@ -371,7 +374,7 @@ div.icon-external-link-sign {
 .show-asset-left-col{
 	position:absolute;
 	height:auto;
-	top:0;
+	top:-14px;
 	bottom:0;
 }
 .show-asset-right-col{
@@ -384,7 +387,7 @@ div.icon-external-link-sign {
     overflow-y: hidden;
     padding: 0;
     position: absolute;
-    top: 60px;
+    top: 0;
     width: 100%;
 }
 .icon-no-results{
@@ -393,6 +396,14 @@ div.icon-external-link-sign {
     margin: 0 auto;
     text-align: center;
     width: 125px;
+}
+.tags-area-text{
+       display: block;
+    font-size: 14px;
+    height: 20px;
+    line-height: 14px;
+    margin-top: 21px;
+    
 }
 label.error {
     background: none repeat scroll 0 0 #F2DEDE;

@@ -2,16 +2,20 @@
     <Module>
     <ModulePrefs title="Bar Chart"
                  author="WSO2 Gadget Server"
-                 category="Templates"
                  height="230"
                  scrolling="true"
+                 category="Google"
                  tags="charts,bar,visualization,data"
                  description="A generic Bar Chart gadget, that takes a json datasource as an input. It can be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained.">
      </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="../../portal/apis/flot-data-files/dataFile4.jag">
+              default_value="/portal/gadgets/bar-chart/datasource/dataFile4.jag">
     </UserPref>
+    <!--UserPref name="options"
+              display_name="Chart Options"
+              default_value="/portal/gadgets/bar-chart/js/options-bar.js">
+    </UserPref-->
     <UserPref name="updateGraph"
               display_name="Update Interval (s)"
               default_value="No">
@@ -22,15 +26,19 @@
  <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Bar Chart</title>
-	<link href="../../themes/portal/css/flot-graph.css" rel="stylesheet" type="text/css">
-	<link href="../../themes/portal/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<script language="javascript" type="text/javascript" src="../../js/flot/excanvas.min.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.selection.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot/jquery.flot.resize.js"></script>
-	<script language="javascript" type="text/javascript" src="js/options-bar.js"></script>
-	<script language="javascript" type="text/javascript" src="../../js/flot-chart-core.js"></script>
+	<link href="css/flot-graph.css" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script>
+	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="js/bootstrap.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.tickrotor.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.axislabels.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.orderBars.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/flot-chart-core.js"></script>
+
 </head>
 
 <body>
@@ -40,11 +48,20 @@
 					<button class="pause btn btn-mini">Pause</button>
 					<button class="reset btn btn-mini">reset</button>
 				</div>
-				<div id="optionsRight" class="seriesContainer"></div>
-				
+				<div id="optionsRight" class="seriesContainer">
+				    <div class="btn-group">
+				    <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+				    Series
+				    <span class="caret"></span>
+				    </a>
+				    <ul class="dropdown-menu series-toggle pull-right" role="menu" aria-labelledby="dLabel">
+
+					</ul>
+				    </div>
+				</div>
+
 			</div>
 			<div id="placeholder" class="demo-placeholder" style="height:90%"></div>
-			<div id="overview" class="demo-placeholder"></div>
 
 	</div>
 </body>

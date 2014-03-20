@@ -366,9 +366,9 @@ $(function() {
 
     for (var itemIndex in items) {
       output += '<tr>';
-      output += '<td><span class="dateFull"> ' + items[itemIndex].timestamp + '</span></td>';
+      output += '<td><span class="dateFull"><i class="icon icon-time"></i> ' + items[itemIndex].timestamp + '</span></td>';
       output += '<td><b>' + items[itemIndex].user + '</b> changed the asset from ' + items[itemIndex].state + ' to ' + items[itemIndex].targetState;
-      output += items[itemIndex].comment ? '<blockquote>' + items[itemIndex].comment + '</blockquote>' : '';
+      output += items[itemIndex].comment ? '<div class="lifecycle-comment"><div class="arrow"></div><p>' + items[itemIndex].comment + '</p></div>' : '';
       output += '</td>'
       output += '</tr>';
     }

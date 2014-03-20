@@ -59,10 +59,8 @@ var rxt_management = function () {
 
                 //Extract the contents into an Xml file
                 var xmlRxtContent = createXml(rxtFile);
-
                 //Load the rxt template from the xml file
                 rxtTemplate = xmlToRxtConverter.execute(xmlRxtContent, rxtTemplate);
-
                 this.rxtTemplates.push(rxtTemplate);
             }
 

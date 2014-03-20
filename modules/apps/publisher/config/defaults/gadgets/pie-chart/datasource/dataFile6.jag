@@ -1,0 +1,25 @@
+<%
+var data1 = [];
+var data2 = [];
+totalPoints = 5;
+
+function getRandomData() {
+
+    var seriesCount = Math.floor(Math.random() * 6) + 1;
+					var data = [];
+					var obj = {};
+					for(var i = 0;i<seriesCount;i++)
+                    {
+						var series = "series"+i;
+						var d = parseInt(Math.random() * 30).toFixed(0);
+						
+                                                obj[series] = {"label":"data set"+i,"data":d};
+						
+					}
+					data.push(obj);
+    return data;
+
+}
+print(getRandomData());
+
+%>

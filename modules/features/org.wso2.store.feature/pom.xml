@@ -97,7 +97,34 @@
                                     org.wso2.carbon.webapp.mgt.server:${patch.version.421}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    caramel:${caramel.feature.version}
+                                    org.jaggeryjs.modules.caramel:${caramel.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.jaggeryjs.modules.handlebars:${handlebars.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.jaggeryjs.modules.markdown:${markdown.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.event:${event.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.login:${login.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.permission:${permission.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.registration:${registration.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.sso:${sso.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.store:${store.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.ues:${ues.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.registry.associations.dependencies:${carbon.platform.version}
@@ -222,12 +249,6 @@
                                     <directory>../../</directory>
                                     <includes>
                                         <include>apps/**</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>../../</directory>
-                                    <includes>
-                                        <include>jaggery-modules/**</include>
                                     </includes>
                                 </resource>
                                 <resource>

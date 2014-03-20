@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-	<ModulePrefs title="Agricultural Land" description="Agricultural land (% of land area)" height="350" tags="climate,agriculture">
+	<ModulePrefs title="Agricultural Land" category="Google" description="Agricultural land (% of land area)" height="350" tags="climate,agriculture">
 		<Require feature="pubsub-2">
 			<Param name="topics">
 				<![CDATA[
