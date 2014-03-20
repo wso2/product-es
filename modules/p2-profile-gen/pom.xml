@@ -104,6 +104,8 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.store.modules:ues.feature:${ues.feature.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store.modules:claims.feature:${claims.feature.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:markdown.feature:${markdown.feature.version}
@@ -306,6 +308,10 @@
                                 <feature>
                                     <id>org.wso2.store.modules.ues.feature.group</id>
                                     <version>${ues.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.store.modules.claims.feature.group</id>
+                                    <version>${claims.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
