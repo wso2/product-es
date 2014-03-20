@@ -193,7 +193,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.governance.lifecycle.management.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.claim.mgt.feature:${carbon.platform.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
 
                         </configuration>
@@ -351,10 +353,11 @@
                                     <id>org.wso2.carbon.event.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.claim.mgt.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
                             </features>
-
-
                         </configuration>
                     </execution>
                 </executions>
