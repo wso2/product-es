@@ -13,6 +13,7 @@ response.addHeader("Content-Type", "application/json");
         var username = String(logged.username) + '@' + logged.tenantDomain;
         var activity = JSON.parse(request.getParameter('activity'));
         activity.actor = {"id": username, "objectType": "person" };
+        activity.published = new Date().getTime();
         var id = social.publish(activity);
 
         var result = {

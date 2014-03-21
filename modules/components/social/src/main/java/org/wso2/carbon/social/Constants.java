@@ -9,6 +9,8 @@ public class Constants {
     public static final String TARGET_JSON_PROP = "target";
     public static final String CONTEXT_JSON_PROP = "context";
     public static final String ID_JSON_PROP = "id";
+    public static final String ACTOR_JSON_PROP = "actor";
+    public static final String PUBLISHED_TIME_PROP = "published";
 
     public static final String STREAM_VERSION = "1.0.0";
     public static final String STREAM_NAME = "org.wso2.social.activity";
@@ -25,6 +27,9 @@ public class Constants {
             " 'payloadData':[" +
             "       {'name':'id','type':'STRING'}," +
             "       {'name':'context.id','type':'STRING'}," +
+            "       {'name':'tenant.id','type':'STRING'}," +
+            "       {'name':'actor.id','type':'STRING'}," +
+            "       {'name':'published','type':'STRING'}," +
             "       {'name':'body','type':'STRING'}" +
             " ]" +
             "}";

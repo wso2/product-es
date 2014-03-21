@@ -69,8 +69,13 @@ public class ActivityPublisher {
                 contextId = getProperty(activity, TARGET_JSON_PROP, ID_JSON_PROP);
             }
 
-
-            publisher.publish(streamId, null, null, new Object[]{id, contextId, json});
+            String actorId = getNullableProperty(activity, ACTOR_JSON_PROP, ID_JSON_PROP);
+            String[] actor = actorId.split("@");
+            String tenantId= actor[1];
+            
+            String published = getNullableProperty(activity, PUBLISHED_TIME_PROP);
+            
+            publisher.publish(streamId, null, null, new Object[]{id, contextId, tenantId, actorId, published, json});
             return id;
         } catch (Exception e) {
             LOG.error("failed to publish social event.", e);
@@ -117,6 +122,9 @@ public class ActivityPublisher {
                     try {
                         streamId = publisher.defineStream(STREAM_DEF);
                         new ActivityBrowser().makeIndexes("context.id");
+                        new ActivityBrowser().makeIndexes("tenant.id");
+                        new ActivityBrowser().makeIndexes("actor.id");
+                        new ActivityBrowser().makeIndexes("published");
                     } catch (Exception e) {
                         LOG.error("Can't create " + STREAM_NAME + ":" +
                                 STREAM_VERSION + " for storing social Activities", e);
