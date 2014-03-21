@@ -7,9 +7,6 @@
     <div class="com-right">
         <div class="clear">
             <strong class="com-author">{{actor.id}}</strong>
-            <div class="com-rating">
-                <div class="com-rating-{{object.rating}}star"></div>
-            </div>
             <p>
                 {{object.content}}
             </p>
@@ -23,20 +20,7 @@
                     </li>
                     <li>
                         <a href="#"><i class="icon icon-thumbs-down {{#if iDislike}}selected{{/if}}"></i><span class="com-dislike-count">{{#if dislikes.totalItems}} {{dislikes.totalItems}} {{/if}}</span></a>
-                    </li>
-                    {{#if isLogged}}
-                        <li>
-                            <textarea rows="2" cols="50" class="textarea-com" id="com-{{id}}"></textarea>
-                            <a href="#" class="com-add" id="{{id}}"><i class="icon-comment"></i>{{id}}</a>
-                        </li>
-                    {{/if}}
-                    <li>
-                        {{#if comments}}
-                            {{#each comments}}
-                                {{> comment}}
-                            {{/each}}
-		                {{/if}}
-                    </li>    
+                    </li>   
                 </ul>
             </div>
         </div>

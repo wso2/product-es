@@ -41,9 +41,17 @@ var caramel;
 
         if (reviewsJSON) {
             for (var i = 0; i < reviewsJSON.length; i++) {
+                //get nested comments
+                var commentTarget = reviewsJSON[i].id;
+                var nestedObj = JSON.parse(String(social.getSocialObjectJson("review:"+commentTarget, tenantDomain, "POPULAR")));
+                var nestedObjJson = nestedObj.attachments;
+                //log.info(nestedObj.attachments);
                 var review = reviewsJSON[i];
+                review.comments = nestedObj.attachments;
+
                 review.iLike = isUserInList(review.likes && review.likes.items, username);
                 review.iDislike = isUserInList(review.dislikes && review.dislikes.items, username);
+                review.isLogged = Boolean(logged);
             }
         }
 

@@ -148,3 +148,28 @@ $stream.on('click', '.icon-thumbs-up', function (e) {
 
 });
 
+// Following functions will be used to generate/publish nested comments
+
+$stream.on('click', '.com-add', function (e) {
+    
+        var renderComments = function () {
+            console.log("Comment published successfully");
+            $comAddBtn.removeAttr('disabled');
+            showLoading(false);
+        };
+    
+    e.preventDefault();
+    var $comAddBtn = $(e.target);
+    var id = $comAddBtn.attr('id');
+    var reply = $('#com-'+id).val();
+    $comAddBtn.attr('disabled', 'disabled');
+    showLoading(true);
+    //generate the comment activity and publish
+    var activity = {"verb":"post","object":{"objectType":"comment","content":reply},"target":{"id":"review:"+id}};
+    console.log(reply);
+    console.log(activity);
+    $.get('apis/comments.jag', {
+        activity: JSON.stringify(activity)
+    }, renderComments())
+    
+});

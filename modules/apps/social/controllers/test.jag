@@ -1,0 +1,21 @@
+<%
+var userModule = require('/modules/user.js');
+    var logged = userModule.current(session);
+    if (logged) {
+        var username = String(logged.username) + '@' + logged.tenantDomain;
+        
+        for (var j=20; j<30; j++)
+        {
+            //var activity = JSON.parse(activity);
+            var carbon = require('carbon');
+            var config=require('/configs/social.json');
+            var social = carbon.server.osgiService('org.wso2.carbon.social.service.SocialActivityService');
+            social.configPublisher(config.dataPublisherConnectionInfo);
+            social.publish(JSON.parse('{"verb" : "post", "object" : {"objectType" : "review", "content" : "testcontent'+j+'", "rating" : 2}, "target" : {"id" : "ebook:78c09042-692d-476c-a1b9-8a1f7f0b8b6f"}, "actor" : {"id" : "admin@carbon.super", "objectType" : "person"}}'));
+            print("Adding test activity: "+j + "</br>");
+            //print(parse(stringify(activity)));
+        }
+    } else {
+        response.sendError(401);
+    }
+%>
