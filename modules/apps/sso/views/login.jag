@@ -90,6 +90,10 @@ var e = request.getParameter('authFailure');
 									        	},
 									        	PASSWORD: {
 									        		render: false // because this is already rendered by default
+									        	},
+									        	EMAILADDRESS: {
+									        		render: true,
+									        		customClass: 'email'
 									        	}
 									        }
 
@@ -106,7 +110,7 @@ var e = request.getParameter('authFailure');
 									        		%> 
 									        		<div class = "control">
 									        			<label><%=claims[i].displayTag%></label>
-							        					<input type="text" name="<%=formElementName%>" data-claim-uri="<%=claims[i].claimUri%>" class="input-block-level required">
+							        					<input type="text" name="<%=formElementName%>" data-claim-uri="<%=claims[i].claimUri%>" class="input-block-level required <%=claims[i].customClass%>">
 							        				</div> 
 							        				<%
 
