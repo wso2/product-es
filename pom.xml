@@ -132,6 +132,7 @@
         <sso.feature.version>1.0.0-SNAPSHOT</sso.feature.version>
         <store.feature.version>1.0.0-SNAPSHOT</store.feature.version>
         <ues.feature.version>1.0.0-SNAPSHOT</ues.feature.version>
+        <claims.feature.version>1.0.0-SNAPSHOT</claims.feature.version>
         <wso2.slf4j.version>1.5.10.wso2v1</wso2.slf4j.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
 

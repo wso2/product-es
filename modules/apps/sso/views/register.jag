@@ -1,15 +1,30 @@
 <%
 var action = request.getParameter('action'),
-        username = request.getParameter('reg-username'),
-        password = request.getParameter('reg-password'),
-        res = {};
-        log = new Log();
+    username = request.getParameter('reg-username'),
+    password = request.getParameter('reg-password'),
+    res = {},
+    log = new Log();
 
-(function () {
-    var registerUser = function (username, password) {
+(function() {
+    var getClaimValues = function(claims, req) {
+        var claimValues = [];
+
+        for (var formFieldName in claims) {
+            if (claims.hasOwnProperty(formFieldName)) {
+                claimValues.push({
+                    claimURI: claims[formFieldName],
+                    value: req.getParameter(formFieldName)
+                });
+            }
+        }
+
+        return claimValues;
+    };
+
+    var registerUser = function(username, password, claims) {
         var userMod = require('/modules/user.js');
         try {
-            userMod.register(username, password);
+            userMod.register(username, password, claims);
             res.error = 'false';
             res.msg = 'User successfully added';
             print(res);
@@ -23,10 +38,12 @@ var action = request.getParameter('action'),
     };
 
     if (action == 'register') {
-        registerUser(username, password);
+        var claims = JSON.parse(request.getParameter("reg-claims"));
+        var claimValues = getClaimValues(claims, request);
+
+        registerUser(username, password, claimValues);
     }
 
 }());
-
 
 %>

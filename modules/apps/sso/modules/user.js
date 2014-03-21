@@ -221,7 +221,7 @@ var privateRole = function (username) {
     return USER_ROLE_PREFIX + username;
 };
 
-var register = function (username, password) {
+var register = function (username, password, claims) {
     var user, role, id, perms, r, p,
         server = require('/modules/server.js'),
         carbon = require('carbon'),
@@ -240,7 +240,12 @@ var register = function (username, password) {
 
     var opts = options(usr.tenantId);
 
-    um.addUser(usr.username, password, opts.userRoles);
+    var claimsMap = new java.util.HashMap();
+    for (var i = 0; i < claims.length; i++) {
+        claimsMap.put(claims[i].claimURI, claims[i].value);
+    };
+    
+    um.addUser(usr.username, password, opts.userRoles, claimsMap);
     user = um.getUser(usr.username);
     role = privateRole(usr.username);
     id = userSpace(usr.username);
