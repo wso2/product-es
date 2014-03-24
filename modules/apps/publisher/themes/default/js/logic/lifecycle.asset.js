@@ -189,12 +189,13 @@ $(function() {
 	 lifecycle button
 	 @action: The action for the button
 	 */
-  function buttonClickLogic(action, comment) {
+  function buttonClickLogic(action, comment, roles) {
     $.ajax({
       url: '/publisher/api/lifecycle/' + action + '/' + asset + '/' + id,
       type: 'PUT',
       data: JSON.stringify({
-        'comment': comment
+        'comment': comment,
+        'roles': roles
       }),
       contentType: 'application/json',
 
@@ -223,7 +224,7 @@ $(function() {
       },
       error: function(response) {
         if (response.status === 400) {
-          showAlert('You need to insert a comment for this change.', 'error');
+          showAlert(response.responseText, 'error');
         } else {
           showAlert(action + ' operation failed', 'error');
         }
@@ -271,6 +272,14 @@ $(function() {
       var thisState = className;
       if (isClickable(thisState)) {
         $('#commentModal').data('state', thisState).modal('show');
+
+        var statesConfiguredForRole = $('#rolesGroup').attr('data-roles').split(',');
+
+        if(statesConfiguredForRole.indexOf(thisState) === -1) {
+          $('#rolesGroup').hide();
+        } else {
+          $('#rolesGroup').show();
+        }
       } else {
         showAlert('Invalid operation', 'error');
       }
@@ -291,7 +300,12 @@ $(function() {
     var comment = $('#commentModalText').val();
     $('#commentModalText').val('');
 
-    buttonClickLogic(action, comment);
+    var roles = [];
+    $('#roles').tokenInput('get').forEach(function (selected) {
+      roles.push(selected.name);
+    });
+
+    buttonClickLogic(action, comment, roles);
   });
 
   /*
@@ -483,6 +497,13 @@ $(function() {
     }
     return null;
   }
+
+  // roles autocomplete
+  $('#roles').tokenInput('/publisher/api/lifecycle/information/meta/roles', {
+    theme: 'facebook',
+    preventDuplicates: true,
+    zindex:99999 // so that autcomplete will render on top of a modal
+  });
 
   /*
 	 Click handlers for the checkboxes

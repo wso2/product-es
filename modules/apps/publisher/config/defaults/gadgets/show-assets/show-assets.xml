@@ -82,7 +82,7 @@
             {{/rating}}
         </h5>
         <small>by {{overview_provider}}</small>
-        <button class="btn select-btn">Select Gadget</button>
+        <button class="btn select-btn">Select Template</button>
     </div>
     {{/attributes}}
 </script>
@@ -108,6 +108,8 @@
 		</div>
 		<div class="span10 show-asset-right-col">
 			<div>
+				<div id="asset-grid-store" class="asset-grid"></div>
+				<!--
 				<ul class="nav nav-tabs">
 					<li class="active">
 						<a href="#tab1" data-toggle="tab" id="my-tab">Bookmarks</a>
@@ -139,6 +141,7 @@
 					
 					</div>
 				</div>
+				-->
 			</div>
 		</div>
 	</div>
