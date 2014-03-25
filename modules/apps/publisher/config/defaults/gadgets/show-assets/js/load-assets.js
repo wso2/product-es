@@ -122,6 +122,9 @@ $(function () {
         $(document).bind('assetSelect', function (e, p) {
             func(p);
         });
+        $(document).bind('load', function(){
+    		$('#asset-grid-store').getNiceScroll().resize();
+    	});
     };
     var deselectGadget = function () {
         $('.select-btn').text('Select Gadget').removeClass('active');
