@@ -5,6 +5,7 @@
                  height="230"
                  scrolling="true"
                  category="Templates"
+                 tags="charts,stacked,bar,visualization,template"
                  description="A generic Line + Bar Chart gadget, that takes a json data source as an input. It can be be configured to fetch data
                   in defined intervals. This gadget can be used to create dashboards with statistical data. Gadget can be reused as an iframe in any web page
                   as it is sef contained">
