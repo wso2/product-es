@@ -271,6 +271,14 @@ $(function() {
       var thisState = className;
       if (isClickable(thisState)) {
         $('#commentModal').data('state', thisState).modal('show');
+
+        var statesConfiguredForRole = $('#rolesGroup').attr('data-roles').split(',');
+
+        if(statesConfiguredForRole.indexOf(thisState) === -1) {
+          $('#rolesGroup').hide();
+        } else {
+          $('#rolesGroup').show();
+        }
       } else {
         showAlert('Invalid operation', 'error');
       }
