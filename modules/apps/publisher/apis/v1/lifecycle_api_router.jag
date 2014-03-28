@@ -24,8 +24,6 @@
 require('/modules/publisher.js').exec(function(ctx) {
 
   var config = require('/config/publisher.json');
-  var caramel = require('caramel');
-
 
   var router = require('/modules/router-g.js').router();
 
@@ -229,22 +227,6 @@ require('/modules/publisher.js').exec(function(ctx) {
     return lcJSON;
   }
 
-  routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/roles/{like}', function(context) {
-    log.info(context);
-
-    // getting the user roles
-    var um = server.userManager(server.current(session).tenantId);
-    var allRoles = um.allRoles();
-    var matchedRoles = [];
-
-    for (var i = 0; i < allRoles.length ; i++) {
-      if (allRoles[i].indexOf(context.params.like) > -1) {
-        matchedRoles.push(allRoles[i]);
-      }
-    };
-
-    print(matchedRoles);
-  });
 
   routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/{type}/{id}', function(context) {
 
