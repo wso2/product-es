@@ -122,12 +122,9 @@ $(function () {
         $(document).bind('assetSelect', function (e, p) {
             func(p);
         });
-        $(document).bind('load', function(){
-    		$('#asset-grid-store').getNiceScroll().resize();
-    	});
     };
     var deselectGadget = function () {
-        $('.select-btn').text('Select Template').removeClass('active');
+        $('.select-btn').text('Select Gadget').removeClass('active');
         console.log("Gadget deselected");
     };
 
@@ -136,8 +133,8 @@ $(function () {
         if (target.hasClass('select-btn')) {
             var event = jQuery.Event('assetSelect');
             $(document).trigger(event, $(e.target).parents('.asset-box').data());
-            $('.select-btn').text('Select Template').removeClass('active');
-            target.text('Template Selected').addClass('active');
+            $('.select-btn').text('Select Gadget').removeClass('active');
+            target.text('Gadget Selected').addClass('active');
         } else if (target.hasClass('btn-browse')) {
             STORE_TAB.click();
         }

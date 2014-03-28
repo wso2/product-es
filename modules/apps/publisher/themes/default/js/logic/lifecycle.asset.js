@@ -223,7 +223,7 @@ $(function() {
       },
       error: function(response) {
         if (response.status === 400) {
-          showAlert(response.responseText, 'error');
+          showAlert('You need to insert a comment for this change.', 'error');
         } else {
           showAlert(action + ' operation failed', 'error');
         }

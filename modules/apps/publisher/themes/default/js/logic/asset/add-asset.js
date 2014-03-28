@@ -95,4 +95,11 @@ $(function () {
             }
         });
     }
+
+    // roles autocomplete
+    $('#roles').tokenInput('/publisher/api/lifecycle/information/meta/'+ $('#meta-asset-type').val() + '/roles', {
+        theme: 'facebook',
+        preventDuplicates: true,
+        zindex: 99999 // so that autcomplete will render on top of a modal
+    });
 });
