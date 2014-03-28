@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.store</groupId>
     <artifactId>wso2store-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
 	<name>WSO2 Enterprise Store - Parent</name>
     <url>http://wso2.org/projects/appserver/java</url>
@@ -85,7 +85,7 @@
     </modules>
 
     <properties>
-        <ues.version>1.0.0</ues.version>
+        <ues.version>1.0.1</ues.version>
         <carbon.kernal.version>4.2.0</carbon.kernal.version>
         <carbon.platform.version>4.2.0</carbon.platform.version>
 
@@ -118,7 +118,7 @@
         <maven-project-info-report-plugin.version>2.4</maven-project-info-report-plugin.version>
         <maven-buildnumber-plugin.version>1.1</maven-buildnumber-plugin.version>
         <maven-dependency-plugin.version>2.4</maven-dependency-plugin.version>
-        <caramel.feature.version>1.0.0</caramel.feature.version>
+        <caramel.feature.version>1.0.1</caramel.feature.version>
 		<wso2.slf4j.version>1.5.10.wso2v1</wso2.slf4j.version>
 		<sso.hostobjects.version>1.0.1</sso.hostobjects.version>
 
@@ -126,7 +126,7 @@
         <commons-codec.osgi.version>1.4.0.wso2v1</commons-codec.osgi.version>
         <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
         <commons-logging.version>1.1.1</commons-logging.version>
-        <cep.component.version>1.0.0</cep.component.version>
+        <cep.component.version>1.0.1</cep.component.version>
     </properties>
 
     <distributionManagement>
