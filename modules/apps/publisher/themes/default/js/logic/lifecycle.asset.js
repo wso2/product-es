@@ -189,12 +189,13 @@ $(function() {
 	 lifecycle button
 	 @action: The action for the button
 	 */
-  function buttonClickLogic(action, comment) {
+  function buttonClickLogic(action, comment, roles) {
     $.ajax({
       url: '/publisher/api/lifecycle/' + action + '/' + asset + '/' + id,
       type: 'PUT',
       data: JSON.stringify({
-        'comment': comment
+        'comment': comment,
+        'roles': roles
       }),
       contentType: 'application/json',
 
@@ -299,7 +300,12 @@ $(function() {
     var comment = $('#commentModalText').val();
     $('#commentModalText').val('');
 
-    buttonClickLogic(action, comment);
+    var roles = [];
+    $('#roles').tokenInput('get').forEach(function (selected) {
+      roles.push(selected.name);
+    });
+
+    buttonClickLogic(action, comment, roles);
   });
 
   /*
@@ -491,6 +497,13 @@ $(function() {
     }
     return null;
   }
+
+  // roles autocomplete
+  $('#roles').tokenInput('/publisher/api/lifecycle/information/meta/roles', {
+    theme: 'facebook',
+    preventDuplicates: true,
+    zindex:99999 // so that autcomplete will render on top of a modal
+  });
 
   /*
 	 Click handlers for the checkboxes
