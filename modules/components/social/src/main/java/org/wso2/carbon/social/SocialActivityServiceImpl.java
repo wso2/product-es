@@ -19,8 +19,8 @@ public class SocialActivityServiceImpl implements SocialActivityService {
     }
 
     @Override
-    public String publish(NativeObject activity) {
-        return activityPublisher.publish(activity);
+    public String publish(NativeObject activity, String wallConfig) {
+        return activityPublisher.publish(activity, wallConfig);
     }
 
     @Override

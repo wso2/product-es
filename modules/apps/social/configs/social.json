@@ -28,6 +28,6 @@
         "password":"admin"
     },
     "wallSettings":{
-        "limit":"YYYY:MM:DD:HH:MM:SS"
+        "limit":"yyyy:MM:dd"
     }
 }

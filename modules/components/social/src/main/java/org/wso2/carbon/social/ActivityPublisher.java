@@ -6,6 +6,8 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.PropertyException;
 import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -57,7 +59,7 @@ public class ActivityPublisher {
         }
     }
 
-    public String publish(NativeObject activity) {
+    public String publish(NativeObject activity, String wallConfig) {
         DataPublisher publisher = getPublisher();
         try {
             String streamId = getStreamId(publisher);
@@ -73,7 +75,7 @@ public class ActivityPublisher {
             String[] actor = actorId.split("@");
             String tenantId= actor[1];
             
-            String published = getNullableProperty(activity, PUBLISHED_TIME_PROP);
+            String published = getFormattedTime(wallConfig);
             
             publisher.publish(streamId, null, null, new Object[]{id, contextId, tenantId, actorId, published, json});
             return id;
@@ -209,6 +211,22 @@ public class ActivityPublisher {
 
         return password;
     }
+    
+	/**
+	 * The method returns the formatted time-stamp according to the social-wall
+	 * configuration. If no password is found in the configuration properties
+	 * then the default password is provided
+	 * 
+	 * @return the formatted time-stamp
+	 */
+	private String getFormattedTime(String config) {
+		String formattedTime = null;
 
+		SimpleDateFormat sdf = new SimpleDateFormat(config);
+		Date date = new Date();
+		formattedTime = sdf.format(date);
+
+		return formattedTime;
+	}
 
 }

@@ -13,7 +13,7 @@ public interface SocialActivityService {
      */
     void configPublisher(NativeObject configObject);
 
-    String publish(NativeObject activity);
+    String publish(NativeObject activity, String wallConfig);
 
     String[] listActivities(String contextId, String tenant);
 

@@ -45,7 +45,7 @@ var caramel;
                 var commentTarget = reviewsJSON[i].id;
                 var nestedObj = JSON.parse(String(social.getSocialObjectJson("review:"+commentTarget, tenantDomain, "POPULAR")));
                 var nestedObjJson = nestedObj.attachments;
-                //log.info(nestedObj.attachments);
+                log.info(nestedObj.attachments);
                 var review = reviewsJSON[i];
                 review.comments = nestedObj.attachments;
 
