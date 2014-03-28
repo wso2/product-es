@@ -157,18 +157,31 @@ require('/modules/publisher.js').exec(function(ctx) {
     var shortName = context.params.type;
     var action = context.params.action;
     var id = context.params.id;
+
     var comment = context.content.comment;
-
+    var roles = context.content.roles || [];
     var artifactManager = rxtManager.getArtifactManager(shortName);
+    var artifact = artifactManager.get(id);
+    var currentState = artifactManager.getLifecycleState(artifact).toString();
+    var carbon = require('carbon');
+    var um = server.userManager(server.current(session).tenantId);
+    var validRoles = um.allRoles();
 
-    var commentNeeded = require('/config/ext/' + shortName + '.json').behavior.lifecycle_change_comment_required === 'true';
+    var commentNeeded = require('/config/ext/' + shortName + '.json').behavior.lifecycle.transitionCommentNeeded === 'true';
 
     if (!comment && commentNeeded) {
-      response.sendError(400, 'This change requires that you insert a comment');
+      response.status = 400;
+      response.content = 'This change requires that you insert a comment';
     } else {
       try {
-        var artifact = artifactManager.get(id);
         log.debug('Calling promoteLifecycleState for action : ' + action);
+
+        if (roles.length > 0) {
+          roles.forEach(function(role) {
+            um.authorizeRole(role, artifact.path, carbon.registry.actions.GET);
+          });
+        }
+
         artifactManager.promoteLifecycleState(action, artifact);
 
         if (comment) {
