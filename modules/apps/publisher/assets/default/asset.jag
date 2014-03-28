@@ -155,12 +155,8 @@ routeManager.register('GET', 'publisher', '/publisher/asset/operations/{opType}/
 		var tags = rxtManager.registry.tags(path);
 		var title = assetName;
 
-        // getting the user roles
-        var server = require('store').server,
-            um = server.userManager(server.current(session).tenantId);
+        output.info.rolesConfigurableStates = require('/config/ext/' + shortName + '.json').behavior.lifecycle.roleConfigurationFor;
 
-        output.roles = um.allRoles();
-		
         caramel.render({op: operation, cuser: server.current(session), shortName: shortName, artifact: artifact, rxtTemplate: rxtTemplate, data: output, versions: versionList, tags:tags, title:title});
     } catch (e) {
         log.debug('The asset with id ' + id + ' could not be found due to : ' + e);
