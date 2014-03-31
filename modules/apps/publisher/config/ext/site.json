@@ -147,9 +147,6 @@
     },
 
     "behavior": {
-        "lifecycle" : {
-            "transitionCommentNeeded": "true",
-            "roleConfigurationFor": ["Published", "Published"]
-        }
+      "lifecycle_change_comment_required": "true"
     }
 }

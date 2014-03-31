@@ -130,11 +130,10 @@ h1, h2, h3, h4 {
 }
 
 .asset-grid {
-    height: 94%;
+    height: 90%;
     overflow: auto;
     position: relative;
     width: 100%;
-   
 }
 .asset-grid .row-fluid{
     margin-bottom:18px;
@@ -240,21 +239,23 @@ h1, h2, h3, h4 {
 
 .page-num-list {
     background: none repeat scroll 0 0 #FFFFFF;
-    bottom: 0;
-    font-size: 14px;
-    font-weight: bold;
-    height: 25px;
+    top: 3px;
+    right: -7px;
+    text-align: center;
     position: fixed;
-    right: 0;
-    text-align: right;
+    font-size: 16px;
+    font-weight: bold;
+    height: 40px;
+    line-height: 40px;
 }
 
 .page-num-list a {
- color: #888888;
-    height: 22px;
+    border: 1px solid #CCCCCC;
+    color: #888888;
+    height: 30px;
     line-height: 30px;
-    margin: 0;
-    padding: 1px 11px;
+    margin-right: 7px;
+    padding: 0 9px;
 }
 .page-num-list a:hover {
     background: #16a085;
@@ -262,11 +263,12 @@ h1, h2, h3, h4 {
     text-decoration: none;
 }
 .page-num-list a.current-page {
-    color: #16a085;
+    color: #fff;
+    background:#16a085;
+     border: 1px solid #16a085;
 }
 .page-num-list a.current-page:hover {
     background:#07BFAC;
-    color:#fff;
 }
 
 .nav-tabs {

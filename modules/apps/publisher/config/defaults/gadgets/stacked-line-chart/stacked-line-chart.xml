@@ -4,7 +4,7 @@
                  author="WSO2 Gadget Server"
                  height="230"
                  scrolling="true"  category="Templates"
-                 tags="charts,stacked,visualization,template"
+                 tags="charts,stacked,visualization"
                  description="A generic Stacked Chart gadget, takes a json datasource as an input. It can be be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained">
      </ModulePrefs>
     <UserPref name="dataSource"
