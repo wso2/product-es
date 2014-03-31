@@ -261,38 +261,6 @@ require('/modules/publisher.js').exec(function(ctx) {
     }
   });
 
-  routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/information/meta/roles?q={query}', function(context) {
-    var carbon = require('carbon');
-    var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
-    var realm = realmService.getTenantUserRealm(server.current(session).tenantId);
-    var allRoles = realm.getUserStoreManager().getRoleNames();
-    var matchedRoles = [];
-
-    var query;
-
-    if (!request.getQueryString()) {
-      query = '';
-    } else if (request.getQueryString().split('=')[0] != 'q') {
-      response.sendError(400, 'Bad query for roles');
-      return;
-    } else {
-      query = request.getQueryString().split('=')[1];
-    }
-
-    for (var i = 0; i < allRoles.length; i++) {
-      if (allRoles[i].indexOf(query) > -1) {
-        matchedRoles.push({
-          id: allRoles[i],
-          name: allRoles[i]
-        });
-      }
-    };
-
-    response.contentType = 'application/json';
-    response.status = 200;
-    response.content = matchedRoles;
-  });
-
   routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/checklist/{type}/{id}', function(context) {
     //log.debug('short name: '+context.params.type);
 
