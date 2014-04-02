@@ -62,7 +62,8 @@
                                 <parameter name="STATE_RULE1:Published"
                                            value="Internal/private_{asset_author}:+get,+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Published"
-                                           value="Internal/reviewer:+get,-add,-delete,-authorize"/>                                <parameter name="STATE_RULE3:Published"
+                                           value="Internal/reviewer:+get,-add,-delete,-authorize"/>                                
+                                <parameter name="STATE_RULE3:Published"
                                            value="system/wso2.anonymous.role:+get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
