@@ -127,7 +127,7 @@ $(function () {
     	});
     };
     var deselectGadget = function () {
-        $('.select-btn').text('Select Template').removeClass('active');
+        $('.select-btn').text('Select Gadget').removeClass('active');
         console.log("Gadget deselected");
     };
 
@@ -136,8 +136,8 @@ $(function () {
         if (target.hasClass('select-btn')) {
             var event = jQuery.Event('assetSelect');
             $(document).trigger(event, $(e.target).parents('.asset-box').data());
-            $('.select-btn').text('Select Template').removeClass('active');
-            target.text('Template Selected').addClass('active');
+            $('.select-btn').text('Select Gadget').removeClass('active');
+            target.text('Gadget Selected').addClass('active');
         } else if (target.hasClass('btn-browse')) {
             STORE_TAB.click();
         }
@@ -194,7 +194,7 @@ $(function () {
 
     //loads all asset names and loads the first page.
     loadPages();
-
+/*
     $('a[data-toggle="tab"]').on('shown', function (e) {
         isMyAssetsShown = ($(this).attr('id') == 'my-tab');
         if (!tabSwitched) {
@@ -204,7 +204,7 @@ $(function () {
             tagToBeLoaded = null;
         }
     });
-
+*/
     // load list of all tags
     $.ajax({
         url: API_URL + 'tag/' + type,
