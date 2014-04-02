@@ -18,7 +18,6 @@
 
                                 <parameter name="STATE_RULE1:Created"
                                            value="Internal/private_{asset_author}:+add,+delete,+authorize"/>
-                                <parameter name="STATE_RULE2:Created" value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -39,7 +38,6 @@
                                 <parameter name="STATE_RULE1:In-Review"
                                            value="Internal/private_{asset_author}:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE2:In-Review" value="Internal/reviewer:+add,-delete,+authorize"/>
-                                <parameter name="STATE_RULE3:In-Review" value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -60,7 +58,6 @@
                                 <parameter name="STATE_RULE1:Approved"
                                            value="Internal/private_{asset_author}:+get,+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Approved" value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Approved" value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                             <execution forEvent="Reject" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
                                 <parameter name="PERMISSION:get"
@@ -74,7 +71,6 @@
                                 <parameter name="STATE_RULE1:Rejected"
                                            value="Internal/private_{asset_author}:+add,+delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Rejected" value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Rejected" value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -98,7 +94,6 @@
                                 <parameter name="STATE_RULE2:Published"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE3:Published"
-                                           value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -119,7 +114,6 @@
                                 <parameter name="STATE_RULE1:In-Review"
                                            value="Internal/private_{asset_author}:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE2:In-Review" value="Internal/reviewer:+add,-delete,+authorize"/>
-                                <parameter name="STATE_RULE3:In-Review" value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -142,7 +136,6 @@
                                 <parameter name="STATE_RULE2:Unpublished"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE3:Unpublished"
-                                           value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                             <execution forEvent="Deprecate" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
                                 <parameter name="PERMISSION:get"
@@ -158,7 +151,6 @@
                                 <parameter name="STATE_RULE2:Deprecated"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE3:Deprecated"
-                                           value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -182,7 +174,6 @@
                                 <parameter name="STATE_RULE2:Published"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE3:Published"
-                                           value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                             <execution forEvent="Retire" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
                                 <parameter name="PERMISSION:get"
@@ -196,7 +187,6 @@
                                 <parameter name="STATE_RULE1:Retired"
                                            value="Internal/private_{asset_author}:-add,+delete,-authorize"/>
                                 <parameter name="STATE_RULE2:Retired" value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Retired" value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -218,7 +208,6 @@
                                 <parameter name="STATE_RULE1:Retired"
                                            value="Internal/private_{asset_author}:-add,+delete,-authorize"/>
                                 <parameter name="STATE_RULE2:Retired" value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Retired" value="Internal/everyone:-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
