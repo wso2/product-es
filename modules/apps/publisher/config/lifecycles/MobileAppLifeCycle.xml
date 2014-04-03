@@ -94,7 +94,6 @@
                                            value="Internal/private_{asset_author}:+add,+delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Published"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Published"
                             </execution>
                         </data>
                     </datamodel>
@@ -136,7 +135,6 @@
                                            value="Internal/private_{asset_author}:+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Unpublished"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Unpublished"
                             </execution>
                             <execution forEvent="Deprecate" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
                                 <parameter name="PERMISSION:get"
@@ -151,7 +149,6 @@
                                            value="Internal/private_{asset_author}:+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Deprecated"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Deprecated"
                             </execution>
                         </data>
                     </datamodel>
@@ -174,7 +171,6 @@
                                            value="Internal/private_{asset_author}:+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Published"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
-                                <parameter name="STATE_RULE3:Published"
                             </execution>
                             <execution forEvent="Retire" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
                                 <parameter name="PERMISSION:get"
