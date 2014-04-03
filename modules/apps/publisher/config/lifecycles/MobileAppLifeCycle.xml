@@ -18,6 +18,7 @@
 
                                 <parameter name="STATE_RULE1:Created"
                                            value="Internal/private_{asset_author}:+add,+delete,+authorize"/>
+                                <parameter name="STATE_RULE2:Created" value="Internal/everyone:-get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
