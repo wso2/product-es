@@ -24,8 +24,6 @@
 require('/modules/publisher.js').exec(function(ctx) {
 
   var config = require('/config/publisher.json');
-  var caramel = require('caramel');
-
 
   var router = require('/modules/router-g.js').router();
 
@@ -157,18 +155,31 @@ require('/modules/publisher.js').exec(function(ctx) {
     var shortName = context.params.type;
     var action = context.params.action;
     var id = context.params.id;
+
     var comment = context.content.comment;
-
+    var roles = context.content.roles || [];
     var artifactManager = rxtManager.getArtifactManager(shortName);
+    var artifact = artifactManager.get(id);
+    var currentState = artifactManager.getLifecycleState(artifact).toString();
+    var carbon = require('carbon');
+    var um = server.userManager(server.current(session).tenantId);
+    var validRoles = um.allRoles();
 
-    var commentNeeded = require('/config/ext/' + shortName + '.json').behavior.lifecycle_change_comment_required === 'true';
+    var commentNeeded = require('/config/ext/' + shortName + '.json').behavior.lifecycle.transitionCommentNeeded === 'true';
 
     if (!comment && commentNeeded) {
-      response.sendError(400, 'This change requires that you insert a comment');
+      response.status = 400;
+      response.content = 'This change requires that you insert a comment';
     } else {
       try {
-        var artifact = artifactManager.get(id);
         log.debug('Calling promoteLifecycleState for action : ' + action);
+
+        if (roles.length > 0) {
+          roles.forEach(function(role) {
+            um.authorizeRole(role, artifact.path, carbon.registry.actions.GET);
+          });
+        }
+
         artifactManager.promoteLifecycleState(action, artifact);
 
         if (comment) {
@@ -216,6 +227,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     return lcJSON;
   }
 
+
   routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/{type}/{id}', function(context) {
 
 
@@ -247,6 +259,38 @@ require('/modules/publisher.js').exec(function(ctx) {
       log.debug('The asset with id: ' + id + ' could not be found.The following exception was thrown: ' + e);
       response.sendError(404, 'The asset with id: ' + id + ' could not be found.Please refere to the server log.');
     }
+  });
+
+  routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/information/meta/roles?q={query}', function(context) {
+    var carbon = require('carbon');
+    var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
+    var realm = realmService.getTenantUserRealm(server.current(session).tenantId);
+    var allRoles = realm.getUserStoreManager().getRoleNames();
+    var matchedRoles = [];
+
+    var query;
+
+    if (!request.getQueryString()) {
+      query = '';
+    } else if (request.getQueryString().split('=')[0] != 'q') {
+      response.sendError(400, 'Bad query for roles');
+      return;
+    } else {
+      query = request.getQueryString().split('=')[1];
+    }
+
+    for (var i = 0; i < allRoles.length; i++) {
+      if (allRoles[i].indexOf(query) > -1) {
+        matchedRoles.push({
+          id: allRoles[i],
+          name: allRoles[i]
+        });
+      }
+    };
+
+    response.contentType = 'application/json';
+    response.status = 200;
+    response.content = matchedRoles;
   });
 
   routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/checklist/{type}/{id}', function(context) {
