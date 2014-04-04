@@ -57,7 +57,7 @@ var installer = function () {
         artifact['attributes']['overview_description'] = xml.*::ModulePrefs.@description;
         artifact['attributes']['overview_category'] = xml.*::ModulePrefs.@category;
         artifact['attributes']['overview_url'] = path + context.bundle.getName() + '.xml';
-        artifact['attributes']['overview_location'] = '/gadgets/' + context.bundle.getName();
+        artifact['attributes']['overview_location'] = '/config/defaults/gadgets/' + context.bundle.getName();
         //artifact['attributes']['images_thumbnail'] = path + 'thumbnail.jpg';
         //artifact['attributes']['images_banner'] = path + 'banner.jpg';
 
