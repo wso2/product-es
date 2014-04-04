@@ -10,7 +10,7 @@
      </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="/portal/gadgets/bar-chart/datasource/dataFile4.jag">
+              default_value="/publisher/config/defaults/gadgets/bar-chart/datasource/dataFile4.jag">
     </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"

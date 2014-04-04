@@ -1,5 +1,6 @@
 var PAGE_SIZE = 12;
 var API_URL = '/store/apis/v2/';
+var API_TAGS_URL = '/store/apis/';
 
 var prefs = new gadgets.Prefs();
 var type = prefs.getString('type') || 'gadget';
@@ -151,8 +152,9 @@ $(function () {
      */
     var loadPages = function (query, tag) {
         var data = query ? {query:query} : {};
+        
         $.ajax({
-            url: API_URL + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'assets/' + type)) + '?start=0&count=100',
+          url: (tag?API_TAGS_URL:API_URL) + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'assets/' + type)) + '?start=0&count=100',
             data: data,
             success: function (data) {
                 toFade = [];
@@ -207,7 +209,7 @@ $(function () {
 */
     // load list of all tags
     $.ajax({
-        url: API_URL + 'tag/' + type,
+        url: API_TAGS_URL + "tag/" + type,
         success: function (data) {
             var tags = $('#ul-modal-tags').html(tagTmpl(data));
             tags.find('.tag-box').on('click', function () {
