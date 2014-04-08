@@ -25,7 +25,26 @@ $(function () {
             return;
         }
 
+        // I am not confirming to the formManger behavior here. 
+        // Since roles are such precious little bundles of joy, they deserve their own
+        // special caretakers.
+        var rolePermissions = [];
+
+        $('.role-permission').each(function (i, tr) {
+            var role = $(tr).attr('data-role');
+
+            var permissions = [];
+
+            $(tr).children('td').children(':checked').each(function (j, checkbox) {
+                permissions.push($(checkbox).attr('data-perm'));
+            });
+
+            rolePermissions.push({role: role, permissions: permissions});
+        });
+
         var formData = formManager.getFormData();//formManager.validate();
+        formData.permissions = rolePermissions;
+
         postData(formData);
     });
 
@@ -100,6 +119,13 @@ $(function () {
     $('#roles').tokenInput('/publisher/api/lifecycle/information/meta/'+ $('#meta-asset-type').val() + '/roles', {
         theme: 'facebook',
         preventDuplicates: true,
-        zindex: 99999 // so that autcomplete will render on top of a modal
+        onAdd: function(role) {
+            var permission = $('<tr class="role-permission" data-role="'+role.id+'"><td>'+role.name+'</td><td><input data-perm="get" type="checkbox" value=""></td><td><input data-perm="edit" type="checkbox" value=""></td><td><input data-perm="delete" type="checkbox" value=""></td><td><input data-perm="authorize" type="checkbox" value=""></td></tr>')
+            $('#permissionsTable > tbody').append(permission);
+        },
+        onDelete: function(role) {
+            console.log()
+            $('#permissionsTable tr[data-role="' + role.id + '"]').remove();
+        }
     });
 });
