@@ -79,6 +79,7 @@
         "show": true,
         "position": "bottom",
         "mode": null,
+        "timeformat": null,
 
         "color": null,
         "tickColor": null,
