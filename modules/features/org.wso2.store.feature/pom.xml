@@ -127,26 +127,26 @@
                                     org.wso2.store.modules.ues:${ues.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.associations.dependencies:${carbon.platform.version}
+                                    org.wso2.carbon.registry.associations.dependencies.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.community.features:${patch.version.421}
+                                    org.wso2.carbon.registry.community.features.server:${patch.version.421}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.extensions:${carbon.platform.version}
+                                    org.wso2.carbon.registry.extensions.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.core:${patch.version.421}
+                                    org.wso2.carbon.registry.core.server:${patch.version.421}
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.registry.ui.menu:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef>-->
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.resource.properties:${patch.version.421}
+                                    org.wso2.carbon.registry.resource.properties.server:${patch.version.421}
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.registry.ui.menu.governance:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef>-->
                                 <importFeatureDef>
                                     org.wso2.carbon.registry.contentsearch.server:${patch.version.421}
                                 </importFeatureDef>
@@ -176,10 +176,10 @@
                                     org.wso2.carbon.identity.core:${patch.version.421}
                                 </feaureArtifactDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.governance.metadata:${patch.version.421}
+                                    org.wso2.carbon.governance.metadata.server:${patch.version.421}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.governance.lifecycle.management:${carbon.platform.version}
+                                    org.wso2.carbon.governance.lifecycle.management.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.cassandra.explorer:${carbon.platform.version}
@@ -213,14 +213,14 @@
                                 </importFeatureDef>
                                 <!-- Stratos features    -->
                                 <importFeatureDef>
-                                    org.wso2.carbon.stratos.common:${stratos.patch.version.221}
+                                    org.wso2.carbon.stratos.common.server:${stratos.patch.version.221}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.event:${patch.version.421}
+                                    org.wso2.carbon.event.server:${patch.version.421}
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.registry.ws:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef>-->
                             </importFeatures>
                         </configuration>
                     </execution>
