@@ -1340,3 +1340,10 @@ circle:hover {
         top: 0;
     }
 }
+#permissionsTable > tbody > tr > td:nth-child(1) {
+    width: 40%;
+}
+#permissionsTable {
+    width: 100%;
+    margin-top: 20px;
+}
