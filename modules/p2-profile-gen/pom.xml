@@ -117,29 +117,26 @@
                                 <featureArtifactDef>org.jaggeryjs.modules:uuid.feature:${uuid.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.server.feature:${carbon.platform.version}
+                                    org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.community.features.server.feature:${patch.version.421}
+                                    org.wso2.carbon:org.wso2.carbon.registry.community.features.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.extensions.server.feature:${carbon.platform.version}
+                                    org.wso2.carbon:org.wso2.carbon.registry.extensions.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.core.common.feature:${patch.version.421}
+                                    org.wso2.carbon:org.wso2.carbon.registry.core.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.core.server.feature:${patch.version.421}
-                                </featureArtifactDef>
-                                <!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.platform.version}
-                                </featureArtifactDef>-->
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.resource.properties.server.feature:${patch.version.421}
                                 </featureArtifactDef>
-                                <!--<featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${patch.version.421}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.ui.menu.governance.feature:${carbon.platform.version}
-                                </featureArtifactDef>-->
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.contentsearch.server.feature:${patch.version.421}
                                 </featureArtifactDef>
@@ -163,7 +160,10 @@
                                     org.wso2.carbon:org.wso2.carbon.identity.application.authentication.framework.server.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${patch.version.421}
+                                    org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.server.feature:${patch.version.421}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <feaureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.sso.saml.feature:${patch.version.421}
@@ -175,7 +175,7 @@
                                     org.wso2.carbon:org.wso2.carbon.identity.core.feature:${patch.version.421}
                                 </feaureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.governance.metadata.server.feature:${patch.version.421}
+                                    org.wso2.carbon:org.wso2.carbon.governance.metadata.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.platform.version}
@@ -210,17 +210,17 @@
 
                                 <!-- Stratos features    -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.stratos.common.server.feature:${stratos.patch.version.221}
+                                    org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.patch.version.221}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.event.server.feature:${patch.version.421}
+                                    org.wso2.carbon:org.wso2.carbon.event.feature:${patch.version.421}
                                 </featureArtifactDef>
-                                <!--<featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.registry.ws.feature:${carbon.platform.version}
-                                </featureArtifactDef>-->
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.governance.lifecycle.management.server.feature:${carbon.platform.version}
+                                    org.wso2.carbon:org.wso2.carbon.registry.ws.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.governance.lifecycle.management.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.claim.mgt.feature:${carbon.platform.version}
@@ -317,31 +317,27 @@
                                     <version>${claims.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.registry.core.common.feature.group</id>
+                                    <id>org.wso2.carbon.registry.core.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.registry.core.server.feature.group</id>
-                                    <version>${patch.version.421}</version>
-                                </feature>
-                                <!--<feature>
                                     <id>org.wso2.carbon.registry.ui.menu.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>-->
+                                </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.registry.resource.properties.server.feature.group</id>
+                                    <id>org.wso2.carbon.registry.resource.properties.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.contentsearch.server.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
-                               <!-- <feature>
+                                <feature>
                                     <id>org.wso2.carbon.registry.ws.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>-->
+                                </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.registry.extensions.server.feature.group</id>
+                                    <id>org.wso2.carbon.registry.extensions.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
@@ -375,7 +371,11 @@
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.authenticator.saml2.sso.feature.group</id>
+                                    <id>org.wso2.carbon.identity.authenticator.saml2.sso.server.feature.group</id>
+                                    <version>${patch.version.421}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
@@ -391,19 +391,19 @@
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.governance.metadata.server.feature.group</id>
+                                    <id>org.wso2.carbon.governance.metadata.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
-                                <!--<feature>
-                                    <id>org.wso2.carbon.registry.ui.menu.governance.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>-->
                                 <feature>
-                                    <id>org.wso2.carbon.governance.lifecycle.management.server.feature.group</id>
+                                    <id>org.wso2.carbon.registry.ui.menu.governance.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.stratos.common.server.feature.group</id>
+                                    <id>org.wso2.carbon.governance.lifecycle.management.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.stratos.common.feature.group</id>
                                     <version>${stratos.patch.version.221}</version>
                                 </feature>
                                 <feature>
@@ -439,7 +439,7 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.event.server.feature.group</id>
+                                    <id>org.wso2.carbon.event.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
