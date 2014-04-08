@@ -154,6 +154,13 @@
                 <include>**/application-authenticators.xml</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>src/repository/conf/etc</directory>
+            <outputDirectory>wso2store-${pom.version}/repository/conf/etc/</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
 		<fileSet>
             <directory>src/repository/conf</directory>
             <outputDirectory>wso2store-${pom.version}/repository/conf</outputDirectory>
