@@ -222,7 +222,7 @@ routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function (
         //Add the tags
         addTags(context.post,assetId,artifactManager,reg);
 
-        print({ok:true,message:'asset added'});
+        print({ok:true,message:'asset added',id:assetId});
     }
     catch (e) {
         log.error(e);
