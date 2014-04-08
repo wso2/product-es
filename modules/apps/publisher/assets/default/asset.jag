@@ -222,7 +222,7 @@ routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function (
         //Add the tags
         addTags(context.post,assetId,artifactManager,reg);
 
-        print({ok:true,message:'asset added'});
+        print({ok:true,message:'asset added',id:assetId});
     }
     catch (e) {
         log.error(e);
@@ -243,7 +243,7 @@ function addTags(params,assetId,artifactManager,reg){
 
     //Obtain the tags parameter
    // var tags=params['tags']||[];
-	 var tags=params['tag-container']||[];
+     var tags=params['tag-container']||[];
 
     //Only proceed if there are any tags
     if(tags.length==0){
@@ -255,10 +255,35 @@ function addTags(params,assetId,artifactManager,reg){
     var asset=artifactManager.get(assetId);
 
     var path=asset.path;
-	tags = tags.split(',');
-	
+    tags = tags.split(',');
+    
     //Attach the tags
     reg.tag(path,tags);
+
+}
+
+/*
+The function is used to add permissions to the provided asset id
+@params: A post parameter object
+@assetId: The id of the asset to which the tags will be applied
+@artifactManager: An artifact manager instance
+@reg: A registry instance
+ */
+function addPermissions(params,assetId,artifactManager,reg){
+
+    // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
+    var artifact = artifactManager.get(assetId);
+    artifactManager.detachLifecycle(artifact);
+
+    // remove all the current permissions from the asset
+
+    // add some default permissions
+    //  1. +get +edit +delete +authorize for admin
+    //  2. +get +edit +delete +authorize for asset_{owner}
+
+    // add the permissions as passed
+
+    // remove the lifecycle
 
 }
 
