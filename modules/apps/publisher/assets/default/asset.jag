@@ -279,45 +279,58 @@ The function is used to add permissions to the provided asset id
 @artifactManager: An artifact manager instance
 @permission: Requried permissions
  */
-function addPermissions(assetId,artifactManager,permissions){
+    function addPermissions(assetId, artifactManager, permissions) {
 
-    // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
-    var artifact = artifactManager.get(assetId);
-    // artifactManager.detachLifecycle(artifact);
+        // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
+        var artifact = artifactManager.get(assetId);
+        // artifactManager.detachLifecycle(artifact);
 
-    // remove all the current permissions from the asset
-    var um = server.userManager(server.current(session).tenantId);
-    um.clearResourceAuthorizations(artifact.path);
+        // remove all the current permissions from the asset
+        var um = server.userManager(server.current(session).tenantId);
+        um.clearResourceAuthorizations(artifact.path);
 
-    // add some default permissions
-    //  1. +get +edit +delete +authorize for admin
-    //  2. +get +edit +delete +authorize for asset_{owner}
+        // But, there's an internal_everyone coming up with +GET. Let's nuke it.
+        um.denyRole('Internal/everyone', artifact.path, carbon.registry.actions.GET);
 
-    // add the permissions as passed
-    permissions.forEach(function (rolePermissions) {
-        var role = rolePermissions.role;
-
-        rolePermissions.permissions.forEach (function (permission) {
-            var permission;
-
-            if (permission === 'GET') {
-                permission = carbon.registry.actions.GET
-            } else if (permission === 'PUT') {
-                permission = carbon.registry.actions.PUT
-            } else if (permission === 'DELETE') {
-                permission = carbon.registry.actions.DELETE
-            } else if (permission === 'AUTHORIZE') {
-                permission = carbon.registry.actions.AUTHORIZE
-            }
-             
-            um.authorizeRole(role, artifact.path, permission);
+        // add some default permissions
+        var username = server.current(session).username;
+        var currentUserRole = USER_ROLE_PREFIX + username;
+        //  1. +get +edit +delete +authorize for asset_{owner}
+        permissions.push({
+            role: currentUserRole,
+            permissions: ['GET', 'PUT', 'DELETE', 'AUTHORIZE']
+        });
+        //  2. +get +edit +delete +authorize for admin TODO: 'admin' needs to come from a config
+        permissions.push({
+            role: 'admin',
+            permissions: ['GET', 'PUT', 'DELETE', 'AUTHORIZE']
         });
 
-    });
+        // add the permissions as passed
+        permissions.forEach(function(rolePermissions) {
+            var role = rolePermissions.role;
 
-}
+            rolePermissions.permissions.forEach(function(permission) {
+                var permission;
 
-/*
+                if (permission === 'GET') {
+                    permission = carbon.registry.actions.GET
+                } else if (permission === 'PUT') {
+                    permission = carbon.registry.actions.PUT
+                } else if (permission === 'DELETE') {
+                    permission = carbon.registry.actions.DELETE
+                } else if (permission === 'AUTHORIZE') {
+                    permission = carbon.registry.actions.AUTHORIZE
+                }
+
+                um.authorizeRole(role, artifact.path, permission);
+            });
+
+        });
+
+        artifactManager.registry.addProperty(artifact.path, 'overriden_permissions', JSON.stringify(permissions));
+    }
+    /*
  The function inspects the files sent with a request.If files are found
  they are added to Storage and then the generated uuids are added to
  the POST parameter object
