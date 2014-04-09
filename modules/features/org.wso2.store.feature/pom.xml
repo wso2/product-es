@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.store</groupId>
         <artifactId>wso2store-features</artifactId>
-        <version>1.1.0</version>
+        <version>1.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -110,7 +110,7 @@
                             </importBundles>
                             <importFeatures>
                                 <importFeatureDef>
-                                    org.jaggeryjs:${jaggery.feature.version}
+                                    org.jaggeryjs.server:${jaggery.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.webapp.mgt.server:${patch.version.421}
@@ -206,8 +206,21 @@
                                 <!--<importFeatureDef>
                                     org.wso2.carbon.cassandra.explorer:${carbon.platform.version}
                                 </importFeatureDef>-->
+                                <!--casandra -->
                                 <importFeatureDef>
-                                    org.wso2.carbon.cassandra:${carbon.platform.version}
+                                    org.wso2.carbon.cassandra.server:4.2.1:greaterOrEqual
+                                </importFeatureDef>
+                                <!--<featureArtifactDef>-->
+                                <!--org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.patchrelease.version.422}-->
+                                <!--</featureArtifactDef>-->
+                                <importFeatureDef>
+                                    org.wso2.carbon.cassandra.mgt:4.2.1:greaterOrEqual
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.cassandra.dataaccess:4.2.1:greaterOrEqual
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.cassandra.common:4.2.1:greaterOrEqual
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.cassandra-jdbc-1.1.1.server:4.0.1
