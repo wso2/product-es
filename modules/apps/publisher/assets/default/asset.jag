@@ -175,7 +175,7 @@ routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function (
     var model = modelManager.getModel(shortName);
     var assetCacheManager=new assetCachingModule.AssetCacheManager(session);
 
-//context.post['tag-container'] = ['tag1', 'tag2'];
+    //context.post['tag-container'] = ['tag1', 'tag2'];
 
     //Check if the type is valid
     try {
@@ -232,6 +232,17 @@ routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function (
 
 });
 
+routeManager.register('POST', 'publisher', '/publisher/asset/{type}/id/{assetId}/permissions', function(context) {
+    var assetId = context.params.assetId;
+        
+    var artifactManager = rxtManager.getArtifactManager(context.params.type);
+    log.info(context);
+    var permissions = context.request.getContent();
+
+
+    addPermissions(assetId, artifactManager, permissions);
+});
+
 /*
 The function is used to add tags to the provided asset id
 @params: A post parameter object
@@ -264,26 +275,45 @@ function addTags(params,assetId,artifactManager,reg){
 
 /*
 The function is used to add permissions to the provided asset id
-@params: A post parameter object
 @assetId: The id of the asset to which the tags will be applied
 @artifactManager: An artifact manager instance
-@reg: A registry instance
+@permission: Requried permissions
  */
-function addPermissions(params,assetId,artifactManager,reg){
+function addPermissions(assetId,artifactManager,permissions){
 
     // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
     var artifact = artifactManager.get(assetId);
-    artifactManager.detachLifecycle(artifact);
+    // artifactManager.detachLifecycle(artifact);
 
     // remove all the current permissions from the asset
+    var um = server.userManager(server.current(session).tenantId);
+    um.clearResourceAuthorizations(artifact.path);
 
     // add some default permissions
     //  1. +get +edit +delete +authorize for admin
     //  2. +get +edit +delete +authorize for asset_{owner}
 
     // add the permissions as passed
+    permissions.forEach(function (rolePermissions) {
+        var role = rolePermissions.role;
 
-    // remove the lifecycle
+        rolePermissions.permissions.forEach (function (permission) {
+            var permission;
+
+            if (permission === 'GET') {
+                permission = carbon.registry.actions.GET
+            } else if (permission === 'PUT') {
+                permission = carbon.registry.actions.PUT
+            } else if (permission === 'DELETE') {
+                permission = carbon.registry.actions.DELETE
+            } else if (permission === 'AUTHORIZE') {
+                permission = carbon.registry.actions.AUTHORIZE
+            }
+             
+            um.authorizeRole(role, artifact.path, permission);
+        });
+
+    });
 
 }
 
