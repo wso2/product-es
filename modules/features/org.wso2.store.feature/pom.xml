@@ -110,7 +110,7 @@
                             </importBundles>
                             <importFeatures>
                                 <importFeatureDef>
-                                    org.jaggeryjs:${jaggery.feature.version}
+                                    org.jaggeryjs.server:${jaggery.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.webapp.mgt.server:${patch.version.421}

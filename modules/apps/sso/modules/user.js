@@ -12,7 +12,7 @@ var USER_ROLE_PREFIX = 'Internal/private_';
  * Initializes the user environment for the specified tenant. If it is already initialized, then will be skipped.
  */
 var init = function (options) {
-    var event = require('/modules/event.js');
+    var event = require('event');
     event.on('tenantCreate', function (tenantId) {
         var role, roles,
             server = require('/modules/server.js'),
@@ -100,7 +100,7 @@ var options = function (tenantId) {
  */
 var login = function (username, password, session) {
     var carbon = require('carbon'),
-        event = require('/modules/event.js'),
+        event = require('event'),
         server = require('/modules/server.js'),
         serv = server.server();
     if (!serv.authenticate(username, password)) {
@@ -115,7 +115,7 @@ var permitted = function (username, session) {
         authorized = false,
         carbon = require('carbon'),
         server = require('/modules/server.js'),
-        event = require('/modules/event.js'),
+        event = require('event'),
         usr = carbon.server.tenantUser(username);
     if (!server.configs(usr.tenantId)) {
         event.emit('tenantCreate', usr.tenantId);
@@ -197,7 +197,7 @@ var userRegistry = function (session) {
  */
 var logout = function () {
     var user = current(session),
-        event = require('/modules/event.js'),
+        event = require('event'),
         opts = options(user.tenantId);
     if (opts.logout) {
         opts.logout(user, session);
@@ -225,7 +225,7 @@ var register = function (username, password, claims) {
     var user, role, id, perms, r, p,
         server = require('/modules/server.js'),
         carbon = require('carbon'),
-        event = require('/modules/event.js'),
+        event = require('event'),
         usr = carbon.server.tenantUser(username),
         um = server.userManager(usr.tenantId);
 

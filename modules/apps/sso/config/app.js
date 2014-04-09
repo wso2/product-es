@@ -6,7 +6,7 @@ server.init(configs);
 var user = require('/modules/user.js');
 user.init(configs);
 
-var event = require('/modules/event.js');
+var event = require('event');
 
 
 var STORE_CONFIG_PATH = '/_system/config/sso/configs/sso.json';
