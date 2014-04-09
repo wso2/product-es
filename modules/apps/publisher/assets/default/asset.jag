@@ -278,12 +278,12 @@ require('/modules/publisher.js').exec(function(ctx) {
     });
 
     /*
-The function is used to add tags to the provided asset id
-@params: A post parameter object
-@assetId: The id of the asset to which the tags will be applied
-@artifactManager: An artifact manager instance
-@reg: A registry instance
- */
+        The function is used to add tags to the provided asset id
+        @params: A post parameter object
+        @assetId: The id of the asset to which the tags will be applied
+        @artifactManager: An artifact manager instance
+        @reg: A registry instance
+     */
     function addTags(params, assetId, artifactManager, reg) {
 
         //Obtain the tags parameter
@@ -308,11 +308,11 @@ The function is used to add tags to the provided asset id
     }
 
     /*
-The function is used to add permissions to the provided asset id
-@assetId: The id of the asset to which the tags will be applied
-@artifactManager: An artifact manager instance
-@permission: Requried permissions
- */
+        The function is used to add permissions to the provided asset id
+        @assetId: The id of the asset to which the tags will be applied
+        @artifactManager: An artifact manager instance
+        @permission: Requried permissions
+    */
     function addPermissions(assetId, artifactManager, permissions) {
 
         // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
@@ -364,13 +364,14 @@ The function is used to add permissions to the provided asset id
 
         artifactManager.registry.addProperty(artifact.path, 'overriden_permissions', JSON.stringify(permissions));
     }
+
     /*
- The function inspects the files sent with a request.If files are found
- they are added to Storage and then the generated uuids are added to
- the POST parameter object
- @req: A request object
- @params: The POST parameters
- */
+        The function inspects the files sent with a request.If files are found
+         they are added to Storage and then the generated uuids are added to
+         the POST parameter object
+         @req: A request object
+         @params: The POST parameters
+    */
     function inspectFiles(req, params) {
         var files = req.getAllFiles();
         var fileName;
