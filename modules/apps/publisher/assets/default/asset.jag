@@ -14,358 +14,405 @@
 
 require('/modules/publisher.js').exec(function(ctx) {
 
-var config = require('/config/publisher.json');
-var caramel = require('caramel');
-var server = require('store').server;
-var utility = require('/modules/utility.js').rxt_utility();
-var assetCachingModule=require('/modules/cache/cache.manager.js').assetCachingModule();
-var publisher = require('/modules/publisher.js').publisher(request, session);
-var storageModule = require('/modules/data/storage.js').storageModule();
-var storageConfig = require('/config/storage.json');
+    var config = require('/config/publisher.json');
+    var caramel = require('caramel');
+    var server = require('store').server;
+    var utility = require('/modules/utility.js').rxt_utility();
+    var assetCachingModule = require('/modules/cache/cache.manager.js').assetCachingModule();
+    var publisher = require('/modules/publisher.js').publisher(request, session);
+    var storageModule = require('/modules/data/storage.js').storageModule();
+    var storageConfig = require('/config/storage.json');
+    var USER_ROLE_PREFIX = 'Internal/private_';
 
-var router = require('/modules/router-g.js').router();
-var routeManager = new router.Router();
+    var router = require('/modules/router-g.js').router();
+    var routeManager = new router.Router();
 
-//var routeManager=application.get(config.app.ROUTE_MANAGER);
-var rxtManager = publisher.rxtManager;
-var modelManager = publisher.modelManager;
-var dataInjector = publisher.dataInjector;
-var DataInjectorModes = publisher.DataInjectorModes;
-var filterManager=publisher.filterManager;
+    //var routeManager=application.get(config.app.ROUTE_MANAGER);
+    var rxtManager = publisher.rxtManager;
+    var modelManager = publisher.modelManager;
+    var dataInjector = publisher.dataInjector;
+    var DataInjectorModes = publisher.DataInjectorModes;
+    var filterManager = publisher.filterManager;
 
-var log = new Log();
+    var log = new Log();
 
-routeManager.register('GET', 'publisher', '/publisher/asset/{type}', function (context) {
+    routeManager.register('GET', 'publisher', '/publisher/asset/{type}', function(context) {
 
-    var shortName = (context.params.type) || '';
-    var operation = 'create';
-    var rxtTemplate = rxtManager.findAssetTemplate(function (template) {
-        return (template.shortName == shortName) ? true : false;
+        var shortName = (context.params.type) || '';
+        var operation = 'create';
+        var rxtTemplate = rxtManager.findAssetTemplate(function(template) {
+            return (template.shortName == shortName) ? true : false;
+        });
+
+        var model = modelManager.getModel(shortName);
+
+        if (!rxtTemplate) {
+            log.debug('The requested asset type: ' + shortName + ' was not found');
+            response.sendError(404, 'Asset type not found'); //TODO: Replace
+        } else {
+            //Obtain the username from the session and populate the provider field
+            var username = server.current(session).username; //.get('LOGGED_IN_USER');
+            model.set('overview.provider', username);
+
+            var output = model.export('form');
+            var title = shortName;
+            caramel.render({
+                op: operation,
+                cuser: server.current(session),
+                shortName: shortName,
+                rxtTemplate: rxtTemplate,
+                data: output,
+                title: title
+            });
+        }
     });
 
-    var model = modelManager.getModel(shortName);
+    routeManager.register('GET', 'publisher', '/publisher/asset/{type}/{id}', function(context) {
 
-    if (!rxtTemplate) {
-        log.debug('The requested asset type: ' + shortName + ' was not found');
-        response.sendError(404, 'Asset type not found'); //TODO: Replace
-    }
-    else {
-        //Obtain the username from the session and populate the provider field
-        var username = server.current(session).username;//.get('LOGGED_IN_USER');
-        model.set('overview.provider', username);
+        var shortName = context.params.type;
+        //print(context.params);
+        var id = context.params.id;
+        var operation = 'view';
+        var artifactManager = rxtManager.getArtifactManager(shortName);
 
-        var output = model.export('form');
-        var title = shortName;
-        caramel.render({op: operation, cuser: server.current(session), shortName: shortName, rxtTemplate: rxtTemplate, data: output, title: title});
-    }
-});
+        //If the id is not found it will throw a conversion exception
+        //TODO: Return an empty artifact or null
+        try {
 
-routeManager.register('GET', 'publisher', '/publisher/asset/{type}/{id}', function (context) {
+            log.debug('look for ' + id);
 
-    var shortName = context.params.type;
-    //print(context.params);
-    var id = context.params.id;
-    var operation = 'view';
-    var artifactManager = rxtManager.getArtifactManager(shortName);
+            var artifact = artifactManager.get(id);
 
-    //If the id is not found it will throw a conversion exception
-    //TODO: Return an empty artifact or null
-    try {
+            log.debug('left');
 
-        log.debug('look for '+id);
+            //Get the template
+            var rxtTemplate = rxtManager.findAssetTemplate(function(template) {
+                return (template.shortName == shortName) ? true : false;
+            });
 
-        var artifact = artifactManager.get(id);
+            var model = modelManager.getModel(shortName);
 
-        log.debug('left');
+            //Customize the asset for the app
+            dataInjector.inject(artifact, DataInjectorModes.DISPLAY);
 
-        //Get the template
-        var rxtTemplate = rxtManager.findAssetTemplate(function (template) {
-            return (template.shortName == shortName) ? true : false;
-        });
 
+            //Perform filtering logic on the artifact
+            artifact = filterManager.filter(artifact, session);
+
+            //If there is no data after the filtering step we need to send an error
+            if (!artifact) {
+                response.sendError(401, 'You do not have viewing permissions to the requested asset');
+                return;
+            }
+
+            model.import('asset', artifact);
+
+            var output = model.export('form');
+
+            var assetName = model.get('overview.name').value;
+            //Get the list of versions
+            var versionList = artifactManager.getAllAssetVersions(assetName);
+
+            var path = artifact.path;
+            var tags = rxtManager.registry.tags(path);
+            var title = assetName;
+
+            caramel.render({
+                op: operation,
+                cuser: server.current(session),
+                shortName: shortName,
+                artifact: artifact,
+                rxtTemplate: rxtTemplate,
+                data: output,
+                versions: versionList,
+                tags: tags,
+                title: title
+            });
+        } catch (e) {
+            log.debug('The asset with id ' + id + ' could not be found due to : ' + e);
+            response.sendError(404, 'Asset with id ' + id + ' could not be found.Please check server log.');
+        }
+
+    });
+
+    routeManager.register('GET', 'publisher', '/publisher/asset/operations/{opType}/{type}/{id}', function(context) {
+
+        var shortName = context.params.type;
+        //print(context.params);
+        var id = context.params.id;
+        var operation = context.params.opType;
+        var artifactManager = rxtManager.getArtifactManager(shortName);
+
+        //If the id is not found it will throw a conversion exception
+        //TODO: Return an empty artifact or null
+        try {
+            var artifact = artifactManager.get(id);
+
+            //Get the template
+            var rxtTemplate = rxtManager.findAssetTemplate(function(template) {
+                return (template.shortName == shortName) ? true : false;
+            });
+
+            var model = modelManager.getModel(shortName);
+
+            //Customize the asset for the app
+            dataInjector.inject(artifact, DataInjectorModes.DISPLAY);
+
+            model.import('asset', artifact);
+
+            var output = model.export('form');
+
+            var assetName = model.get('overview.name').value;
+
+            //Get the list of versions
+            var versionList = artifactManager.getAllAssetVersions(assetName);
+
+            //Get tags
+            var path = artifact.path;
+            var tags = rxtManager.registry.tags(path);
+            var title = assetName;
+
+            // getting the user roles
+            var server = require('store').server,
+                um = server.userManager(server.current(session).tenantId);
+
+            output.roles = um.allRoles();
+
+            caramel.render({
+                op: operation,
+                cuser: server.current(session),
+                shortName: shortName,
+                artifact: artifact,
+                rxtTemplate: rxtTemplate,
+                data: output,
+                versions: versionList,
+                tags: tags,
+                title: title
+            });
+        } catch (e) {
+            log.debug('The asset with id ' + id + ' could not be found due to : ' + e);
+            response.sendError(404, 'Asset with id ' + id + ' could not be found.Please check server log.');
+        }
+
+    });
+
+    routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function(context) {
+        var shortName = context.params.type;
+        var artifactManager = rxtManager.getArtifactManager(shortName);
         var model = modelManager.getModel(shortName);
+        var assetCacheManager = new assetCachingModule.AssetCacheManager(session);
 
-        //Customize the asset for the app
-        dataInjector.inject(artifact, DataInjectorModes.DISPLAY);
+        //context.post['tag-container'] = ['tag1', 'tag2'];
+
+        //Check if the type is valid
+        try {
+            //assigning default thumbnail and banner if not provided.
+            if (context.post['images_thumbnail'] == '') {
+                context.post['images_thumbnail'] = '/publisher/config/defaults/img/thumbnail.jpg';
+            }
+            if (context.post['images_banner'] == '') {
+                context.post['images_banner'] = '/publisher/config/defaults/img/banner.jpg';
+            }
+
+            //Process and add any files in the request
+            inspectFiles(request, context.post);
+
+            model.import('form.importer', context.post);
 
 
-        //Perform filtering logic on the artifact
-        artifact=filterManager.filter(artifact,session);
+            //Perform validation on the model
 
-        //If there is no data after the filtering step we need to send an error
-        if(!artifact){
-            response.sendError(401,'You do not have viewing permissions to the requested asset');
-            return;
+            var report = model.validate();
+
+            if ((report) && (report.failed)) {
+
+                print({
+                    ok: false,
+                    message: 'Validation failure',
+                    report: report
+                });
+                return;
+            }
+
+
+            //log.debug(context.post);
+
+            model.save();
+
+            //Obtain the asset id in order to retrieve the asset again
+            var assetId = model.get('*.id').value;
+
+            //Convert the model to an artifact
+            var asset = model.export('asset.exporter');
+
+            //Cache the asset
+            assetCacheManager.add(asset, shortName);
+
+            var reg = rxtManager.registry;
+
+            //Add the tags
+            addTags(context.post, assetId, artifactManager, reg);
+
+            print({
+                ok: true,
+                message: 'asset added',
+                id: assetId
+            });
+        } catch (e) {
+            log.error(e);
+            log.debug('An instance could not be created for asset with type :' + shortName + '.The following exception was recorded: ' + e);
+            response.sendError(500, 'The asset instance could not be created.Please check the server log.');
         }
 
-        model.import('asset', artifact);
+    });
 
-        var output = model.export('form');
-		
-        var assetName = model.get('overview.name').value;
-        //Get the list of versions
-        var versionList = artifactManager.getAllAssetVersions(assetName);
-		
-		var path = artifact.path;
-		var tags = rxtManager.registry.tags(path);
-		var title = assetName;
-		
-        caramel.render({op: operation, cuser: server.current(session), shortName: shortName, artifact: artifact, rxtTemplate: rxtTemplate, data: output, versions: versionList, tags:tags, title:title});
-    } catch (e) {
-        log.debug('The asset with id ' + id + ' could not be found due to : ' + e);
-        response.sendError(404, 'Asset with id ' + id + ' could not be found.Please check server log.');
-    }
+    routeManager.register('POST', 'publisher', '/publisher/asset/{type}/id/{assetId}/permissions', function(context) {
+        var assetId = context.params.assetId;
 
-});
-
-routeManager.register('GET', 'publisher', '/publisher/asset/operations/{opType}/{type}/{id}', function (context) {
-
-    var shortName = context.params.type;
-    //print(context.params);
-    var id = context.params.id;
-    var operation = context.params.opType;
-    var artifactManager = rxtManager.getArtifactManager(shortName);
-   
-    //If the id is not found it will throw a conversion exception
-    //TODO: Return an empty artifact or null
-    try {
-        var artifact = artifactManager.get(id);
-
-        //Get the template
-        var rxtTemplate = rxtManager.findAssetTemplate(function (template) {
-            return (template.shortName == shortName) ? true : false;
-        });
-
-        var model = modelManager.getModel(shortName);
-
-        //Customize the asset for the app
-        dataInjector.inject(artifact, DataInjectorModes.DISPLAY);
-
-        model.import('asset', artifact);
-
-        var output = model.export('form');
-
-        var assetName = model.get('overview.name').value;
-
-        //Get the list of versions
-        var versionList = artifactManager.getAllAssetVersions(assetName);
-        
-		//Get tags
-		var path = artifact.path;
-		var tags = rxtManager.registry.tags(path);
-		var title = assetName;
-
-        // getting the user roles
-        var server = require('store').server,
-            um = server.userManager(server.current(session).tenantId);
-
-        output.roles = um.allRoles();
-		
-        caramel.render({op: operation, cuser: server.current(session), shortName: shortName, artifact: artifact, rxtTemplate: rxtTemplate, data: output, versions: versionList, tags:tags, title:title});
-    } catch (e) {
-        log.debug('The asset with id ' + id + ' could not be found due to : ' + e);
-        response.sendError(404, 'Asset with id ' + id + ' could not be found.Please check server log.');
-    }
-
-});
-
-routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function (context) {
-    var shortName = context.params.type;
-    var artifactManager = rxtManager.getArtifactManager(shortName);
-    var model = modelManager.getModel(shortName);
-    var assetCacheManager=new assetCachingModule.AssetCacheManager(session);
-
-    //context.post['tag-container'] = ['tag1', 'tag2'];
-
-    //Check if the type is valid
-    try {
-        //assigning default thumbnail and banner if not provided.
-        if (context.post['images_thumbnail'] == '') {
-            context.post['images_thumbnail'] = '/publisher/config/defaults/img/thumbnail.jpg';
-        }
-        if (context.post['images_banner'] == '') {
-            context.post['images_banner'] = '/publisher/config/defaults/img/banner.jpg';
-        }
-		
-        //Process and add any files in the request
-        inspectFiles(request, context.post);
-
-        model.import('form.importer', context.post);
+        var artifactManager = rxtManager.getArtifactManager(context.params.type);
+        log.info(context);
+        var permissions = context.request.getContent();
 
 
-        //Perform validation on the model
+        addPermissions(assetId, artifactManager, permissions);
+    });
 
-        var report=model.validate();
-
-        if((report)&&(report.failed)){
-
-            print({ok:false,message:'Validation failure',report:report});
-            return;
-        }
-
-
-        //log.debug(context.post);
-
-        model.save();
-
-        //Obtain the asset id in order to retrieve the asset again
-        var assetId=model.get('*.id').value;
-
-        //Convert the model to an artifact
-        var asset=model.export('asset.exporter');
-
-        //Cache the asset
-        assetCacheManager.add(asset,shortName);
-
-        var reg=rxtManager.registry;
-
-        //Add the tags
-        addTags(context.post,assetId,artifactManager,reg);
-
-        print({ok:true,message:'asset added',id:assetId});
-    }
-    catch (e) {
-        log.error(e);
-        log.debug('An instance could not be created for asset with type :' + shortName + '.The following exception was recorded: ' + e);
-        response.sendError(500, 'The asset instance could not be created.Please check the server log.');
-    }
-
-});
-
-routeManager.register('POST', 'publisher', '/publisher/asset/{type}/id/{assetId}/permissions', function(context) {
-    var assetId = context.params.assetId;
-        
-    var artifactManager = rxtManager.getArtifactManager(context.params.type);
-    log.info(context);
-    var permissions = context.request.getContent();
-
-
-    addPermissions(assetId, artifactManager, permissions);
-});
-
-/*
+    /*
 The function is used to add tags to the provided asset id
 @params: A post parameter object
 @assetId: The id of the asset to which the tags will be applied
 @artifactManager: An artifact manager instance
 @reg: A registry instance
  */
-function addTags(params,assetId,artifactManager,reg){
+    function addTags(params, assetId, artifactManager, reg) {
 
-    //Obtain the tags parameter
-   // var tags=params['tags']||[];
-     var tags=params['tag-container']||[];
+        //Obtain the tags parameter
+        // var tags=params['tags']||[];
+        var tags = params['tag-container'] || [];
 
-    //Only proceed if there are any tags
-    if(tags.length==0){
-        log.debug('no tags to add to '+assetId);
-        return;
+        //Only proceed if there are any tags
+        if (tags.length == 0) {
+            log.debug('no tags to add to ' + assetId);
+            return;
+        }
+
+        //Obtain the artifact
+        var asset = artifactManager.get(assetId);
+
+        var path = asset.path;
+        tags = tags.split(',');
+
+        //Attach the tags
+        reg.tag(path, tags);
+
     }
 
-    //Obtain the artifact
-    var asset=artifactManager.get(assetId);
-
-    var path=asset.path;
-    tags = tags.split(',');
-    
-    //Attach the tags
-    reg.tag(path,tags);
-
-}
-
-/*
+    /*
 The function is used to add permissions to the provided asset id
 @assetId: The id of the asset to which the tags will be applied
 @artifactManager: An artifact manager instance
 @permission: Requried permissions
  */
-function addPermissions(assetId,artifactManager,permissions){
+    function addPermissions(assetId, artifactManager, permissions) {
 
-    // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
-    var artifact = artifactManager.get(assetId);
-    // artifactManager.detachLifecycle(artifact);
+        // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
+        var artifact = artifactManager.get(assetId);
+        // artifactManager.detachLifecycle(artifact);
 
-    // remove all the current permissions from the asset
-    var um = server.userManager(server.current(session).tenantId);
-    um.clearResourceAuthorizations(artifact.path);
+        // remove all the current permissions from the asset
+        var um = server.userManager(server.current(session).tenantId);
+        um.clearResourceAuthorizations(artifact.path);
 
-    // add some default permissions
-    //  1. +get +edit +delete +authorize for admin
-    //  2. +get +edit +delete +authorize for asset_{owner}
+        // But, there's an internal_everyone coming up with +GET. Let's nuke it.
+        um.denyRole('Internal/everyone', artifact.path, carbon.registry.actions.GET);
 
-    // add the permissions as passed
-    permissions.forEach(function (rolePermissions) {
-        var role = rolePermissions.role;
-
-        rolePermissions.permissions.forEach (function (permission) {
-            var permission;
-
-            if (permission === 'GET') {
-                permission = carbon.registry.actions.GET
-            } else if (permission === 'PUT') {
-                permission = carbon.registry.actions.PUT
-            } else if (permission === 'DELETE') {
-                permission = carbon.registry.actions.DELETE
-            } else if (permission === 'AUTHORIZE') {
-                permission = carbon.registry.actions.AUTHORIZE
-            }
-             
-            um.authorizeRole(role, artifact.path, permission);
+        // add some default permissions
+        var username = server.current(session).username;
+        var currentUserRole = USER_ROLE_PREFIX + username;
+        //  1. +get +edit +delete +authorize for asset_{owner}
+        permissions.push({
+            role: currentUserRole,
+            permissions: ['GET', 'PUT', 'DELETE', 'AUTHORIZE']
+        });
+        //  2. +get +edit +delete +authorize for admin TODO: 'admin' needs to come from a config
+        permissions.push({
+            role: 'admin',
+            permissions: ['GET', 'PUT', 'DELETE', 'AUTHORIZE']
         });
 
-    });
+        // add the permissions as passed
+        permissions.forEach(function(rolePermissions) {
+            var role = rolePermissions.role;
 
-}
+            rolePermissions.permissions.forEach(function(permission) {
+                var permission;
 
-/*
+                if (permission === 'GET') {
+                    permission = carbon.registry.actions.GET
+                } else if (permission === 'PUT') {
+                    permission = carbon.registry.actions.PUT
+                } else if (permission === 'DELETE') {
+                    permission = carbon.registry.actions.DELETE
+                } else if (permission === 'AUTHORIZE') {
+                    permission = carbon.registry.actions.AUTHORIZE
+                }
+
+                um.authorizeRole(role, artifact.path, permission);
+            });
+
+        });
+
+        artifactManager.registry.addProperty(artifact.path, 'overriden_permissions', JSON.stringify(permissions));
+    }
+    /*
  The function inspects the files sent with a request.If files are found
  they are added to Storage and then the generated uuids are added to
  the POST parameter object
  @req: A request object
  @params: The POST parameters
  */
-function inspectFiles(req, params) {
-    var files = req.getAllFiles();
-    var fileName;
-    var file;
-    var uuid = '';
-    var extension;
+    function inspectFiles(req, params) {
+        var files = req.getAllFiles();
+        var fileName;
+        var file;
+        var uuid = '';
+        var extension;
 
-    //log.info(storageConfig.dataSource);
+        //log.info(storageConfig.dataSource);
 
-    var storageManager = new storageModule.StorageManager({
-        context: 'storage',
-        isCached: false,
-        connectionInfo: {
-            dataSource: storageConfig.dataSource
+        var storageManager = new storageModule.StorageManager({
+            context: 'storage',
+            isCached: false,
+            connectionInfo: {
+                dataSource: storageConfig.dataSource
+            }
+        });
+
+
+        for (var index in files) {
+
+            file = files[index];
+
+            //log.debug('file: ' + index);
+
+            //Put the file in storage and get a uuid as a reference
+            var resource = {};
+            resource['file'] = file;
+            extension = utility.fileio.getExtension(file);
+            resource['contentType'] = utility.fileio.getContentType(extension);
+
+            uuid = storageManager.put(resource);
+
+            //log.info('uuid added: '+uuid);
+
+            //Add a new  entry into the POST parameters containing the uuid
+            params[index] = uuid;
         }
-    });
-
-
-    for (var index in files) {
-
-        file = files[index];
-
-        //log.debug('file: ' + index);
-
-        //Put the file in storage and get a uuid as a reference
-        var resource = {};
-        resource['file'] = file;
-        extension = utility.fileio.getExtension(file);
-        resource['contentType'] = utility.fileio.getContentType(extension);
-
-        uuid=storageManager.put(resource);
-
-        //log.info('uuid added: '+uuid);
-
-        //Add a new  entry into the POST parameters containing the uuid
-        params[index] = uuid;
     }
-}
 
-routeManager.register('PUT', 'publisher', '/publisher/asset/{type}/{id}/{attr}/{value}', function (context) {
-    log.debug('Unsupported method PUT for /asset called.');
-    /*var shortName=context.params.type;
+    routeManager.register('PUT', 'publisher', '/publisher/asset/{type}/{id}/{attr}/{value}', function(context) {
+        log.debug('Unsupported method PUT for /asset called.');
+        /*var shortName=context.params.type;
      var id=context.params.id;
      var attribute=context.params.attr;
      var attributeValue=context.params.value;
@@ -385,25 +432,25 @@ routeManager.register('PUT', 'publisher', '/publisher/asset/{type}/{id}/{attr}/{
      }catch(e){
      print('unable to update artifact with id'+e);
      }*/
-});
+    });
 
-routeManager.register('DELETE', 'publisher', '/publisher/asset/{type}/{id}', function (context) {
-    var shortName = context.params.type;
-    var id = context.params.id;
+    routeManager.register('DELETE', 'publisher', '/publisher/asset/{type}/{id}', function(context) {
+        var shortName = context.params.type;
+        var id = context.params.id;
 
-    var artifactManager = rxtManager.getArtifactManager(shortName);
+        var artifactManager = rxtManager.getArtifactManager(shortName);
 
-    try {
-        artifactManager.remove(id);
+        try {
+            artifactManager.remove(id);
 
-    } catch (e) {
-        log.debug('Asset id: ' + id + 'was not removed.Due to exception: ' + e);
-        response.sendError(404, 'Asset with id: ' + id + 'was not removed.Please check the server log for more details.');
-    }
+        } catch (e) {
+            log.debug('Asset id: ' + id + 'was not removed.Due to exception: ' + e);
+            response.sendError(404, 'Asset with id: ' + id + 'was not removed.Please check the server log for more details.');
+        }
 
 
-});
-routeManager.handle(request, response);
+    });
+    routeManager.handle(request, response);
 
 }, request, response, session);
 
