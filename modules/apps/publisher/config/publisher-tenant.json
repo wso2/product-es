@@ -60,7 +60,13 @@
                     "co2-emission",
                     "electric-power",
                     "energy-use",
-                    "greenhouse-gas"
+                    "greenhouse-gas",
+                    "wso2-architecture",
+                    "wso2-carbon-commits",
+                    "wso2-carbon-dev",
+                    "wso2-dev",
+                    "wso2-jira"
+
 
                     ]
             },
