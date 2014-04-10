@@ -87,11 +87,11 @@
 
     <properties>
         <ues.version>1.0.0</ues.version>
-        <carbon.kernal.version>4.2.0</carbon.kernal.version>
-        <carbon.platform.version>4.2.0</carbon.platform.version>
+        <carbon.kernal.version>4.3.0-SNAPSHOT</carbon.kernal.version>
+        <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
 
         <!-- jaggery versions -->
-        <jaggery.feature.version>0.9.0.ALPHA4.wso2v4</jaggery.feature.version>
+        <jaggery.feature.version>0.9.0.ALPHA5.wso2v1-SNAPSHOT</jaggery.feature.version>
 
         <cassandra.osgi.range>[4.2.1,4.2.3)</cassandra.osgi.range>
 
@@ -144,6 +144,16 @@
         <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
         <commons-logging.version>1.1.1</commons-logging.version>
         <cep.component.version>1.0.0</cep.component.version>
+
+        <!--Migration to 4.3.0-SNAPSHOT -->
+        <jaxws.webapp.mgt.version>4.2.0</jaxws.webapp.mgt.version>
+        <cassandra.explorer.version>4.2.1</cassandra.explorer.version>
+        <databridge.datareceiver.version>4.2.0</databridge.datareceiver.version>
+        <databridge.cassandra.version>4.2.0</databridge.cassandra.version>
+        <module.mgt.version>4.2.0</module.mgt.version>
+        <databridge.streamdefn.cassandra>4.2.0</databridge.streamdefn.cassandra>
+        <usr.mgt.version>4.3.0-SNAPSHOT</usr.mgt.version>
+        <!--End of migration-->
     </properties>
 
     <distributionManagement>
