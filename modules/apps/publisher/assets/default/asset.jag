@@ -274,7 +274,7 @@ require('/modules/publisher.js').exec(function(ctx) {
         var permissions = context.request.getContent();
 
 
-        addPermissions(assetId, artifactManager, permissions);
+        overridePermissions(assetId, artifactManager, permissions);
     });
 
     /*
