@@ -176,7 +176,20 @@ require('/modules/publisher.js').exec(function(ctx) {
             var server = require('store').server,
                 um = server.userManager(server.current(session).tenantId);
 
-            output.roles = um.allRoles();
+            var registry = new carbon.registry.Registry(server, {
+                username: server.current(session).username,
+                tenantId: server.current(session).tenantId
+            });
+
+            var overridenPermissions = null;
+
+            if(registry.properties(path)['overridden_permissions']) {
+                overridenPermissions = registry.properties(path)['overridden_permissions'][0];
+            } 
+
+            if (overridenPermissions) {
+                output.permissions = JSON.parse(overridenPermissions.replace('\\', ''));
+            }
 
             caramel.render({
                 op: operation,
@@ -189,7 +202,8 @@ require('/modules/publisher.js').exec(function(ctx) {
                 tags: tags,
                 title: title
             });
-        } catch (e) {
+        } 
+        catch (e) {
             log.debug('The asset with id ' + id + ' could not be found due to : ' + e);
             response.sendError(404, 'Asset with id ' + id + ' could not be found.Please check server log.');
         }
@@ -308,7 +322,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     }
 
     /*
-        The function is used to add permissions to the provided asset id
+        The function is used to add/edit permissions to the provided asset id
         @assetId: The id of the asset to which the tags will be applied
         @artifactManager: An artifact manager instance
         @permission: Requried permissions
@@ -326,9 +340,18 @@ require('/modules/publisher.js').exec(function(ctx) {
         // But, there's an internal_everyone coming up with +GET. Let's nuke it.
         um.denyRole('Internal/everyone', artifact.path, carbon.registry.actions.GET);
 
-        // add some default permissions
         var username = server.current(session).username;
         var currentUserRole = USER_ROLE_PREFIX + username;
+
+        // Prevent the user from making modifications to the default roles
+        // If the permissions are defined for the two roles that we're explicitly adding permissions
+        // as below, just splice them up.
+        for (var i = permissions.length - 1; i >= 0; i--) {
+            if (permissions[i].role === currentUserRole || permissions[i].role === 'admin') {
+                permissions.splice(i, 1);
+            }
+        };
+                
         //  1. +get +edit +delete +authorize for asset_{owner}
         permissions.push({
             role: currentUserRole,
@@ -355,9 +378,13 @@ require('/modules/publisher.js').exec(function(ctx) {
         });
 
         var registry = new carbon.registry.Registry(server, {
-                username: server.current(session).username,
-                tenantId: server.current(session).tenantId
+            username: server.current(session).username,
+            tenantId: server.current(session).tenantId
         });
+
+        if(registry.properties(artifact.path)['overridden_permissions']) {
+            registry.removeProperty(artifact.path, 'overridden_permissions');
+        }
 
         registry.addProperty(artifact.path, 'overridden_permissions', JSON.stringify(permissions));
     }
