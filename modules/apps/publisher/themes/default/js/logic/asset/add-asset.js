@@ -3,7 +3,7 @@
  *              to manage the input fields
  *
  */
-$(function () {
+$(function() {
 
     var formManager = new FormManager('form-asset-create');
 
@@ -12,7 +12,7 @@ $(function () {
 
     PageFormContainer.setInstance(formManager);
 
-    $('#btn-create-asset').on('click', function () {
+    $('#btn-create-asset').on('click', function() {
 
         console.log(formManager.getData());
         //Perform validations
@@ -26,6 +26,7 @@ $(function () {
         }
 
         var formData = formManager.getFormData();//formManager.validate();
+
         postData(formData);
     });
 
@@ -34,7 +35,7 @@ $(function () {
      @report: The report to be processed
      @return: An html string containing the validation issues
      */
-    var processErrorReport = function (report) {
+    var processErrorReport = function(report) {
         var msg = '';
         for (var index in report) {
 
@@ -51,7 +52,7 @@ $(function () {
      @report: The report to be processed
      @return: An html string containing the validation issues
      */
-    var processClientErrorReport = function (report) {
+    var processClientErrorReport = function(report) {
         var msg = '';
         for (var index in report) {
 
@@ -67,8 +68,10 @@ $(function () {
      * The method calls the add asset api to create a new asset
      * @param formData
      */
-    var postData = function (formData) {
+    var postData = function(formData) {
         var type = $('#meta-asset-type').val();
+
+        console.log(JSON.stringify(formData));
 
         $.ajax({
             url: '/publisher/asset/' + type,
@@ -77,29 +80,76 @@ $(function () {
             contentType: false,
             dataType: 'json',
             data: formData,
-            success: function (response) {
+            success: function(response) {
                 var result = response;
 
                 //Check if the asset was added
                 if (result.ok) {
                     showAlert('Asset added successfully.', 'success');
-                    window.location = '/publisher/assets/' + type + '/';
+
+                    // I am not conforming to the formManger behavior here. 
+                    // Since roles are such precious little bundles of joy, they deserve their own
+                    // special caretakers.
+
+                    (function setupPermissions() {
+                        var rolePermissions = [];
+                        $('.role-permission').each(function(i, tr) {
+                            var role = $(tr).attr('data-role');
+
+                            var permissions = [];
+
+                            $(tr).children('td').children(':checked').each(function(j, checkbox) {
+                                permissions.push($(checkbox).attr('data-perm'));
+                            });
+
+                            rolePermissions.push({
+                                role: role,
+                                permissions: permissions
+                            });
+                        });
+
+
+                        if (rolePermissions.length > 0) {
+                            $.ajax({
+                                url: '/publisher/asset/' + type + '/id/' + result.id + '/permissions',
+                                type: 'POST',
+                                processData: false,
+                                contentType: 'application/json',
+                                data: JSON.stringify(rolePermissions),
+                                success: function(response) {
+                                    window.location = '/publisher/assets/' + type + '/';
+                                },
+                                error: function(response) {
+                                    showAlert('Error adding permissions.', 'error');
+                                }
+                            });
+                        } else {
+                            window.location = '/publisher/assets/' + type + '/';
+                        }
+                    })();
                 } else {
                     var msg = processErrorReport(result.report);
                     showAlert(msg, 'error');
                 }
 
             },
-            error: function (response) {
+            error: function(response) {
                 showAlert('Failed to add asset.', 'error');
             }
         });
     }
 
     // roles autocomplete
-    $('#roles').tokenInput('/publisher/api/lifecycle/information/meta/roles', {
+    $('#roles').tokenInput('/publisher/api/lifecycle/information/meta/' + $('#meta-asset-type').val() + '/roles', {
         theme: 'facebook',
         preventDuplicates: true,
-        zindex: 99999 // so that autcomplete will render on top of a modal
+        onAdd: function(role) {
+            var permission = $('<tr class="role-permission" data-role="' + role.id + '"><td>' + role.name + '</td><td><input data-perm="GET" type="checkbox" value=""></td><td><input data-perm="PUT" type="checkbox" value=""></td><td><input data-perm="DELETE" type="checkbox" value=""></td><td><input data-perm="AUTHORIZE" type="checkbox" value=""></td></tr>')
+            $('#permissionsTable > tbody').append(permission);
+        },
+        onDelete: function(role) {
+            console.log()
+            $('#permissionsTable tr[data-role="' + role.id + '"]').remove();
+        }
     });
 });

@@ -5,7 +5,7 @@
                  height="230"
                  scrolling="true"
                  category="Google"
-                 tags="charts,bubble,visualization,data,analytics,template"
+                 tags="charts,bubble,visualization,data,analytics"
                  description="A generic Bubble Chart gadget, that takes a json datasource as an input. It can be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained">
     </ModulePrefs>
     <UserPref name="dataSource"
