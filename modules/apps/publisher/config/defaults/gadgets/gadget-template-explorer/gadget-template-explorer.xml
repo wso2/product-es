@@ -98,7 +98,7 @@
 	<div class="row-fluid show-asset-col-wrapper">
 		<div class="span2 show-asset-left-col">
 			<div>
-				<input type="text" placeholder="Search Gadget" id="inp-search-gadget" class="span12">
+				<input type="text" placeholder="Search Template" id="inp-search-gadget" class="span12">
 				
 				<h5 class="tags-area-text"><i class="icon icon-tags"></i> All Tags (<span id="tag-num-span"></span>)</h5>
 				<ul id="ul-modal-tags">

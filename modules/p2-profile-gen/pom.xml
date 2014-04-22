@@ -160,7 +160,10 @@
                                     org.wso2.carbon:org.wso2.carbon.identity.application.authentication.framework.server.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${patch.version.421}
+                                    org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.server.feature:${patch.version.421}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <feaureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.sso.saml.feature:${patch.version.421}
@@ -177,8 +180,21 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.platform.version}
                                 </featureArtifactDef>
+                                <!--casandra -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.platform.version}
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.server.feature:${patch.version.421}
+                                </featureArtifactDef>
+                                <!--<featureArtifactDef>-->
+                                <!--org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.patchrelease.version.422}-->
+                                <!--</featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.mgt.feature:${patch.version.421}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.dataaccess.feature:${patch.version.421}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.common.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra-jdbc-1.1.1.server.feature:4.0.1
@@ -368,7 +384,11 @@
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.authenticator.saml2.sso.feature.group</id>
+                                    <id>org.wso2.carbon.identity.authenticator.saml2.sso.server.feature.group</id>
+                                    <version>${patch.version.421}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature.group</id>
                                     <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
@@ -404,8 +424,24 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.cassandra.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <id>org.wso2.carbon.cassandra.server.feature.group</id>
+                                    <version>${patch.version.421}</version>
+                                </feature>
+                                <!--<feature>-->
+                                <!--<id>org.wso2.carbon.cassandra.feature.group</id>-->
+                                <!--<version>${carbon.patchrelease.version.422}</version>-->
+                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.mgt.feature.group</id>
+                                    <version>${patch.version.421}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.dataaccess.feature.group</id>
+                                    <version>${patch.version.421}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.common.feature.group</id>
+                                    <version>${patch.version.421}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.cassandra-jdbc-1.1.1.server.feature.group</id>

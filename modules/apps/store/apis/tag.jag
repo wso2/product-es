@@ -23,7 +23,6 @@ require('/modules/store.js').exec(function (ctx) {
 
     } else if (matcher.match('/{context}/apis/tag/{tagName}/{type}')) {
         var elements = matcher.elements();
-
         print(store.tagged(elements.type, elements.tagName, {
             start: Number(request.getParameter('start')) || 0,
             count: Number(request.getParameter('count')) || 50000,

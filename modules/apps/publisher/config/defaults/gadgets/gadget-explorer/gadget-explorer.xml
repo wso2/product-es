@@ -82,7 +82,7 @@
             {{/rating}}
         </h5>
         <small>by {{overview_provider}}</small>
-        <button class="btn select-btn">Select Template</button>
+        <button class="btn select-btn">Select Gadget</button>
     </div>
     {{/attributes}}
 </script>
@@ -108,7 +108,40 @@
 		</div>
 		<div class="span10 show-asset-right-col">
 			<div>
-				<div id="asset-grid-store" class="asset-grid"></div>
+				
+				
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#tab2" data-toggle="tab" id="store-tab">Store Items</a>
+					</li>
+					<li>
+						<a href="#tab1" data-toggle="tab" id="my-tab">Bookmarks</a>
+					</li>
+					<li>
+						<a href="#tab3" data-toggle="tab">External</a>
+					</li>
+				</ul>
+				<div class="tab-content span12">
+					<div class="tab-pane active" id="tab2">
+						<div id="asset-grid-store" class="asset-grid"></div>
+					</div>
+					<div class="tab-pane" id="tab1">
+						<div id="asset-grid-my" class="asset-grid"></div>
+					</div>
+					<div class="asset-byUrl tab-pane span12" id="tab3">
+					
+                        
+					<div class="asset-byUrl-info-div">
+						<div class="icon icon-external-link-sign"></div>
+						<h3>Add an external gadget to the dashboard </h3>
+						<form id="add-ext" class="add-ext-asset">
+		    			<span class="add-ext-url-parent"><input name="add-ext-url" class="span6 inp-add-ext-url pull-left" id="add-ext-url" type="text" placeholder="URL" required></span>
+		    			<span class="span4"><input name="add-ext-btn" id="add-ext-btn" class="btn select-btn btn-primary" type="button" value="Add Gadget"></span>
+						</form>
+					
+					</div>
+				</div>
+				
 			</div>
 		</div>
 	</div>
