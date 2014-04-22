@@ -2,7 +2,7 @@
 var data1 = [];
 var data2 = [];
 totalPoints = 5;
-
+var chartOptions = require("../config/chart-options.json");
 function getRandomData() {
 
     if (data1.length > 0)
@@ -25,7 +25,7 @@ function getRandomData() {
         }
     }
 
-
+    chartOptions["series"]["bars"]["barWidth"] = 0.5;
 
     return [
         {"series1":{ label: "Data set 1",
@@ -33,7 +33,7 @@ function getRandomData() {
         },
         "series2":{ label: "Data set 2",
             data: data2
-        }}
+        }},chartOptions
 
     ];
 

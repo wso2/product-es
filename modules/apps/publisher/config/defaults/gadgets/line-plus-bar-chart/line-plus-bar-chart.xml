@@ -5,13 +5,14 @@
                  height="230"
                  scrolling="true"
                  category="Templates"
+                 tags="charts,stacked,bar,visualization,template"
                  description="A generic Line + Bar Chart gadget, that takes a json data source as an input. It can be be configured to fetch data
                   in defined intervals. This gadget can be used to create dashboards with statistical data. Gadget can be reused as an iframe in any web page
                   as it is sef contained">
     </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="/portal/gadgets/line-plus-bar-chart/datasource/dataFile2.jag">
+              default_value="/publisher/config/defaults/gadgets/line-plus-bar-chart/datasource/dataFile2.jag">
     </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"

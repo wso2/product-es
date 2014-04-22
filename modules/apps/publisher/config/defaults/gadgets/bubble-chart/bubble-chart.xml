@@ -5,12 +5,12 @@
                  height="230"
                  scrolling="true"
                  category="Google"
-                 tags="charts,bubble,visualization,data,analytics"
+                 tags="charts,bubble,visualization,data,analytics,template"
                  description="A generic Bubble Chart gadget, that takes a json datasource as an input. It can be configured to fetch data in defined intervals. This gadget can be used to create dashboards with statistical data. This gadget can be reused as an iframe in any web page as it is self contained">
     </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="/portal/gadgets/bubble-chart/datasource/dataFile3.jag">
+              default_value="/publisher/config/defaults/gadgets/bubble-chart/datasource/dataFile3.jag">
     </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"

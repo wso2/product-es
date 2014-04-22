@@ -18,7 +18,7 @@ var TENANT_CONFIGS = 'tenant.configs';
  */
 var init = function (options) {
     var carbon = require('carbon'),
-        event = require('/modules/event.js'),
+        event = require('event'),
         srv = new carbon.server.Server({
             tenanted: options.tenanted,
             url: options.server.https
@@ -123,7 +123,7 @@ var loadTenant = function (tenantId) {
     if (config[ANONYMOUS_REGISTRY]) {
         return;
     }
-    require('/modules/event.js').emit('tenantLoad', tenantId);
+    require('event').emit('tenantLoad', tenantId);
 };
 
 /**
