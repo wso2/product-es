@@ -4,6 +4,5 @@
     ],
     "dataLabels":[
         "Y-Axis Label", "X-Axis Label"
-    ],
-    "timeSeriesAllowed" : false
+    ]
 }

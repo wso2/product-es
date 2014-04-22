@@ -53,22 +53,14 @@
             {
                 "type": "gadgets",
                 "ignore":["agricultural-land",
+                    "wso2-carbon-dev",
                     "intro-gadget-1",
                     "intro-gadget-2",
-                    "gadget-template-explorer",
-                    "gadget-explorer",
+                    "show-assets",
                     "co2-emission",
                     "electric-power",
                     "energy-use",
-                    "greenhouse-gas",
-                    "wso2-architecture",
-                    "wso2-carbon-commits",
-                    "wso2-carbon-dev",
-                    "wso2-dev",
-                    "wso2-jira"
-
-
-                    ]
+                    "greenhouse-gas"]
             },
             {
                 "type": "ebooks"

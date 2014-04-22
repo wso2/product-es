@@ -1,6 +1,5 @@
 var PAGE_SIZE = 12;
 var API_URL = '/store/apis/v2/';
-var API_TAGS_URL = '/store/apis/';
 
 var prefs = new gadgets.Prefs();
 var type = prefs.getString('type') || 'gadget';
@@ -128,7 +127,7 @@ $(function () {
     	});
     };
     var deselectGadget = function () {
-        $('.select-btn').text('Select Gadget').removeClass('active');
+        $('.select-btn').text('Select Template').removeClass('active');
         console.log("Gadget deselected");
     };
 
@@ -137,8 +136,8 @@ $(function () {
         if (target.hasClass('select-btn')) {
             var event = jQuery.Event('assetSelect');
             $(document).trigger(event, $(e.target).parents('.asset-box').data());
-            $('.select-btn').text('Select Gadget').removeClass('active');
-            target.text('Gadget Selected').addClass('active');
+            $('.select-btn').text('Select Template').removeClass('active');
+            target.text('Template Selected').addClass('active');
         } else if (target.hasClass('btn-browse')) {
             STORE_TAB.click();
         }
@@ -152,9 +151,8 @@ $(function () {
      */
     var loadPages = function (query, tag) {
         var data = query ? {query:query} : {};
-        
         $.ajax({
-          url: (tag?API_TAGS_URL:API_URL) + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'assets/' + type)) + '?start=0&count=100',
+            url: API_URL + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'assets/' + type)) + '?start=0&count=100',
             data: data,
             success: function (data) {
                 toFade = [];
@@ -196,7 +194,7 @@ $(function () {
 
     //loads all asset names and loads the first page.
     loadPages();
-/*
+
     $('a[data-toggle="tab"]').on('shown', function (e) {
         isMyAssetsShown = ($(this).attr('id') == 'my-tab');
         if (!tabSwitched) {
@@ -206,10 +204,10 @@ $(function () {
             tagToBeLoaded = null;
         }
     });
-*/
+
     // load list of all tags
     $.ajax({
-        url: API_TAGS_URL + "tag/" + type,
+        url: API_URL + 'tag/' + type,
         success: function (data) {
             var tags = $('#ul-modal-tags').html(tagTmpl(data));
             tags.find('.tag-box').on('click', function () {

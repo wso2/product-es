@@ -15,11 +15,11 @@
     <Content type="html">
         <![CDATA[
        <head>
-            <link href="css/flot-graph.css" rel="stylesheet" type="text/css">
-	        <script language="javascript" type="text/javascript" src="/publisher/config/defaults/gadgets/intro-gadget-1/js/excanvas.min.js"></script>
-	        <script language="javascript" type="text/javascript" src="/publisher/config/defaults/gadgets/intro-gadget-1/js/jquery.js"></script>
-	        <script language="javascript" type="text/javascript" src="/publisher/config/defaults/gadgets/intro-gadget-1/js/flot/jquery.flot.js"></script>
-		    <script src="/publisher/config/defaults/gadgets/intro-gadget-1/js/intro-gadget-1.js"></script>
+            <link href="/portal/themes/portal/css/flot-graph.css" rel="stylesheet" type="text/css">
+	        <script language="javascript" type="text/javascript" src="../../js/flot/excanvas.min.js"></script>
+	        <script language="javascript" type="text/javascript" src="/portal/js/flot/jquery.js"></script>
+	        <script language="javascript" type="text/javascript" src="/portal/js/flot/jquery.flot.js"></script>
+		    <script src="/portal/gadgets/intro-gadget-1/js/intro-gadget-1.js"></script>
 		     <style>
 		     	body{
 		     	background:#EFF9F7;

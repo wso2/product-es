@@ -10,7 +10,7 @@
     </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="/publisher/config/defaults/gadgets/bubble-chart/datasource/dataFile3.jag">
+              default_value="/portal/gadgets/bubble-chart/datasource/dataFile3.jag">
     </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"

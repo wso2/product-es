@@ -9,7 +9,7 @@
      </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="/publisher/config/defaults/gadgets/line-chart/datasource/dataFile1.jag">
+              default_value="/portal/gadgets/line-chart/datasource/dataFile1.jag">
     </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"
@@ -36,7 +36,6 @@
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.tickrotor.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.axislabels.js"></script>
-	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/flot-chart-core.js"></script>
 
 </head>

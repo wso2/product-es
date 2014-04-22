@@ -44,7 +44,6 @@
                 <exclude>**/master-datasources.xml</exclude>
                 <exclude>**/org.wso2.carbon.identity.relyingparty.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/org.wso2.carbon.identity.user.registration.ui-3.1.0.SNAPSHOT.jar</exclude>
-                <exclude>**/apache-cassandra_1.1.3.wso2v5.jar</exclude>
                 <exclude>**/log4j.properties</exclude>
             </excludes>
         </fileSet>
@@ -153,13 +152,6 @@
             <outputDirectory>wso2store-${pom.version}/repository/conf/security/</outputDirectory>
             <includes>
                 <include>**/application-authenticators.xml</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/repository/conf/etc</directory>
-            <outputDirectory>wso2store-${pom.version}/repository/conf/etc/</outputDirectory>
-            <includes>
-                <include>**/**</include>
             </includes>
         </fileSet>
 		<fileSet>

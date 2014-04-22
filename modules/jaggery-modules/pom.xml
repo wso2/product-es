@@ -27,7 +27,6 @@
     </parent>
 
     <artifactId>jaggery-modules</artifactId>
-    <version>1.0.0</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <name>Enterprise Store - Jaggery Modules</name>

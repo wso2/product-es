@@ -57,6 +57,7 @@
         "inverseTransform": null,
 
         "ticks": null,
+        "tickLength": 0,
         "tickDecimals": 0,
         "tickFormatter": null,
         "tickLength": null,
@@ -78,7 +79,6 @@
         "show": true,
         "position": "bottom",
         "mode": null,
-        "timeformat": null,
 
         "color": null,
         "tickColor": null,

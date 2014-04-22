@@ -2,7 +2,7 @@
 var data1 = [];
 var data2 = [];
 totalPoints = 50;
-var chartOptions = require("../config/chart-options.json");
+
 function getRandomData() {
 
     if (data1.length > 0)
@@ -29,9 +29,8 @@ function getRandomData() {
         }
     }
 
-    chartOptions["xaxis"]["autoscaleMargin"] = 0;
     return [
-        {"series1":{label: "sin(x sin(x))", data: data1} , "series2":{label: "cos(x cos(x))", data: data2 }},chartOptions
+        {"series1":{label: "sin(x sin(x))", data: data1} , "series2":{label: "cos(x cos(x))", data: data2 }}
     ];
 
 }

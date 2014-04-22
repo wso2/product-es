@@ -10,7 +10,7 @@
      </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="/publisher/config/defaults/gadgets/bar-chart/datasource/dataFile4.jag">
+              default_value="/portal/gadgets/bar-chart/datasource/dataFile4.jag">
     </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"
@@ -37,7 +37,6 @@
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.tickrotor.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.axislabels.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.orderBars.js"></script>
-	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="js/flot/flot-chart-core.js"></script>
 
 </head>

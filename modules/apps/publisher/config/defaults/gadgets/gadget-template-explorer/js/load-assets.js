@@ -153,8 +153,8 @@ $(function () {
     var loadPages = function (query, tag) {
         var data = query ? {query:query} : {};
         $.ajax({
-            url: API_TAGS_URL + (tag ? tag : 'template') + '/gadget?start=0&count=100',
-            //url: API_TAGS_URL + 'template/gadget' + '?start=0&count=100',
+            //url: API_URL + ( isMyAssetsShown ? 'myAsset/' : ( tag ? 'tag/' + tag + '/' + type : 'assets/' + type)) + '?start=0&count=100',
+            url: API_TAGS_URL + 'template/gadget' + '?start=0&count=100',
             data: data,
             success: function (data) {
                 toFade = [];

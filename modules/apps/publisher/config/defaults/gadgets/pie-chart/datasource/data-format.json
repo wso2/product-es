@@ -4,6 +4,5 @@
     ],
     "dataLabels":[
         "Data Label"
-    ],
-    "timeSeriesAllowed" : false
+    ]
 }

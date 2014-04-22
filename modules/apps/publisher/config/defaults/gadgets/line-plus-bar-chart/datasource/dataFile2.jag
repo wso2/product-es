@@ -1,8 +1,8 @@
 <%
 var data1 = [];
 var data2 = [];
-totalPoints = 10;
-var chartOptions = require("../config/chart-options.json");
+totalPoints = 50;
+
 function getRandomData() {
 
     if (data1.length > 0)
@@ -12,7 +12,7 @@ function getRandomData() {
         data2 = data2.slice(1);
 
     while (data1.length < totalPoints) {
-        for (var i = 0; i <= 20; ++i) {
+        for (var i = 0; i <= 100; ++i) {
             var x1 = Math.random();
             var x2 = Math.random();
             var x = x1 + i * (Math.abs(x2 - x1)) / 100;
@@ -21,37 +21,28 @@ function getRandomData() {
     }
 
     while (data2.length < totalPoints) {
-        for (var i = 0; i <= 20; ++i) {
+        for (var i = 0; i <= 100; ++i) {
             var x1 = Math.random();
             var x2 = Math.random();
             var x = x1 + i * (Math.abs(x2 - x1)) / 100;
             data2.push([i, Math.cos(x)]);
         }
     }
-    chartOptions["xaxis"]["autoscaleMargin"] = 0;
 
     return [
         {
-            "series2": {
-                label: "cos(x cos(x))",
-                data: data2,
-                bars: { show: true },
-                color: "#FA0B43"
-            },
             "series1": {
                 label: "sin(x sin(x))",
                 data: data1,
                 lines: { show: true },
-                "points": {
-                    "radius": 5,
-                    "show": true,
-                    "fill": true,
-                    "symbol": "circle"
-                },
-                color: "#41E328"
+                color: "#f00"
+            },
+            "series2": {
+                label: "cos(x cos(x))",
+                data: data2,
+                bars: { show: true }
             }
-
-        },chartOptions
+        }
     ];
 
 }

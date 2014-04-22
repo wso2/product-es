@@ -1,5 +1,4 @@
 <%
-var chartOptions = require("../config/chart-options.json");
 var data1 = [];
 var data2 = [];
 totalPoints = 5;
@@ -18,7 +17,6 @@ function getRandomData() {
 						
 					}
 					data.push(obj);
-                    data.push(chartOptions)
     return data;
 
 }

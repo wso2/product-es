@@ -16,8 +16,6 @@
 
 package org.wso2.jaggery.scxml;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.wso2.jaggery.scxml.internal.RealmServiceComponent;
@@ -28,16 +26,13 @@ Filename:RealmContext.java
 Created Date: 26/8/2013
  */
 public class Activator implements BundleActivator {
-
-    private static final Log log=LogFactory.getLog(Activator.class);
-
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-        log.info("Activating org.wso2.jaggery.scxml with RealmService enabled");
+        System.out.println("Activating org.wso2.jaggery.scxml with RealmService enabled");
     }
 
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
-        log.info("Stopping org.wso2.jaggery.scxml with RealmService disabled");
+        System.out.println("Stopping org.wso2.jaggery.scxml with RealmService disabled");
     }
 }

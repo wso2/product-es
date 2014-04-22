@@ -10,7 +10,7 @@
      </ModulePrefs>
     <UserPref name="dataSource"
               display_name="Data Source"
-              default_value="/publisher/config/defaults/gadgets/pie-chart/datasource/dataFile6.jag">
+              default_value="/portal/gadgets/pie-chart/datasource/dataFile6.jag">
     </UserPref>
     <!--UserPref name="options"
               display_name="Chart Options"
