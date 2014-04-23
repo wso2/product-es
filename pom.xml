@@ -146,7 +146,7 @@
         <cep.component.version>1.0.0</cep.component.version>
 
         <!--Migration to 4.3.0-SNAPSHOT -->
-        <jaxws.webapp.mgt.version>4.2.0</jaxws.webapp.mgt.version>
+        <!--jaxws.webapp.mgt.version>4.3.0-SNAPSHOT</jaxws.webapp.mgt.version-->
         <cassandra.explorer.version>4.2.1</cassandra.explorer.version>
         <databridge.datareceiver.version>4.2.0</databridge.datareceiver.version>
         <databridge.cassandra.version>4.2.0</databridge.cassandra.version>

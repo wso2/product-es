@@ -71,6 +71,7 @@
               <Bundle-Activator>org.wso2.jaggery.scxml.Activator</Bundle-Activator>
               <Import-Package>
                   org.osgi.framework,
+				  org.wso2.carbon.governance.registry.extensions.*;version="0.0.0",
                   *;resolution:=optional
               </Import-Package>
 	      <Export-Package>
