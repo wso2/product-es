@@ -139,6 +139,7 @@
         <wso2.slf4j.version>1.5.10.wso2v1</wso2.slf4j.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
         <email.feature.version>1.0.0</email.feature.version>
+        <ws.feature.version>1.0.0</ws.feature.version>
 
         <rhino.osgi.version>1.7.0.R4.wso2v1-SNAPSHOT</rhino.osgi.version>
         <commons-codec.osgi.version>1.4.0.wso2v1</commons-codec.osgi.version>
