@@ -218,7 +218,7 @@
                                     org.wso2.carbon:org.wso2.carbon.user.mgt.feature:${patch.version.421}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.cassandra.feature:${carbon.platform.version}
+                                    org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.registry.server.feature:4.2.1
                                 </featureArtifactDef>
 
                                 <!-- Stratos features    -->
@@ -464,8 +464,8 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.databridge.streamdefn.cassandra.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <id>org.wso2.carbon.databridge.streamdefn.registry.server.feature.group</id>
+                                    <version>4.2.1</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.feature.group</id>

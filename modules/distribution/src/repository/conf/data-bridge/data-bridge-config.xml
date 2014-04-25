@@ -16,7 +16,7 @@
 
 <dataBridgeConfiguration xmlns="http://wso2.org/carbon/databridge">
 
-    <StreamDefinitionStore>org.wso2.carbon.databridge.streamdefn.cassandra.datastore.CassandraStreamDefinitionStore</StreamDefinitionStore>
+    <StreamDefinitionStore>org.wso2.carbon.databridge.streamdefn.registry.datastore.RegistryStreamDefinitionStore</StreamDefinitionStore>
 
     <workerThreads>10</workerThreads>
     <eventBufferCapacity>10000</eventBufferCapacity>

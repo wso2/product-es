@@ -244,7 +244,7 @@
                                     org.wso2.carbon.user.mgt:${patch.version.421}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.databridge.streamdefn.cassandra:${carbon.platform.version}
+                                    org.wso2.carbon.databridge.streamdefn.registry.server:4.2.1
                                 </importFeatureDef>
                                 <!-- Stratos features    -->
                                 <importFeatureDef>
