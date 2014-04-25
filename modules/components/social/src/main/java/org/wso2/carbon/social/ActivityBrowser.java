@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
@@ -11,6 +12,7 @@ import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceManager;
 
 import javax.sql.DataSource;
+
 import java.sql.*;
 import java.util.*;
 
@@ -23,7 +25,7 @@ public class ActivityBrowser {
             CONTEXT_ID_COLUMN + "'=?";
 
     private JsonParser parser = new JsonParser();
-    private Connection conn;
+    //private Connection conn;
     private Cache cache = new Cache();
 
     public double getRating(String targetId, String tenant) {
@@ -95,6 +97,7 @@ public class ActivityBrowser {
                 } catch (SQLException e) {
                     //ignore
                 }
+                closeConnection(connection);
             }
         }
         if (activities != null) {
@@ -151,7 +154,8 @@ public class ActivityBrowser {
     }
 
     public Connection getConnection() {
-        if (conn == null) {
+    	Connection conn = null;
+        ///if (conn == null) {
             try {
                 CarbonDataSource carbonDataSource = DataSourceManager.getInstance().getDataSourceRepository().getDataSource("SOCIAL_CASSANDRA_DB");
                 DataSource dataSource = (DataSource) carbonDataSource.getDSObject();
@@ -161,7 +165,15 @@ public class ActivityBrowser {
             } catch (DataSourceException e) {
                 LOG.error("Can't create create data source for Cassandra", e);
             }
-        }
+        //}
         return conn;
+    }
+    
+    public void closeConnection(Connection connection){
+    	try {
+			connection.close();
+		} catch (SQLException e) {
+			LOG.error("Can't close JDBC connection to Cassandra", e);
+		}  	
     }
 }
