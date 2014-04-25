@@ -45,9 +45,11 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="tab-reviews">
+                        {{#if isSocial}}
                         <iframe name="socialIfr" id="socialIfr"
                                 src="{{../../socialAppDetails.socialAppUrl}}?target={{../../type}}:{{../id}}&user={{../../user.username}}"
                                 width="100%" height="100%" style="height: 300px;" data-script="{{../../socialAppDetails.script}}" data-script-type="{{../../socialAppDetails.scriptType}}"></iframe>
+                        {{/if}}
                        	{{#if ../../inDashboard}}
                        		 <div id="comment-content" class="content"></div>
 						{{else}}
