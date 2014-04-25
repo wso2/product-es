@@ -249,6 +249,82 @@ require('/modules/publisher.js').exec(function(ctx) {
     }
   });
 
+  routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/information/meta/{type}/roles', function(context) {
+    log.info(context);
+    var shortName = context.params.type;
+    var carbon = require('carbon');
+    var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
+    var realm = realmService.getTenantUserRealm(server.current(session).tenantId);
+
+    var allRoles = realm.getUserStoreManager().getRoleNames();
+
+    var lifecycleJSON = obtainLifeCycle(shortName);
+
+    var relatedRoles = [];
+
+    // TODO: needs to go in a config
+    var criticalRoles = ['admin'];
+
+    lifecycleJSON.configuration[0].lifecycle[0].scxml[0].state.forEach(function(state) {
+      state.datamodel.forEach(function(dataModel) {
+        dataModel.data.forEach(function(data) {
+          data.execution.forEach(function(execution) {
+            execution.parameter.forEach(function(parameter) {
+              if (parameter.name.indexOf('STATE_RULE') > -1) {
+                var role = parameter.value.split(':')[0];
+                if (role.indexOf('{') === -1) {
+                  relatedRoles.push(parameter.value.split(':')[0]);
+                }
+              }
+            })
+          })
+        })
+      })
+    });
+
+    for (var i = 0; i < criticalRoles.length; i++) {
+      log.info(allRoles.indexOf(criticalRoles[i]));
+      if (allRoles.indexOf(criticalRoles[i]) > -1) {
+        allRoles.splice(i, 1);
+      }
+    };
+
+    log.info(allRoles);
+
+    // TODO: needs to go in a config
+    if (relatedRoles.indexOf('Internal/everyone') === -1 && relatedRoles.indexOf('system/wso2.anonymous.role') === -1) {
+      // if there are no permissions for anoanymous users and registered users
+
+      for (var i = 0; i < allRoles.length; i++) {
+        if (relatedRoles.indexOf(allRoles[i]) === -1) {
+          // if the role is not included in the lifecycle, remove the role from the list of possible roles
+          allRoles.splice(i, 1);
+        }
+      }
+    }
+
+    var matchedRoles = [];
+
+    var query = request.getQueryString() && request.getQueryString().split('=')[1];
+
+    if (!query) {
+      query = '';
+    }
+
+    for (var i = 0; i < allRoles.length; i++) {
+      if (allRoles[i].indexOf(query) > -1) {
+        matchedRoles.push({
+          id: allRoles[i],
+          name: allRoles[i]
+        });
+      }
+    };
+
+    response.contentType = 'application/json';
+    response.status = 200;
+    response.content = matchedRoles;
+  });
+
   routeManager.register('GET', 'publisher', '/publisher/api/lifecycle/checklist/{type}/{id}', function(context) {
     //log.debug('short name: '+context.params.type);
 
