@@ -196,13 +196,13 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
-        <fileSet>
+        <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>wso2store-${pom.version}/repository/components/patches/</outputDirectory>
             <includes>
                 <include>**/patch0001/*.*</include>
             </includes>
-        </fileSet>
+        </fileSet-->
     </fileSets>
 
     <dependencySets>

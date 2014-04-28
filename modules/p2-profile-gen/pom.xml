@@ -241,6 +241,15 @@
 								<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.common.feature:${carbon.platform.version}
                                 </featureArtifactDef>
+								<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.tenant.usage.agent.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.tenant.throttling.agent.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.tenant.deployment.feature:${carbon.platform.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
 
                         </configuration>
@@ -481,6 +490,18 @@
 								<feature>
                                     <id>org.wso2.carbon.tenant.common.feature.group</id>
                                     <version>${carbon.platform.version}</version>
+                                </feature>
+								<feature>
+                                    <id>org.wso2.carbon.tenant.usage.agent.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+                                <feature>
+                                     <id>org.wso2.carbon.tenant.throttling.agent.feature.group</id>
+                                     <version>${carbon.platform.version}</version>
+                                </feature>                               
+                                <feature>
+                                     <id>org.wso2.carbon.tenant.deployment.feature.group</id>
+                                     <version>${carbon.platform.version}</version>
                                 </feature>
                             </features>
                         </configuration>

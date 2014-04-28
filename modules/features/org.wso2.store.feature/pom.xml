@@ -262,6 +262,15 @@
 								<importFeatureDef>
                                     org.wso2.carbon.tenant.common.server:${carbon.platform.version}
                                 </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.tenant.usage.agent:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.tenant.throttling.agent:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.tenant.deployment:${carbon.platform.version}
+                                </importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
