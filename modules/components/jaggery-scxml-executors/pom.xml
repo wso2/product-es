@@ -27,7 +27,7 @@
         <repository>
             <id>wso2-maven2-snapshot-repository</id>
             <name>WSO2 Maven2 Snapshot Repository</name>
-            <url>http://dist.wso2.org/snapshots/maven2/</url>
+            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>wso2-nexus</id>
@@ -63,9 +63,9 @@
       <configuration>
 	  <orbRepository>NONE</orbRepository>
           <instructions>
-              <Bundle-SymbolicName>${pom.groupId}.${pom.artifactId}</Bundle-SymbolicName>
+              <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 	      <Service-Component>OSGI-INF/serviceComponents.xml</Service-Component>
-              <Bundle-Name>${pom.artifactId}</Bundle-Name>
+              <Bundle-Name>${project.artifactId}</Bundle-Name>
               <Bundle-Version>1.0.0</Bundle-Version>
               <Private-Package>org.wso2.jaggery.scxml</Private-Package>
               <Bundle-Activator>org.wso2.jaggery.scxml.Activator</Bundle-Activator>
