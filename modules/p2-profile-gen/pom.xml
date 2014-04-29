@@ -14,6 +14,23 @@
     <artifactId>wso2store-profile-gen</artifactId>
     <packaging>pom</packaging>
 
+    <repositories>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+		<repository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <name>WSO2 Maven2 Snapshot Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -41,7 +58,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <execution>
+                    <!--execution>
                         <id>2-unpack-kernel-patch</id>
                         <phase>test</phase>
                         <goals>
@@ -59,7 +76,7 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
-                    </execution>
+                    </execution-->
                 </executions>
             </plugin>
             <plugin>

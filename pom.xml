@@ -21,8 +21,7 @@
 
     <scm>
         <connection>scm:svn:http://svn.wso2.org/repos/wso2/trunk/carbon/products/UserEngagementServer</connection>
-        <developerConnection>scm:svn:https://svn.wso2.org/repos/wso2/trunk/carbon/products/ues
-        </developerConnection>
+        <developerConnection>scm:svn:https://svn.wso2.org/repos/wso2/trunk/carbon/products/ues</developerConnection>
     </scm>
     <repositories>
         <repository>
@@ -93,14 +92,14 @@
         <!-- jaggery versions -->
         <jaggery.feature.version>0.9.0.ALPHA5.wso2v1-SNAPSHOT</jaggery.feature.version>
 
-        <cassandra.osgi.range>[4.2.1,4.2.3)</cassandra.osgi.range>
+        <!--cassandra.osgi.range>[4.2.1,4.2.3)</cassandra.osgi.range-->
 
         <!-- patch versions -->
-        <patch.version.421>4.2.1</patch.version.421>
+        <!--patch.version.421>4.2.1</patch.version.421>
         <patch.version.422>4.2.2</patch.version.422>
         <patch.version.423>4.2.3</patch.version.423>
+        <stratos.version>2.2.0</stratos.version-->
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
-        <stratos.version>2.2.0</stratos.version>
         <stratos.patch.version.221>2.2.1</stratos.patch.version.221>
 
         <!-- maven plugin versions -->
@@ -139,24 +138,24 @@
         <wso2.slf4j.version>1.5.10.wso2v1</wso2.slf4j.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
 
-        <rhino.osgi.version>1.7.0.R4.wso2v1-SNAPSHOT</rhino.osgi.version>
+        <rhino.osgi.version>1.7.0.R4.wso2v1</rhino.osgi.version>
         <commons-codec.osgi.version>1.4.0.wso2v1</commons-codec.osgi.version>
         <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
         <commons-logging.version>1.1.1</commons-logging.version>
-        <cep.component.version>1.0.0</cep.component.version>
+        <!--cep.component.version>1.0.0</cep.component.version-->
 
         <!--Migration to 4.3.0-SNAPSHOT -->
         <!--jaxws.webapp.mgt.version>4.3.0-SNAPSHOT</jaxws.webapp.mgt.version-->
-        <cassandra.explorer.version>4.2.1</cassandra.explorer.version>
-        <databridge.datareceiver.version>4.2.0</databridge.datareceiver.version>
-        <databridge.cassandra.version>4.2.0</databridge.cassandra.version>
-        <module.mgt.version>4.2.0</module.mgt.version>
-        <databridge.streamdefn.cassandra>4.2.0</databridge.streamdefn.cassandra>
-        <usr.mgt.version>4.3.0-SNAPSHOT</usr.mgt.version>
+        <!--cassandra.explorer.version>4.3.0-SNAPSHOT</cassandra.explorer.version>
+        <databridge.datareceiver.version>4.3.0-SNAPSHOT</databridge.datareceiver.version>
+        <databridge.cassandra.version>4.3.0-SNAPSHOT</databridge.cassandra.version>
+        <module.mgt.version>4.3.0-SNAPSHOT</module.mgt.version>
+        <databridge.streamdefn.cassandra>4.3.0-SNAPSHOT</databridge.streamdefn.cassandra>
+        <usr.mgt.version>4.3.0-SNAPSHOT</usr.mgt.version-->
         <!--End of migration-->
     </properties>
 
-    <distributionManagement>
+    <!--distributionManagement>
         <repository>
             <id>wso2-maven2-repository</id>
             <name>WSO2 Maven2 Repository</name>
@@ -166,6 +165,18 @@
             <id>wso2-maven2-snapshot-repository</id>
             <name>WSO2 Maven2 Snapshot Repository</name>
             <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/snapshots/maven2/</url>
+        </snapshotRepository>
+    </distributionManagement-->
+    <distributionManagement>
+        <repository>
+            <id>wso2.releases</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>wso2.snapshots</id>
+            <name>WSO2 Snapshot Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
