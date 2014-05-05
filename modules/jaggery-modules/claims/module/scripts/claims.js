@@ -1,14 +1,14 @@
 (function() {
 	'use strict';
 
-	var DEFAULT_CLAIM_DIALECT;
+	var DEFAULT_CLAIM_DIALECT = null;
 
 	var getClaims = function(dialect) {
 		var claims = [];
 
-		var admin = new Packages.org.wso2.carbon.claim.mgt.ClaimAdminService();
+		var handler = Packages.org.wso2.carbon.claim.mgt.ClaimManagerHandler.getInstance();
 
-		var defaultClaims = admin.getClaimMappingByDialect(dialect).claimMappings;
+		var defaultClaims = handler.getAllSupportedClaimMappings(dialect);
 
 		for (var i = 0; i < defaultClaims.length; i++) {
 			var c = defaultClaims[i].getClaim();
