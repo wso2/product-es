@@ -208,7 +208,7 @@
                                 </importFeatureDef>-->
                                 <!--casandra -->
                                 <importFeatureDef>
-                                    org.wso2.carbon.cassandra.server:4.2.2
+                                    org.wso2.carbon.cassandra.server:4.2.3
                                 </importFeatureDef>
                                 <!--<featureArtifactDef>-->
                                 <!--org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.patchrelease.version.422}-->
@@ -233,10 +233,10 @@
                                 </importFeatureDef>
                                 <!--importFeatureDef>
                                     org.wso2.carbon.databridge.commons.server:4.2.1
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.databridge.cassandra:${carbon.platform.version}
                                 </importFeatureDef-->
+                                <importFeatureDef>
+                                    org.wso2.carbon.databridge.cassandra:4.2.2
+                                </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.module.mgt.server:${carbon.platform.version}
                                 </importFeatureDef>

@@ -182,7 +182,7 @@
                                 </featureArtifactDef>
                                 <!--casandra -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.cassandra.server.feature:4.2.2
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.server.feature:4.2.3
                                 </featureArtifactDef>
                                 <!--<featureArtifactDef>-->
                                 <!--org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.patchrelease.version.422}-->
@@ -207,10 +207,10 @@
                                 </featureArtifactDef>
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:4.2.1
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.databridge.cassandra.feature:${carbon.platform.version}
                                 </featureArtifactDef-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.cassandra.feature:4.2.2
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.module.mgt.server.feature:${carbon.platform.version}
                                 </featureArtifactDef>
@@ -429,7 +429,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.cassandra.server.feature.group</id>
-                                    <version>4.2.2</version>
+                                    <version>4.2.3</version>
                                 </feature>
                                 <!--<feature>-->
                                 <!--<id>org.wso2.carbon.cassandra.feature.group</id>-->
@@ -462,11 +462,11 @@
                                 <!--feature>
                                     <id>org.wso2.carbon.databridge.commons.server.feature.group</id>
                                     <version>4.2.1</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.databridge.cassandra.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature-->
+                                    <version>4.2.2</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.databridge.streamdefn.registry.server.feature.group</id>
                                     <version>4.2.1</version>
