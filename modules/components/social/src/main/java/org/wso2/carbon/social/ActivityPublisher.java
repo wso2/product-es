@@ -113,7 +113,7 @@ public class ActivityPublisher {
         if (streamId == null && publisher != null) {
             try {
                 streamId = publisher.findStreamId(STREAM_NAME, STREAM_VERSION);
-                if (streamId == null) {
+                /*if (streamId == null) {
                     try {
                         streamId = publisher.defineStream(STREAM_DEF);
                         new ActivityBrowser().makeIndexes("context.id");
@@ -121,7 +121,7 @@ public class ActivityPublisher {
                         LOG.error("Can't create " + STREAM_NAME + ":" +
                                 STREAM_VERSION + " for storing social Activities", e);
                     }
-                }
+                }*/
             } catch (Exception e) {
                 LOG.error("Can't find " + STREAM_NAME + ":" +
                         STREAM_VERSION + " for storing social Activities", e);
