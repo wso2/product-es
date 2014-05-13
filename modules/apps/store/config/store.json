@@ -3,7 +3,7 @@
     "extensionsUrlPrefix": "/extensions",
     "subscriptionsUrlPrefix": "/subscriptions",
     "tenantConfigs": "/_system/config/store/configs/store.json",
-    "socialCommentsEnable": false,
+    "socialCommentsEnable": true,
     "cached": false,
     "server": {
         "https": "%https.host%/admin",
