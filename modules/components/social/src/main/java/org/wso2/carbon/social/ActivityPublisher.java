@@ -110,6 +110,7 @@ public class ActivityPublisher {
      */
     private String getStreamId(DataPublisher publisher) {
         // stream id is cached in field streamId, if it's not there get it form publisher
+        //TODO: move DataPublisher argument to constructor.
         if (streamId == null && publisher != null) {
             try {
                 streamId = publisher.findStreamId(STREAM_NAME, STREAM_VERSION);
@@ -118,6 +119,7 @@ public class ActivityPublisher {
                         streamId = publisher.defineStream(STREAM_DEF);
                         new ActivityBrowser().makeIndexes("context.id");
                     } catch (Exception e) {
+                        streamId = null;
                         LOG.error("Can't create " + STREAM_NAME + ":" +
                                 STREAM_VERSION + " for storing social Activities", e);
                     }
