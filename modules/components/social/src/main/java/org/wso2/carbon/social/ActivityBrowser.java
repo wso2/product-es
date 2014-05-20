@@ -154,6 +154,7 @@ public class ActivityBrowser {
     }
 
     public Connection getConnection() {
+        //TODO: use a pool
     	Connection conn = null;
         ///if (conn == null) {
             try {
