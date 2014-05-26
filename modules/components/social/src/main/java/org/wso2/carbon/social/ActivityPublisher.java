@@ -90,8 +90,8 @@ public class ActivityPublisher {
         String username = getUserName();
         String password = getPassword();
 
-        LOG.info("Host: "+host+" Port: "+port);
-        LOG.info("Username: "+username+" Password: "+password);
+        //LOG.info("Host: "+host+" Port: "+port);
+        //LOG.info("Username: "+username+" Password: "+password);
 
         if (publisher == null) {
             try {
