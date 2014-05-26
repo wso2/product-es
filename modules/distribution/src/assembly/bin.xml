@@ -204,6 +204,15 @@
                 <include>**/patch0001/*.*</include>
             </includes>
         </fileSet>
+       <!--copy social toolbox-->
+        <fileSet>
+            <directory>src/repository/toolboxes</directory>
+            <outputDirectory>wso2store-${pom.version}/repository/deployment/server/bam-toolbox</outputDirectory>
+            <includes>
+                <include>**/social.tbox</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
 
     <dependencySets>
@@ -371,5 +380,6 @@
             <outputDirectory>wso2store-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>-->
+
     </files>
 </assembly>
