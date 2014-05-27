@@ -3,7 +3,7 @@ package org.wso2.carbon.social;
 public class Constants {
     public static final String BODY_COLUMN = "payload_body";
     public static final String ID_COLUMN = "payload_id";
-    public static final String CONTEXT_ID_COLUMN = "payload_context.id";
+    public static final String CONTEXT_ID_COLUMN = "payload_context_id";
     public static final String TIMESTAMP_COLUMN = "Timestamp";
 
     public static final String TARGET_JSON_PROP = "target";
@@ -24,7 +24,7 @@ public class Constants {
             " ]," +
             " 'payloadData':[" +
             "       {'name':'id','type':'STRING'}," +
-            "       {'name':'context.id','type':'STRING'}," +
+            "       {'name':'context_id','type':'STRING'}," +
             "       {'name':'body','type':'STRING'}" +
             " ]" +
             "}";
