@@ -1,8 +1,8 @@
-package org.wso2.carbon.social;
+package org.wso2.carbon.social.core;
 
 import com.google.gson.JsonObject;
 import org.mozilla.javascript.NativeObject;
-import org.wso2.carbon.social.service.SocialActivityService;
+import org.wso2.carbon.social.core.service.SocialActivityService;
 
 import java.util.List;
 import java.util.Properties;

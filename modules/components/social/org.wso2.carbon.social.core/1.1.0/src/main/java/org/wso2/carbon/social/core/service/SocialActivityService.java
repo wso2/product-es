@@ -1,4 +1,4 @@
-package org.wso2.carbon.social.service;
+package org.wso2.carbon.social.core.service;
 
 
 import org.mozilla.javascript.NativeObject;

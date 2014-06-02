@@ -1,4 +1,4 @@
-package org.wso2.carbon.social;
+package org.wso2.carbon.social.core;
 
 import org.json.JSONException;
 import org.json.JSONStringer;

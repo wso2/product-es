@@ -1,12 +1,12 @@
-package org.wso2.carbon.social.summarizer;
+package org.wso2.carbon.social.core.summarizer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.social.Activity;
-import org.wso2.carbon.social.SortOrder;
+import org.wso2.carbon.social.core.Activity;
+import org.wso2.carbon.social.core.SortOrder;
 
 import java.util.*;
 

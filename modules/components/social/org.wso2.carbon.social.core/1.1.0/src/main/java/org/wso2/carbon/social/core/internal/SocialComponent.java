@@ -1,12 +1,12 @@
-package org.wso2.carbon.social.internal;
+package org.wso2.carbon.social.core.internal;
 
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.social.SocialActivityServiceImpl;
-import org.wso2.carbon.social.service.SocialActivityService;
+import org.wso2.carbon.social.core.SocialActivityServiceImpl;
+import org.wso2.carbon.social.core.service.SocialActivityService;
 
 /**
  * Registering {@link SocialActivityService}

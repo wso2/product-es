@@ -1,4 +1,4 @@
-package org.wso2.carbon.social;
+package org.wso2.carbon.social.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,9 +9,9 @@ import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
 import java.util.Properties;
 import java.util.UUID;
 
-import static org.wso2.carbon.social.Constants.*;
-import static org.wso2.carbon.social.JSONUtil.getNullableProperty;
-import static org.wso2.carbon.social.JSONUtil.getProperty;
+import static org.wso2.carbon.social.core.Constants.*;
+import static org.wso2.carbon.social.core.JSONUtil.getNullableProperty;
+import static org.wso2.carbon.social.core.JSONUtil.getProperty;
 
 public class ActivityPublisher {
 

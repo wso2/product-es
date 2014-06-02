@@ -1,4 +1,4 @@
-package org.wso2.carbon.social;
+package org.wso2.carbon.social.core;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
-import static org.wso2.carbon.social.Constants.*;
+import static org.wso2.carbon.social.core.Constants.*;
 
 public class ActivityBrowser {
 

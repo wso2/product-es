@@ -1,4 +1,4 @@
-package org.wso2.carbon.social;
+package org.wso2.carbon.social.core;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

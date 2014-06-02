@@ -1,9 +1,9 @@
-package org.wso2.carbon.social.summarizer;
+package org.wso2.carbon.social.core.summarizer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.wso2.carbon.social.Activity;
+import org.wso2.carbon.social.core.Activity;
 
 import java.util.*;
 

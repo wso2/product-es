@@ -1,4 +1,4 @@
-package org.wso2.carbon.social;
+package org.wso2.carbon.social.core;
 
 public class Constants {
     public static final String BODY_COLUMN = "payload_body";

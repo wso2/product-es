@@ -1,4 +1,4 @@
-package org.wso2.carbon.social.summarizer;
+package org.wso2.carbon.social.core.summarizer;
 
 import java.util.Map;
 
