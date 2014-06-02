@@ -245,6 +245,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.event.stream.manager.feature:${cep.component.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.social.core.feature:1.1.0
+                                </featureArtifactDef>
                             </featureArtifacts>
 
                         </configuration>
@@ -268,6 +271,10 @@
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
 
                             <features>
+                                <feature>
+                                    <id>org.wso2.carbon.social.core.feature.group</id>
+                                    <version>1.1.0</version>
+                                </feature>
                                 <feature>
                                     <id>org.jaggeryjs.feature.group</id>
                                     <version>${jaggery.feature.version}</version>
