@@ -86,6 +86,8 @@
 
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:4.2.0</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.bam.toolbox.deployer:4.2.1</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.event.stream.manager:1.0.1</importFeatureDef>
                             </importFeatures>
 
                         </configuration>
