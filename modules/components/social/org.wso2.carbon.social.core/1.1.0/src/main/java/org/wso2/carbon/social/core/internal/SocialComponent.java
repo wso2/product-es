@@ -10,7 +10,7 @@ import org.wso2.carbon.social.core.service.SocialActivityService;
 
 /**
  * Registering {@link SocialActivityService}
- * @scr.component name="org.wso2.carbon.bam.service.data.publisher " immediate="true"
+ * @scr.component name="org.wso2.carbon.social.component" immediate="true"
  */
 
 
