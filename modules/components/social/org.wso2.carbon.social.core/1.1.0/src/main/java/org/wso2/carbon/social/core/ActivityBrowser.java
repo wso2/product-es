@@ -21,8 +21,8 @@ import static org.wso2.carbon.social.core.Constants.*;
 public class ActivityBrowser {
 
     private static final Log LOG = LogFactory.getLog(ActivityBrowser.class);
-    public static final String SELECT_CQL = "SELECT * FROM " + STREAM_NAME_IN_CASSANDRA + " WHERE '" +
-            CONTEXT_ID_COLUMN + "'=?";
+    public static final String SELECT_CQL = "SELECT * FROM " + STREAM_NAME_IN_CASSANDRA + " WHERE " +
+            CONTEXT_ID_COLUMN + "=?";
 
     private JsonParser parser = new JsonParser();
     //private Connection conn;
