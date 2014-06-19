@@ -1,5 +1,20 @@
 <%
-(function(){
+/**
+ * This is a temp fix to allow users to login to the publisher without going through SSO.
+ * All users will be logged in as the admin user
+ */
+var user=require('store').user;
+var isAuthenticated=user.login('admin','admin',session);
+
+if(isAuthenticated){
+  session.put("LOGGED_IN_USER", 'admin');
+  session.put("Loged", "true");
+  response.sendRedirect('/store/');
+}
+else{
+  response.sendError(401);
+}
+/*(function(){
     var dataConfi = require('/config/store.js').config(),
             sso = require("sso"),
             process = require("process"),
@@ -33,5 +48,5 @@
                    </script>
         <%
     }
-}());
+}());*/
 %>
