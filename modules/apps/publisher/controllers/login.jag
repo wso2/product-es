@@ -5,8 +5,8 @@
  * All users will be logged in as the admin user
  */
 var user=require('store').user;
-var username='user2';
-var password='user2';
+var username='user1';
+var password='user1';
 var isAuthenticated=user.login(username,password,session);
 
 if(isAuthenticated){
