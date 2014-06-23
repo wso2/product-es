@@ -5,10 +5,12 @@
  * All users will be logged in as the admin user
  */
 var user=require('store').user;
-var isAuthenticated=user.login('admin','admin',session);
+var username='user2';
+var password='user2';
+var isAuthenticated=user.login(username,password,session);
 
 if(isAuthenticated){
-  session.put("LOGGED_IN_USER", 'admin');
+  session.put("LOGGED_IN_USER", username);
   session.put("Loged", "true");
   response.sendRedirect('/publisher/assets/gadget/');
 }
