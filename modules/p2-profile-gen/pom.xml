@@ -185,9 +185,9 @@
                                 <feaureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.sso.saml.feature:${carbon.platform.version}
                                 </feaureArtifactDef>
-                                <!--feaureArtifactDef>
+                                <feaureArtifactDef>
                                     org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${carbon.platform.version}
-                                </feaureArtifactDef-->
+                                </feaureArtifactDef>
                                 <feaureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.platform.version}
                                 </feaureArtifactDef>
@@ -420,10 +420,10 @@
                                     <id>org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                                <!--feature>
+                                <feature>
                                     <id>org.wso2.stratos.identity.saml2.sso.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature-->
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${carbon.platform.version}</version>
