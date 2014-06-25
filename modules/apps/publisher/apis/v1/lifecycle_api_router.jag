@@ -164,10 +164,8 @@ require('/modules/publisher.js').exec(function(ctx) {
     var server=require('store').server;
     var um=server.userManager();
     var username=server.current(session);
+    var permissions=require('/modules/permissions.js').permissions;
 
-    log.info('###Username: '+username.username+' ###');
-    var roles=um.getRoleListOfUser(username.username);
-    log.info('###Roles: '+stringify(roles)+' ####');
     
     var artifactManager = rxtManager.getSystemArtifactManager(shortName,session);//rxtManager.getArtifactManager(shortName);
 
@@ -177,31 +175,37 @@ require('/modules/publisher.js').exec(function(ctx) {
       response.sendError(400, 'This change requires that you insert a comment');
     } else {
       try {
-        var artifact = artifactManager.get(id);
-        log.info('###Artifact###');
-        //log.info(stringify(artifact));
-        log.info('Roles: '+roles[2]);
-        var roleAuthorized=um.isAuthorized(roles[0],id,'http://www.wso2.org/projects/registry/actions/get');
-        log.info('Is authorized: '+roleAuthorized);
-        log.info('###End of Artifact###');
-
-        log.debug('Calling promoteLifecycleState for action : ' + action);
-        artifactManager.promoteLifecycleState(action, artifact);
-
-        if (comment) {
-          var lcHistory = artifactManager.getLifecycleHistory(artifact);
-          var lcHistoryXML = new XML(lcHistory.content);
-          lcHistoryJSON = utility.xml.convertE4XtoJSON(lcHistoryXML);
-          var newChangeOrder = lcHistoryJSON.item[0].order;
-
-          require('/modules/comment.js').addLifecycleComment(artifactManager, id, comment, newChangeOrder);
-        }
-
         var msg = {};
-        msg['status'] = 'ok';
+        var artifact = artifactManager.get(id);
+
+
+        log.info('Attempting to perform action : '+action);
+
+        //Check if the user can perform the life-cycle action
+        if(permissions.isLCActionsPermitted (username.username,artifact.path,um)){
+
+          artifactManager.promoteLifecycleState(action, artifact);
+
+          if (comment) {
+            var lcHistory = artifactManager.getLifecycleHistory(artifact);
+            var lcHistoryXML = new XML(lcHistory.content);
+            lcHistoryJSON = utility.xml.convertE4XtoJSON(lcHistoryXML);
+            var newChangeOrder = lcHistoryJSON.item[0].order;
+
+            require('/modules/comment.js').addLifecycleComment(artifactManager, id, comment, newChangeOrder);
+          }       
+          msg['status'] = 'ok';
+          log.info('Has permission to perform the action');
+        }
+        else{
+          log.info('Does not have permission to perform the action');
+          msg['status']='failed';
+          msg['message']='You do not have rights to perform the life-cycle operation';
+        }
+        
         print(msg);
       } catch (e) {
-        log.debug('The asset with id: ' + id + ' could not be found.The following exception was thrown: ' + e);
+        log.info('The asset with id: ' + id + ' could not be found.The following exception was thrown: ' + e);
         response.sendError(404, 'The asset with id: ' + id + ' could not be found.Please refer to the server log.');
       }
     }
