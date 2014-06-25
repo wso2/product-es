@@ -190,7 +190,7 @@
                                 </feaureArtifactDef>
                                 <!-- SSO Fix-->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.user.profile.server.feature:${carbon.platform.version}
+                                    org.wso2.carbon:org.wso2.carbon.identity.user.profile.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <!-- End of SSO Fixes -->
                                 <feaureArtifactDef>
@@ -431,7 +431,7 @@
                                 </feature>
                                  <!-- SSO Fix-->
                                 <feature>
-                                    <id>org.wso2.carbon.identity.user.profile.server.feature.group</id>
+                                    <id>org.wso2.carbon.identity.user.profile.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                  <!-- End of SSO Fix -->
