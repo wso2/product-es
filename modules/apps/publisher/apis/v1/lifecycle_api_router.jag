@@ -201,6 +201,7 @@ require('/modules/publisher.js').exec(function(ctx) {
           log.info('Does not have permission to perform the action');
           msg['status']='failed';
           msg['message']='You do not have rights to perform the life-cycle operation';
+          response.status=401;
         }
         
         print(msg);
