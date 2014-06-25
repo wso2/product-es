@@ -154,12 +154,15 @@ require('/modules/publisher.js').exec(function(ctx) {
   });
 
   routeManager.register('PUT', 'publisher', '/publisher/api/lifecycle/{action}/{type}/{id}', function(context) {
+
     var shortName = context.params.type;
     var action = context.params.action;
     var id = context.params.id;
     var comment = context.content.comment;
 
-    var artifactManager = rxtManager.getArtifactManager(shortName);
+    log.info('###Lifecycle action invoker ###');
+    
+    var artifactManager = rxtManager.getSystemArtifactManager(shortName,session);//rxtManager.getArtifactManager(shortName);
 
     var commentNeeded = require('/config/ext/' + shortName + '.json').behavior.lifecycle_change_comment_required === 'true';
 
