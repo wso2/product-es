@@ -161,6 +161,13 @@ require('/modules/publisher.js').exec(function(ctx) {
     var comment = context.content.comment;
 
     log.info('###Lifecycle action invoker ###');
+    var server=require('store').server;
+    var um=server.userManager();
+    var username=server.current(session);
+
+    log.info('###Username: '+username.username+' ###');
+    var roles=um.getRoleListOfUser(username.username);
+    log.info('###Roles: '+stringify(roles)+' ####');
     
     var artifactManager = rxtManager.getSystemArtifactManager(shortName,session);//rxtManager.getArtifactManager(shortName);
 
@@ -171,6 +178,13 @@ require('/modules/publisher.js').exec(function(ctx) {
     } else {
       try {
         var artifact = artifactManager.get(id);
+        log.info('###Artifact###');
+        //log.info(stringify(artifact));
+        log.info('Roles: '+roles[2]);
+        var roleAuthorized=um.isAuthorized(roles[0],id,'http://www.wso2.org/projects/registry/actions/get');
+        log.info('Is authorized: '+roleAuthorized);
+        log.info('###End of Artifact###');
+
         log.debug('Calling promoteLifecycleState for action : ' + action);
         artifactManager.promoteLifecycleState(action, artifact);
 
