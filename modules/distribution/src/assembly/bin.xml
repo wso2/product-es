@@ -153,6 +153,8 @@
             <outputDirectory>wso2store-${pom.version}/repository/conf/security/</outputDirectory>
             <includes>
                 <include>**/application-authenticators.xml</include>
+                <!-- Replacement for application-authenticators.xml -->
+                <include>**/application-authentication.xml</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -164,7 +166,7 @@
         </fileSet>
 		<fileSet>
             <directory>src/repository/conf</directory>
-            <outputDirectory>wso2store-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2store-${pom.version}/repository/conf/security/</outputDirectory>
             <includes>
                 <include>**/sso-idp-config.xml</include>
             </includes>
@@ -183,6 +185,16 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
+
+        <!-- Identity Components for IS 5.0.0 -->
+        <fileSet>
+            <directory>src/repository/conf/identity</directory>
+            <outputDirectory>wso2store-${pom.version}/repository/conf/identity/</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
+        <!-- End -->
 	<!--data-bridge configuration-->
         <fileSet>
             <directory>src/repository/conf/data-bridge</directory>
