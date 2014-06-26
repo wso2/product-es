@@ -84,7 +84,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.store</id>
+                            <id>org.wso2.es</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <!--<adviceFile>
                                 <properties>
