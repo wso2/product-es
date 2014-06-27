@@ -191,9 +191,9 @@
                                 <feaureArtifactDef>
                                     org.wso2.carbon.identity.sso.saml.server:${patch.version.421}
                                 </feaureArtifactDef>
-                                <feaureArtifactDef>
+                                <!--feaureArtifactDef>
                                     org.wso2.stratos.identity.saml2.sso.mgt.server:${stratos.version}
-                                </feaureArtifactDef>
+                                </feaureArtifactDef-->
                                 <feaureArtifactDef>
                                     org.wso2.carbon.identity.core:${patch.version.421}
                                 </feaureArtifactDef>
@@ -247,9 +247,9 @@
                                     org.wso2.carbon.databridge.streamdefn.registry.server:4.2.1
                                 </importFeatureDef>
                                 <!-- Stratos features    -->
-                                <importFeatureDef>
+                                <!--importFeatureDef>
                                     org.wso2.carbon.stratos.common.server:${stratos.patch.version.221}
-                                </importFeatureDef>
+                                </importFeatureDef-->
                                 <importFeatureDef>
                                     org.wso2.carbon.event.server:${patch.version.421}
                                 </importFeatureDef>
