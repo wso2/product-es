@@ -388,7 +388,7 @@ var configureUser = function (tenantId, user) {
 
     log.debug('Starting configuringUser.');
 
-    var cleanedUsername=store.user.cleanedUsername(user.username);
+    var cleanedUsername=store.user.cleanUsername(user.username);
     //Create the permissions in the options configuration file
     perms = buildPermissionsList(tenantId, cleanedUsername, perms, server);
 
