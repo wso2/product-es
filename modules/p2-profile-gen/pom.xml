@@ -4,34 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.store</groupId>
-        <artifactId>wso2store-parent</artifactId>
-        <version>1.1.0</version>
+        <artifactId>wso2es-parent</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
-    <version>1.1.0</version>
-    <artifactId>wso2store-profile-gen</artifactId>
+    <artifactId>wso2es-profile-gen</artifactId>
     <packaging>pom</packaging>
-
-    <repositories>
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-		<repository>
-            <id>wso2-maven2-snapshot-repository</id>
-            <name>WSO2 Maven2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-
     <build>
         <plugins>
             <plugin>
@@ -50,7 +29,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon</groupId>
                                     <artifactId>wso2carbon-core</artifactId>
-                                    <version>${carbon.kernal.version}</version>
+                                    <version>${carbon.kernel.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
@@ -82,23 +61,18 @@
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
-                <version>${carbon.p2.plugin.version}</version>
-
                 <executions>
                     <execution>
                         <id>2-p2-repo-generation</id>
                         <phase>package</phase>
-
                         <goals>
                             <goal>p2-repo-gen</goal>
                         </goals>
-
                         <configuration>
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
                             <publishArtifacts>true</publishArtifacts>
                             <publishArtifactRepository>true</publishArtifactRepository>
-
                             <featureArtifacts>
                                 <featureArtifactDef>org.jaggeryjs:org.jaggeryjs.feature:${jaggery.feature.version}
                                 </featureArtifactDef>
@@ -107,23 +81,24 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:caramel.feature:${caramel.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:event.feature:${event.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:event.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:login.feature:${login.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:login.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:permission.feature:${permission.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:permission.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:registration.feature:${registration.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:registration.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:sso.feature:${sso.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:sso.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:store.feature:${store.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:store.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:ues.feature:${ues.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:ues.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:claims.feature:${claims.feature.version}
+                                <featureArtifactDef>org.wso2.store.modules:claims.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
+                                <featureArtifactDef>
+                                    org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:markdown.feature:${markdown.feature.version}
                                 </featureArtifactDef>
@@ -255,10 +230,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.claim.mgt.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-								<featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.common.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-								<featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.usage.agent.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -267,28 +242,26 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.deployment.feature:${carbon.platform.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.user.profile.server.feature:${carbon.platform.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
-
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>3-p2-profile-generation</id>
                         <phase>package</phase>
-
                         <goals>
                             <goal>p2-profile-gen</goal>
                         </goals>
-
                         <configuration>
                             <profile>default</profile>
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
                             <destination>
-                                ${basedir}/target/wso2carbon-core-${carbon.kernal.version}/repository/components
+                                ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/components
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
-
                             <features>
                                 <feature>
                                     <id>org.jaggeryjs.feature.group</id>
@@ -328,35 +301,35 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.event.feature.group</id>
-                                    <version>${event.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.login.feature.group</id>
-                                    <version>${login.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.permission.feature.group</id>
-                                    <version>${permission.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.registration.feature.group</id>
-                                    <version>${registration.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.sso.feature.group</id>
-                                    <version>${sso.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.store.feature.group</id>
-                                    <version>${store.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.ues.feature.group</id>
-                                    <version>${ues.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.claims.feature.group</id>
-                                    <version>${claims.feature.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
@@ -398,7 +371,6 @@
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-
                                 <!-- sso -->
                                 <feature>
                                     <id>
@@ -504,21 +476,25 @@
                                     <id>org.wso2.carbon.claim.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-								<feature>
+                                <feature>
                                     <id>org.wso2.carbon.tenant.common.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-								<feature>
+                                <feature>
                                     <id>org.wso2.carbon.tenant.usage.agent.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
-                                     <id>org.wso2.carbon.tenant.throttling.agent.feature.group</id>
-                                     <version>${carbon.platform.version}</version>
-                                </feature>                               
+                                    <id>org.wso2.carbon.tenant.throttling.agent.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
                                 <feature>
-                                     <id>org.wso2.carbon.tenant.deployment.feature.group</id>
-                                     <version>${carbon.platform.version}</version>
+                                    <id>org.wso2.carbon.tenant.deployment.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.profile.server.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -528,14 +504,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <configuration>
                             <tasks>
                                 <replace token="false" value="true"
-                                         dir="target/wso2carbon-core-${carbon.kernal.version}/repository/components">
+                                         dir="target/wso2carbon-core-${carbon.kernel.version}/repository/components">
                                     <include name="**/bundles.info"/>
                                 </replace>
                             </tasks>
@@ -548,7 +523,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>${maven-clean-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>auto-clean</id>

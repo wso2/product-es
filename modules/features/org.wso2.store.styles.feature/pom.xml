@@ -18,34 +18,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <parent>
         <groupId>org.wso2.store</groupId>
-        <artifactId>wso2store-features</artifactId>
-        <version>1.1.0</version>
+        <artifactId>wso2es-features</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.store.styles.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Enterprise Store Styles Feature</name>
     <url>http://wso2.org</url>
-
     <dependencies>
         <dependency>
             <groupId>org.wso2.store</groupId>
             <artifactId>org.wso2.store.admin.styles</artifactId>
-            <version>${ues.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
-                <version>${carbon.p2.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>p2-feature-generation</id>
