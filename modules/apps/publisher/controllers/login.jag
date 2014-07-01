@@ -1,25 +1,5 @@
 <%
-
-/**
- * This is a temp fix to allow users to login to the publisher without going through SSO.
- * All users will be logged in as the admin user
- */
-var user=require('store').user;
-var username='user2';
-var password='user2';
-var isAuthenticated=user.login(username,password,session);
-
-if(isAuthenticated){
-  session.put("LOGGED_IN_USER", username);
-  session.put("Loged", "true");
-  response.sendRedirect('/publisher/assets/gadget/');
-}
-else{
-  response.sendError(401);
-}
-
-
-/*(function(){
+(function(){
     var dataConfi = require('/config/publisher.js').config(),
             sso = require("sso"),
             process = require("process"),
@@ -55,5 +35,5 @@ else{
                    </script>
         <%
     }
-}());*/
+}());
 %>
