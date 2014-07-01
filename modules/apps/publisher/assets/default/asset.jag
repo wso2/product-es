@@ -90,7 +90,7 @@ routeManager.register('GET', 'publisher', '/publisher/asset/{type}/{id}', functi
 
 
         //Perform filtering logic on the artifact
-        artifact=filterManager.filter(artifact,session);
+        //artifact=filterManager.filter(artifact,session);
 
         //If there is no data after the filtering step we need to send an error
         if(!artifact){
@@ -169,6 +169,10 @@ routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function (
     var model = modelManager.getModel(shortName);
     var assetCacheManager=new assetCachingModule.AssetCacheManager(session);
 
+    log.info('###POST content###');
+    log.info(context.post);
+    log.info('###End of POST content###');
+
 //context.post['tag-container'] = ['tag1', 'tag2'];
 
     //Check if the type is valid
@@ -215,6 +219,10 @@ routeManager.register('POST', 'publisher', '/publisher/asset/{type}', function (
 
         //Add the tags
         addTags(context.post,assetId,artifactManager,reg);
+
+        log.info('###Created asset###');
+        log.info(stringify(artifactManager.get(assetId)));
+        log.info('###End of Created Asset###');
 
         print({ok:true,message:'asset added'});
     }

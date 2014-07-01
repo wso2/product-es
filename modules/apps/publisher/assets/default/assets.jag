@@ -76,8 +76,10 @@ routeMnger.register('GET', 'publisher', '/publisher/assets/{type}/', function(co
 
 		dataInjector.inject(artifacts, DataInjectorModes.DISPLAY);
 
+
+		log.info('###Removed filtering of assets###');
         //Perform some filtering logic on the artifacts
-        artifacts=filterManager.filter(artifacts,session);
+        //artifacts=filterManager.filter(artifacts,session);
 
 		caramel.render({
 			op : 'list',

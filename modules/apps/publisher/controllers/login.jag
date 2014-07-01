@@ -11,6 +11,9 @@
             log = new Log(),
             postUrl = dataConfi.ssoConfiguration.identityProviderURL;//"https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
             log.info('LOgin URL: '+postUrl);
+
+
+
     if (!session.get("Loged")) {
         %>
 
