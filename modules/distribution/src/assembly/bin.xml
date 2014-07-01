@@ -21,7 +21,6 @@
         <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
-
     <fileSets>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
@@ -38,7 +37,7 @@
                 <exclude>**/pom.xml</exclude>
                 <exclude>**/version.txt</exclude>
                 <exclude>**/carbon.xml</exclude>
-                <exclude>**/registry.xml</exclude>				
+                <exclude>**/registry.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
                 <!--exclude>**/ciphertool.bat</exclude-->
                 <exclude>**/master-datasources.xml</exclude>
@@ -56,14 +55,12 @@
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
-	
         <!--Multitenancy related file -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy
             </directory>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
-            <fileMode>755</fileMode>
         </fileSet>
 
         <fileSet>
@@ -81,19 +78,17 @@
                 <include>**/**.png</include>
             </includes>
         </fileSet>
-
-
         <!-- copy documentation -->
         <fileSet>
             <directory>target/site</directory>
             <outputDirectory>${project.artifactId}-${pom.version}/docs</outputDirectory>
             <fileMode>755</fileMode>
         </fileSet>
-
         <!-- copy the landing page webapp -->
         <fileSet>
             <directory>lib/home</directory>
-            <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+            <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT
+            </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/modules</directory>
@@ -103,8 +98,11 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/</outputDirectory>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/
+            </outputDirectory>
             <includes>
                 <include>*/**</include>
             </includes>
@@ -116,7 +114,6 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
-
         <!--copy jaxrs web app for OAuth feature-->
         <fileSet>
             <directory>
@@ -129,14 +126,16 @@
         </fileSet>
         <fileSet>
             <directory>target/shindig</directory>
-            <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/webapps/ROOT</outputDirectory>
+            <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/webapps/ROOT
+            </outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>target/jaxwebapps</directory>
-            <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/jaxwebapps</outputDirectory>
+            <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/jaxwebapps
+            </outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
@@ -164,7 +163,7 @@
                 <include>**/**</include>
             </includes>
         </fileSet>
-		<fileSet>
+        <fileSet>
             <directory>src/repository/conf</directory>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/security/</outputDirectory>
             <includes>
@@ -185,28 +184,28 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
-
         <!-- Identity Components for IS 5.0.0 -->
         <fileSet>
             <directory>src/repository/conf/identity</directory>
-            <outputDirectory>wso2store-${pom.version}/repository/conf/identity/</outputDirectory>
+            <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/identity/</outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernal.version}/repository/resources/security/</directory>
-            <outputDirectory>wso2store-${pom.version}/repository/resources/security/</outputDirectory>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/
+            </directory>
+            <outputDirectory>${project.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
             <includes>
                 <include>**/sso_redirect.html</include>
             </includes>
         </fileSet>
         <!-- End -->
-	<!--data-bridge configuration-->
+        <!--data-bridge configuration-->
         <fileSet>
             <directory>src/repository/conf/data-bridge</directory>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/data-bridge</outputDirectory>
-            <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/lib/runtimes</directory>
@@ -223,7 +222,6 @@
             </includes>
         </fileSet-->
     </fileSets>
-
     <dependencySets>
         <!--        <dependencySet>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
@@ -247,7 +245,6 @@
             </includes>
         </dependencySet>
     </dependencySets>
-
     <files>
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/event-broker.xml
@@ -256,12 +253,10 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-
         <!--        <file>
             <source>target/shindig</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/deployment/server/webapps/ROOT</outputDirectory>
         </file>-->
-
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${project.artifactId}-${pom.version}</outputDirectory>
@@ -307,7 +302,7 @@
             <source>src/repository/conf/registry.xml</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
-        </file>		
+        </file>
         <file>
             <source>src/repository/conf/log4j.properties</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/</outputDirectory>
@@ -330,7 +325,6 @@
             </source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file-->
-
         <!-- Including log4j.properties file -->
         <!--        <file>
             <source>
@@ -357,33 +351,26 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>-->
-
         <!--file>
             <source>conf/claim-config.xml</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file-->
-
-
         <file>
             <source>src/repository/conf/identity.xml</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
         <file>
             <source>src/repository/database/WSO2IDENTITY_DB.h2.db</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/database</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
         <!--        <file>
             <source>conf/wso2is-user-certs.jks</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>-->
-
-
         <!--       <file>
             <source>conf/userRP.jks</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
