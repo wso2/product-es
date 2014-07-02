@@ -39,7 +39,7 @@ var module = function () {
                     tableName = table.name;
                     fieldName = field.name;
                     //log.info('Creating attributes ' + tableName + '_' + fieldName + '' + field.value.toString().split(','));
-                    attributes[tableName + '_' + fieldName] = getValue(field);//field.value.toString().split(',');
+                    attributes[tableName + '_' + fieldName] = ''+getValue(field);//field.value.toString().split(',');
                     //log.info('Value assigned');
                 }
             }
