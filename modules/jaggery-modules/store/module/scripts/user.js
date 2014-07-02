@@ -17,6 +17,10 @@ var user = {};
         return username.replace('@', ':').replace('/', ':');
     };
 
+    user.cleanUsername=function(username){
+        return cleanUsername(username);
+    };
+
     user.privateRole = function (username) {
         return USER_ROLE_PREFIX + cleanUsername(username);
     };

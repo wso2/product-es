@@ -52,7 +52,8 @@ routeManager.register('GET', 'publisher', '/publisher/asset/{type}', function (c
     else {
         //Obtain the username from the session and populate the provider field
         var username = server.current(session).username;//.get('LOGGED_IN_USER');
-        model.set('overview.provider', username);
+        //model.set('overview.provider', username);
+        model.set('overview.provider', storeUser.cleanUsername(username));
 
         var output = model.export('form');
         var title = shortName;
