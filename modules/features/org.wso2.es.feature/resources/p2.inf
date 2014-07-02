@@ -7,6 +7,3 @@ org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../featur
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.es_${feature.version}/apps/publisher,target:${installFolder}/../../deployment/server/jaggeryapps/es-publisher,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.es_${feature.version}/distribution/src/dbscripts/,target:${installFolder}/../../../dbscripts,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.es_${feature.version}/distribution/src/repository/,target:${installFolder}/../../../repository,overwrite:true);\
-org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.es_${feature.version}/apps);\
-org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.es_${feature.version}/distribution);\
-org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.es_${feature.version}/dbscripts);\
