@@ -162,8 +162,8 @@ require('/modules/publisher.js').exec(function(ctx) {
 
     log.info('###Lifecycle action invoker ###');
     var server=require('store').server;
-    var um=server.userManager();
-    var username=server.current(session);
+    var user=server.current(session);
+    var um=server.userManager(user.tenantId);
     var permissions=require('/modules/permissions.js').permissions;
 
     
@@ -182,7 +182,7 @@ require('/modules/publisher.js').exec(function(ctx) {
         log.info('Attempting to perform action : '+action);
 
         //Check if the user can perform the life-cycle action
-        if(permissions.isLCActionsPermitted (username.username,artifact.path,um)){
+        if(permissions.isLCActionsPermitted (user.username,artifact.path,um)){
 
           artifactManager.promoteLifecycleState(action, artifact);
 
