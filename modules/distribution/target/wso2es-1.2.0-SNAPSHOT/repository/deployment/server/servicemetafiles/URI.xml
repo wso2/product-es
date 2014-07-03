@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="URI" successfullyAdded="true">
+    <service name="URI" exposedAllTransports="false" serviceDeployedTime="1404364561322" successfullyAdded="true">
+        <operation name="addURI">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/uri/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getURI">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/uri/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="deleteURI">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/uri/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getURIDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/uri/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="updateURI">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/uri/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getURIArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/uri/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="URISoap12Binding">
+                <operation name="addURI"/>
+                <operation name="getURI"/>
+                <operation name="deleteURI"/>
+                <operation name="getURIDependencies"/>
+                <operation name="updateURI"/>
+                <operation name="getURIArtifactIDs"/>
+            </binding>
+            <binding name="URIHttpBinding">
+                <operation name="addURI"/>
+                <operation name="getURI"/>
+                <operation name="deleteURI"/>
+                <operation name="getURIDependencies"/>
+                <operation name="updateURI"/>
+                <operation name="getURIArtifactIDs"/>
+            </binding>
+            <binding name="URISoap11Binding">
+                <operation name="addURI"/>
+                <operation name="getURI"/>
+                <operation name="deleteURI"/>
+                <operation name="getURIDependencies"/>
+                <operation name="updateURI"/>
+                <operation name="getURIArtifactIDs"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

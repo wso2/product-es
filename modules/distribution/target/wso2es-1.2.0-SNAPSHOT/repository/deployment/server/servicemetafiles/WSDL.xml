@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="WSDL" successfullyAdded="true">
+    <service name="WSDL" exposedAllTransports="false" serviceDeployedTime="1404364561383" successfullyAdded="true">
+        <operation name="getWSDLDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/wsdl/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="deleteWSDL">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/wsdl/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="addWSDL">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/wsdl/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="updateWSDL">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/wsdl/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getWSDLArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/wsdl/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getWSDL">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/wsdl/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="WSDLSoap11Binding">
+                <operation name="getWSDLDependencies"/>
+                <operation name="deleteWSDL"/>
+                <operation name="addWSDL"/>
+                <operation name="updateWSDL"/>
+                <operation name="getWSDLArtifactIDs"/>
+                <operation name="getWSDL"/>
+            </binding>
+            <binding name="WSDLSoap12Binding">
+                <operation name="getWSDLDependencies"/>
+                <operation name="deleteWSDL"/>
+                <operation name="addWSDL"/>
+                <operation name="updateWSDL"/>
+                <operation name="getWSDLArtifactIDs"/>
+                <operation name="getWSDL"/>
+            </binding>
+            <binding name="WSDLHttpBinding">
+                <operation name="getWSDLDependencies"/>
+                <operation name="deleteWSDL"/>
+                <operation name="addWSDL"/>
+                <operation name="updateWSDL"/>
+                <operation name="getWSDLArtifactIDs"/>
+                <operation name="getWSDL"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

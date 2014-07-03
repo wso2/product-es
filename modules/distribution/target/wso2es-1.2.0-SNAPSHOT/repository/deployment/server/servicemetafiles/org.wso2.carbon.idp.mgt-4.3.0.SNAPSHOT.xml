@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="org.wso2.carbon.idp.mgt-4.3.0.SNAPSHOT" successfullyAdded="true">
+    <service name="IdentityProviderMgtService" serviceDocumentation="IdentityProviderMgtService" exposedAllTransports="false" serviceDeployedTime="1404364559898" successfullyAdded="true">
+        <operation name="deleteIdP">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getAllIdPs">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/login</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getAllLocalClaimUris">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getIdPByName">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="addIdP">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getAllProvisioningConnectors">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="updateResidentIdP">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getEnabledAllIdPs">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="updateIdP">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getAllFederatedAuthenticators">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getResidentIdP">
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="IdentityProviderMgtServiceSoap11Binding">
+                <operation name="deleteIdP"/>
+                <operation name="getAllIdPs"/>
+                <operation name="getAllLocalClaimUris"/>
+                <operation name="getIdPByName"/>
+                <operation name="getAllProvisioningConnectors"/>
+                <operation name="addIdP"/>
+                <operation name="updateResidentIdP"/>
+                <operation name="getEnabledAllIdPs"/>
+                <operation name="updateIdP"/>
+                <operation name="getAllFederatedAuthenticators"/>
+                <operation name="getResidentIdP"/>
+            </binding>
+            <binding name="IdentityProviderMgtServiceHttpBinding">
+                <operation name="deleteIdP"/>
+                <operation name="getAllIdPs"/>
+                <operation name="getAllLocalClaimUris"/>
+                <operation name="getIdPByName"/>
+                <operation name="getAllProvisioningConnectors"/>
+                <operation name="addIdP"/>
+                <operation name="updateResidentIdP"/>
+                <operation name="getEnabledAllIdPs"/>
+                <operation name="updateIdP"/>
+                <operation name="getAllFederatedAuthenticators"/>
+                <operation name="getResidentIdP"/>
+            </binding>
+            <binding name="IdentityProviderMgtServiceSoap12Binding">
+                <operation name="deleteIdP"/>
+                <operation name="getAllIdPs"/>
+                <operation name="getAllLocalClaimUris"/>
+                <operation name="getIdPByName"/>
+                <operation name="getAllProvisioningConnectors"/>
+                <operation name="addIdP"/>
+                <operation name="updateResidentIdP"/>
+                <operation name="getEnabledAllIdPs"/>
+                <operation name="updateIdP"/>
+                <operation name="getAllFederatedAuthenticators"/>
+                <operation name="getResidentIdP"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        <parameter name="adminService" locked="true">true</parameter>
+        <parameter name="ServiceClass" locked="true">
+            org.wso2.carbon.idp.mgt.IdentityProviderManagementService
+        </parameter>
+        <parameter name="AuthorizationAction" locked="false">/permission/admin</parameter>
+        <parameter name="hiddenService" locked="true">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

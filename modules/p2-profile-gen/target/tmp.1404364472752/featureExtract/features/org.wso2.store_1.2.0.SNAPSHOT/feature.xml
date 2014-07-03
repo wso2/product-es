@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.store" label="WSO2 Enterprise Store Feature" provider-name="%providerName" version="1.2.0.SNAPSHOT">
+  <description>WSO2 Enterprise Store</description>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <plugin id="org.wso2.store.admin.styles" unpack="false" version="1.2.0.SNAPSHOT"/>
+  <plugin id="org.wso2.store.sso.common" unpack="false" version="1.2.0.SNAPSHOT"/>
+  <plugin id="slf4j" unpack="false" version="1.5.10.wso2v1"/>
+  <plugin id="org.wso2.carbon.social" unpack="false" version="1.2.0.SNAPSHOT"/>
+  <plugin id="org.wso2.store.jaggery-scxml-executors" unpack="false" version="1.0.0"/>
+  <require>
+    <import match="equivalent" plugin="httpcore" version="4.1.0.wso2v1"/>
+    <import match="equivalent" plugin="httpclient" version="4.1.1.wso2v1"/>
+    <import feature="org.jaggeryjs.modules.handlebars" match="equivalent" version="1.0.0"/>
+    <import feature="org.wso2.carbon.security.mgt" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.ws" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.ues" match="equivalent" version="1.2.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.identity.authenticator.saml2.sso.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.store" match="equivalent" version="1.2.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.governance.lifecycle.management.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.identity.core" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.tenant.common.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.permission" match="equivalent" version="1.2.0.SNAPSHOT"/>
+    <import feature="org.jaggeryjs.server" match="equivalent" version="0.0.0.0_9_0_ALPHA5_wso2v1_SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.resource.properties.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.identity.sso.saml.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.identity.application.authenticator.basicauth.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.sso" match="equivalent" version="1.2.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.claims" match="equivalent" version="1.2.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.user.mgt" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.claim.mgt.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.jaggeryjs.modules.markdown" match="equivalent" version="1.0.0"/>
+    <import feature="org.wso2.carbon.registry.ui.menu" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.cassandra-jdbc-1.2.5.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.associations.dependencies.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.tenant.throttling.agent" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.core.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.identity.application.authentication.framework.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.cassandra.common" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.tenant.usage.agent" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.webapp.mgt.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.cassandra.mgt" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.ui.menu.governance" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.login" match="equivalent" version="1.2.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.extensions.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.cassandra.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.event" match="equivalent" version="1.2.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.tenant.deployment" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.governance.metadata.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.module.mgt.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.contentsearch.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.jaggeryjs.modules.caramel" match="equivalent" version="1.0.1"/>
+    <import feature="org.wso2.carbon.event.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.cassandra.dataaccess" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.carbon.registry.community.features.server" match="equivalent" version="4.3.0.SNAPSHOT"/>
+    <import feature="org.wso2.store.modules.registration" match="equivalent" version="1.2.0.SNAPSHOT"/>
+  </require>
+</feature>

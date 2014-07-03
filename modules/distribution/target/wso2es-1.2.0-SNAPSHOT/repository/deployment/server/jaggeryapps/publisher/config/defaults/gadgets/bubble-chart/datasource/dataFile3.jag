@@ -1,0 +1,45 @@
+<%
+var data1 = [];
+var data2 = [];
+totalPoints = 5;
+
+function getRandomData() {
+
+    if (data1.length > 0)
+        data1 = data1.slice(1);
+
+    if (data2.length > 0)
+        data2 = data2.slice(1);
+
+    while (data1.length < totalPoints) {
+        for (var i = 0; i <= 10; ++i) {
+            var x1 = (Math.floor(Math.random() * (10 - 1 + 1)) + 1)*5;
+            var x2 = (Math.floor(Math.random() * (10 - 1 + 1)) + 1)*2;
+            data1.push([i, ,x1, x2]);
+        }
+    }
+
+    while (data2.length < totalPoints) {
+        for (var i = 0; i <= 10; ++i) {
+            var x1 = (Math.floor(Math.random() * (10 - 1 + 1)) + 1)*5;
+            var x2 = (Math.floor(Math.random() * (10 - 1 + 1)) + 1)*2;
+            data2.push([i, x1, x2]);
+        }
+    }
+
+
+
+    return [
+        {"series1":{ label: "Data set 1",
+          data: data1
+        },"series2":
+        { label: "Data set 2",
+            data: data2
+        }}
+
+    ];
+
+}
+print(getRandomData());
+
+%>

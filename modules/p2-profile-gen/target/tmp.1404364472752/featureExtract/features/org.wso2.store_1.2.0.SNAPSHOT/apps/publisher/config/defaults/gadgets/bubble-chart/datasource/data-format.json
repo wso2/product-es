@@ -1,0 +1,9 @@
+{
+    "dataColumns": [
+        "X-Axis", "Y-Axis" , "Size"
+    ],
+    "dataLabels":[
+        "X-Axis Label", "Y-Axis Label"
+    ],
+    "timeSeriesAllowed" : false
+}

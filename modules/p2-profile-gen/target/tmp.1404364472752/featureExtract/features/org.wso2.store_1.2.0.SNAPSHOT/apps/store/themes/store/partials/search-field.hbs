@@ -1,0 +1,12 @@
+<div>
+    <label>{{this.field_label}}</label>
+    {{#if this.isOptions}}
+    <select id="{{this.field_name}}" class="span12 selectpicker " name='{{this.field_name}}'>
+        {{#each this.valueList}}
+        <option>{{this}}</option>
+        {{/each}}
+    </select>
+    {{else}}
+    <input type="text" class="span12" id="{{this.field_name}}" name="{{this.field_name}}" placeholder="">
+    {{/if}}
+</div>

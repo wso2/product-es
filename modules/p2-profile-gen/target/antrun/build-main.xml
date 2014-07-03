@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <replace token="false" dir="target/wso2carbon-core-4.3.0-SNAPSHOT/repository/components" value="true">
+    <include name="**/bundles.info"/>
+  </replace>
+</target>
+</project>

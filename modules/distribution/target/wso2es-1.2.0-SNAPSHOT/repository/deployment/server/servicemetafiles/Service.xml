@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><serviceGroup name="Service" successfullyAdded="true">
+    <service name="Service" exposedAllTransports="false" serviceDeployedTime="1404364561192" successfullyAdded="true">
+        <operation name="deleteService">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/service/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="addService">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/service/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getService">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/service/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="updateService">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/service/add</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getServiceArtifactIDs">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/service/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <operation name="getServiceDependencies">
+            <parameter name="AuthorizationAction">/permission/admin/manage/resources/govern/service/list</parameter>
+            <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+            <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        </operation>
+        <bindings>
+            <binding name="ServiceSoap11Binding">
+                <operation name="addService"/>
+                <operation name="deleteService"/>
+                <operation name="getService"/>
+                <operation name="updateService"/>
+                <operation name="getServiceArtifactIDs"/>
+                <operation name="getServiceDependencies"/>
+            </binding>
+            <binding name="ServiceHttpBinding">
+                <operation name="addService"/>
+                <operation name="deleteService"/>
+                <operation name="getService"/>
+                <operation name="updateService"/>
+                <operation name="getServiceArtifactIDs"/>
+                <operation name="getServiceDependencies"/>
+            </binding>
+            <binding name="ServiceSoap12Binding">
+                <operation name="addService"/>
+                <operation name="deleteService"/>
+                <operation name="getService"/>
+                <operation name="updateService"/>
+                <operation name="getServiceArtifactIDs"/>
+                <operation name="getServiceDependencies"/>
+            </binding>
+        </bindings>
+        <policies/>
+        <module name="addressing" version="4.30-SNAPSHOT" type="engagedModules"/>
+        <module name="pagination" version="4.30-SNAPSHOT" type="engagedModules"/>
+        <parameter name="enableMTOM">true</parameter>
+        <parameter name="adminService">true</parameter>
+        <parameter name="AuthorizationAction">/permission/admin/login</parameter>
+        <parameter name="hiddenService">true</parameter>
+        <association destinationPath="/repository/transports/https/listener" type="exposedTransports"/>
+    </service>
+</serviceGroup>

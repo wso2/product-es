@@ -1,0 +1,98 @@
+{
+    "applyTo": "service",
+
+
+    "import": [
+        "/modules/ext/scripts/rxt.importer.js",
+        "/modules/ext/scripts/form.exporter.js",
+        "/modules/ext/scripts/asset.exporter.js",
+        "/modules/ext/scripts/asset.action.save.js",
+        "/modules/ext/scripts/asset.lifecycle.action.save.js",
+        "/modules/ext/scripts/form.importer.js"],
+
+    "fieldPropertyRules": [    ],
+
+    "link": [
+        "overview.stage:value=*.lifecycleState"
+    ],
+
+    "tables": [
+
+        {
+            "name": "*"
+        }
+
+    ],
+
+    "fieldProperties": [
+
+        {
+            "field": "*",
+            "name": "order",
+            "value": ""
+        },
+        {
+            "field": "*",
+            "name": "hidden",
+            "value": "false"
+        },
+        {
+            "field": "*",
+            "name": "visible",
+            "value": "true"
+        },
+        {
+            "field": "overview.*",
+            "name": "save",
+            "value": "default"
+        },
+        {
+            "field": "overview.*",
+            "name": "editable",
+            "value": true
+        },
+        {
+            "field": "*.lifeCycle",
+            "name": "save",
+            "value": "asset.lifecycle.action.save"
+        },
+        {
+            "field": "*.lifeCycle",
+            "name": "fetch",
+            "value": "default"
+        },
+        {
+            "field": "overview.name",
+            "name": "editable",
+            "value": false
+        },
+        {
+            "field": "overview.version",
+            "name": "editable",
+            "value": false
+        }
+    ],
+
+    "fields": [
+        {
+            "name": "lifeCycle",
+            "table": "*",
+            "label": "Life Cycle",
+            "value": "ServiceLifeCycle"
+        } 
+    ],
+
+    "permissions": {
+        "created": ["Internal/private_{overview_provider}"],
+        "in-review": ["Internal/reviewer", "Internal/private_{overview_provider}"],
+        "published": ["Internal/private_{overview_provider}"],
+        "unpublished": ["Internal/private_{overview_provider}"]
+    },
+
+    "storage": {
+    },
+
+    "behavior": {
+      "lifecycle_change_comment_required": "true"
+    }
+}

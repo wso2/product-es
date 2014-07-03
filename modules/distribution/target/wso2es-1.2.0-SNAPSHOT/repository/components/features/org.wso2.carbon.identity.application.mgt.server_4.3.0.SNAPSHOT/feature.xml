@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.carbon.identity.application.mgt.server" label="Identity Application Management Server Feature" provider-name="%providerName" version="4.3.0.SNAPSHOT">
+  <description/>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <plugin id="org.wso2.carbon.identity.application.common" unpack="false" version="4.3.0.SNAPSHOT"/>
+  <plugin id="org.wso2.carbon.identity.application.mgt" unpack="false" version="4.3.0.SNAPSHOT"/>
+</feature>

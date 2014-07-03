@@ -1,0 +1,26 @@
+<%
+var data1 = [];
+totalPoints = 50;
+
+function getRandomData() {
+
+    if (data1.length > 0)
+        data1 = data1.slice(1);
+
+    while (data1.length < totalPoints) {
+        for (var i = 0; i <= 100; ++i) {
+            var x1 = Math.random();
+            var x2 = Math.random();
+            var x = x1 + i * (Math.abs(x2 - x1)) / 100;
+            data1.push([i, Math.sin(x * Math.sin(x))]);
+        }
+    }
+
+    return [
+        {"series1":{label: "sin(x sin(x))", data: data1}}
+    ];
+
+}
+print(getRandomData());
+
+%>
