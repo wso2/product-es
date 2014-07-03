@@ -1,9 +1,0 @@
-{
-    "dataColumns": [
-        "Data"
-    ],
-    "dataLabels":[
-        "Data Label"
-    ],
-    "timeSeriesAllowed" : false
-}

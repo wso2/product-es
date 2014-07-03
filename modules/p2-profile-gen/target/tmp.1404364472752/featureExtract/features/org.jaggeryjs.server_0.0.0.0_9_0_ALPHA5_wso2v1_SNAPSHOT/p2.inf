@@ -1,6 +1,0 @@
-instructions.configure = \
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../modules); \
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.jaggeryjs.server_0.0.0.0_9_0_ALPHA5_wso2v1_SNAPSHOT/modules/,target:${installFolder}/../../../modules,overwrite:true);\
-
-
-

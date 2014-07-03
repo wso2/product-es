@@ -1,5 +1,0 @@
-[2014-07-03 10:52:14,635]  INFO -  'admin@carbon.super [-1234]' logged in at [2014-07-03 10:52:14,634+0530] 
-[2014-07-03 10:52:16,726]  INFO -  'admin@carbon.super [-1234]' logged out at [2014-07-03 10:52:16,0725] 
-[2014-07-03 10:52:17,058]  INFO -  'tenantAdmin@mytestdomain.com [1]' logged in at [2014-07-03 10:52:17,051+0530] 
-[2014-07-03 10:52:19,388]  INFO -  Initiator : tenantAdmin@mytestdomain.com | Action : Add User | Target : PRIMARY/tenantUser | Data : { Roles : } | Result : Success  
-[2014-07-03 10:52:21,288]  INFO -  Initiator : tenantAdmin@mytestdomain.com | Action : Add Internal Role | Target : store | Data : { Users : tenantUser, Permissions : [Ljava.lang.String;@45c3d185 } | Result : Success  

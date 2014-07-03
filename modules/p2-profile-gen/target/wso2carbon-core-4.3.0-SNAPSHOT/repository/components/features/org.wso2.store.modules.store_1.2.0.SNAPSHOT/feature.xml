@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<feature id="org.wso2.store.modules.store" label="store Module - Feature" provider-name="%providerName" version="1.2.0.SNAPSHOT">
-  <description>WSO2 Enterprise Store</description>
-  <copyright>%copyright</copyright>
-  <license url="%licenseURL">%license</license>
-  <require>
-    <import feature="org.wso2.store.modules.event" match="equivalent" version="1.2.0.SNAPSHOT"/>
-  </require>
-</feature>
