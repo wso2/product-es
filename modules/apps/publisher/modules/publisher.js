@@ -1,5 +1,7 @@
 var PUBLISHER_CONFIG_PATH = '/_system/config/publisher/configs/publisher.json';
 
+var ASSETS_EXT_PATH = '/extensions/assets/';
+
 var TENANT_PUBLISHER = 'tenant.publisher';
 var log=new Log('modules.publisher');
 var utility=require('/modules/utility.js').rxt_utility();
@@ -164,6 +166,24 @@ var Publisher = function (tenantId, session) {
     this.filterManager=managers.filterManager;
     this.storageSecurityProvider=managers.storageSecurityProvider;
 
+};
+
+/**
+ * Returns links of a asset for the current user
+ * @param type Asset type
+ */
+Publisher.prototype.assetLinks = function (type) {
+    var mod,
+        path = ASSETS_EXT_PATH + type + '/asset.js',
+        file = new File(path);
+
+        var log=new Log();
+        log.info(path);
+    if (!file.isExists()) {
+        return [];
+    }
+    mod = require(path);
+    return mod.assetLinks(this.user);
 };
 /*
 
