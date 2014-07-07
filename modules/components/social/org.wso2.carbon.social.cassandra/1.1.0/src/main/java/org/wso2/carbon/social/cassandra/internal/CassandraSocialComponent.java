@@ -5,13 +5,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.social.cassandra.CassandraActivityService;
+import org.wso2.carbon.social.cassandra.service.CassandraActivityService;
 import org.wso2.carbon.social.core.service.SocialActivityService;
 
 /**
  * Registering {@link SocialActivityService}
  *
- * @scr.component name="org.wso2.carbon.bam.service.data.publisher " immediate="true"
+ * @scr.component name="org.wso2.carbon.social.component" immediate="true"
  */
 
 
