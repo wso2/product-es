@@ -80,7 +80,7 @@ public class JSONUtil {
         return result;
     }
 
-    static String getNullableProperty(NativeObject obj, String... keys) {
+    public static String getNullableProperty(NativeObject obj, String... keys) {
         NativeObject result = obj;
         for (int i = 0; i < keys.length - 1; i++) {
             String key = keys[i];
@@ -94,7 +94,7 @@ public class JSONUtil {
         return result.get(keys[keys.length - 1], result).toString();
     }
 
-    static String getProperty(NativeObject obj, String... keys) {
+    public static String getProperty(NativeObject obj, String... keys) {
         String property = getNullableProperty(obj, keys);
         if (property == null) {
             throw new RuntimeException("property missing in activity object : " + Arrays.toString(keys));

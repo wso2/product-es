@@ -1,21 +1,26 @@
-package org.wso2.carbon.social.core;
+package org.wso2.carbon.social.cassandra;
 
 import com.google.gson.JsonObject;
 import org.mozilla.javascript.NativeObject;
+import org.wso2.carbon.social.core.Activity;
+import org.wso2.carbon.social.core.ActivityBrowser;
+import org.wso2.carbon.social.core.ActivityPublisher;
+import org.wso2.carbon.social.core.SortOrder;
 import org.wso2.carbon.social.core.service.SocialActivityService;
 
 import java.util.List;
 import java.util.Properties;
 
-public class SocialActivityServiceImpl implements SocialActivityService {
+public class CassandraActivityService implements SocialActivityService {
 
 
-    private ActivityPublisher activityPublisher = new ActivityPublisher();
-    private ActivityBrowser activityBrowser = new ActivityBrowser();
+    private ActivityPublisher activityPublisher = new CassandraActivityPublisher();
+    private ActivityBrowser activityBrowser = new CassandraActivityBrowser();
 
     @Override
     public void configPublisher(NativeObject configObject) {
-        activityPublisher.parseJSONConfig(configObject);
+        //TODO: config should happen via core
+        ((CassandraActivityPublisher)activityPublisher).parseJSONConfig(configObject);
     }
 
     @Override

@@ -1,11 +1,13 @@
-package org.wso2.carbon.social.core;
+package org.wso2.carbon.social.cassandra;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.social.core.summarizer.DefaultSummarizer;
-import org.wso2.carbon.social.core.summarizer.Summarizer;
-import org.wso2.carbon.social.core.summarizer.SummarizerFactory;
+import org.wso2.carbon.social.cassandra.summarizer.DefaultSummarizer;
+import org.wso2.carbon.social.cassandra.summarizer.Summarizer;
+import org.wso2.carbon.social.cassandra.summarizer.SummarizerFactory;
+import org.wso2.carbon.social.core.Activity;
+import org.wso2.carbon.social.core.SortOrder;
 
 import java.util.HashMap;
 import java.util.Map;

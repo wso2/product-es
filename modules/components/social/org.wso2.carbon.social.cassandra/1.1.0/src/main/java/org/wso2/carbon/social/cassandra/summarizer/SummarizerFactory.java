@@ -1,4 +1,4 @@
-package org.wso2.carbon.social.core.summarizer;
+package org.wso2.carbon.social.cassandra.summarizer;
 
 import java.util.Map;
 

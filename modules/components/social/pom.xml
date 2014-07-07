@@ -32,6 +32,8 @@
 
     <modules>
         <module>org.wso2.carbon.social.core/1.1.0</module>
+        <module>org.wso2.carbon.social.sql/1.1.0</module>
+        <module>org.wso2.carbon.social.cassandra/1.1.0</module>
     </modules>
 
     <repositories>
