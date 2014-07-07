@@ -10,7 +10,7 @@ import org.wso2.carbon.social.core.JSONUtil;
 import java.util.Properties;
 import java.util.UUID;
 
-public class CassandraActivityPublisher implements ActivityPublisher {
+public class CassandraActivityPublisher extends ActivityPublisher {
 
     private static final Log LOG = LogFactory.getLog(ActivityPublisher.class);
 
@@ -35,8 +35,9 @@ public class CassandraActivityPublisher implements ActivityPublisher {
      * connection information.
      * The properties of the JSON object must match the key attributes ; username,password, host and port
      * Any non key value is read but is not used.
-     * @param configObject  A JSON object containing the username,password , host and port properties
-     *                      Each property should contain a String value
+     *
+     * @param configObject A JSON object containing the username,password , host and port properties
+     *                     Each property should contain a String value
      */
     public void parseJSONConfig(NativeObject configObject) {
         Object[] properties;
@@ -54,11 +55,11 @@ public class CassandraActivityPublisher implements ActivityPublisher {
         }
     }
 
-    @Override public String publish(NativeObject activity) {
+    @Override
+    public String publish(String id, NativeObject activity) {
         DataPublisher publisher = getPublisher();
         try {
             String streamId = getStreamId(publisher);
-            String id = UUID.randomUUID().toString();
             activity.put("id", activity, id);
             String json = JSONUtil.SimpleNativeObjectToJson(activity);
             String contextId = JSONUtil.getNullableProperty(activity, Constants.CONTEXT_JSON_PROP, Constants.ID_JSON_PROP);
@@ -87,8 +88,8 @@ public class CassandraActivityPublisher implements ActivityPublisher {
         String username = getUserName();
         String password = getPassword();
 
-        LOG.info("Host: "+host+" Port: "+port);
-        LOG.info("Username: "+username+" Password: "+password);
+        LOG.info("Host: " + host + " Port: " + port);
+        LOG.info("Username: " + username + " Password: " + password);
 
         if (publisher == null) {
             try {
