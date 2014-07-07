@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS social( id VARCHAR(250), contextId VARCHAR(250),body BLOB );
