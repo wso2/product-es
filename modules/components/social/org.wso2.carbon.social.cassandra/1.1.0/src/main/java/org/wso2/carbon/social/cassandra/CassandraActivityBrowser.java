@@ -4,18 +4,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceManager;
-import org.wso2.carbon.social.core.*;
+import org.wso2.carbon.social.core.Activity;
+import org.wso2.carbon.social.core.ActivityBrowser;
+import org.wso2.carbon.social.core.SortOrder;
 
 import javax.sql.DataSource;
-
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class CassandraActivityBrowser implements ActivityBrowser {
 

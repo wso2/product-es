@@ -5,7 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.wso2.carbon.social.core.Activity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class LikeSummarizer implements Summarizer {
 

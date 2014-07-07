@@ -8,7 +8,6 @@ import org.wso2.carbon.social.core.ActivityPublisher;
 import org.wso2.carbon.social.core.JSONUtil;
 
 import java.util.Properties;
-import java.util.UUID;
 
 public class CassandraActivityPublisher extends ActivityPublisher {
 
