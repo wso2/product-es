@@ -4,6 +4,13 @@ import com.google.gson.JsonObject;
 import org.wso2.carbon.social.core.Activity;
 
 public class SQLActivity implements Activity {
+    private final JsonObject body;
+    private final int timestamp;
+
+    public SQLActivity(JsonObject body, int timestamp) {
+        this.body = body;
+        this.timestamp = timestamp;
+    }
     @Override
     public String getId() {
         return null;
