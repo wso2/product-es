@@ -86,7 +86,7 @@ public class CassandraActivityBrowser implements ActivityBrowser {
                 // we'll ignore the "Keyspace EVENT_KS does not exist" error,
                 // this happens when there are 0 activities in Cassandra.
                 if (!(message.startsWith("Keyspace ") && message.endsWith(" does not exist"))) {
-                    LOG.error("Can't retrieve activities form cassandra.", e);
+                    LOG.error("Can't retrieve activities from cassandra.", e);
                 }
             } finally {
                 try {
