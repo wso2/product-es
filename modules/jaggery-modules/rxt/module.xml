@@ -3,4 +3,8 @@
         <name>core</name>
         <path>scripts/core/core.js</path>
     </script>
+    <script>
+    	<name>resources</name>
+    	<path>scripts/resources/resources.js</path>
+    </script>
 </module>
