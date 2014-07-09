@@ -32,18 +32,18 @@ var resources = {};
         }
         return content;
     };
-    var addToConfigs=function(tenantId,type,assetResource){
-    	var configs=core.configs(tenantId);
-    	configs.assetResources={};
-    	configs.assetResources[type]=assetResource;
+    var addToConfigs = function(tenantId, type, assetResource) {
+        var configs = core.configs(tenantId);
+        configs.assetResources = {};
+        configs.assetResources[type] = assetResource;
     };
     var loadResources = function(options, tenantId, sysRegistry) {
-        var manager = core.manager(tenantId);
+        var manager = core.rxtManager(tenantId);
         var rxts = manager.listRxtTypes();
         var resourcePath;
         var type;
         var map = {};
-
+        log.info('### Loading resources! ###');
         for (var index in rxts) {
             type = rxts[index];
             resourcePath = getAssetScriptPath(type, options);
@@ -52,15 +52,21 @@ var resources = {};
                 log.info('Asset script for ' + type + ' could not be found.The default asset script will be loaded from: ' + getDefaultAssetScriptPath(options));
                 content = loadDefaultAssetScript(options, resourcePath, sysRegistry);
             }
-             var module='function(){ '+content+' };';
-            var modulePtr=eval(module);
-            var obj={};
-            obj.manager=null;
-            obj.ui=null;
-            obj.server=null;
-            obj.configure=null;
-            modulePtr.call(this,obj.manager,obj.ui,obj.server,obj.configure,log);
-            addToConfigs(tenantId, type,obj);
+            var module = 'function(asset,log){  '+content+' };';
+            var modulePtr = eval(module);
+            var asset = {};
+            asset.manager = null;
+            asset.ui = null;
+            asset.server =null;
+            asset.configure = null;
+            modulePtr.call(this,asset, log);
+            addToConfigs(tenantId, type,asset);
+            //Perform any rxt mutations
+            if (asset.configure) {
+                log.info('### Applying mutations ###');
+                log.info(asset.configure());
+                manager.applyMutator(type, asset.configure());
+            }
         }
     };
     var init = function(tenantId) {
@@ -76,9 +82,6 @@ var resources = {};
     };
     resources.manager = function(tenantId) {
         init(tenantId);
-    };
-    resources.assetManager=function(tenantId){
-
     };
     resources.init = function() {
         var event = require('event');
