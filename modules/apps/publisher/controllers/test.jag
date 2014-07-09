@@ -11,7 +11,7 @@
 	var manager=core.rxtManager(-1234);
 
 	//print(manager.listRxtTypes());
-	print(manager.getRxtDefinition('servicex'));
+	print(manager.getRxtDefinition('gadget'));
 	//print(manager.getRxtStoragePath('api'));
 
 	

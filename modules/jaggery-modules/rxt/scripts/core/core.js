@@ -10,40 +10,57 @@ var core = {};
     var applyDefinitionMutation = function(rxtDefinition, rxtMutation) {
         var mutatedTables = rxtMutation.table || {};
         var rxtTables = rxtDefinition.content.table;
+        log.info('### Applying Definition Mutation ###');
         for (var tableName in mutatedTables) {
+            log.info('Inspecting table name: ' + tableName);
             //Check if the rxt table has a table name similar to the 
             if (rxtTables[tableName]) {
-                applyTableMutation(rxtTables[tableName], mutatedTables[tableName]);
+                log.info('Mutations for table ' + tableName+' have been found.');
+                rxtDefinition.content.table[tableName] = applyTableMutation(rxtTables[tableName], mutatedTables[tableName]);
             }
         }
         //Copy any non table mutations over to the rxtDefinition
         for (var key in rxtMutation) {
             if (key != 'table') {
+                log.info('Adding extra properties: '+key);
                 rxtDefinition[key] = rxtMutation[key];
             }
         }
+        log.info('### Finished applying definition mutation ###');
+        return rxtDefinition;
     };
     var applyTableMutation = function(rxtTable, rxtTableMutation) {
         var rxtFields = rxtTable.fields;
         var mutatedFields = rxtTableMutation.fields;
+        
         for (var fieldName in mutatedFields) {
+            log.info('Found field to mutate name: ' + fieldName);
             if (rxtFields[fieldName]) {
-                copyFieldProps(rxtFields[fieldName], mutatedFields[fieldName]);
+                log.info('Found field in rxtFields list');
+                rxtTable.fields[fieldName] = applyFieldPropMutation(rxtFields, mutatedFields, fieldName);
             }
         }
+        return rxtTable;
     };
-    var applyFieldPropMutation = function(rxtField, mutatedField) {
+    var applyFieldPropMutation = function(rxtField, mutatedField, fieldName) {
+        rxtField = rxtField[fieldName];
+        mutatedField = mutatedField[fieldName];
         if (!rxtField.validations) {
             rxtField.validations = [];
         }
         if (mutatedField.validation) {
+            log.info('Found valiation for field: '+fieldName);
             rxtField.validations.push(mutatedField.validation);
         }
+        log.info('Inspecting properties of field: '+fieldName);
         for (var propName in mutatedField) {
-            if ((rxtField[propName]) && (propName != 'validation')) {
+            
+            if (propName != 'validation') {
+                log.info('Adding property '+propName+'to field: ' + fieldName);
                 rxtField[propName] = mutatedField[propName];
             }
         }
+        return rxtField;
     };
     var makeWordUpperCase = function(word) {
         if (word.length > 1) {
@@ -69,12 +86,14 @@ var core = {};
         rxtDefinition.storagePath = rxtDefinition.storagePath[0].storagePath;
         rxtDefinition.content = rxtDefinition.content[0];
         var table;
+        var tableName;
         var tableBlock = rxtDefinition.content.table;
         rxtDefinition.content.table = {};
         for (var index in tableBlock) {
             table = tableBlock[index];
-            rxtDefinition.content.table[table.name] = {};
-            rxtDefinition.content.table[table.name] = table;
+            tableName = createCamelCaseName(table.name);
+            rxtDefinition.content.table[tableName] = {};
+            rxtDefinition.content.table[tableName] = table;
             transformTable(rxtDefinition.content.table[table.name], table);
         }
     };
@@ -142,13 +161,14 @@ var core = {};
         for (var type in this.rxtMap) {
             list.push(type);
         }
-        return list;
+        return ['gadget']; //list;
     };
     RxtManager.prototype.applyMutator = function(type, mutator) {
         this.mutatorMap[type] = {};
         this.mutatorMap[type] = mutator;
         var rxtDefinition = this.rxtMap[type];
-        applyDefinitionMutation(rxtDefinition, mutator);
+        this.rxtMap[type] = applyDefinitionMutation(rxtDefinition, mutator);
+        log.info('Definition After Mutation: ' + stringify(this.rxtMap[type]));
     };
     /*
     Creates an xml file from the contents of an Rxt file
@@ -186,7 +206,9 @@ var core = {};
         }
         var manager = map[tenantId].rxtManager;
         if (!manager) {
+            log.debug('Creating a new rxt manager');
             manager = createRxtManager(tenantId, map);
+            //map[tenantId].rxtManager = manager;
         }
         return manager;
     };

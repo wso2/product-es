@@ -63,7 +63,7 @@ var resources = {};
             addToConfigs(tenantId, type,asset);
             //Perform any rxt mutations
             if (asset.configure) {
-                log.info('### Applying mutations ###');
+                log.info('### Applying mutations ### '+type);
                 log.info(asset.configure());
                 manager.applyMutator(type, asset.configure());
             }
