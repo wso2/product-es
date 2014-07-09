@@ -1,6 +1,4 @@
-
 log.info('Start of script!');
-
 asset.manager = function(ctx) {
     return {
         create: function() {
@@ -24,10 +22,12 @@ asset.configure = function() {
                             label: 'Name'
                         },
                         required: false,
-                        validate: function() {}
+                        validation: function() {}
                     },
                     version: {
-                        label: 'Super Version'
+                        name: {
+                            label: 'Super Version'
+                        }
                     }
                 }
             }
