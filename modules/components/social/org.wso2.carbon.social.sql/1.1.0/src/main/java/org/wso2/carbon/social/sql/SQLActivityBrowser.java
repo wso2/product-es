@@ -20,8 +20,8 @@ import java.util.List;
 
 public class SQLActivityBrowser implements ActivityBrowser {
     private static final Log log = LogFactory.getLog(SQLActivityBrowser.class);
-    public static final String SELECT_SQL = "SELECT * FROM ES_SOCIAL WHERE '" +
-            Constants.CONTEXT_ID_COLUMN + "'=?";
+    public static final String SELECT_SQL = "SELECT * FROM ES_SOCIAL WHERE " +
+            Constants.CONTEXT_ID_COLUMN + "=?";
     private JsonParser parser = new JsonParser();
     
     @Override
@@ -32,7 +32,11 @@ public class SQLActivityBrowser implements ActivityBrowser {
     @Override
     public JsonObject getSocialObject(String targetId, String tenant, SortOrder order) {
         List<Activity> activities = listActivitiesChronologically(targetId, tenant);
-        return null;
+        Gson gson = new Gson();
+
+    	String jsonStr = gson.toJson(activities);
+    	JsonObject jsonObj = (JsonObject)  parser.parse(jsonStr);
+        return jsonObj;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class SQLActivityBrowser implements ActivityBrowser {
                 JsonObject body = (JsonObject) parser.parse(resultSet.getString(Constants.BODY_COLUMN));
                 String tenant = getTenant(body);
                 if (tenantDomain.equals(tenant)) {
-                    Activity activity = new SQLActivity(body.getAsJsonObject(), resultSet.getInt(Constants.TIMESTAMP_COLUMN));
+                    Activity activity = new SQLActivity(body.getAsJsonObject());
                     activities.add(activity);
                 }
             }
