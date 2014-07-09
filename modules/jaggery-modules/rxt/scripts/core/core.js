@@ -7,10 +7,101 @@ var core = {};
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
     var utils = require('utils');
     var log = new Log('rxt.core');
+    var applyDefinitionMutation = function(rxtDefinition, rxtMutation) {
+        var mutatedTables = rxtMutation.table || {};
+        var rxtTables = rxtDefinition.content.table;
+        for (var tableName in mutatedTables) {
+            //Check if the rxt table has a table name similar to the 
+            if (rxtTables[tableName]) {
+                applyTableMutation(rxtTables[tableName], mutatedTables[tableName]);
+            }
+        }
+        //Copy any non table mutations over to the rxtDefinition
+        for (var key in rxtMutation) {
+            if (key != 'table') {
+                rxtDefinition[key] = rxtMutation[key];
+            }
+        }
+    };
+    var applyTableMutation = function(rxtTable, rxtTableMutation) {
+        var rxtFields = rxtTable.fields;
+        var mutatedFields = rxtTableMutation.fields;
+        for (var fieldName in mutatedFields) {
+            if (rxtFields[fieldName]) {
+                copyFieldProps(rxtFields[fieldName], mutatedFields[fieldName]);
+            }
+        }
+    };
+    var applyFieldPropMutation = function(rxtField, mutatedField) {
+        if (!rxtField.validations) {
+            rxtField.validations = [];
+        }
+        if (mutatedField.validation) {
+            rxtField.validations.push(mutatedField.validation);
+        }
+        for (var propName in mutatedField) {
+            if ((rxtField[propName]) && (propName != 'validation')) {
+                rxtField[propName] = mutatedField[propName];
+            }
+        }
+    };
+    var makeWordUpperCase = function(word) {
+        if (word.length > 1) {
+            return word[0].toUpperCase() + word.substring(1);
+        }
+        return word;
+    };
+    var createCamelCaseName = function(fieldName) {
+        var comps = fieldName.split(' ');
+        for (var index in comps) {
+            comps[index] = comps[index].toLowerCase();
+        }
+        //Check if there is more than one element in the name
+        if (comps.length > 1) {
+            for (var index = 1; index < comps.length; index++) {
+                //Get the first letter of the word and convert it to Uppercase
+                comps[index] = makeWordUpperCase(comps[index]);
+            }
+        }
+        return comps.join('');
+    };
+    var transformDefinition = function(rxtDefinition) {
+        rxtDefinition.storagePath = rxtDefinition.storagePath[0].storagePath;
+        rxtDefinition.content = rxtDefinition.content[0];
+        var table;
+        var tableBlock = rxtDefinition.content.table;
+        rxtDefinition.content.table = {};
+        for (var index in tableBlock) {
+            table = tableBlock[index];
+            rxtDefinition.content.table[table.name] = {};
+            rxtDefinition.content.table[table.name] = table;
+            transformTable(rxtDefinition.content.table[table.name], table);
+        }
+    };
+    var transformTable = function(rxtDefinition, rxtTable) {
+        var fields = rxtTable.field;
+        var field;
+        var name;
+        rxtTable.fields = {};
+        for (var index in fields) {
+            field = fields[index];
+            trasnformField(field)
+            name = createCamelCaseName(field.name.name);
+            rxtTable.fields[name] = field;
+            field.name.name = name;
+        }
+        delete rxtTable.field;
+    };
+    var trasnformField = function(rxtField) {
+        var nameBlock = rxtField.name;
+        rxtField.name = {};
+        rxtField.name = nameBlock[0];
+    };
 
     function RxtManager(registry) {
         this.registry = registry;
         this.rxtMap = {};
+        this.mutatorMap = {};
     }
     RxtManager.prototype.load = function() {
         var rxtPaths = GovernanceUtils.findGovernanceArtifacts(DEFAULT_MEDIA_TYPE, this.registry.registry);
@@ -20,6 +111,7 @@ var core = {};
             try {
                 content = this.registry.get(rxtPaths[index]);
                 rxtDefinition = utils.xml.convertE4XtoJSON(createXml(content));
+                transformDefinition(rxtDefinition);
                 this.rxtMap[rxtDefinition.shortName] = rxtDefinition;
             } catch (e) {
                 log.debug('Unable to load RXT definition for : ' + rxtPaths[index] + '.The following exception occured: ' + e);
@@ -52,6 +144,12 @@ var core = {};
         }
         return list;
     };
+    RxtManager.prototype.applyMutator = function(type, mutator) {
+        this.mutatorMap[type] = {};
+        this.mutatorMap[type] = mutator;
+        var rxtDefinition = this.rxtMap[type];
+        applyDefinitionMutation(rxtDefinition, mutator);
+    };
     /*
     Creates an xml file from the contents of an Rxt file
     @rxtFile: An rxt file
@@ -77,20 +175,29 @@ var core = {};
         var rxtMap = application.get(RXT_MAP);
         var configs = rxtMap[tenantId];
         if (!configs) {
-            configs=createTenantRxtMap(tenantId, map);
+            configs = createTenantRxtMap(tenantId, map);
         }
         return configs;
     };
-    core.manager = function(tenantId) {
+    core.rxtManager = function(tenantId) {
         var map = application.get(RXT_MAP);
         if (!map) {
             throw 'rxt map was not found in the application object';
         }
         var manager = map[tenantId].rxtManager;
         if (!manager) {
-            manager=createRxtManager(tenantId, map);
+            manager = createRxtManager(tenantId, map);
         }
         return manager;
+    };
+    core.assetResources = function(tenantId, type) {
+        var configs = core.configs(tenantId);
+        var assetResource = configs.assetResources[type];
+        if (!assetResource) {
+            log.error('Unable to locate assetResources for tenant: ' + tenantId + ' and type: ' + type);
+            throw 'Unable to locate assetResources for tenant: ' + tenantId + ' and type: ' + type;
+        }
+        return assetResource;
     };
     core.init = function() {
         var event = require('event');
@@ -98,13 +205,10 @@ var core = {};
         var options = server.options();
         var map = {};
         application.put(RXT_MAP, map);
-        log.info('### Initializing the rxt core for the super tenant ###');
         event.on('tenantLoad', function(tenantId) {
-            log.info('### Initializing the rxt core for tenant: ' + tenantId + ' ###');
             map = application.get(RXT_MAP);
             createTenantRxtMap(tenantId, map);
             createRxtManager(tenantId, map);
-            log.info('### Finished initializing rxt core ###');
         });
     };
 }(core));
