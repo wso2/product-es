@@ -7,6 +7,12 @@
         "username": "admin",
         "password": "admin"
     },
+    "rxt":{
+        "CONFIG_BASE_PATH":"/_system/config/store/configs/",
+        "EXTENSION_PATH":"extensions/assets/",
+        "ASSET_SCRIPT_PATH":"/asset.js",
+        "DEFAULT_ASSET_SCRIPT":"/extensions/assets/default/asset.js"
+    },
     "tenantConfigs": "/_system/config/publisher/configs/publisher.json",
     "app": {
         "RXT_MANAGER": "rxt_manager",

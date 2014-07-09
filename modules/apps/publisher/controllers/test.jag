@@ -1,0 +1,38 @@
+<%
+	var core=require('rxt').core;
+	var resources=require('rxt').resources;
+	var ref=require('utils').reflection;
+	var log=new Log();
+
+	//var server=require('store').server;
+	//var registry=server.systemRegistry(-1234);
+	//core.init(-1234,registry);
+	//var manager=core.manager(-1234);
+
+	//print(manager.listRxtTypes());
+	//print(manager.getRxtStoragePath('api'));
+
+	//resources.manager(-1234);
+
+	function Apple(){
+
+	}
+	Apple.prototype.eat=function(who){
+		print('Eating a yummy apple '+who+'<br/>');
+	};
+
+    Apple.prototype.drink=function(){
+    	print('Drinking<br/>');
+    };
+
+	var Macintosh={
+		eat:function(who){
+			this._super.eat('Peter');
+			print('Eating a macintosh '+who+'<br/>');
+		}
+	};
+	var apple=new Apple();
+	ref.override(apple,Macintosh);
+	apple.eat('Mac');
+	apple.drink();
+%>

@@ -2,6 +2,7 @@ var xml = {};
 
 (function () {
 
+    var log=new Log('util.xml')
 
     /*
      The method is used to create a JSON object using

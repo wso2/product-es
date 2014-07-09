@@ -1,20 +1,28 @@
-var artifacts=function(ctx){
+manager=function(ctx){
 	return{
-		create:null,
-		search:null,
-		remove:null,
-		update:null,
-		invokeLifecycleAction:null
+		create:function(){ 
+			log.info('Create called!');
+		},
 	};
 };
 
-var configure=function(ctx){
+server=function(ctx){
+	return{
+		onUserLoggedIn:function(){
+
+		}
+	}
+};
+
+configure=function(ctx){
 
 	return{
 		overview:{
 
 			name:{
+				validate:function(){
 
+				}
 			},
 			version:{
 
@@ -24,15 +32,11 @@ var configure=function(ctx){
 	};
 };
 
-var render=function(ctx){
+ui=function(ctx){
 	return {
-
-	};
-};
-
-var application=function(){
-	return{
-		onTenantCreate:function(){},
-		onTenantLoad:function(){}
+		renderCreate:function(){},
+		renderEdit:function(){},
+		renderLifecycle:function(){},
+		renderNavigation:function(){}
 	};
 };
