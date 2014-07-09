@@ -1,8 +1,8 @@
 package org.wso2.carbon.social.sql;
 
 public class Constants {
-    public static final String BODY_COLUMN = "payload_body";
-    public static final String ID_COLUMN = "payload_id";
+    public static final String BODY_COLUMN = "body";
+    public static final String ID_COLUMN = "id";
     public static final String CONTEXT_ID_COLUMN = "payload_context_id";
     public static final String TIMESTAMP_COLUMN = "Timestamp";
 
