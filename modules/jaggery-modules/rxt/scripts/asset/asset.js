@@ -1,6 +1,6 @@
 var asset = {};
 (function(asset, core) {
-    function AssetManager(registry, type) {
+    function AssetManager(registry, type, ctx) {
         this.registry = registry;
         this.type = type;
     }
@@ -9,12 +9,18 @@ var asset = {};
     AssetManager.prototype.update = function(options) {};
     AssetManager.prototype.remove = function(options) {};
     AssetManager.prototype.search = function(options) {};
-    var createContext=function(tenantId,type){
-    	return{
-    		tenantId:tenantId,
-    		type:type
-    	}
-    };
+    AssetManager.prototype.invokeAction = function(options) {};
+    AssetManager.prototype.createVersion = function(options, newVersion) {};
+
+    function AssetRenderer(rxtManager, type) {
+        this.rxtManager = rxtManager;
+        this.type = type;
+    }
+    AssetRenderer.prototype.create = function(asset) {};
+    AssetRenderer.prototype.update = function(asset) {};
+    AssetRenderer.prototype.listAsset = function(asset) {};
+    AssetRenderer.prototype.listAssets = function(assets) {};
+    AssetRenderer.prototype.leftNav = function(asset) {};
     /**
      * The function create an asset manage given a registry instance,type and tenantId
      * @param  {[type]} tenantId The id of the tenant
@@ -26,10 +32,20 @@ var asset = {};
         var reflection = require('utils').reflection;
         var assetManager = new AssetManager(registry, type);
         var assetResourcesTemplate = core.assetResources(tenantId, type);
-        var context=createContext(tenantId, type);
-       	var assetResources=assetResourcesTemplate.manager?assetResourcesTemplate.manager(context):{};
+        var context = core.createAssetContext(tenantId, type);
+        var assetResources = assetResourcesTemplate.manager ? assetResourcesTemplate.manager(context) : {};
         reflection.override(assetManager, assetResources);
         return assetManager;
+    };
+    var createRenderer = function(session, type) {
+        var reflection = require('utils').reflection;
+        var context = core.createAssetContext(session, type);
+        var assetResources = core.assetResources(context.tenantId, type);
+        context.endpoints = asset.getAssetEndpoints(session, type);
+        var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) :{};
+        var rxtManager = core.rxtManager(context.tenantId);
+        var renderer = new AssetRenderer(rxtManager, type);
+        reflection.override(renderer, customRenderer);
     };
     /**
      * The function will create an Asset Manager instance using the registry of the currently
@@ -51,5 +67,20 @@ var asset = {};
         var server = require('store').server;
         var sysRegistry = server.systemRegistry(tenantId);
         return createAssetManager(tenantId, sysRegistry, type);
+    };
+    asset.createRenderer = function(session, type) {
+        return createRenderer(session, type);
+    };
+    /**
+     * The function obtains a list of all endpoints available to currently
+     * logged in user for the provided asset type
+     * @param  {[type]} session [description]
+     * @param  {[type]} type    [description]
+     * @return {[type]}         [description]
+     */
+    asset.getAssetEndpoints = function(session, type) {
+        var context = core.createAssetContext(session, type);
+        var assetResources = core.assetResources(context.tenantId, type);
+        return assetResources.server ? assetResources.server(context).endpoints : {};
     };
 }(asset, core))

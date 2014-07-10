@@ -1,15 +1,27 @@
-log.info('Start of script!');
+log.info('Start of scriptqq!');
 asset.manager = function(ctx) {
     return {
-        create: function() {
+        create: function(ctx) {
+        	this._super.create(options);
             log.info('Create called!');
         }
     };
 };
 asset.server = function(ctx) {
     return {
-        onUserLoggedIn: function() {}
-    }
+        onUserLoggedIn: function() {},
+        endpoints: {
+            apis: [{
+                url: 'test',
+                path: 'test.jag'
+            }],
+            pages: [{
+                title: 'Bookmarks'
+                url: 'bookmarks',
+                path: 'bookmarks.jag'
+            }]
+        }
+    };
 };
 asset.configure = function() {
     return {
@@ -40,11 +52,13 @@ asset.configure = function() {
         }
     };
 };
-asset.ui = function(ctx) {
+asset.renderer = function(ctx) {
     return {
-        renderCreate: function() {},
-        renderEdit: function() {},
-        renderLifecycle: function() {},
-        renderNavigation: function() {}
+        create: function(asset) {},
+        update: function(asset) {},
+        listAsset: function(asset) {},
+        listAssets:function(asset){},
+        leftNav: function(asset) {},
+        topNav: function(asset) {}
     };
 };

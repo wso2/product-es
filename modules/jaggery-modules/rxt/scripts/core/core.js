@@ -220,4 +220,22 @@ var core = {};
             createRxtManager(tenantId, map);
         });
     };
+    core.createAssetContext = function(session, type) {
+        var user = require('store').user;
+        var server = require('server').server;
+        var userDetails=server.current(session);
+        var tenantId=userDetails.tenantId;
+        var sysRegistry = server.systemRegistry(session);
+        var userManager = server.userManager(tenantId);
+        var tenatOptions = server.configs(tenantId);
+        var username = server.current(session).username;
+        return {
+            username: username,
+            userManager: userManager,
+            configs: tenatOptions,
+            username: username,
+            tenantId: tenantId,
+            systemRegistry: sysRegistry
+        };
+    };
 }(core));

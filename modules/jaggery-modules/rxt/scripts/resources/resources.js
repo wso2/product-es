@@ -43,28 +43,25 @@ var resources = {};
         var resourcePath;
         var type;
         var map = {};
-        log.info('### Loading resources! ###');
         for (var index in rxts) {
             type = rxts[index];
             resourcePath = getAssetScriptPath(type, options);
             var content = sysRegistry.content(resourcePath);
-            if (!content) {
-                log.info('Asset script for ' + type + ' could not be found.The default asset script will be loaded from: ' + getDefaultAssetScriptPath(options));
+            /*if (!content) {
+                log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from: ' + getDefaultAssetScriptPath(options));
                 content = loadDefaultAssetScript(options, resourcePath, sysRegistry);
-            }
+            }*/
             var module = 'function(asset,log){  '+content+' };';
             var modulePtr = eval(module);
             var asset = {};
             asset.manager = null;
-            asset.ui = null;
+            asset.renderer = null;
             asset.server =null;
             asset.configure = null;
-            modulePtr.call(this,asset, log);
+            modulePtr.call(this,asset,log);
             addToConfigs(tenantId, type,asset);
             //Perform any rxt mutations
             if (asset.configure) {
-                log.info('### Applying mutations ### '+type);
-                log.info(asset.configure());
                 manager.applyMutator(type, asset.configure());
             }
         }
