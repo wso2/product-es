@@ -59,6 +59,9 @@ var resources = {};
                 log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from file system');
                 content = loadDefaultAssetScript(options, resourcePath, sysRegistry, type);
             //}
+            //
+            //Load the default script first
+            //Then load the type specific script so the methods are overloaded
             var module = 'function(asset,log){  ' + content + ' };';
             var modulePtr = eval(module);
             var asset = {};

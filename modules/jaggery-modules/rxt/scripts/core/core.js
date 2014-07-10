@@ -235,7 +235,8 @@ var core = {};
             configs: tenatOptions,
             username: username,
             tenantId: tenantId,
-            systemRegistry: sysRegistry
+            systemRegistry: sysRegistry,
+            assetType:type
         };
     };
 }(core));

@@ -8,17 +8,27 @@ asset.manager = function(ctx) {
     };
 };
 asset.server = function(ctx) {
+    var type=ctx.type;
     return {
         onUserLoggedIn: function() {},
         endpoints: {
             apis: [{
-                url: 'test',
-                path: 'test.jag'
+                url: 'asset',
+                path: 'asset.jag'
+            },
+            {
+                url:'assets',
+                path:'assets.jag'
             }],
             pages: [{
-                title: 'Bookmarks'
-                url: 'bookmarks',
-                path: 'bookmarks.jag'
+                title: 'Asset: '+type,
+                url: 'asset',
+                path: 'asset.jag'
+            },
+            {
+                title:'Assets '+type,
+                url:'assets',
+                path:'assets.jag'
             }]
         }
     };

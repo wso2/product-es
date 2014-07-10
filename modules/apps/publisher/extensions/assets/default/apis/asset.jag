@@ -1,0 +1,3 @@
+<%
+	print('Default asset api');
+%>
