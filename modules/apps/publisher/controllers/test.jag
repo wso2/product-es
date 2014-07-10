@@ -9,6 +9,7 @@
 	//core.init(-1234,registry);
 	resources.manager(-1234);
 	var manager=core.rxtManager(-1234);
+	core.assetResources(-1234,'gadget');
 
 	//print(manager.listRxtTypes());
 	print(manager.getRxtDefinition('gadget'));

@@ -79,7 +79,9 @@ var asset = {};
      * @return {[type]}         [description]
      */
     asset.getAssetEndpoints = function(session, type) {
+        log.info('Starting to create context');
         var context = core.createAssetContext(session, type);
+        log.info('Finished building context');
         var assetResources = core.assetResources(context.tenantId, type);
         return assetResources.server ? assetResources.server(context).endpoints : {};
     };

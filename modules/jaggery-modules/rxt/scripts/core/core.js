@@ -201,6 +201,7 @@ var core = {};
     };
     core.assetResources = function(tenantId, type) {
         var configs = core.configs(tenantId);
+        log.info('Configs'+stringify(configs.assetResources));
         var assetResource = configs.assetResources[type];
         if (!assetResource) {
             log.error('Unable to locate assetResources for tenant: ' + tenantId + ' and type: ' + type);
@@ -222,13 +223,20 @@ var core = {};
     };
     core.createAssetContext = function(session, type) {
         var user = require('store').user;
-        var server = require('server').server;
-        var userDetails=server.current(session);
-        var tenantId=userDetails.tenantId;
-        var sysRegistry = server.systemRegistry(session);
+        var server = require('store').server;
+
+        var userDetails = server.current(session);
+        log.info('Obtained user details');
+        var tenantId = userDetails.tenantId;
+        log.info('Obtained tenantId '+tenantId);
+        var sysRegistry = server.systemRegistry(tenantId);
+        log.info('Obtained systemRegistry');
         var userManager = server.userManager(tenantId);
+        log.info('Obtained userManager');
         var tenatOptions = server.configs(tenantId);
+        log.info('Obtained tenant options');
         var username = server.current(session).username;
+        log.info('Obtained username');
         return {
             username: username,
             userManager: userManager,
@@ -236,7 +244,7 @@ var core = {};
             username: username,
             tenantId: tenantId,
             systemRegistry: sysRegistry,
-            assetType:type
+            assetType: type
         };
     };
 }(core));

@@ -1,0 +1,35 @@
+<%
+
+	var log=new Log('assets');
+	var matcher=new URIMatcher(request.getRequestURI());
+	var apiEndpoint='/{context}/asts/{type}/api/{+suffix}';
+	var pageEndpoint='/{context}/asts/{type}/{+suffix}';
+	var asset=require('rxt').asset;
+
+	var handleApiEndpoint=function(request,session,uriParams){
+		var type=uriParams.type;
+		var page=uriParams.suffix;
+		var endPoints=asset.getAssetEndpoints(session,type);
+		print('API Endpoint '+uriParams.type+' page: '+page +' endpoints: '+stringify(endPoints));
+	};
+
+	var handlePageEndpoint=function(request,session,uriParams){
+		var type=uriParams.type;
+		var page=uriParams.suffix;
+		print('Page Endpoint '+uriParams.type+' page: '+page);
+	};
+
+	log.info('Starting routing to asset resources');
+
+	if(matcher.match(apiEndpoint)){
+		log.info('Matched an api endpoint');
+		handleApiEndpoint(request,session,matcher.elements());		
+	}
+
+	/*if(matcher.match(pageEndpoint)){
+		log.info('Matched a page endpoint');
+		handlePageEndpoint(request,session,matcher.elements());
+	}*/
+
+
+%>

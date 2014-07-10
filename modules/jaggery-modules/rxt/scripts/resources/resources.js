@@ -13,37 +13,49 @@ var resources = {};
     var getDefaultAssetTypeScriptPath = function(options, type) {
         return '/extensions/assets/' + type + '/asset.js';
     };
-    var loadDefaultAssetScript = function(options, path, sysRegistry, type) {
-        var file = new File(getDefaultAssetTypeScriptPath(options, type));
-        var content;
-        if (!file.isExists()) {
-            log.info('Loading asset script from default path')
-            //Check if a default script is found
-            file = new File(getDefaultAssetScriptPath(options));
-            if (!file.isExists()) {
-                log.debug('The default asset script could not be found');
-                throw 'The default asset script could not be found ';
-            }
+    var addToConfigs = function(tenantId, type, assetResource) {
+        var configs = core.configs(tenantId);
+        configs.assetResources = {};
+        log.info('Setting asset resource: '+stringify(assetResource));
+        configs.assetResources[type] = assetResource;
+    };
+    var loadAssetScriptContent=function(path){
+        var file=new File(path);
+        var content='';
+        if(!file.isExists()){
+            throw 'Unable to load the default asset script.';
         }
-        try {
+        try{
             file.open('r');
-            content = file.readAll();
-            sysRegistry.put(path, {
-                content: content,
-                mediaType: 'application/javascript'
-            });
-        } catch (e) {
-            log.debug('Unable to read the default asset script');
-            throw 'The default asset script could not be read: ' + e;
-        } finally {
+            content=file.readAll();
+        }
+        catch(e){
+            throw 'Unable to read the default asset script';
+        }
+        finally{
             file.close();
         }
         return content;
     };
-    var addToConfigs = function(tenantId, type, assetResource) {
-        var configs = core.configs(tenantId);
-        configs.assetResources = {};
-        configs.assetResources[type] = assetResource;
+    var loadDefaultAssetScript=function(options,type,assetResource){
+        var content=loadAssetScriptContent(getDefaultAssetScriptPath(options));
+        if(content){
+            assetResource=evalAssetScript(content, assetResource)
+        }
+        return assetResource;
+    };
+    var loadAssetScript=function(options,type,assetResource){
+        var content=loadAssetScriptContent(getDefaultAssetTypeScriptPath(options, type));
+        if(content){
+            assetResource=evalAssetScript(content, assetResource);
+        }
+        return assetResource;
+    }
+    var evalAssetScript=function(scriptContent,assetResource){
+        var module='function(asset,log){'+scriptContent+'};';
+        var modulePtr=eval(module);
+        modulePtr.call(this,assetResource,log);
+        return assetResource;
     };
     var loadResources = function(options, tenantId, sysRegistry) {
         var manager = core.rxtManager(tenantId);
@@ -56,25 +68,30 @@ var resources = {};
             resourcePath = getAssetScriptPath(type, options);
             var content = sysRegistry.content(resourcePath);
             //if (!content) {
-                log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from file system');
-                content = loadDefaultAssetScript(options, resourcePath, sysRegistry, type);
+                //log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from file system');
+                //content = loadDefaultAssetScript(options, resourcePath, sysRegistry, type);
             //}
             //
             //Load the default script first
             //Then load the type specific script so the methods are overloaded
-            var module = 'function(asset,log){  ' + content + ' };';
-            var modulePtr = eval(module);
+            //var module = 'function(asset,log){  ' + content + ' };';
+            //var modulePtr = eval(module);
             var asset = {};
             asset.manager = null;
             asset.renderer = null;
             asset.server = null;
             asset.configure = null;
-            modulePtr.call(this, asset, log);
-            addToConfigs(tenantId, type, asset);
+            asset=loadDefaultAssetScript(options, type, asset);
+            asset=loadAssetScript(options,type,asset);
+
+            //modulePtr.call(this, asset, log);
+            
             //Perform any rxt mutations
             if (asset.configure) {
                 manager.applyMutator(type, asset.configure());
             }
+
+            addToConfigs(tenantId, type, asset);
         }
     };
     var init = function(tenantId) {
