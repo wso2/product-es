@@ -8,11 +8,11 @@
     	<path>scripts/resources/resources.js</path>
     </script>
     <script>
-    	<name>asset</name>
-    	<path>scripts/asset/asset.js</path>
-    </script>
-    <script>
     	<name>server</name>
     	<path>scripts/server/server.js</path>
+    </script>
+        <script>
+        <name>asset</name>
+        <path>scripts/asset/asset.js</path>
     </script>
 </module>
