@@ -10,12 +10,20 @@ var resources = {};
     var getDefaultAssetScriptPath = function(options) {
         return options.DEFAULT_ASSET_SCRIPT;
     };
-    var loadDefaultAssetScript = function(options, path, sysRegistry) {
-        var defaultAssetScriptPath = getDefaultAssetScriptPath(options);
-        var file = new File(defaultAssetScriptPath);
+    var getDefaultAssetTypeScriptPath = function(options, type) {
+        return '/extensions/assets/' + type + '/asset.js';
+    };
+    var loadDefaultAssetScript = function(options, path, sysRegistry, type) {
+        var file = new File(getDefaultAssetTypeScriptPath(options, type));
         var content;
         if (!file.isExists()) {
-            throw 'The default asset script could not be found at : ' + defaultAssetScriptPath;
+            log.info('Loading asset script from default path')
+            //Check if a default script is found
+            file = new File(getDefaultAssetScriptPath(options));
+            if (!file.isExists()) {
+                log.debug('The default asset script could not be found');
+                throw 'The default asset script could not be found ';
+            }
         }
         try {
             file.open('r');
@@ -47,19 +55,19 @@ var resources = {};
             type = rxts[index];
             resourcePath = getAssetScriptPath(type, options);
             var content = sysRegistry.content(resourcePath);
-            /*if (!content) {
-                log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from: ' + getDefaultAssetScriptPath(options));
-                content = loadDefaultAssetScript(options, resourcePath, sysRegistry);
-            }*/
-            var module = 'function(asset,log){  '+content+' };';
+            //if (!content) {
+                log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from file system');
+                content = loadDefaultAssetScript(options, resourcePath, sysRegistry, type);
+            //}
+            var module = 'function(asset,log){  ' + content + ' };';
             var modulePtr = eval(module);
             var asset = {};
             asset.manager = null;
             asset.renderer = null;
-            asset.server =null;
+            asset.server = null;
             asset.configure = null;
-            modulePtr.call(this,asset,log);
-            addToConfigs(tenantId, type,asset);
+            modulePtr.call(this, asset, log);
+            addToConfigs(tenantId, type, asset);
             //Perform any rxt mutations
             if (asset.configure) {
                 manager.applyMutator(type, asset.configure());
