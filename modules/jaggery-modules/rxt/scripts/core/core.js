@@ -10,33 +10,25 @@ var core = {};
     var applyDefinitionMutation = function(rxtDefinition, rxtMutation) {
         var mutatedTables = rxtMutation.table || {};
         var rxtTables = rxtDefinition.content.table;
-        log.info('### Applying Definition Mutation ###');
         for (var tableName in mutatedTables) {
-            log.info('Inspecting table name: ' + tableName);
             //Check if the rxt table has a table name similar to the 
             if (rxtTables[tableName]) {
-                log.info('Mutations for table ' + tableName+' have been found.');
                 rxtDefinition.content.table[tableName] = applyTableMutation(rxtTables[tableName], mutatedTables[tableName]);
             }
         }
         //Copy any non table mutations over to the rxtDefinition
         for (var key in rxtMutation) {
             if (key != 'table') {
-                log.info('Adding extra properties: '+key);
                 rxtDefinition[key] = rxtMutation[key];
             }
         }
-        log.info('### Finished applying definition mutation ###');
         return rxtDefinition;
     };
     var applyTableMutation = function(rxtTable, rxtTableMutation) {
         var rxtFields = rxtTable.fields;
         var mutatedFields = rxtTableMutation.fields;
-        
         for (var fieldName in mutatedFields) {
-            log.info('Found field to mutate name: ' + fieldName);
             if (rxtFields[fieldName]) {
-                log.info('Found field in rxtFields list');
                 rxtTable.fields[fieldName] = applyFieldPropMutation(rxtFields, mutatedFields, fieldName);
             }
         }
@@ -49,14 +41,10 @@ var core = {};
             rxtField.validations = [];
         }
         if (mutatedField.validation) {
-            log.info('Found valiation for field: '+fieldName);
             rxtField.validations.push(mutatedField.validation);
         }
-        log.info('Inspecting properties of field: '+fieldName);
         for (var propName in mutatedField) {
-            
             if (propName != 'validation') {
-                log.info('Adding property '+propName+'to field: ' + fieldName);
                 rxtField[propName] = mutatedField[propName];
             }
         }
@@ -168,7 +156,6 @@ var core = {};
         this.mutatorMap[type] = mutator;
         var rxtDefinition = this.rxtMap[type];
         this.rxtMap[type] = applyDefinitionMutation(rxtDefinition, mutator);
-        log.info('Definition After Mutation: ' + stringify(this.rxtMap[type]));
     };
     /*
     Creates an xml file from the contents of an Rxt file
@@ -208,7 +195,7 @@ var core = {};
         if (!manager) {
             log.debug('Creating a new rxt manager');
             manager = createRxtManager(tenantId, map);
-            //map[tenantId].rxtManager = manager;
+            map[tenantId].rxtManager = manager;
         }
         return manager;
     };
