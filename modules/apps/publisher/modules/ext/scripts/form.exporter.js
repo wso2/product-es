@@ -278,6 +278,8 @@ var module = function () {
 
         data['valueList'] = csvToArray(fieldTemplate.value || '');
 
+        data['value'] = data['valueList'][0];
+        
         buildOptionsObject(field, fieldTemplate, data);
     };
 

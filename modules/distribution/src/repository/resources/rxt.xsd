@@ -9,6 +9,7 @@
             <xs:element name="storagePath" type="xs:string" minOccurs="0"/>
             <xs:element name="nameAttribute" type="xs:string" minOccurs="0"/>
             <xs:element name="namespaceAttribute" type="xs:string" minOccurs="0"/>
+            <xs:element name="lifecycle" type="xs:string" minOccurs="0"/>
             <xs:element name="menu" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
@@ -87,6 +88,7 @@
         </xs:sequence>
         <xs:attribute name="columns" type="xs:integer"/>
         <xs:attribute name="name" use="required"/>
+        <xs:attribute name="maxoccurs" type="xs:NCName" fixed="unbounded"/>
     </xs:complexType>
 
     <xs:complexType name="subheadingType">
@@ -113,14 +115,15 @@
                     <xs:enumeration value="options"/>
                     <xs:enumeration value="option-text"/>
                     <xs:enumeration value="checkbox"/>
-                    <xs:enumeration value="date"/>                    
+                    <xs:enumeration value="date"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="default" type="xs:string"/>
         <xs:attribute name="template" type="xs:string"/>
-        <xs:attribute name="validate" type="xs:string"/>        
-        <xs:attribute name="tooltip" type="xs:string"/>                
+        <xs:attribute name="validate" type="xs:string"/>
+        <xs:attribute name="tooltip" type="xs:string"/>
+        <xs:attribute name="startsWith" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="fieldType2">
@@ -130,6 +133,7 @@
         </xs:sequence>
         <xs:attribute name="default" type="xs:string"/>
         <xs:attribute name="template" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType mixed="true" name="nameType">
@@ -145,6 +149,7 @@
             <xs:element name="value" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
         </xs:sequence>
         <xs:attribute name="class"/>
+        <xs:attribute name="isLifecycle" type="xs:boolean"/>
     </xs:complexType>
 
     <xs:complexType name="associationType">
@@ -171,4 +176,3 @@
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>
-
