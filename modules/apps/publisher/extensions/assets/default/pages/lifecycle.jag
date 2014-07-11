@@ -1,3 +1,4 @@
 <%
 	print('This is the lifecycle page!');
+	caramel.render({});
 %>

@@ -67,6 +67,9 @@ var engine = caramel.engine('handlebars', (function () {
 }()));
 
 var resolve = function (path) {
+    log.info('Resolving patha: '+path);
+    var asset=require('rxt').asset;
+    asset.resolve(request,path,this.name);
     var p,
         publisher = require('/modules/publisher.js'),
         asset = publisher.currentAsset();

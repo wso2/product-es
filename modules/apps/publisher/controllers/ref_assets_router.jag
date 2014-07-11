@@ -10,6 +10,11 @@
 		var comps=uri.split('/');
 		return comps.length>0?comps[0]:null;
 	};
+	var mapper=function(path){
+		return function(){
+			return path;
+		};
+	}
 
 	var handleApiEndpoint=function(request,session,uriParams){
 		var type=uriParams.type;
@@ -23,10 +28,11 @@
 			}
 		}
 		if(endpoint){
+			request.getMappedPath=mapper(endpoint);
 			include(endpoint);
 		}
 		else{
-			response.sendError(404,'Unabled to locate an endpoint for the type: '+type);
+			response.sendError(404,'Unabled to locate an api endpoint for the type: '+type);
 		}
 	};
 
@@ -44,22 +50,33 @@
 			}
 		}
 		if(endpoint){
+			request.getMappedPath=mapper(endpoint);
 			include(endpoint);
 		}
 		else{
-			response.sendError(404);
+			response.sendError(404,'Unabled to locate a page endpoint for the type: '+type);
 		}
 	};
 
-	//Check if options have been provided
-	if(matcher.match(apiEndpoint)){
-		handleApiEndpoint(request,session,matcher.elements());		
+	//Check if the user is logged
+	var server=require('store').server;
+	var user=server.current(session);
+
+	if(!user){
+		response.sendRedirect('/publisher/login');//TODO:Remove this
 	}
-	else if(matcher.match(pageEndpoint)){
-		handlePageEndpoint(request,session,matcher.elements());
-	}
-	else{
-		response.sendError(404,'Unable to route the request to an appropriate endpoint');
-	}
+ 	else{
+ 		//Check if options have been provided
+		if(matcher.match(apiEndpoint)){
+			handleApiEndpoint(request,session,matcher.elements());		
+		}
+		else if(matcher.match(pageEndpoint)){
+			handlePageEndpoint(request,session,matcher.elements());
+		}
+		else{
+			response.sendError(404,'Unable to route the request to an appropriate endpoint');
+		}
+ 	}
+
 
 %>

@@ -55,7 +55,7 @@ publisher.init(pubConfig);
 //Configure Caramel
 caramel.configs({
     context: '/publisher',
-    cache: true,
+    cache: false,
     negotiation: true,
     themer: function () {
         //TODO: Hardcoded theme

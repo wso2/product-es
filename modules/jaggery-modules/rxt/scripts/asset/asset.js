@@ -129,4 +129,42 @@ var asset = {};
         }
         return endpointPath;
     };
+    asset.resolve = function(request, path,themeName) {
+        var log = new Log();
+        log.info('Path: ' + path);
+        log.info('Request: ' + request.getRequestURI());
+        path = '/' + path;
+        //Determine the type of the asset
+        var uriMatcher = new URIMatcher(request.getRequestURI());
+        var extensionMatcher = new URIMatcher(path);
+        var uriPattern = '/{context}/asts/{type}/{+options}';
+        var extensionPattern = '/{root}/extensions/assets/{type}/{+suffix}';
+        uriMatcher.match(uriPattern);
+        extensionMatcher.match(extensionPattern);
+        var pathOptions = extensionMatcher.elements()||{};
+        var uriOptions = uriMatcher.elements()||{};
+
+
+        log.info('URI details: ' + stringify(uriMatcher.elements()));
+        log.info('Extension details: ' + stringify(extensionMatcher.elements()));
+
+        //If the type is not metioned then return the path
+        if(!pathOptions.type){
+            return path;
+        }
+
+        //Check if type has a similar path in its extension directory
+        var extensionPath='/extensions/assets/'+uriOptions.type+'/'+themeName+'/'+pathOptions.root+'/'+pathOptions.suffix;
+        var file=new File(path);
+
+        if(file.isExists()){
+            log.info('Final path: '+extensionPath);
+            return extensionPath;
+        }
+        
+        //If an extension directory does not exist then use theme directory
+        extensionPath=pathOptions.root+'/'+pathOptions.suffix;
+        log.info('Final path: '+extensionPath);
+        return extensionPath;
+    };
 }(asset, core))
