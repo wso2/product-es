@@ -42,7 +42,7 @@ var asset = {};
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(context.tenantId, type);
         context.endpoints = asset.getAssetEndpoints(session, type);
-        var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) :{};
+        var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
         var rxtManager = core.rxtManager(context.tenantId);
         var renderer = new AssetRenderer(rxtManager, type);
         reflection.override(renderer, customRenderer);
@@ -79,10 +79,54 @@ var asset = {};
      * @return {[type]}         [description]
      */
     asset.getAssetEndpoints = function(session, type) {
-        log.info('Starting to create context');
         var context = core.createAssetContext(session, type);
-        log.info('Finished building context');
         var assetResources = core.assetResources(context.tenantId, type);
         return assetResources.server ? assetResources.server(context).endpoints : {};
+    };
+    asset.getAssetApiEndpoints = function(session, type) {
+        var endpoints = this.getAssetEndpoints(session, type);
+        return endpoints['apis'] || [];
+    };
+    asset.getAssetPageEndpoints = function(session, type) {
+        var endpoints = this.getAssetEndpoints(session, type);
+        return endpoints['pages'] || [];
+    };
+    asset.getAssetExtensionPath = function(type) {
+        return '/extensions/assets/' + type;
+    };
+    asset.getAssetDefaultPath = function() {
+        return '/extensions/assets/default';
+    };
+    asset.getAssetApiDirPath = function(type) {
+        return asset.getAssetExtensionPath(type) + '/apis';
+    };
+    asset.getAssetPageDirPath = function(type) {
+        return asset.getAssetExtensionPath(type) + '/pages';
+    };
+    asset.getAssetApiEndpoint = function(type, endpointName) {
+        //Check if the path exists within the asset extension path
+        var endpointPath = asset.getAssetApiDirPath(type) + '/' + endpointName;
+        var endpoint = new File(endpointPath);
+        if (!endpoint.isExists()) {
+            endpointPath = asset.getAssetDefaultPath() + '/apis/' + endpointName;
+            endpoint = new File(endpointPath);
+            if (!endpoint.isExists()) {
+                endpointPath = '';
+            }
+        }
+        return endpointPath;
+    };
+    asset.getAssetPageEndpoint = function(type, endpointName) {
+        //Check if the path exists within the asset extension path
+        var endpointPath = asset.getAssetPageDirPath(type) + '/' + endpointName;
+        var endpoint = new File(endpointPath);
+        if (!endpoint.isExists()) {
+            endpointPath = asset.getAssetDefaultPath() + '/pages/' + endpointName;
+            endpoint = new File(endpointPath);
+            if (!endpoint.isExists()) {
+                endpointPath = '';
+            }
+        }
+        return endpointPath;
     };
 }(asset, core))

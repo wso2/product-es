@@ -6,30 +6,60 @@
 	var pageEndpoint='/{context}/asts/{type}/{+suffix}';
 	var asset=require('rxt').asset;
 
+	var getPage=function(uri){
+		var comps=uri.split('/');
+		return comps.length>0?comps[0]:null;
+	};
+
 	var handleApiEndpoint=function(request,session,uriParams){
 		var type=uriParams.type;
-		var page=uriParams.suffix;
-		var endPoints=asset.getAssetEndpoints(session,type);
-		print('API Endpoint '+uriParams.type+' page: '+page +' endpoints: '+stringify(endPoints));
+		var page=getPage(uriParams.suffix);
+
+		var endPoints=asset.getAssetApiEndpoints(session,type);
+		var endpoint;
+		for(var index in endPoints){
+			if(endPoints[index].url==page){
+				endpoint=asset.getAssetApiEndpoint(type,endPoints[index].path);
+			}
+		}
+		if(endpoint){
+			include(endpoint);
+		}
+		else{
+			response.sendError(404,'Unabled to locate an endpoint for the type: '+type);
+		}
 	};
 
 	var handlePageEndpoint=function(request,session,uriParams){
 		var type=uriParams.type;
 		var page=uriParams.suffix;
-		print('Page Endpoint '+uriParams.type+' page: '+page);
+		var type=uriParams.type;
+		var page=getPage(uriParams.suffix);
+
+		var endPoints=asset.getAssetPageEndpoints(session,type);
+		var endpoint;
+		for(var index in endPoints){
+			if(endPoints[index].url==page){
+				endpoint=asset.getAssetPageEndpoint(type,endPoints[index].path);
+			}
+		}
+		if(endpoint){
+			include(endpoint);
+		}
+		else{
+			response.sendError(404);
+		}
 	};
 
-	log.info('Starting routing to asset resources');
-
+	//Check if options have been provided
 	if(matcher.match(apiEndpoint)){
-		log.info('Matched an api endpoint');
 		handleApiEndpoint(request,session,matcher.elements());		
 	}
-
-	/*if(matcher.match(pageEndpoint)){
-		log.info('Matched a page endpoint');
+	else if(matcher.match(pageEndpoint)){
 		handlePageEndpoint(request,session,matcher.elements());
-	}*/
-
+	}
+	else{
+		response.sendError(404,'Unable to route the request to an appropriate endpoint');
+	}
 
 %>

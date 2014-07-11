@@ -29,6 +29,11 @@ asset.server = function(ctx) {
                 title:'Assets '+type,
                 url:'assets',
                 path:'assets.jag'
+            },
+            {
+                title:'Lifecycle',
+                url:'lifecycle',
+                path:'lifecycle.jag'
             }]
         }
     };
