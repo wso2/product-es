@@ -129,10 +129,11 @@ var asset = {};
         }
         return endpointPath;
     };
-    asset.resolve = function(request, path,themeName) {
+    asset.resolve = function(request, path,themeName,themeObj,themeResolver) {
         var log = new Log();
         log.info('Path: ' + path);
         log.info('Request: ' + request.getRequestURI());
+        var resPath=path;
         path = '/' + path;
         //Determine the type of the asset
         var uriMatcher = new URIMatcher(request.getRequestURI());
@@ -150,13 +151,24 @@ var asset = {};
 
         //If the type is not metioned then return the path
         if(!pathOptions.type){
-            return path;
+
+            //Determine if the paths occur within the extensions directory
+            var extensionResPath='/extensions/assets/'+uriOptions.type+'/themes/'+themeName+'/'+resPath;
+            var resFile=new File(extensionResPath);
+            log.info('Checking if resource exists: '+extensionResPath);
+
+            if(resFile.isExists()){
+                return extensionResPath;
+            }
+
+            log.info('Resource not present in extensions directory, using : ' +themeResolver.call(themeObj,path));
+            return themeResolver.call(themeObj,path);
         }
 
         //Check if type has a similar path in its extension directory
-        var extensionPath='/extensions/assets/'+uriOptions.type+'/'+themeName+'/'+pathOptions.root+'/'+pathOptions.suffix;
-        var file=new File(path);
-
+        var extensionPath='/extensions/assets/'+uriOptions.type+'/themes/'+themeName+'/'+pathOptions.root+'/'+pathOptions.suffix;
+        var file=new File(extensionPath);
+        log.info('Extension path: '+extensionPath);
         if(file.isExists()){
             log.info('Final path: '+extensionPath);
             return extensionPath;
@@ -164,7 +176,9 @@ var asset = {};
         
         //If an extension directory does not exist then use theme directory
         extensionPath=pathOptions.root+'/'+pathOptions.suffix;
+        var modPath=themeResolver.call(themeObj,extensionPath);
         log.info('Final path: '+extensionPath);
-        return extensionPath;
+        log.info('Mod path: '+modPath);
+        return modPath;
     };
 }(asset, core))

@@ -68,9 +68,10 @@ var engine = caramel.engine('handlebars', (function () {
 
 var resolve = function (path) {
     log.info('Resolving patha: '+path);
+    var themeResolver=this.__proto__.resolve;
     var asset=require('rxt').asset;
-    asset.resolve(request,path,this.name);
-    var p,
+    path=asset.resolve(request,path,this.name,this,themeResolver);
+    /*var p,
         publisher = require('/modules/publisher.js'),
         asset = publisher.currentAsset();
     if (asset) {
@@ -79,6 +80,7 @@ var resolve = function (path) {
             return p;
         }
     }
-
-    return this.__proto__.resolve.call(this, path);
+    var actualPath=this.__proto__.resolve.call(this, path);
+    log.info('Actual path: '+actualPath);*/
+    return path;
 };
