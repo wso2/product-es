@@ -84,7 +84,9 @@ var asset = {};
         var context = core.createAssetContext(session, type);
         log.info('Finished creating asset context');
         var assetResources = assetResourcesTemplate.manager ? assetResourcesTemplate.manager(context) : {};
+        log.info('User defined assetResources '+assetResources.toSource());
         reflection.override(assetManager, assetResources);
+        log.info(assetManager.search({}));
         return assetManager;
     };
     var createRenderer = function(session,tenantId,type) {

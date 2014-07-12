@@ -5,7 +5,8 @@ asset.manager = function(ctx) {
         	this._super.create(options);
             log.info('Create called!');
         },
-        search:function(ctx){
+        search:function(options){
+            log.info('SEARCH method '+stringify(options));
             return [
             {
                 id:'146',
