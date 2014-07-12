@@ -6,7 +6,7 @@
 	var am=asset.createUserAssetManager(session,type);
 	var page=ui.buildPage(session);
 
-	var assets=am.search();
+	var assets=am.search({});
 	//print(stringify(assets));
 	var output=am.render(assets,page).list();
 	print(stringify(output));

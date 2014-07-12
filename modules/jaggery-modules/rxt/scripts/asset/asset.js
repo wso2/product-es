@@ -76,17 +76,11 @@ var asset = {};
     var createAssetManager = function(session,tenantId, registry, type) {
         var reflection = require('utils').reflection;
         var rxtManager = core.rxtManager(tenantId);
-        log.info('Creating asset manager');
         var assetManager = new AssetManager(registry, type, rxtManager);
-        log.info('Obtaining asset resources');
         var assetResourcesTemplate = core.assetResources(tenantId, type);
-        log.info('Creating asset context');
         var context = core.createAssetContext(session, type);
-        log.info('Finished creating asset context');
         var assetResources = assetResourcesTemplate.manager ? assetResourcesTemplate.manager(context) : {};
-        log.info('User defined assetResources '+assetResources.toSource());
         reflection.override(assetManager, assetResources);
-        log.info(assetManager.search({}));
         return assetManager;
     };
     var createRenderer = function(session,tenantId,type) {
@@ -106,16 +100,10 @@ var asset = {};
     asset.createUserAssetManager = function(session, type) {
         var server = require('store').server;
         var user = require('store').user;
-        log.info('Getting user ');
         var userDetails = server.current(session);
-        log.info('User: '+stringify(userDetails));
-        log.info('Obtaining user registry');
         var userRegistry = user.userRegistry(session);
-        log.info('Obtained user registry');
         var am = createAssetManager(session,userDetails.tenantId, userRegistry, type);
-        log.info('Created asset manager');
         am.r = createRenderer(session,userDetails.tenantId,type);
-        log.info('Finished creating asset manager');
         return am;
     };
     /**

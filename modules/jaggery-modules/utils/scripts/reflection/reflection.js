@@ -166,7 +166,6 @@ var reflection = {};
             for (var parentKey in parent) {
                 //Only override those methods that are common
                 if (childKey === parentKey) {
-                    log.info('Overriding: '+childKey);
                     var parentPtr = parent[parentKey];
                     var childPtr = child[childKey];
                     //Update the clone with the old parent method
