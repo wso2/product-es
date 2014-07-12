@@ -1,0 +1,4 @@
+<%
+	print('CREATE A NEW ASSET');
+	caramel.render({});
+%>

@@ -1,0 +1,4 @@
+<%
+	print('LISTING ALL ASSETS OF THIS TYPE');
+	caramel.render({});
+%>

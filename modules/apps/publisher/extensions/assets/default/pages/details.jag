@@ -1,0 +1,4 @@
+<%
+	print('DETAILS OF CURRENT ASSET');
+	caramel.render({});
+%>

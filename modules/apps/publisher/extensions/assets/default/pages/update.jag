@@ -1,0 +1,4 @@
+<%
+	print('UPDATE AN EXISTING ASSET');
+	caramel.render({});
+%>

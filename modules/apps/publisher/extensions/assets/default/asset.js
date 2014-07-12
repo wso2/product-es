@@ -31,6 +31,26 @@ asset.server = function(ctx) {
                 path:'assets.jag'
             },
             {
+                title:'Create '+type,
+                url:'create',
+                path:'create.jag'
+            },
+            {
+                title:'Update '+type,
+                url:'update',
+                path:'update.jag'
+            },
+            {
+                title:'Details '+type,
+                url:'details',
+                path:'details.jag'
+            },
+            {
+                title:'List '+type,
+                url:'list',
+                path:'list.jag'
+            },
+            {
                 title:'Lifecycle',
                 url:'lifecycle',
                 path:'lifecycle.jag'
