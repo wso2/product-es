@@ -1,8 +1,12 @@
 var asset = {};
 (function(asset, core) {
-    function AssetManager(registry, type, ctx) {
+    var log=new Log('asset');
+    function AssetManager(registry, type, rxtManager, renderer) {
         this.registry = registry;
+        this.rxtManager = rxtManager;
+        this.rxtTemplate = rxtManager.getRxtDefinition(type);
         this.type = type;
+        this.r = renderer;
     }
     AssetManager.prototype.init = function() {};
     AssetManager.prototype.create = function(options) {};
@@ -11,16 +15,57 @@ var asset = {};
     AssetManager.prototype.search = function(options) {};
     AssetManager.prototype.invokeAction = function(options) {};
     AssetManager.prototype.createVersion = function(options, newVersion) {};
+    AssetManager.prototype.render = function(assets, page) {
+        page.assets = assets;
+        page.rxt = this.rxtTemplate;
+        var that = this;
+        return {
+            create: function() {
+                page = that.r.create(page) || page;
+                page = that.r.leftNav(page) || page;
+                page = that.r.ribbon(page) || page;
+                return page;
+            },
+            update: function() {
+                page = that.r.update(page) || page;
+                page = that.r.leftNav(page) || page;
+                page = that.r.ribbon(page) || page;
+                return page;
+            },
+            list: function() {
+                page = that.r.list(page) || page;
+                page = that.r.leftNav(page) || page;
+                page = that.r.ribbon(page) || page;
+                return page;
+            },
+            details: function() {
+                page = that.r.details(page) || page;
+                page = that.r.leftNav(page) || page;
+                page = that.r.ribbon(page) || page;
+                return page;
+            },
+            lifecycle: function() {
+                page = that.r.lifecycle(page) || page;
+                page = that.r.leftNav(page) || page;
+                page = that.r.ribbon(page) || page;
+                return page;
+            }
+        };
+    };
 
-    function AssetRenderer(rxtManager, type) {
-        this.rxtManager = rxtManager;
-        this.type = type;
+    function AssetRenderer(pagesRoot) {
+        this.assetPagesRoot = pagesRoot;
     }
-    AssetRenderer.prototype.create = function(asset) {};
-    AssetRenderer.prototype.update = function(asset) {};
-    AssetRenderer.prototype.listAsset = function(asset) {};
-    AssetRenderer.prototype.listAssets = function(assets) {};
-    AssetRenderer.prototype.leftNav = function(asset) {};
+    AssetRenderer.prototype.buildUrl = function(pageName) {
+        return this.assetPagesRoot + '/' + page;
+    };
+    AssetRenderer.prototype.create = function(page) {};
+    AssetRenderer.prototype.update = function(page) {};
+    AssetRenderer.prototype.details = function(page) {};
+    AssetRenderer.prototype.list = function(page) {};
+    AssetRenderer.prototype.lifecycle = function(page) {};
+    AssetRenderer.prototype.leftNav = function(page) {};
+    AssetRenderer.prototype.ribbon = function(page) {};
     /**
      * The function create an asset manage given a registry instance,type and tenantId
      * @param  {[type]} tenantId The id of the tenant
@@ -28,24 +73,28 @@ var asset = {};
      * @param  {[type]} type     The type of the assets managed by the asset manager
      * @return An asset manager instance
      */
-    var createAssetManager = function(tenantId, registry, type) {
+    var createAssetManager = function(session,tenantId, registry, type) {
         var reflection = require('utils').reflection;
-        var assetManager = new AssetManager(registry, type);
+        var rxtManager = core.rxtManager(tenantId);
+        log.info('Creating asset manager');
+        var assetManager = new AssetManager(registry, type, rxtManager);
+        log.info('Obtaining asset resources');
         var assetResourcesTemplate = core.assetResources(tenantId, type);
-        var context = core.createAssetContext(tenantId, type);
+        log.info('Creating asset context');
+        var context = core.createAssetContext(session, type);
+        log.info('Finished creating asset context');
         var assetResources = assetResourcesTemplate.manager ? assetResourcesTemplate.manager(context) : {};
         reflection.override(assetManager, assetResources);
         return assetManager;
     };
-    var createRenderer = function(session, type) {
+    var createRenderer = function(session,tenantId,type) {
         var reflection = require('utils').reflection;
         var context = core.createAssetContext(session, type);
-        var assetResources = core.assetResources(context.tenantId, type);
-        context.endpoints = asset.getAssetEndpoints(session, type);
+        var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
-        var rxtManager = core.rxtManager(context.tenantId);
-        var renderer = new AssetRenderer(rxtManager, type);
+        var renderer = new AssetRenderer(asset.getAssetPageUrl(type));
         reflection.override(renderer, customRenderer);
+        return renderer;
     };
     /**
      * The function will create an Asset Manager instance using the registry of the currently
@@ -55,9 +104,17 @@ var asset = {};
     asset.createUserAssetManager = function(session, type) {
         var server = require('store').server;
         var user = require('store').user;
+        log.info('Getting user ');
         var userDetails = server.current(session);
+        log.info('User: '+stringify(userDetails));
+        log.info('Obtaining user registry');
         var userRegistry = user.userRegistry(session);
-        return createAssetManager(userDetails.tenantId, userRegistry, type);
+        log.info('Obtained user registry');
+        var am = createAssetManager(session,userDetails.tenantId, userRegistry, type);
+        log.info('Created asset manager');
+        am.rendererInstance = createRenderer(session,userDetails.tenantId,type);
+        log.info('Finished creating asset manager');
+        return am;
     };
     /**
      * The function will create an Asset Manager using the system registry of the provided tenant
@@ -103,6 +160,9 @@ var asset = {};
     asset.getAssetPageDirPath = function(type) {
         return asset.getAssetExtensionPath(type) + '/pages';
     };
+    asset.getAssetPageUrl = function(type) {
+        return '/' + type;
+    }
     asset.getAssetApiEndpoint = function(type, endpointName) {
         //Check if the path exists within the asset extension path
         var endpointPath = asset.getAssetApiDirPath(type) + '/' + endpointName;
@@ -129,11 +189,11 @@ var asset = {};
         }
         return endpointPath;
     };
-    asset.resolve = function(request, path,themeName,themeObj,themeResolver) {
+    asset.resolve = function(request, path, themeName, themeObj, themeResolver) {
         var log = new Log();
         log.info('Path: ' + path);
         log.info('Request: ' + request.getRequestURI());
-        var resPath=path;
+        var resPath = path;
         path = '/' + path;
         //Determine the type of the asset
         var uriMatcher = new URIMatcher(request.getRequestURI());
@@ -142,43 +202,35 @@ var asset = {};
         var extensionPattern = '/{root}/extensions/assets/{type}/{+suffix}';
         uriMatcher.match(uriPattern);
         extensionMatcher.match(extensionPattern);
-        var pathOptions = extensionMatcher.elements()||{};
-        var uriOptions = uriMatcher.elements()||{};
-
-
+        var pathOptions = extensionMatcher.elements() || {};
+        var uriOptions = uriMatcher.elements() || {};
         log.info('URI details: ' + stringify(uriMatcher.elements()));
         log.info('Extension details: ' + stringify(extensionMatcher.elements()));
-
         //If the type is not metioned then return the path
-        if(!pathOptions.type){
-
+        if (!pathOptions.type) {
             //Determine if the paths occur within the extensions directory
-            var extensionResPath='/extensions/assets/'+uriOptions.type+'/themes/'+themeName+'/'+resPath;
-            var resFile=new File(extensionResPath);
-            log.info('Checking if resource exists: '+extensionResPath);
-
-            if(resFile.isExists()){
+            var extensionResPath = '/extensions/assets/' + uriOptions.type + '/themes/' + themeName + '/' + resPath;
+            var resFile = new File(extensionResPath);
+            log.info('Checking if resource exists: ' + extensionResPath);
+            if (resFile.isExists()) {
                 return extensionResPath;
             }
-
-            log.info('Resource not present in extensions directory, using : ' +themeResolver.call(themeObj,path));
-            return themeResolver.call(themeObj,path);
+            log.info('Resource not present in extensions directory, using : ' + themeResolver.call(themeObj, path));
+            return themeResolver.call(themeObj, path);
         }
-
         //Check if type has a similar path in its extension directory
-        var extensionPath='/extensions/assets/'+uriOptions.type+'/themes/'+themeName+'/'+pathOptions.root+'/'+pathOptions.suffix;
-        var file=new File(extensionPath);
-        log.info('Extension path: '+extensionPath);
-        if(file.isExists()){
-            log.info('Final path: '+extensionPath);
+        var extensionPath = '/extensions/assets/' + uriOptions.type + '/themes/' + themeName + '/' + pathOptions.root + '/' + pathOptions.suffix;
+        var file = new File(extensionPath);
+        log.info('Extension path: ' + extensionPath);
+        if (file.isExists()) {
+            log.info('Final path: ' + extensionPath);
             return extensionPath;
         }
-        
         //If an extension directory does not exist then use theme directory
-        extensionPath=pathOptions.root+'/'+pathOptions.suffix;
-        var modPath=themeResolver.call(themeObj,extensionPath);
-        log.info('Final path: '+extensionPath);
-        log.info('Mod path: '+modPath);
+        extensionPath = pathOptions.root + '/' + pathOptions.suffix;
+        var modPath = themeResolver.call(themeObj, extensionPath);
+        log.info('Final path: ' + extensionPath);
+        log.info('Mod path: ' + modPath);
         return modPath;
     };
 }(asset, core))

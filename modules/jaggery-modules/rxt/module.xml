@@ -15,4 +15,8 @@
         <name>asset</name>
         <path>scripts/asset/asset.js</path>
     </script>
+    <script>
+        <name>ui</name>
+        <path>scripts/ui/ui.js</path>
+    </script>
 </module>

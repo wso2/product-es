@@ -182,7 +182,7 @@ var core = {};
         var rxtMap = application.get(RXT_MAP);
         var configs = rxtMap[tenantId];
         if (!configs) {
-            configs = createTenantRxtMap(tenantId, map);
+            configs = createTenantRxtMap(tenantId, rxtMap);//TODO:Check if this is map or rxtMap
         }
         return configs;
     };

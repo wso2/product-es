@@ -4,6 +4,17 @@ asset.manager = function(ctx) {
         create: function(ctx) {
         	this._super.create(options);
             log.info('Create called!');
+        },
+        search:function(ctx){
+            return [
+            {
+                id:'146',
+                attributes:{
+                    overview_name:'Test Asset 1',
+                    overview_provider:'Admin'
+                }
+            }
+            ];
         }
     };
 };
@@ -88,12 +99,17 @@ asset.configure = function() {
     };
 };
 asset.renderer = function(ctx) {
+
     return {
-        create: function(asset) {},
-        update: function(asset) {},
-        listAsset: function(asset) {},
-        listAssets:function(asset){},
-        leftNav: function(asset) {},
-        topNav: function(asset) {}
+        create: function(page) {
+        },
+        update: function(page) {},
+        list: function(page) {    
+            return page;
+        },
+        details:function(page){},
+        lifecycle: function(page) {},
+        leftNav: function(page) {},
+        ribbon:function(page){}
     };
 };
