@@ -114,7 +114,7 @@ var asset = {};
         log.info('Obtained user registry');
         var am = createAssetManager(session,userDetails.tenantId, userRegistry, type);
         log.info('Created asset manager');
-        am.rendererInstance = createRenderer(session,userDetails.tenantId,type);
+        am.r = createRenderer(session,userDetails.tenantId,type);
         log.info('Finished creating asset manager');
         return am;
     };
