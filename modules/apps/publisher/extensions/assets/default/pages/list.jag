@@ -1,5 +1,4 @@
 <%
-	print('LISTING ALL ASSETS OF THIS TYPE');
 	var ui=require('rxt').ui;
 	var asset=require('rxt').asset;
 	var type='gadget';
@@ -9,6 +8,6 @@
 	var assets=am.search({});
 	//print(stringify(assets));
 	var output=am.render(assets,page).list();
-	print(stringify(output));
-	//caramel.render(output);
+	//print(stringify(output));
+	caramel.render(output);
 %>
