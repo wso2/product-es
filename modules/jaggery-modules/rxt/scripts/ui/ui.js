@@ -5,7 +5,9 @@ var ui = {};
             rxt: {},
             cuser: user,
             assets: {},
-            leftNav: {},
+            leftNav: {
+                items:[]
+            },
             ribbon: {}
         }
     };

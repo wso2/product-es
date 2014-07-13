@@ -2,70 +2,61 @@ log.info('Start of scriptqq!');
 asset.manager = function(ctx) {
     return {
         create: function(ctx) {
-        	this._super.create(options);
+            this._super.create(options);
             log.info('Create called!');
         },
-        search:function(options){
-            log.info('SEARCH method '+stringify(options));
-            return [
-            {
-                id:'146',
-                attributes:{
-                    overview_name:'Test Asset 1',
-                    overview_provider:'Admin'
+        search: function(options) {
+            log.info('SEARCH method ' + stringify(options));
+            return [{
+                id: '146',
+                attributes: {
+                    overview_name: 'Test Asset 1',
+                    overview_provider: 'Admin'
                 }
-            }
-            ];
+            }];
         }
     };
 };
 asset.server = function(ctx) {
-    var type=ctx.type;
+    var type = ctx.type;
     return {
         onUserLoggedIn: function() {},
         endpoints: {
             apis: [{
                 url: 'asset',
                 path: 'asset.jag'
-            },
-            {
-                url:'assets',
-                path:'assets.jag'
+            }, {
+                url: 'assets',
+                path: 'assets.jag'
             }],
             pages: [{
-                title: 'Asset: '+type,
+                title: 'Asset: ' + type,
                 url: 'asset',
                 path: 'asset.jag'
-            },
-            {
-                title:'Assets '+type,
-                url:'assets',
-                path:'assets.jag'
-            },
-            {
-                title:'Create '+type,
-                url:'create',
-                path:'create.jag'
-            },
-            {
-                title:'Update '+type,
-                url:'update',
-                path:'update.jag'
-            },
-            {
-                title:'Details '+type,
-                url:'details',
-                path:'details.jag'
-            },
-            {
-                title:'List '+type,
-                url:'list',
-                path:'list.jag'
-            },
-            {
-                title:'Lifecycle',
-                url:'lifecycle',
-                path:'lifecycle.jag'
+            }, {
+                title: 'Assets ' + type,
+                url: 'assets',
+                path: 'assets.jag'
+            }, {
+                title: 'Create ' + type,
+                url: 'create',
+                path: 'create.jag'
+            }, {
+                title: 'Update ' + type,
+                url: 'update',
+                path: 'update.jag'
+            }, {
+                title: 'Details ' + type,
+                url: 'details',
+                path: 'details.jag'
+            }, {
+                title: 'List ' + type,
+                url: 'list',
+                path: 'list.jag'
+            }, {
+                title: 'Lifecycle',
+                url: 'lifecycle',
+                path: 'lifecycle.jag'
             }]
         }
     };
@@ -95,22 +86,30 @@ asset.configure = function() {
             lifeCycle: {
                 name: 'SimpleLifecycle',
                 commentRequired: true
+            },
+            ui:{
+                icon:'icon-cog'
             }
         }
     };
 };
 asset.renderer = function(ctx) {
-
     return {
-        create: function(page) {
-        },
+        create: function(page) {},
         update: function(page) {},
-        list: function(page) {    
+        list: function(page) {
             return page;
         },
-        details:function(page){},
+        details: function(page) {},
         lifecycle: function(page) {},
         leftNav: function(page) {},
-        ribbon:function(page){}
+        ribbon: function(page) {
+            log.info('CREATING RIBBON!');
+            page.ribbon.currentType='Gadget111';
+            page.ribbon.shortName='aaaa';
+            page.ribbon.currentTitle='Test';
+            log.info('FINISHED CREATING RIBBON');
+            return page;
+        }
     };
 };
