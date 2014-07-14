@@ -1,9 +1,10 @@
 <%
+	var caramel=require('caramel');
 	var ui=require('rxt').ui;
 	var asset=require('rxt').asset;
 	var type='gadget';
 	var am=asset.createUserAssetManager(session,type);
-	var page=ui.buildPage(session);
+	var page=ui.buildPage(session,request);
 
 	var assets=am.search({});
 	//print(stringify(assets));

@@ -170,10 +170,11 @@ var reflection = {};
                     var childPtr = child[childKey];
                     //Update the clone with the old parent method
                     super[parentKey] = parentPtr;
-                    parent[parentKey] = function() {
+                    parent[parentKey]=childPtr;
+                    /*parent[parentKey] = function() {
                         var result=childPtr.apply(this, arguments)||null;
                         return result;
-                    };
+                    };*/
                 }
             }
         }

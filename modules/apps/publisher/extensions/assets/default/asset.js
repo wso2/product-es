@@ -87,27 +87,63 @@ asset.configure = function() {
                 name: 'SimpleLifecycle',
                 commentRequired: true
             },
-            ui:{
-                icon:'icon-cog'
+            ui: {
+                icon: 'icon-cog'
             }
         }
     };
 };
 asset.renderer = function(ctx) {
+    var buildListLeftNav = function(page) {
+        return [{
+            name: 'Add ',
+            iconClass: 'icon-plus-sign-alt',
+            url: '/'
+        }, {
+            name: 'Statistics',
+            iconClass: 'icon-dashboard',
+            url: '/'
+        }];
+    };
+    var buildDefaultLeftNav = function(page) {
+        return [{
+            name: 'Overview',
+            iconClass: 'icon-list-alt',
+            url: '/'
+        }, {
+            name: 'Edit',
+            iconClass: 'icon-edit',
+            url: '/'
+        }, {
+            name: 'Life Cycle',
+            iconClass: 'icon-retweet',
+            url: '/'
+        }];
+    };
     return {
         create: function(page) {},
         update: function(page) {},
-        list: function(page) {
-            return page;
-        },
+        list: function(page) {},
         details: function(page) {},
         lifecycle: function(page) {},
-        leftNav: function(page) {},
+        leftNav: function(page) {
+            log.info('GENERATING LEFTNAV '+page.meta.pageName);
+            switch (page.meta.pageName) {
+                case 'list':
+                    page.leftNav = buildListLeftNav(page);
+                    break;
+                default:
+                    page.leftNav = buildDefaultLeftNav(page);
+                    break;
+            }
+
+            return page;
+        },
         ribbon: function(page) {
             log.info('CREATING RIBBON!');
-            page.ribbon.currentType='Gadget111';
-            page.ribbon.shortName='aaaa';
-            page.ribbon.currentTitle='Test';
+            page.ribbon.currentType = 'Gadget111';
+            page.ribbon.shortName = 'aaaa';
+            page.ribbon.currentTitle = 'Test';
             log.info('FINISHED CREATING RIBBON');
             return page;
         }

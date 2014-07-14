@@ -33,8 +33,12 @@ var asset = {};
                 return page;
             },
             list: function() {
+                var log=new Log();
+                log.info('RENDERING LIST');
                 page = that.r.list(page) || page;
+                log.info("RENDERING LEFT "+that.r.leftNav.toSource());
                 page = that.r.leftNav(page) || page;
+                log.info('RENDERING RIBBON');
                 page = that.r.ribbon(page) || page;
                 return page;
             },
@@ -64,7 +68,10 @@ var asset = {};
     AssetRenderer.prototype.details = function(page) {};
     AssetRenderer.prototype.list = function(page) {};
     AssetRenderer.prototype.lifecycle = function(page) {};
-    AssetRenderer.prototype.leftNav = function(page) {};
+    AssetRenderer.prototype.leftNav = function(page) {
+        var log=new Log();
+        log.info('Default leftnav');
+    };
     AssetRenderer.prototype.ribbon = function(page) {};
     /**
      * The function create an asset manage given a registry instance,type and tenantId
@@ -89,6 +96,7 @@ var asset = {};
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
         var renderer = new AssetRenderer(asset.getAssetPageUrl(type));
+        log.info('Renderer '+stringify(customRenderer));
         reflection.override(renderer, customRenderer);
         return renderer;
     };

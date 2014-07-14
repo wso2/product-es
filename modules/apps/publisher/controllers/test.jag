@@ -1,18 +1,44 @@
 <%
-	var core=require('rxt').core;
-	var resources=require('rxt').resources;
+	//var core=require('rxt').core;
+	//var resources=require('rxt').resources;
 	var ref=require('utils').reflection;
 	var log=new Log();
 
+	var parent={
+		test:function(){
+			var log=new Log();
+			log.info('parent test called');
+		},
+		list:function(){
+			var log=new Log();
+			log.info('parent list called');
+		}
+	};
+
+	var child={
+		list:function(){
+			var log=new Log();
+			this._super.list();
+			log.info('child list called');
+		},
+		test:function(){
+			var log=new Log();
+
+			log.info('child test called');
+		}
+	};
+
+	ref.override(parent,child);
+	parent.list();
 	//var server=require('store').server;
 	//var registry=server.systemRegistry(-1234);
 	//core.init(-1234,registry);
-	resources.manager(-1234);
-	var manager=core.rxtManager(-1234);
-	core.assetResources(-1234,'gadget');
+	//resources.manager(-1234);
+	//var manager=core.rxtManager(-1234);
+	//core.assetResources(-1234,'gadget');
 
 	//print(manager.listRxtTypes());
-	print(manager.getRxtDefinition('gadget'));
+	//print(manager.getRxtDefinition('gadget'));
 	//print(manager.getRxtStoragePath('api'));
 
 	
