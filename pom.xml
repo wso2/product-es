@@ -290,7 +290,11 @@
                 <artifactId>httpcore</artifactId>
                 <version>${httpcomponents-httpcore.wso2.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.h2database.wso2</groupId>
+                <artifactId>h2-database-engine</artifactId>
+                <version>${h2.wso2.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
@@ -438,6 +442,8 @@
         <url>http://wso2.org/jira/browse/STORE</url>
     </issueManagement>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
         <carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
 
@@ -470,6 +476,7 @@
         <junit.version>3.8.1</junit.version>
         <shindig.version>2.5.0-beta5</shindig.version>
         <el.api.version>2.2</el.api.version>
+        <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
         <jaggery.feature.version>0.9.0.ALPHA5.wso2v1-SNAPSHOT</jaggery.feature.version>
         <caramel.feature.version>1.0.1</caramel.feature.version>
