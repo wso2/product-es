@@ -94,30 +94,33 @@ asset.configure = function() {
     };
 };
 asset.renderer = function(ctx) {
-    var buildListLeftNav = function(page) {
+    var buildListLeftNav = function(page,util) {
+        var log=new Log();
+        log.info(util.buildUrl('create'));
         return [{
             name: 'Add ',
             iconClass: 'icon-plus-sign-alt',
-            url: '/'
+            url: util.buildUrl('create')
         }, {
             name: 'Statistics',
             iconClass: 'icon-dashboard',
-            url: '/'
+            url: util.buildUrl('stats')
         }];
     };
-    var buildDefaultLeftNav = function(page) {
+    var buildDefaultLeftNav = function(page,util) {
+
         return [{
             name: 'Overview',
             iconClass: 'icon-list-alt',
-            url: '/'
+            url: util.buildUrl('details')
         }, {
             name: 'Edit',
             iconClass: 'icon-edit',
-            url: '/'
+            url: util.buildUrl('update')
         }, {
             name: 'Life Cycle',
             iconClass: 'icon-retweet',
-            url: '/'
+            url: util.buildUrl('lifecycle')
         }];
     };
     return {
@@ -129,10 +132,10 @@ asset.renderer = function(ctx) {
         leftNav: function(page) {
             switch (page.meta.pageName) {
                 case 'list':
-                    page.leftNav = buildListLeftNav(page);
+                    page.leftNav = buildListLeftNav(page,this);
                     break;
                 default:
-                    page.leftNav = buildDefaultLeftNav(page);
+                    page.leftNav = buildDefaultLeftNav(page,this);
                     break;
             }
 

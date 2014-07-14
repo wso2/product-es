@@ -57,7 +57,7 @@ var asset = {};
         this.assetPagesRoot = pagesRoot;
     }
     AssetRenderer.prototype.buildUrl = function(pageName) {
-        return this.assetPagesRoot + '/' + page;
+        return this.assetPagesRoot + '/' + pageName;
     };
     AssetRenderer.prototype.create = function(page) {};
     AssetRenderer.prototype.update = function(page) {};
@@ -154,7 +154,7 @@ var asset = {};
         return asset.getAssetExtensionPath(type) + '/pages';
     };
     asset.getAssetPageUrl = function(type) {
-        return '/' + type;
+        return '/asts/' + type;
     }
     asset.getAssetApiEndpoint = function(type, endpointName) {
         //Check if the path exists within the asset extension path
