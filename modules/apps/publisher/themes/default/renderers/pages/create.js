@@ -1,11 +1,21 @@
-var render=function(theme,data,meta,require){
-	theme('single-col-fluid',{
+var render = function(theme, data, meta, require) {
+    theme('single-col-fluid', {
         title: 'Asset',
-     	header: [
-            {
-                partial: 'header',
-                context: data
-            }
-        ]
+        header: [{
+            partial: 'header',
+            context: data
+        }],
+        ribbon: [{
+            partial: 'ribbon',
+            context: data
+        }],
+        leftnav: [{
+        	partial:'left-nav',
+        	context:data
+        }],
+        listassets: [{
+            partial: 'add-asset',
+            context: data
+        }]
     });
 };

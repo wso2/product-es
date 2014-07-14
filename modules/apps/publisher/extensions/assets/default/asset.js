@@ -96,7 +96,6 @@ asset.configure = function() {
 asset.renderer = function(ctx) {
     var buildListLeftNav = function(page,util) {
         var log=new Log();
-        log.info(util.buildUrl('create'));
         return [{
             name: 'Add ',
             iconClass: 'icon-plus-sign-alt',

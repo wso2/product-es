@@ -1,4 +1,13 @@
 <%
-	print('CREATE A NEW ASSET');
-	caramel.render({});
+	var caramel=require('caramel');
+	var ui=require('rxt').ui;
+	var asset=require('rxt').asset;
+	var type='gadget';
+	var am=asset.createUserAssetManager(session,type);
+	var page=ui.buildPage(session,request);
+
+	var assets={};
+	var output=am.render(assets,page).create();
+	
+	caramel.render(output);
 %>

@@ -7,10 +7,8 @@
 	var page=ui.buildPage(session,request);
 
 	var assets=am.search({});
-	//print(stringify(assets));
+
 	var output=am.render(assets,page).list();
 
-	
-	//print(stringify(output));
 	caramel.render(output);
 %>

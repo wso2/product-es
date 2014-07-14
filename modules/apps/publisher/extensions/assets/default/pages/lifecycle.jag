@@ -1,4 +1,13 @@
 <%
-	print('This is the lifecycle page!');
-	caramel.render({});
+		var caramel=require('caramel');
+	var ui=require('rxt').ui;
+	var asset=require('rxt').asset;
+	var type='gadget';
+	var am=asset.createUserAssetManager(session,type);
+	var page=ui.buildPage(session,request);
+
+	var assets={};
+	var output=page;//am.render(assets,page).lifecyle();
+	
+	caramel.render(output);
 %>
