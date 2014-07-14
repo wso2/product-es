@@ -12,8 +12,17 @@ var gadgetCount = 0,
         siteCount = 0;
 
 if (server.current(session) == null) {
-    response.sendRedirect('/publisher/login');
+    response.sendRedirect(caramel.configs().context+'/login');
 } else {
-    response.sendRedirect('/publisher/asts/gadget/lifecycle');
+	var user=server.current(session);
+	var usermod=require('store').user;
+	var tenantId=user.tenantId;
+	var configs=usermod.configs(tenantId);
+	if((configs.application)||(configs.application.landingPage)){
+		response.sendRedirect(caramel.configs().context+configs.application.landingPage);
+	}
+	else{
+		response.sendError(404,'Unable to locate the landing page of the tenant: '+tenantId+'.Make sure application property is set in the tenant configuration');
+	}
 }
 %>
