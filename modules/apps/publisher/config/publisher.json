@@ -38,7 +38,8 @@
 
     "urls": {
         "ASSET": "/asset",
-        "ASSETS": "/assets"
+        "ASSETS": "/assets",
+        "EXTENSIONS": "/extensions"
     },
 
     "router": {
