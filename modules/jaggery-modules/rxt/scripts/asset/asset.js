@@ -33,12 +33,8 @@ var asset = {};
                 return page;
             },
             list: function() {
-                var log=new Log();
-                log.info('RENDERING LIST');
                 page = that.r.list(page) || page;
-                log.info("RENDERING LEFT "+that.r.leftNav.toSource());
                 page = that.r.leftNav(page) || page;
-                log.info('RENDERING RIBBON');
                 page = that.r.ribbon(page) || page;
                 return page;
             },
@@ -96,7 +92,6 @@ var asset = {};
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
         var renderer = new AssetRenderer(asset.getAssetPageUrl(type));
-        log.info('Renderer '+stringify(customRenderer));
         reflection.override(renderer, customRenderer);
         return renderer;
     };
@@ -189,8 +184,8 @@ var asset = {};
     };
     asset.resolve = function(request, path, themeName, themeObj, themeResolver) {
         var log = new Log();
-        log.info('Path: ' + path);
-        log.info('Request: ' + request.getRequestURI());
+        //log.info('Path: ' + path);
+        //log.info('Request: ' + request.getRequestURI());
         var resPath = path;
         path = '/' + path;
         //Determine the type of the asset
@@ -202,33 +197,33 @@ var asset = {};
         extensionMatcher.match(extensionPattern);
         var pathOptions = extensionMatcher.elements() || {};
         var uriOptions = uriMatcher.elements() || {};
-        log.info('URI details: ' + stringify(uriMatcher.elements()));
-        log.info('Extension details: ' + stringify(extensionMatcher.elements()));
+        //log.info('URI details: ' + stringify(uriMatcher.elements()));
+        //log.info('Extension details: ' + stringify(extensionMatcher.elements()));
         //If the type is not metioned then return the path
         if (!pathOptions.type) {
             //Determine if the paths occur within the extensions directory
             var extensionResPath = '/extensions/assets/' + uriOptions.type + '/themes/' + themeName + '/' + resPath;
             var resFile = new File(extensionResPath);
-            log.info('Checking if resource exists: ' + extensionResPath);
+            //log.info('Checking if resource exists: ' + extensionResPath);
             if (resFile.isExists()) {
                 return extensionResPath;
             }
-            log.info('Resource not present in extensions directory, using : ' + themeResolver.call(themeObj, path));
+            //log.info('Resource not present in extensions directory, using : ' + themeResolver.call(themeObj, path));
             return themeResolver.call(themeObj, path);
         }
         //Check if type has a similar path in its extension directory
         var extensionPath = '/extensions/assets/' + uriOptions.type + '/themes/' + themeName + '/' + pathOptions.root + '/' + pathOptions.suffix;
         var file = new File(extensionPath);
-        log.info('Extension path: ' + extensionPath);
+        //log.info('Extension path: ' + extensionPath);
         if (file.isExists()) {
-            log.info('Final path: ' + extensionPath);
+            //log.info('Final path: ' + extensionPath);
             return extensionPath;
         }
         //If an extension directory does not exist then use theme directory
         extensionPath = pathOptions.root + '/' + pathOptions.suffix;
         var modPath = themeResolver.call(themeObj, extensionPath);
-        log.info('Final path: ' + extensionPath);
-        log.info('Mod path: ' + modPath);
+        //log.info('Final path: ' + extensionPath);
+        //log.info('Mod path: ' + modPath);
         return modPath;
     };
 }(asset, core))

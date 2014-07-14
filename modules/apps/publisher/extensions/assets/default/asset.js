@@ -127,7 +127,6 @@ asset.renderer = function(ctx) {
         details: function(page) {},
         lifecycle: function(page) {},
         leftNav: function(page) {
-            log.info('GENERATING LEFTNAV '+page.meta.pageName);
             switch (page.meta.pageName) {
                 case 'list':
                     page.leftNav = buildListLeftNav(page);
@@ -140,11 +139,9 @@ asset.renderer = function(ctx) {
             return page;
         },
         ribbon: function(page) {
-            log.info('CREATING RIBBON!');
             page.ribbon.currentType = 'Gadget111';
             page.ribbon.shortName = 'aaaa';
             page.ribbon.currentTitle = 'Test';
-            log.info('FINISHED CREATING RIBBON');
             return page;
         }
     };
