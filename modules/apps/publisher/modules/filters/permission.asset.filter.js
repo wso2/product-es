@@ -48,6 +48,7 @@ var filterModule = function () {
 
             item = data[index];
 
+            log.info('### Asset: '+item.attributes.overview_name+' ###');
             //TODO: We are ignoring any assets without a lifecycle state
             if(item.lifecycleState) {
 
@@ -57,10 +58,15 @@ var filterModule = function () {
                 //Fill in dynamic values
                 permissableRoles = fillDynamicPermissibleRoles(item, permissableRoles);
 
+                log.info('User Roles: '+stringify(userRoles));
+                log.info('Permissable Roles: '+permissableRoles);
+
                 //Check if the user has any of the roles specified for the state
                 var commonRoles = utility.intersect(userRoles, permissableRoles, function (a, b) {
                     return (a == b);
                 });
+
+                log.info('Common Roles: '+commonRoles);
 
                 //Check if we have common roles
                 if (commonRoles.length > 0) {
@@ -69,8 +75,10 @@ var filterModule = function () {
                 }
             }
             else{
-                log.debug('ignoring '+item.attributes.overview_name+' as it does not have a lifecycle state.');
+                log.info('ignoring '+item.attributes.overview_name+' as it does not have a lifecycle state.');
             }
+
+            log.info('### Asset : '+item.attributes.overview_name+' completed ###')
         }
 
         context['data'] = items;
@@ -87,7 +95,7 @@ var filterModule = function () {
     function fillDynamicPermissibleRoles(item, permissions) {
         var list = [];
         for (var index in permissions) {
-            list.push(permissions[index].replace('{overview_provider}', item.attributes.overview_provider));
+            list.push(permissions[index].replace('{overview_provider}', 'user2'));//item.attributes.overview_provider));
         }
 
         return list;
