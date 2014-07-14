@@ -1,3 +1,0 @@
-<%
-	print('This is the default assets page');
-%>

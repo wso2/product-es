@@ -1,5 +1,0 @@
-	<%
-		print('This is the default asset page!');
-		print(request.getMappedPath());
-		caramel.render({});
-	%>
