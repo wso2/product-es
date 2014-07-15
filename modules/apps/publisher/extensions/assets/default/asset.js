@@ -162,7 +162,7 @@ asset.renderer = function(ctx) {
             }
             ribbon.currentType = page.rxt.singularLabel;
             ribbon.currentTitle = page.rxt.singularLabel;
-            ribbon.currentUrl = this.buildUrl(page.pageName);
+            ribbon.currentUrl = page.meta.currentPage;
             ribbon.shortName = page.rxt.singularLabel;
             ribbon.query = 'Query';
             ribbon.breadcrumb = assetTypes;
