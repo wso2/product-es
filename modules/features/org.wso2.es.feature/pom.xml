@@ -189,13 +189,13 @@
                                     org.wso2.carbon.cassandra.explorer:${carbon.platform.version}
                                 </importFeatureDef>-->
                                 <!--casandra -->
-                                <importFeatureDef>
+                                <!--importFeatureDef>
                                     org.wso2.carbon.cassandra.server:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef-->
                                 <!--<featureArtifactDef>-->
                                 <!--org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.patchrelease.version.422}-->
                                 <!--</featureArtifactDef>-->
-                                <importFeatureDef>
+                                <!--importFeatureDef>
                                     org.wso2.carbon.cassandra.mgt:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
@@ -206,7 +206,7 @@
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.cassandra-jdbc-1.2.5.server:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef-->
                                 <!--4.3.0importFeatureDef>
                                     org.wso2.carbon.databridge.datapublisher:${carbon.platform.version}
                                 </importFeatureDef>
