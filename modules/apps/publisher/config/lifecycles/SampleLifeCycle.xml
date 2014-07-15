@@ -22,7 +22,6 @@
                                            value="Internal/reviewer:-get,-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE3:Created"
                                            value="Internal/everyone:-get,-add,-delete,-authorize"/>
-
                             </execution>
                         </data>
                     </datamodel>

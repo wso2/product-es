@@ -82,7 +82,7 @@
                                 <bundleDef>org.wso2.store:org.wso2.store.sso.common</bundleDef>
                                 <bundleDef>org.wso2.store:org.wso2.store.admin.styles</bundleDef>
                                 <bundleDef>org.wso2.store:org.wso2.carbon.social:${project.version}</bundleDef>
-                                <!--bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra</bundleDef-->
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra:${carbon.platform.version}</bundleDef>
                                 <bundleDef>org.wso2.store:jaggery-scxml-executors:${project.version}</bundleDef>
                             </bundles>
                             <importBundles>
@@ -207,23 +207,23 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.cassandra-jdbc-1.2.5.server:${carbon.platform.version}
                                 </importFeatureDef>
-                                <!--4.3.0importFeatureDef>
+                                <importFeatureDef>
                                     org.wso2.carbon.databridge.datapublisher:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.databridge.datareceiver:${carbon.platform.version}
                                 </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.databridge.commons.server:${carbon.platform.version}
-                                </importFeatureDef>
-                                <importFeatureDef>
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.databridge.cassandra:${carbon.platform.version}
-                                </importFeatureDef-->
+                                </importFeatureDef>-->
                                 <importFeatureDef>
                                     org.wso2.carbon.module.mgt.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.user.mgt:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.databridge.streamdefn.registry.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <!--importFeatureDef>
                                     org.wso2.carbon.databridge.streamdefn.registry:4.2.0
@@ -237,6 +237,9 @@
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.claim.mgt.server:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.bam.toolbox.deployer:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.registry.ws:${carbon.platform.version}

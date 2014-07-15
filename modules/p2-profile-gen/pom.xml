@@ -167,7 +167,8 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.user.profile.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.mgt.feature:${carbon.platform.version}
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.application.mgt.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.idp.mgt.feature:${carbon.platform.version}
@@ -204,20 +205,23 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-                                <!--4.3.0featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.databridge.datareceiver.feature:4.2.0
-                                </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:${carbon.platform.version}
+                                    org.wso2.carbon:org.wso2.carbon.databridge.datareceiver.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.databridge.cassandra.feature:${carbon.platform.version}
+                                <!--featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:4.2.1
                                 </featureArtifactDef-->
+                                <!--<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.cassandra.feature:${carbon.platform.version}
+                                </featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.module.mgt.server.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.user.mgt.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.registry.server.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <!--4.3.0featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.registry.feature:4.2.0
@@ -255,6 +259,13 @@
                                 <!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.user.profile.server.feature:${carbon.platform.version}
                                 </featureArtifactDef>-->
+                                <!--BAM ToolBox Features -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.bam.toolbox.deployer.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.event.stream.manager.feature:${cep.component.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -406,7 +417,7 @@
                                     <id>org.wso2.stratos.identity.saml2.sso.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature-->
-                                 <!-- SSO Fix-->
+                                <!-- SSO Fix-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.profile.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -419,7 +430,7 @@
                                     <id>org.wso2.carbon.idp.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                                 <!-- End of SSO Fix -->
+                                <!-- End of SSO Fix -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -476,22 +487,18 @@
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                                <!--feature>
-                                    <id>org.wso2.carbon.databridge.datareceiver.feature.group</id>
-                                    <version>4.2.0</version>
-                                </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.databridge.commons.server.feature.group</id>
+                                    <id>org.wso2.carbon.databridge.datareceiver.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                                <feature>
+                                <!--<feature>
                                     <id>org.wso2.carbon.databridge.cassandra.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+                                </feature>-->
                                 <feature>
-                                    <id>org.wso2.carbon.databridge.streamdefn.registry.feature.group</id>
-                                    <version>4.2.0</version>
-                                </feature-->
+                                    <id>org.wso2.carbon.databridge.streamdefn.registry.server.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -520,6 +527,15 @@
                                     <id>org.wso2.carbon.identity.user.profile.server.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>-->
+                                <!--BAM ToolBox Features-->
+                                <feature>
+                                    <id>org.wso2.carbon.bam.toolbox.deployer.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.stream.manager.feature.group</id>
+                                    <version>${cep.component.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>

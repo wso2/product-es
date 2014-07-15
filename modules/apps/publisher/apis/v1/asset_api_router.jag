@@ -102,6 +102,9 @@ routeManager.register('POST', 'publisher', '/publisher/api/asset/{type}', functi
             context.post['images_banner'] = '/publisher/config/defaults/img/banner.jpg';
         }
 
+        //Process and add any files in the request
+        inspectFiles(request, context.post);
+
         model.import('form.importer',context.post);
 
         //Perform validations on the asset

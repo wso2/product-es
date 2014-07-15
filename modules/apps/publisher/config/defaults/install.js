@@ -87,9 +87,13 @@ var installer = function () {
      */
     function onCreateArtifactManager(context) {
 
+        //require configuration
+        var config = require('/config/publisher.json');
+        var username = config.user.username;
+
         //Create a registry instance
         var registry = new carbon.registry.Registry(server.instance(), {
-            username: 'admin',
+            username: username,
             tenantId: SUPER_TENANT_ID
         });
 
