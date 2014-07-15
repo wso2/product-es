@@ -180,17 +180,17 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.governance.metadata.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.platform.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <!--casandra -->
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.server.feature:${carbon.platform.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <!--<featureArtifactDef>-->
                                 <!--org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.patchrelease.version.422}-->
                                 <!--</featureArtifactDef>-->
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.mgt.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -207,7 +207,7 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.datareceiver.feature:${carbon.platform.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:4.2.1
                                 </featureArtifactDef-->
@@ -220,9 +220,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.user.mgt.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.registry.server.feature:${carbon.platform.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <!--4.3.0featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.registry.feature:4.2.0
                                 </featureArtifactDef-->
@@ -260,9 +260,9 @@
                                     org.wso2.carbon:org.wso2.carbon.identity.user.profile.server.feature:${carbon.platform.version}
                                 </featureArtifactDef>-->
                                 <!--BAM ToolBox Features -->
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam.toolbox.deployer.feature:${carbon.platform.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.event.stream.manager.feature:${cep.component.version}
                                 </featureArtifactDef>
@@ -455,19 +455,19 @@
                                     <id>org.wso2.carbon.stratos.common.feature.group</id>
                                     <version>${stratos.patch.version.221}</version>
                                 </feature-->
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.cassandra.explorer.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.cassandra.server.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+                                </feature-->
                                 <!--<feature>-->
                                 <!--<id>org.wso2.carbon.cassandra.feature.group</id>-->
                                 <!--<version>${carbon.patchrelease.version.422}</version>-->
                                 <!--</feature>-->
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.cassandra.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
@@ -490,15 +490,15 @@
                                 <feature>
                                     <id>org.wso2.carbon.databridge.datareceiver.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+                                </feature-->
                                 <!--<feature>
                                     <id>org.wso2.carbon.databridge.cassandra.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>-->
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.databridge.streamdefn.registry.server.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.event.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -528,10 +528,10 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>-->
                                 <!--BAM ToolBox Features-->
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.bam.toolbox.deployer.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.event.stream.manager.feature.group</id>
                                     <version>${cep.component.version}</version>
