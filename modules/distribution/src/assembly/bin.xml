@@ -226,14 +226,14 @@
             </includes>
         </fileSet-->
         <!--copy social toolbox-->
-        <fileSet>
+        <!--fileSet>
             <directory>src/repository/toolboxes</directory>
             <outputDirectory>${project.artifactId}-${project.version}/repository/deployment/server/bam-toolbox
             </outputDirectory>
             <includes>
                 <include>**/social.tbox</include>
             </includes>
-        </fileSet>
+        </fileSet-->
     </fileSets>
     <dependencySets>
         <!--        <dependencySet>
