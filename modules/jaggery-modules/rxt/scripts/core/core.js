@@ -248,7 +248,6 @@ var core = {};
         return {
             username: username,
             userManager: userManager,
-            configs: tenatConfigs,
             username: username,
             tenantId: tenantId,
             systemRegistry: sysRegistry,
