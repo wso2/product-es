@@ -116,6 +116,7 @@ asset.renderer = function(ctx) {
     };
     var isActivatedAsset = function(assetType) {
         var activatedAssets = ctx.tenantConfigs.assets;
+        return true;
         if (!activatedAssets) {
             throw 'Unable to load all activated assets for current tenant: ' + ctx.tenatId + '.Make sure that the assets property is present in the tenant config';
         }
@@ -153,7 +154,7 @@ asset.renderer = function(ctx) {
                 assetType = assetList[index];
                 if (isActivatedAsset(assetType.shortName)) {
                     assetTypes.push({
-                        url: this.buildUrl('list') + '/list',
+                        url: this.buildBaseUrl(assetType.shortName) + '/list',
                         assetIcon: assetType.ui.icon || DEFAULT_ICON,
                         assetTitle: assetType.singularLabel
                     });
@@ -161,7 +162,7 @@ asset.renderer = function(ctx) {
             }
             ribbon.currentType = page.rxt.singularLabel;
             ribbon.currentTitle = page.rxt.singularLabel;
-            ribbon.currentUrl = 'Current Url';
+            ribbon.currentUrl = this.buildUrl(page.pageName);
             ribbon.shortName = page.rxt.singularLabel;
             ribbon.query = 'Query';
             ribbon.breadcrumb = assetTypes;

@@ -89,11 +89,15 @@ var asset = {};
         };
     };
 
-    function AssetRenderer(pagesRoot) {
+    function AssetRenderer(pagesRoot,assetsRoot) {
         this.assetPagesRoot = pagesRoot;
+        this.assetsPagesRoot=assetsRoot;
     }
     AssetRenderer.prototype.buildUrl = function(pageName) {
         return this.assetPagesRoot + '/' + pageName;
+    };
+    AssetRenderer.prototype.buildBaseUrl=function(type){
+        return this.assetsPagesRoot+type;
     };
     AssetRenderer.prototype.create = function(page) {};
     AssetRenderer.prototype.update = function(page) {};
@@ -129,7 +133,7 @@ var asset = {};
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
-        var renderer = new AssetRenderer(asset.getAssetPageUrl(type));
+        var renderer = new AssetRenderer(asset.getAssetPageUrl(type),asset.getBaseUrl());
         reflection.override(renderer, customRenderer);
         return renderer;
     };
@@ -192,8 +196,11 @@ var asset = {};
         return asset.getAssetExtensionPath(type) + '/pages';
     };
     asset.getAssetPageUrl = function(type) {
-        return '/asts/' + type;
-    }
+        return asset.getBaseUrl() + type;
+    };
+    asset.getBaseUrl=function(){
+        return '/asts/';
+    };
     asset.getAssetApiEndpoint = function(type, endpointName) {
         //Check if the path exists within the asset extension path
         var endpointPath = asset.getAssetApiDirPath(type) + '/' + endpointName;

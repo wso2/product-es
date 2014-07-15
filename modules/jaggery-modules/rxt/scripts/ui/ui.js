@@ -27,6 +27,7 @@ var ui = {};
         var server = require('store').server;
         var user = server.current(session);
         var pageName = getPageName(request);
+        
         var page = genericPage({
             username: user.username,
             pageName: pageName
