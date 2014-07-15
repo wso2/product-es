@@ -151,6 +151,20 @@ var core = {};
         }
         return ['gadget']; //list;
     };
+    RxtManager.prototype.listRxtTypeDetails = function() {
+        var list = [];
+        for (var type in this.rxtMap) {
+            var details = {};
+            var template = this.rxtMap[type];
+            details.shortName = type;
+            details.singularLabel = template.singularLabel;
+            details.pluralLabel = template.pluralLabel;
+            details.ui = (template.meta) ? (template.meta.ui || {}) : {};
+            details.lifecycle = (template.meta) ? (template.meta.lifecycle || {}) : {};
+            list.push(details);
+        }
+        return list;
+    };
     RxtManager.prototype.applyMutator = function(type, mutator) {
         this.mutatorMap[type] = {};
         this.mutatorMap[type] = mutator;
@@ -182,7 +196,7 @@ var core = {};
         var rxtMap = application.get(RXT_MAP);
         var configs = rxtMap[tenantId];
         if (!configs) {
-            configs = createTenantRxtMap(tenantId, rxtMap);//TODO:Check if this is map or rxtMap
+            configs = createTenantRxtMap(tenantId, rxtMap); //TODO:Check if this is map or rxtMap
         }
         return configs;
     };
@@ -223,21 +237,25 @@ var core = {};
     core.createAssetContext = function(session, type) {
         var user = require('store').user;
         var server = require('store').server;
-
         var userDetails = server.current(session);
         var tenantId = userDetails.tenantId;
         var sysRegistry = server.systemRegistry(tenantId);
         var userManager = server.userManager(tenantId);
-        var tenatOptions = server.configs(tenantId);
+        var tenatConfigs = user.configs(tenantId);
+        var serverConfigs = server.configs(tenantId);
         var username = server.current(session).username;
+        var rxtManager = core.rxtManager(tenantId);
         return {
             username: username,
             userManager: userManager,
-            configs: tenatOptions,
+            configs: tenatConfigs,
             username: username,
             tenantId: tenantId,
             systemRegistry: sysRegistry,
-            assetType: type
+            assetType: type,
+            rxtManager: rxtManager,
+            tenantConfigs:tenatConfigs,
+            serverConfigs:serverConfigs
         };
     };
 }(core));

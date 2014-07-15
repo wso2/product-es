@@ -5,8 +5,8 @@ asset.manager = function(ctx) {
             this._super.create(options);
             log.info('Create called!');
         },
-        search: function(query,paging) {
-            return this._super.search.call(this,query,paging);
+        search: function(query, paging) {
+            return this._super.search.call(this, query, paging);
         }
     };
 };
@@ -76,7 +76,7 @@ asset.configure = function() {
             }
         },
         meta: {
-            lifeCycle: {
+            lifecycle: {
                 name: 'SimpleLifecycle',
                 commentRequired: true
             },
@@ -87,8 +87,8 @@ asset.configure = function() {
     };
 };
 asset.renderer = function(ctx) {
-    var buildListLeftNav = function(page,util) {
-        var log=new Log();
+    var buildListLeftNav = function(page, util) {
+        var log = new Log();
         return [{
             name: 'Add ',
             iconClass: 'icon-plus-sign-alt',
@@ -99,8 +99,7 @@ asset.renderer = function(ctx) {
             url: util.buildUrl('stats')
         }];
     };
-    var buildDefaultLeftNav = function(page,util) {
-
+    var buildDefaultLeftNav = function(page, util) {
         return [{
             name: 'Overview',
             iconClass: 'icon-list-alt',
@@ -115,6 +114,18 @@ asset.renderer = function(ctx) {
             url: util.buildUrl('lifecycle')
         }];
     };
+    var isActivatedAsset = function(assetType) {
+        var activatedAssets = ctx.tenantConfigs.assets;
+        if (!activatedAssets) {
+            throw 'Unable to load all activated assets for current tenant: ' + ctx.tenatId + '.Make sure that the assets property is present in the tenant config';
+        }
+        for (var index in activatedAssets) {
+            if (activatedAssets[index] == assetType) {
+                return true;
+            }
+        }
+        return false;
+    };
     return {
         create: function(page) {},
         update: function(page) {},
@@ -124,19 +135,36 @@ asset.renderer = function(ctx) {
         leftNav: function(page) {
             switch (page.meta.pageName) {
                 case 'list':
-                    page.leftNav = buildListLeftNav(page,this);
+                    page.leftNav = buildListLeftNav(page, this);
                     break;
                 default:
-                    page.leftNav = buildDefaultLeftNav(page,this);
+                    page.leftNav = buildDefaultLeftNav(page, this);
                     break;
             }
-
             return page;
         },
         ribbon: function(page) {
-            page.ribbon.currentType = 'Gadget111';
-            page.ribbon.shortName = 'aaaa';
-            page.ribbon.currentTitle = 'Test';
+            var ribbon = page.ribbon = {};
+            var DEFAULT_ICON = 'icon-cog';
+            var assetTypes = [];
+            var assetType;
+            var assetList = ctx.rxtManager.listRxtTypeDetails();
+            for (var index in assetList) {
+                assetType = assetList[index];
+                if (isActivatedAsset(assetType.shortName)) {
+                    assetTypes.push({
+                        url: this.buildUrl('list') + '/list',
+                        assetIcon: assetType.ui.icon || DEFAULT_ICON,
+                        assetTitle: assetType.singularLabel
+                    });
+                }
+            }
+            ribbon.currentType = page.rxt.singularLabel;
+            ribbon.currentTitle = page.rxt.singularLabel;
+            ribbon.currentUrl = 'Current Url';
+            ribbon.shortName = page.rxt.singularLabel;
+            ribbon.query = 'Query';
+            ribbon.breadcrumb = assetTypes;
             return page;
         }
     };

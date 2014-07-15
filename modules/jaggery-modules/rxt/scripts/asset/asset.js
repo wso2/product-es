@@ -28,11 +28,17 @@ var asset = {};
     AssetManager.prototype.remove = function(options) {};
     AssetManager.prototype.list = function(paging) {
         var paging = paging || this.defaultPaging;
+        if (!this.am) {
+            throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
+        }
         return this.am.list(paging);
     };
     AssetManager.prototype.get = function(id) {
         if (!id) {
             throw 'The asset manager get method requires an id to be provided.';
+        }
+        if (!this.am) {
+            throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
         }
         return this.am.get(id);
     };

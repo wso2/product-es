@@ -24,7 +24,6 @@ require('/modules/publisher.js').exec(function(ctx) {
     if (q) {
         assets = am.search(q);
     } else if (sortBy && sort) {
-    	log.info('Providing sorted asset list');
         DEFAULT_PAGIN.sortBy = sortBy;
         DEFAULT_PAGIN.sortOrder = sort;
         assets = am.search(null, DEFAULT_PAGIN);
