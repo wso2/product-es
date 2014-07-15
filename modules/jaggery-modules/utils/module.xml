@@ -15,4 +15,8 @@
         <name>xml</name>
         <path>scripts/xml/xml.js</path>
     </script>
+    <script>
+        <name>request</name>
+        <path>scripts/request/request.js</path>
+    </script>
 </module>

@@ -1,18 +1,48 @@
 var asset = {};
 (function(asset, core) {
-    var log=new Log('asset');
+    var log = new Log('asset');
+    var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
+
     function AssetManager(registry, type, rxtManager, renderer) {
         this.registry = registry;
         this.rxtManager = rxtManager;
         this.rxtTemplate = rxtManager.getRxtDefinition(type);
         this.type = type;
         this.r = renderer;
+        this.am = null;
+        this.defaultPaging = {
+            'start': 0,
+            'count': 1000,
+            'sortOrder': 'desc',
+            'sortBy': 'overview_createdtime',
+            'paginationLimit': 1000
+        };
     }
-    AssetManager.prototype.init = function() {};
+    AssetManager.prototype.init = function() {
+        var carbon = require('carbon');
+        GovernanceUtils.loadGovernanceArtifacts(this.registry.registry);
+        this.am = new carbon.registry.ArtifactManager(this.registry, this.type);
+    };
     AssetManager.prototype.create = function(options) {};
     AssetManager.prototype.update = function(options) {};
     AssetManager.prototype.remove = function(options) {};
-    AssetManager.prototype.search = function(options) {};
+    AssetManager.prototype.list = function(paging) {
+        var paging = paging || this.defaultPaging;
+        return this.am.list(paging);
+    };
+    AssetManager.prototype.get = function(id) {
+        if (!id) {
+            throw 'The asset manager get method requires an id to be provided.';
+        }
+        return this.am.get(id);
+    };
+    AssetManager.prototype.search = function(query, paging) {
+        var paging = paging || this.defaultPaging;
+        if (!this.am) {
+            throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
+        }
+        return this.am.search(query, options);
+    };
     AssetManager.prototype.invokeAction = function(options) {};
     AssetManager.prototype.createVersion = function(options, newVersion) {};
     AssetManager.prototype.render = function(assets, page) {
@@ -65,7 +95,7 @@ var asset = {};
     AssetRenderer.prototype.list = function(page) {};
     AssetRenderer.prototype.lifecycle = function(page) {};
     AssetRenderer.prototype.leftNav = function(page) {
-        var log=new Log();
+        var log = new Log();
         log.info('Default leftnav');
     };
     AssetRenderer.prototype.ribbon = function(page) {};
@@ -76,7 +106,7 @@ var asset = {};
      * @param  {[type]} type     The type of the assets managed by the asset manager
      * @return An asset manager instance
      */
-    var createAssetManager = function(session,tenantId, registry, type) {
+    var createAssetManager = function(session, tenantId, registry, type) {
         var reflection = require('utils').reflection;
         var rxtManager = core.rxtManager(tenantId);
         var assetManager = new AssetManager(registry, type, rxtManager);
@@ -84,9 +114,11 @@ var asset = {};
         var context = core.createAssetContext(session, type);
         var assetResources = assetResourcesTemplate.manager ? assetResourcesTemplate.manager(context) : {};
         reflection.override(assetManager, assetResources);
+        //Initialize the asset manager
+        assetManager.init();
         return assetManager;
     };
-    var createRenderer = function(session,tenantId,type) {
+    var createRenderer = function(session, tenantId, type) {
         var reflection = require('utils').reflection;
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(tenantId, type);
@@ -105,8 +137,8 @@ var asset = {};
         var user = require('store').user;
         var userDetails = server.current(session);
         var userRegistry = user.userRegistry(session);
-        var am = createAssetManager(session,userDetails.tenantId, userRegistry, type);
-        am.r = createRenderer(session,userDetails.tenantId,type);
+        var am = createAssetManager(session, userDetails.tenantId, userRegistry, type);
+        am.r = createRenderer(session, userDetails.tenantId, type);
         return am;
     };
     /**

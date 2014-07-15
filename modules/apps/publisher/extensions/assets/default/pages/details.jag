@@ -1,13 +1,25 @@
 <%
-	var caramel=require('caramel');
-	var ui=require('rxt').ui;
-	var asset=require('rxt').asset;
-	var type='gadget';
-	var am=asset.createUserAssetManager(session,type);
-	var page=ui.buildPage(session,request);
+var caramel;
+require('/modules/publisher.js').exec(function(ctx) {
+    caramel = require('caramel');
+    var ui = require('rxt').ui;
+    var asset = require('rxt').asset;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var options = uriMatcher.match('/{context}/asts/{type}/{pageName}/{+id}');
+    var type = options.type;
+    var am = asset.createUserAssetManager(session, type);
+    var page = ui.buildPage(session, request);
+    if (!options.id) {
+        response.sendRedirect(400, 'An id must be provided when viewing details of a particular asset');
+    } else {
+        var assets = am.get(options.id);
+        if (assets == null) {
+            response.sendRedirect(404, 'The asset with id: ' + options.id + ' could not be located.');
+        } else {
 
-	var assets={};
-	var output=am.render(assets,page).details();
-	
-	caramel.render(output);
-%>
+        	//print(assets);
+            var output = am.render(assets, page).details();
+            caramel.render(output);
+        }
+    }
+}, request, response, session); %>

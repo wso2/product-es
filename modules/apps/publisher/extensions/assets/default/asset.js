@@ -1,19 +1,12 @@
 log.info('Start of scriptqq!');
 asset.manager = function(ctx) {
     return {
-        create: function(ctx) {
+        create: function(options) {
             this._super.create(options);
             log.info('Create called!');
         },
-        search: function(options) {
-            log.info('SEARCH method ' + stringify(options));
-            return [{
-                id: '146',
-                attributes: {
-                    overview_name: 'Test Asset 1',
-                    overview_provider: 'Admin'
-                }
-            }];
+        search: function(query,paging) {
+            return this._super.search.call(this,query,paging);
         }
     };
 };
