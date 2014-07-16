@@ -15,46 +15,48 @@ var resources = {};
     };
     var addToConfigs = function(tenantId, type, assetResource) {
         var configs = core.configs(tenantId);
-        configs.assetResources = {};
-        log.info('Setting asset resource: '+stringify(assetResource));
+        if (!configs.assetResources) {
+            configs.assetResources = {};
+        }
         configs.assetResources[type] = assetResource;
     };
-    var loadAssetScriptContent=function(path){
-        var file=new File(path);
-        var content='';
-        if(!file.isExists()){
-            throw 'Unable to load the default asset script.';
+    var loadAssetScriptContent = function(path) {
+        var file = new File(path);
+        var content = '';
+        if (!file.isExists()) {
+            log.warn('Unable to locate default asset script at path ' + path);
+            return content;
+            //throw 'Unable to load the default asset script.';
         }
-        try{
+        try {
             file.open('r');
-            content=file.readAll();
-        }
-        catch(e){
-            throw 'Unable to read the default asset script';
-        }
-        finally{
+            content = file.readAll();
+        } catch (e) {
+            log.error('Unable to read the default asset script.A custom asset script will not be loaded from ' + path);
+            //throw 'Unable to read the default asset script';
+        } finally {
             file.close();
         }
         return content;
     };
-    var loadDefaultAssetScript=function(options,type,assetResource){
-        var content=loadAssetScriptContent(getDefaultAssetScriptPath(options));
-        if(content){
-            assetResource=evalAssetScript(content, assetResource)
+    var loadDefaultAssetScript = function(options, type, assetResource) {
+        var content = loadAssetScriptContent(getDefaultAssetScriptPath(options));
+        if (content) {
+            assetResource = evalAssetScript(content, assetResource)
         }
         return assetResource;
     };
-    var loadAssetScript=function(options,type,assetResource){
-        var content=loadAssetScriptContent(getDefaultAssetTypeScriptPath(options, type));
-        if(content){
-            assetResource=evalAssetScript(content, assetResource);
+    var loadAssetScript = function(options, type, assetResource) {
+        var content = loadAssetScriptContent(getDefaultAssetTypeScriptPath(options, type));
+        if (content) {
+            assetResource = evalAssetScript(content, assetResource);
         }
         return assetResource;
     }
-    var evalAssetScript=function(scriptContent,assetResource){
-        var module='function(asset,log){'+scriptContent+'};';
-        var modulePtr=eval(module);
-        modulePtr.call(this,assetResource,log);
+    var evalAssetScript = function(scriptContent, assetResource) {
+        var module = 'function(asset,log){' + scriptContent + '};';
+        var modulePtr = eval(module);
+        modulePtr.call(this, assetResource, log);
         return assetResource;
     };
     var loadResources = function(options, tenantId, sysRegistry) {
@@ -68,8 +70,8 @@ var resources = {};
             resourcePath = getAssetScriptPath(type, options);
             var content = sysRegistry.content(resourcePath);
             //if (!content) {
-                //log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from file system');
-                //content = loadDefaultAssetScript(options, resourcePath, sysRegistry, type);
+            //log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from file system');
+            //content = loadDefaultAssetScript(options, resourcePath, sysRegistry, type);
             //}
             //
             //Load the default script first
@@ -81,16 +83,13 @@ var resources = {};
             asset.renderer = null;
             asset.server = null;
             asset.configure = null;
-            asset=loadDefaultAssetScript(options, type, asset);
-            asset=loadAssetScript(options,type,asset);
-
+            asset = loadDefaultAssetScript(options, type, asset);
+            asset = loadAssetScript(options, type, asset);
             //modulePtr.call(this, asset, log);
-            
             //Perform any rxt mutations
             if (asset.configure) {
                 manager.applyMutator(type, asset.configure());
             }
-
             addToConfigs(tenantId, type, asset);
         }
     };

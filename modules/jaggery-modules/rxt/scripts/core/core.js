@@ -149,7 +149,7 @@ var core = {};
         for (var type in this.rxtMap) {
             list.push(type);
         }
-        return ['gadget']; //list;
+        return list;
     };
     RxtManager.prototype.listRxtTypeDetails = function() {
         var list = [];
