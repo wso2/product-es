@@ -1,7 +1,0 @@
-org/wso2/carbon/social/sql/internal/SQLSocialComponent.class
-org/wso2/carbon/social/sql/Constants.class
-org/wso2/carbon/social/sql/SQLActivityBrowser.class
-org/wso2/carbon/social/sql/DSConnection.class
-org/wso2/carbon/social/sql/SQLActivityPublisher.class
-org/wso2/carbon/social/sql/SQLActivity.class
-org/wso2/carbon/social/sql/service/SQLActivityService.class
