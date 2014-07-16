@@ -8,3 +8,12 @@
 *.war
 *.ear
 *.zip
+
+target
+.classpath
+.settings
+.project
+*.iml
+*.iws
+*.ipr
+.idea
