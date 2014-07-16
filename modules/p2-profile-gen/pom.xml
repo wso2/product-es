@@ -263,8 +263,11 @@
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam.toolbox.deployer.feature:${carbon.platform.version}
                                 </featureArtifactDef-->
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.event.stream.manager.feature:${cep.component.version}
+                                </featureArtifactDef-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.social.feature:1.1.0
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -532,9 +535,13 @@
                                     <id>org.wso2.carbon.bam.toolbox.deployer.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature-->
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.event.stream.manager.feature.group</id>
                                     <version>${cep.component.version}</version>
+                                </feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.social.feature.group</id>
+                                    <version>1.1.0</version>
                                 </feature>
                             </features>
                         </configuration>
