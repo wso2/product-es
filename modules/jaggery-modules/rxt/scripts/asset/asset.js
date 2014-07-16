@@ -2,6 +2,19 @@ var asset = {};
 (function(asset, core) {
     var log = new Log('asset');
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
+    /**
+     * The function locates the provided field and table name within an attributes
+     * object
+     * @param  {[type]} attributes [description]
+     * @param  {[type]} fieldName  [description]
+     * @param  {[type]} tableName  [description]
+     * @return {[type]}            [description]
+     */
+    var getField = function(attributes, tableName, fieldName) {
+        var expression = tableName + '_' + fieldName;
+        var result = attributes[expression];
+        return result;
+    };
 
     function AssetManager(registry, type, rxtManager, renderer) {
         this.registry = registry;
@@ -51,8 +64,44 @@ var asset = {};
     };
     AssetManager.prototype.invokeAction = function(options) {};
     AssetManager.prototype.createVersion = function(options, newVersion) {};
+    AssetManager.prototype.combineWithRxt = function(asset) {
+        var modAsset = {};
+        modAsset.tables = [];
+        modAsset.id = asset.id;
+        modAsset.lifecycle = asset.lifecycle;
+        modAsset.lifecycleState = asset.lifecycleState;
+        modAsset.mediaType = asset.mediaType;
+        modAsset.type = asset.type;
+        modAsset.path = asset.path;
+        var tables = this.rxtManager.listRxtTypeTables(this.type);
+        var table;
+        var fields;
+        var attrFieldValue;
+        //Go through each table in the template
+        for (var tableIndex in tables) {
+            table = tables[tableIndex];
+            fields = table.fields;
+            //Go through each field in the table
+            for (var fieldName in fields) {
+                //Check if the field exists in the attributes list
+                attrFieldValue = getField(asset.attributes, table.name, fieldName);
+                //If the field exists then update the value 
+                if (attrFieldValue) {
+                    fields[fieldName].value = attrFieldValue;
+                }
+            }
+        }
+        modAsset.tables = tables;
+        return modAsset;
+    };
     AssetManager.prototype.render = function(assets, page) {
-        page.assets = assets;
+        var refUtil = require('utils').reflection;
+        //Combine with the rxt template only when dealing with a single asset
+        if (refUtil.isArray(assets)) {
+            page.assets = assets;
+        } else {
+            page.assets = this.combineWithRxt(assets);
+        }
         page.rxt = this.rxtTemplate;
         var that = this;
         return {
@@ -89,15 +138,15 @@ var asset = {};
         };
     };
 
-    function AssetRenderer(pagesRoot,assetsRoot) {
+    function AssetRenderer(pagesRoot, assetsRoot) {
         this.assetPagesRoot = pagesRoot;
-        this.assetsPagesRoot=assetsRoot;
+        this.assetsPagesRoot = assetsRoot;
     }
     AssetRenderer.prototype.buildUrl = function(pageName) {
         return this.assetPagesRoot + '/' + pageName;
     };
-    AssetRenderer.prototype.buildBaseUrl=function(type){
-        return this.assetsPagesRoot+type;
+    AssetRenderer.prototype.buildBaseUrl = function(type) {
+        return this.assetsPagesRoot + type;
     };
     AssetRenderer.prototype.create = function(page) {};
     AssetRenderer.prototype.update = function(page) {};
@@ -133,7 +182,7 @@ var asset = {};
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
-        var renderer = new AssetRenderer(asset.getAssetPageUrl(type),asset.getBaseUrl());
+        var renderer = new AssetRenderer(asset.getAssetPageUrl(type), asset.getBaseUrl());
         reflection.override(renderer, customRenderer);
         return renderer;
     };
@@ -198,7 +247,7 @@ var asset = {};
     asset.getAssetPageUrl = function(type) {
         return asset.getBaseUrl() + type;
     };
-    asset.getBaseUrl=function(){
+    asset.getBaseUrl = function() {
         return '/asts/';
     };
     asset.getAssetApiEndpoint = function(type, endpointName) {

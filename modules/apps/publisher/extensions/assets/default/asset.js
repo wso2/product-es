@@ -131,7 +131,9 @@ asset.renderer = function(ctx) {
         create: function(page) {},
         update: function(page) {},
         list: function(page) {},
-        details: function(page) {},
+        details: function(page) {
+            
+        },
         lifecycle: function(page) {},
         leftNav: function(page) {
             switch (page.meta.pageName) {

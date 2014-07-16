@@ -170,7 +170,7 @@ var reflection = {};
                     var childPtr = child[childKey];
                     //Update the clone with the old parent method
                     super[parentKey] = parentPtr;
-                    parent[parentKey]=childPtr;
+                    parent[parentKey] = childPtr;
                     /*parent[parentKey] = function() {
                         var result=childPtr.apply(this, arguments)||null;
                         return result;
@@ -180,5 +180,11 @@ var reflection = {};
         }
         //Allow the child object to call methods of the parent
         parent._super = super;
+    };
+    reflection.isArray = function(object) {
+        if (Object.prototype.toString.call(object) === '[object Array]') {
+            return true;
+        }
+        return false;
     };
 }());
