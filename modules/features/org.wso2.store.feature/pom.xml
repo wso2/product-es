@@ -81,7 +81,7 @@
                                 <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso</bundleDef>-->
                                 <bundleDef>org.wso2.store:org.wso2.store.sso.common</bundleDef>
                                 <bundleDef>org.wso2.store:org.wso2.store.admin.styles</bundleDef>
-                                <bundleDef>org.wso2.store:org.wso2.carbon.social:${project.version}</bundleDef>
+                                <!--bundleDef>org.wso2.store:org.wso2.carbon.social:${project.version}</bundleDef-->
                                 <!--bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra:${carbon.platform.version}</bundleDef-->
                                 <bundleDef>org.wso2.store:jaggery-scxml-executors:${project.version}</bundleDef>
                             </bundles>
