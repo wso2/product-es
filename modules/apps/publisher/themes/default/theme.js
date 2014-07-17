@@ -47,6 +47,16 @@ var engine = caramel.engine('handlebars', (function () {
                 partials(new File(resolve('partials')));
                 return options.fn(this);
             });
+
+            Handlebars.registerHelper('eachField',function(context,options){
+                var ret='';
+                for(var key in context){
+                    context[key].label=context[key].name.label?context[key].name.label:context[key].name.name;
+                    log.info('field '+stringify(context[key]));
+                    ret+=options.fn(context[key]);
+                }
+                return ret;
+            });
         },
         render: function (data, meta) {
             if (request.getParameter('debug') == '1') {
