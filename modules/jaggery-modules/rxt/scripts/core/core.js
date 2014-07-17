@@ -171,19 +171,19 @@ var core = {};
         var rxtDefinition = this.rxtMap[type];
         this.rxtMap[type] = applyDefinitionMutation(rxtDefinition, mutator);
     };
-    RxtManager.prototype.listRxtTypeTables=function(type){
-        var rxtDefinition=this.rxtMap[type];
-        if(!rxtDefinition){
-            log.error('Unable to locate the rxt definition for type: '+type+' in order to return tables');
-            throw 'Unable to locate the rxt definition for type: '+type+' in order to return tables';
+    RxtManager.prototype.listRxtTypeTables = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return tables');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return tables';
         }
-        var tables=[];
+        var tables = [];
         var table;
-        for(var key in rxtDefinition.content.table){
-            table=rxtDefinition.content.table[key];
-            var temp=table.name;
-            table.label=temp;
-            table.name=key;
+        for (var key in rxtDefinition.content.table) {
+            table = rxtDefinition.content.table[key];
+            var temp = table.name;
+            table.label = temp;
+            table.name = key;
             tables.push(table);
         }
         return tables;
@@ -270,8 +270,8 @@ var core = {};
             systemRegistry: sysRegistry,
             assetType: type,
             rxtManager: rxtManager,
-            tenantConfigs:tenatConfigs,
-            serverConfigs:serverConfigs
+            tenantConfigs: tenatConfigs,
+            serverConfigs: serverConfigs
         };
     };
 }(core));

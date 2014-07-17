@@ -52,7 +52,6 @@ var engine = caramel.engine('handlebars', (function () {
                 var ret='';
                 for(var key in context){
                     context[key].label=context[key].name.label?context[key].name.label:context[key].name.name;
-                    log.info('field '+stringify(context[key]));
                     ret+=options.fn(context[key]);
                 }
                 return ret;
