@@ -44,7 +44,7 @@
                 <exclude>**/org.wso2.carbon.identity.relyingparty.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/org.wso2.carbon.identity.user.registration.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/apache-cassandra_1.1.3.wso2v5.jar</exclude>
-                <exclude>**/log4j.properties</exclude>
+                <!--<exclude>**/log4j.properties</exclude>-->
             </excludes>
         </fileSet>
         <fileSet>
@@ -62,7 +62,20 @@
             </directory>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
         </fileSet>
-
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources
+            </directory>
+            <outputDirectory>${project.artifactId}-${pom.version}/repository/resources</outputDirectory>
+        </fileSet>
+        <!--
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf
+            </directory>
+            <outputDirectory>${project.artifactId}-${pom.version}/repository/conf</outputDirectory>
+        </fileSet>
+         -->
         <fileSet>
             <directory>src/repository/resources/styles/css</directory>
             <outputDirectory>${project.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
@@ -303,11 +316,13 @@
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
+        <!--
         <file>
             <source>src/repository/conf/log4j.properties</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
+        -->
         <file>
             <source>src/repository/conf/multitenancy/cloud-services-desc.xml</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/multitenancy/</outputDirectory>
@@ -326,13 +341,14 @@
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file-->
         <!-- Including log4j.properties file -->
-        <!--        <file>
+        <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties
             </source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/
             </outputDirectory>
-        </file>-->
+        </file>
+        <!-- added  -->
         <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/axis2/axis2.xml</source>
             <outputDirectory>${project.artifactId}-${pom.version}/repository/conf/axis2/</outputDirectory>

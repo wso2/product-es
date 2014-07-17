@@ -54,7 +54,10 @@
                                 				</div>
                                 				<div class="tbl-upload-cell">
                                 					<button class="btn btn-upload">Browse</button>
-                                   					<input class='fm-managed' id='{{this.name}}' type='file' name='{{this.name}}' data-use-plugins="DefaultFileUploadPlugin,RequiredField" data-required='{{this.isRequired}}'/>
+                                   					<input class='fm-managed' id='{{this.name}}' type='file' name='{{this.name}}' data-use-plugins="DefaultFileUploadPlugin,RequiredField" data-required='{{this.isRequired}}' ext='{{this.fileExtension}}'/>
+                                                    {{#if this.fileExtension}}                                                 
+                                                        <label>upload "{{this.fileExtension}}"</label>
+                                                    {{/if}} 
                                 				</div>
                                 			</div>
                                 		</div>

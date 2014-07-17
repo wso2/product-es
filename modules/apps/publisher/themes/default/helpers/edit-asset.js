@@ -2,7 +2,7 @@ var resources = function(page, meta) {
 	var log = new Log('edit-asset');
 	log.debug('resource called');
 	return {
-		js : ['common/form-manager.js','common/form-plugins/common-plugins.js','common/form-plugins/options-text-plugin.js','common/form-plugins/tag-plugin.js','common/form-plugins/unbound-table-plugin.js','logic/asset/edit-asset.js','logic/asset.tag.edit.js'], //['edit.asset.js', '/logic/asset.tag.edit.js', 'bootstrap-select.min.js','options.text.js'],
+		js : ['common/form-manager.js','common/form-plugins/common-plugins.js','common/form-plugins/options-text-plugin.js','common/form-plugins/tag-plugin.js','common/form-plugins/unbound-table-plugin.js','logic/asset/edit-asset.js','logic/asset.tag.edit.js','common/form-plugins/custom.js'], //['edit.asset.js', '/logic/asset.tag.edit.js', 'bootstrap-select.min.js','options.text.js'],
 		css : ['bootstrap-select.min.css']
 	};
 
