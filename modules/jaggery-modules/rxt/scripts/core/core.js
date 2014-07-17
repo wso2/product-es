@@ -180,7 +180,7 @@ var core = {};
         var tables = [];
         var table;
         for (var key in rxtDefinition.content.table) {
-            table = rxtDefinition.content.table[key];
+            table = parse(stringify(rxtDefinition.content.table[key]));
             var temp = table.name;
             table.label = temp;
             table.name = key;
