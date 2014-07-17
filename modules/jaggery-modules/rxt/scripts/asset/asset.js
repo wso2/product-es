@@ -15,6 +15,32 @@ var asset = {};
         var result = attributes[expression];
         return result;
     };
+    var getOptionTextField = function(attributes, tableName, fieldName, field, table) {
+        //Determine the number of headings 
+        var subHeading = table.subheading ? table.subheading[0].heading : null;
+        if (!subHeading) {
+            return '';
+        }
+        var expression = tableName + '_' + fieldName;
+        //Get the number of subheadings
+        if (subHeading.length > 0) {
+            expression = tableName + '_entry';
+        }
+        var value = attributes[expression];
+        return value;
+    };
+    var resolveField = function(attributes, tableName, fieldName, field, table) {
+        var value;
+        switch (field.type) {
+            case 'option-text':
+                value = getOptionTextField(attributes, tableName, fieldName, field, table);
+                break;
+            default:
+                value = getField(attributes, tableName, fieldName);
+                break;
+        }
+        return parse(stringify(value));
+    };
 
     function AssetManager(registry, type, rxtManager, renderer) {
         this.registry = registry;
@@ -76,6 +102,7 @@ var asset = {};
         var tables = this.rxtManager.listRxtTypeTables(this.type);
         var table;
         var fields;
+        var field;
         var attrFieldValue;
         //Go through each table in the template
         for (var tableIndex in tables) {
@@ -83,8 +110,10 @@ var asset = {};
             fields = table.fields;
             //Go through each field in the table
             for (var fieldName in fields) {
+                field = fields[fieldName];
+                //log.info(stringify(field));
                 //Check if the field exists in the attributes list
-                attrFieldValue = getField(asset.attributes, table.name, fieldName);
+                attrFieldValue = resolveField(asset.attributes, table.name, fieldName, field, table);
                 //If the field exists then update the value 
                 if (attrFieldValue) {
                     fields[fieldName].value = attrFieldValue;

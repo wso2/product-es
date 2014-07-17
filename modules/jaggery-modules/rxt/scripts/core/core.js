@@ -114,6 +114,7 @@ var core = {};
         var rxtPaths = GovernanceUtils.findGovernanceArtifacts(DEFAULT_MEDIA_TYPE, this.registry.registry);
         var content;
         var rxtDefinition;
+        log.info('RXT paths: '+stringify(rxtPaths));
         for (var index in rxtPaths) {
             try {
                 content = this.registry.get(rxtPaths[index]);
