@@ -269,11 +269,14 @@ $(function() {
 
     window.changeState = function(className) {
       var thisState = className;
+      /*
       if (isClickable(thisState)) {
         $('#commentModal').data('state', thisState).modal('show');
       } else {
         showAlert('Invalid operation', 'error');
       }
+      */
+      permitt(thisState);
     }
   }
 
@@ -457,6 +460,39 @@ $(function() {
     }
   }
 
+  /*
+  Show the comments box and allow performing Lifecycle action to be continued only if user has permission
+  */
+  function permitt(state){
+     var action = getAction(state);
+     if (isClickable(state)) {
+            var jqxhr = $.ajax({
+                  url: '/publisher/api/lifecycle/' + action + '/' + asset + '/' + id,
+                  type: 'GET',
+                  data: JSON.stringify({      
+                  }),
+                  contentType: 'application/json',
+
+                  success: function(response) {              
+                     $('#commentModal').data('state', state).modal('show');
+                    },
+                  error: function(response) {        
+                    if (response.status === 401) {
+                      showAlert('You do not have permission to perform this action.', 'error');
+                    } else {
+                      showAlert(action + ' operation failed', 'error');
+                    }
+                     // showAlert('Permission Denied for '+action, 'error');
+                            
+                  }
+              });   
+             
+      }else {
+             showAlert('Invalid operation', 'error');
+          }    
+     
+      return true;
+  }
 
   function getTransitions() {
     var i = 0;
