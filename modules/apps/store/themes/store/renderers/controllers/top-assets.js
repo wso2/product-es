@@ -1,4 +1,20 @@
 var render = function (theme, data, meta, require) {
+
+    var topAssets='top-assets';
+    var topAssetContext=require('/helpers/top-assets.js').currentPage(data.topAssets,data.sso,data.user);
+    var navigation='navigation';
+    var navigationContext=require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search);
+
+    switch(data.assetTypeCount) {
+        case 1:
+            topAssets='top-assets-single';
+            topAssetContext=require('/helpers/top-assets-single.js').currentPage(data.topAssets,data.sso,data.user);
+            navigation='navigation-single';
+            navigationContext=require('/helpers/navigation-single.js').currentPage(data.navigation, data.type, data.search);
+            break;
+        default:
+            break;
+    }
    
     theme('2-column-right', {
         title: data.title,
@@ -10,14 +26,14 @@ var render = function (theme, data, meta, require) {
         ],
         navigation: [
             {
-                partial: 'navigation',
-                context: require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search)
+                partial: navigation,
+                context: navigationContext
             }
         ],
         body: [
             {
-                partial: 'top-assets',
-                context: require('/helpers/top-assets.js').currentPage(data.topAssets,data.sso,data.user)
+                partial: topAssets,
+                context: topAssetContext
             }
         ],
         right: [

@@ -2,7 +2,7 @@
 var caramel;
 
 require('/modules/store.js').exec(function (ctx) {
-    var count, tags, title,
+    var count, tags, title,typeCount,
             log = ctx.log,
             sso = ctx.sso,
             store = ctx.store,
@@ -16,6 +16,7 @@ require('/modules/store.js').exec(function (ctx) {
 
     caramel = require('caramel');
 
+    typeCount=types.length;
     var rxtAttributes = require('/modules/util.js').getRXTAttributes(tenantId, type);
 
     if (!user) {
@@ -53,7 +54,8 @@ require('/modules/store.js').exec(function (ctx) {
         subscriptions: count > 0 ? subscriptions : null,
         recentAssets: recentAssets,
         myAssets: { user: user, type: type, title: title},
-        tags: tags
+        tags: tags,
+        assetTypeCount:typeCount
     });
 }, request, response, session);
 %>

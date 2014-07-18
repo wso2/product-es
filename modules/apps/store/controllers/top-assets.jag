@@ -5,7 +5,7 @@
 var caramel;
 
 require('/modules/store.js').exec(function (ctx) {
-    var paging, count, current, loggedUser, manager, assets, length, recentDiff,
+    var paging, count, current, loggedUser, manager, assets, length, recentDiff, popAssets,
             popularDiff, recent, popular, type,
             log = ctx.log,
             query = ctx.params.query,
@@ -23,6 +23,7 @@ require('/modules/store.js').exec(function (ctx) {
             items = [],
             popularItems = [],
             recentItems = [],
+            popItems = [],
             options = {},
             types = store.assetTypes(),
             search = require('/modules/search.js'),
@@ -57,6 +58,13 @@ require('/modules/store.js').exec(function (ctx) {
             singular: manager.singularLabel,
             type: manager.shortName
         });
+        popAssets = store.popularAssets(type, first ? (popular + popularDiff) : popular);
+        popItems.push({
+            popAssets: popAssets,
+            plural: manager.pluralLabel,
+            singular: manager.singularLabel,
+            type: manager.shortName
+        });
         popularItems = popularItems.concat(store.popularAssets(type, first ? (popular + popularDiff) : popular));
         recentItems = recentItems.concat(store.recentAssets(type, first ? (recent + recentDiff) : recent));
         first = false;
@@ -78,13 +86,15 @@ require('/modules/store.js').exec(function (ctx) {
         },
         topAssets: {
             assets: items,
-            popularAssets: popularItems
+            popularAssets: popularItems,
+            popAssets: popItems
         },
         tags: {
             url: '/assets/' + type + '?page=1&tag=',
             data: store.tags(type)
         },
-        recentAssets: recentItems
+        recentAssets: recentItems,
+        assetTypeCount: length
         // type: type,  tag: tag,
     });
 }, request, response, session);

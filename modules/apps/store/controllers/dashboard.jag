@@ -2,7 +2,7 @@
 var caramel;
 
 require('/modules/store.js').exec(function (ctx) {
-    var tag, type, recentGadgets, recentSites, recentEBooks,
+    var tag, type, recentGadgets, recentSites, recentEBooks,typeCount,
             log = ctx.log,
             sso = ctx.sso,
             store = ctx.store,
@@ -26,6 +26,7 @@ require('/modules/store.js').exec(function (ctx) {
         response.sendRedirect(caramel.configs().context);
         return;
     }
+    typeCount=types.length;
     recentGadgets = store.recentAssets("gadget", 3);
     recentSites = store.recentAssets("site", 3);
     recentEBooks = store.recentAssets("ebook", 3);
@@ -78,7 +79,8 @@ require('/modules/store.js').exec(function (ctx) {
 
         'userAssets': count > 0 ? subscriptions : null,
         'recentAssets': recentAssets,
-        'tags': tags
+        'tags': tags,
+        assetTypeCount: typeCount
     });
 }, request, response, session);
 %>
