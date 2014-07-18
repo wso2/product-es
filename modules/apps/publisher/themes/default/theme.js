@@ -66,46 +66,6 @@ var engine = caramel.engine('handlebars', (function() {
                 }
                 return output;
             };
-            var renderDefaultPreview = function(field) {
-                var label = field.name.label ? field.name.label : field.name.name;
-                return '<td>' + label + '</td><td>' + field.value + '</td>';
-            };
-            Handlebars.registerHelper('renderFieldPreview', function(field) {
-                var out;
-                switch (field.type) {
-                    case 'option-text':
-                        out = renderOptionsTextPreview(field);
-                        break;
-                    default:
-                        out = ''; //renderDefaultPreview(field);
-                        break;
-                }
-                return new Handlebars.SafeString(out);
-            });
-            Handlebars.registerHelper('renderFieldsPreview', function(table) {
-                var heading = (context.subheading) ? context.subheading[0].heading : [];
-                var field;
-                var out = '';
-                for (var index = 0; index < heading.length; index++) {
-                    for (var key in table.fields) {
-                        field = table.fields[key];
-                        out += '<td>' + field.value[index]
-                    }
-                }
-            });
-            Handlebars.registerHelper('renderTable', function(context) {
-                var unboundedPtr = Handlebars.compile('{{> heading_table .}}');
-                var defaultPtr = Handlebars.compile('{{> default_table .}}');
-                var out;
-                var heading = (context.subheading) ? context.subheading[0].heading : [];
-                if (heading.length > 0) {
-                    context.subheading = context.subheading[0].heading;
-                    out = unboundedPtr(context);
-                } else {
-                    out = defaultPtr(context);
-                }
-                return new Handlebars.SafeString(out);
-            });
             var getHeadings = function(table) {
                 return (table.subheading) ? table.subheading[0].heading : [];
             };
@@ -114,7 +74,35 @@ var engine = caramel.engine('handlebars', (function() {
                     return table.fields[key].value.length;
                 }
                 return 0;
-            }
+            };
+            var getFieldCount = function(table) {
+                var count = 0;
+                for (var key in table.fields) {
+                    count++;
+                }
+                return count;
+            };
+            var getFirstField = function(table) {
+                for (var key in table.fields) {
+                    return table.fields[key];
+                }
+                return null;
+            };
+            var renderHeadingFieldPreview = function(table) {
+                var fields = table.fields;
+                var columns = table.columns;
+                var index = 0;
+                var out = '<tr>';
+                for (var key in fields) {
+                    if ((index % 3) == 0) {
+                        index = 0;
+                        out += '</tr><tr>';
+                    }
+                    out += '<td>' + (fields[key].value || ' ') + '</td>';
+                    index++;
+                }
+                return out;
+            };
             Handlebars.registerHelper('renderUnboundTablePreview', function(table) {
                 //Get the number of rows in the table
                 var rowCount = getNumOfRows(table);
@@ -123,11 +111,22 @@ var engine = caramel.engine('handlebars', (function() {
                 for (var index = 0; index < rowCount; index++) {
                     out += '<tr>';
                     for (var key in fields) {
-                        out += '<td>' + fields[key].value[index] + '</td>';
+                        var value = fields[key].value[index] ? fields[key].value : ' ';
+                        out += '<td>' + value + '</td>';
                     }
                     out += '</tr>';
                 }
                 return new Handlebars.SafeString(out);
+            });
+            Handlebars.registerHelper('renderHeadingTablePreview', function(table) {
+                var fieldCount = getFieldCount(table);
+                var firstField = getFirstField(table);
+                //Determine if there is only one field and it is an option text
+                if ((fieldCount == 1) && (firstField.type == 'option-text')) {
+                    return new Handlebars.SafeString(renderOptionsTextPreview(firstField));
+                } else {
+                    return new Handlebars.SafeString(renderHeadingFieldPreview(table));
+                }
             });
             Handlebars.registerHelper('renderTablePreview', function(table) {
                 var headingPtr = Handlebars.compile('{{> heading_table .}}');
