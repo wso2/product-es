@@ -75,6 +75,12 @@ var engine = caramel.engine('handlebars', (function() {
                 }
                 return 0;
             };
+            var getNumOfRowsUnbound = function(table) {
+                for (var key in table.fields) {
+                    return (table.fields[key].value) ? table.fields[key].value.length : 0;
+                }
+                return 0;
+            };
             var getFieldCount = function(table) {
                 var count = 0;
                 for (var key in table.fields) {
@@ -241,6 +247,32 @@ var engine = caramel.engine('handlebars', (function() {
                 } else {
                     return new Handlebars.SafeString(renderEditableHeadingField(table));
                 }
+            });
+            Handlebars.registerHelper('renderEditableUnboundTable', function(table) {
+                //Get the number of rows in the table
+                var rowCount = getNumOfRowsUnbound(table);
+                var fields = table.fields;
+                var out = '';
+                if (rowCount == 0) {
+                    log.info('Empty row');
+                    out+='<tr>';
+                    for(var key in fields){
+                        
+                        out+=renderField(fields[key]);
+            
+                    }
+                    out+='</tr>';
+                } else {
+                    for (var index = 0; index < rowCount; index++) {
+                        out += '<tr>';
+                        for (var key in fields) {
+                            var value = fields[key].value[index] ? fields[key].value[index] : ' ';
+                            out += '<td>' + value + '</td>';
+                        }
+                        out += '</tr>';
+                    }
+                }
+                return new Handlebars.SafeString(out);
             });
             Handlebars.registerHelper('renderTable', function(table) {
                 var headingPtr = Handlebars.compile('{{> editable_heading_table .}}');
