@@ -1,0 +1,9 @@
+<form  class="form-horizontal" id="form-asset-create" enctype="multipart/form-data" data-use-plugins="UnboundDataCompiler" >
+    <div class="control-group">
+             {{#each assets.tables}}                                             
+                <tr>
+                        {{renderTable .}}
+                </tr>                                    
+            {{/each}}  
+    </div>           
+</form>

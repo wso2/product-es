@@ -148,6 +148,121 @@ var engine = caramel.engine('handlebars', (function() {
                 //Check if the table is a normal table
                 return new Handlebars.SafeString(defaultPtr(table));
             });
+            var renderFieldLabel = function(field) {
+                return '<b><label class="control-label">' + (field.name.label || field.name.name) + '</label>';
+            };
+            var renderOptions = function(value, values) {
+                var out = '<select>';
+                if (value) {
+                    out += '<option selected>' + value + '</option>';
+                }
+                for (var index in values) {
+                    out += '<option>' + values[index].value + '</option>';
+                }
+                //Filter out the selected 
+                out + '</select>';
+                return out;
+            };
+            var renderOptionsTextField = function(field) {
+                var value;
+                var values = field.value;
+                var output = '';
+                if (values) {
+                    for (var index in values) {
+                        value = values[index];
+                        var delimter = value.indexOf(':')
+                        var option = value.substring(0, delimter);
+                        var text = value.substring(delimter + 1, value.length);
+                        output += '<tr>';
+                        output += '<td>' + renderOptions(option, field.values) + '</td>';
+                        output += '<td><input type="text"' + text + ' /></td>';
+                        output += '</tr>';
+                    }
+                } else {
+                    output += '<tr>';
+                    output += '<td>' + renderOptions(option, field.values[0].value) + '</td>';
+                    output += '<td><input type="text" /></td>';
+                    output += '</tr>';
+                }
+                return output;
+            };
+            var renderField = function(field) {
+                var out = '';
+                switch (field.type) {
+                    case 'options':
+                        out = '<td>' + renderOptions(field.value, field.values[0].value) + '</td>';
+                        break;
+                    case 'text':
+                        out = '<td><input type="text" >';
+                        break;
+                    case 'text-area':
+                        out = '<td><input type="text-area">';
+                        break;
+                    default:
+                        out = '<td>Normal Field' + field.type + '</td>';
+                        break;
+                }
+                return out;
+            };
+            var renderEditableHeadingField = function(table) {
+                var fields = table.fields;
+                var columns = table.columns;
+                var index = 0;
+                var out = '<tr>';
+                for (var key in fields) {
+                    if ((index % 3) == 0) {
+                        index = 0;
+                        out += '</tr><tr>';
+                    }
+                    out += renderField(fields[key]);
+                    index++;
+                }
+                return out;
+            };
+            Handlebars.registerHelper('renderEditableFields', function(fields) {
+                var out = '';
+                var field;
+                for (var key in fields) {
+                    field = fields[key];
+                    out += rendeLabel(field) + renderField(field);
+                }
+                return new Handlebars.SafeString(out);
+            });
+            Handlebars.registerHelper('renderEditableField', function(field) {
+                var label = '<td>' + renderFieldLabel(field) + '</td>';
+                return new Handlebars.SafeString(label + renderField(field));
+            });
+            Handlebars.registerHelper('renderEditableHeadingTable', function(table) {
+                var fieldCount = getFieldCount(table);
+                var firstField = getFirstField(table);
+                //Determine if there is only one field and it is an option text
+                if ((fieldCount == 1) && (firstField.type == 'option-text')) {
+                    return new Handlebars.SafeString(renderOptionsTextField(firstField));
+                } else {
+                    return new Handlebars.SafeString(renderEditableHeadingField(table));
+                }
+            });
+            Handlebars.registerHelper('renderTable', function(table) {
+                var headingPtr = Handlebars.compile('{{> editable_heading_table .}}');
+                var defaultPtr = Handlebars.compile('{{> editable_default_table .}}');
+                var unboundPtr = Handlebars.compile('{{> editable_unbound_table .}}');
+                var headings = getHeadings(table);
+                //Check if the table is unbounded
+                if ((table.maxoccurs) && (table.maxoccurs == 'unbounded')) {
+                    if (headings.length > 0) {
+                        table.subheading = table.subheading[0].heading;
+                    }
+                    log.info('Rendering unbounded table');
+                    return new Handlebars.SafeString(unboundPtr(table));
+                }
+                //Check if the table has headings
+                if (headings.length > 0) {
+                    table.subheading = table.subheading[0].heading;
+                    return new Handlebars.SafeString(headingPtr(table));
+                }
+                //Check if the table is a normal table
+                return new Handlebars.SafeString(defaultPtr(table));
+            });
         },
         render: function(data, meta) {
             if (request.getParameter('debug') == '1') {

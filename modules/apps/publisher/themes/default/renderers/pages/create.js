@@ -14,7 +14,7 @@ var render = function(theme, data, meta, require) {
         	context:data
         }],
         listassets: [{
-            partial: 'add-asset',
+            partial: 'add_asset',
             context: data
         }]
     });
