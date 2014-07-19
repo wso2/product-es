@@ -111,7 +111,7 @@ var engine = caramel.engine('handlebars', (function() {
                 for (var index = 0; index < rowCount; index++) {
                     out += '<tr>';
                     for (var key in fields) {
-                        var value = fields[key].value[index] ? fields[key].value : ' ';
+                        var value = fields[key].value[index] ? fields[key].value[index] : ' ';
                         out += '<td>' + value + '</td>';
                     }
                     out += '</tr>';
