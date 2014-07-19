@@ -1,0 +1,12 @@
+ <form class="form-horizontal" id='form-asset-edit' data-asset-id='{{this.artifact.id}}'
+                          data-asset-type='{{this.artifact.type}}'
+                          data-use-plugins="FormMetaReader,UnboundDataCompiler">
+
+    <div class="control-group">
+             {{#each assets.tables}}                                             
+                <tr>
+                        {{renderTable .}}
+                </tr>                                    
+            {{/each}}  
+    </div>    
+</form>

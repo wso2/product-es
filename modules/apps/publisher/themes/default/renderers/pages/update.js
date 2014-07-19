@@ -14,7 +14,7 @@ var render = function(theme, data, meta, require) {
         	context:data
         }],
         listassets: [{
-            partial: 'edit-asset',
+            partial: 'update_asset',
             context: data
         }]
     });

@@ -181,7 +181,7 @@ var engine = caramel.engine('handlebars', (function() {
                         var text = value.substring(delimter + 1, value.length);
                         output += '<tr>';
                         output += '<td>' + renderOptions(option, field.values) + '</td>';
-                        output += '<td><input type="text"' + text + ' /></td>';
+                        output += '<td><input type="text" value="'+text+'" /></td>';
                         output += '</tr>';
                     }
                 } else {
@@ -194,15 +194,34 @@ var engine = caramel.engine('handlebars', (function() {
             };
             var renderField = function(field) {
                 var out = '';
+                var value=field.value||'';
                 switch (field.type) {
                     case 'options':
                         out = '<td>' + renderOptions(field.value, field.values[0].value) + '</td>';
                         break;
                     case 'text':
-                        out = '<td><input type="text" >';
+                        out = '<td><input type="text" value="'+value+'"" >';
                         break;
                     case 'text-area':
-                        out = '<td><input type="text-area">';
+                        out = '<td><input type="text-area" value="'+value+'">';
+                        break;
+                    default:
+                        out = '<td>Normal Field' + field.type + '</td>';
+                        break;
+                }
+                return out;
+            };
+              var renderFieldValue = function(field,value) {
+                var out = '';
+                switch (field.type) {
+                    case 'options':
+                        out = '<td>' + renderOptions(value, field.values[0].value) + '</td>';
+                        break;
+                    case 'text':
+                        out = '<td><input type="text" value="'+value+'"" >';
+                        break;
+                    case 'text-area':
+                        out = '<td><input type="text-area" value="'+value+'">';
                         break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
@@ -254,7 +273,6 @@ var engine = caramel.engine('handlebars', (function() {
                 var fields = table.fields;
                 var out = '';
                 if (rowCount == 0) {
-                    log.info('Empty row');
                     out+='<tr>';
                     for(var key in fields){
                         
@@ -267,7 +285,8 @@ var engine = caramel.engine('handlebars', (function() {
                         out += '<tr>';
                         for (var key in fields) {
                             var value = fields[key].value[index] ? fields[key].value[index] : ' ';
-                            out += '<td>' + value + '</td>';
+                            var field=fields[key];
+                            out += renderFieldValue(field, value);
                         }
                         out += '</tr>';
                     }
@@ -284,7 +303,6 @@ var engine = caramel.engine('handlebars', (function() {
                     if (headings.length > 0) {
                         table.subheading = table.subheading[0].heading;
                     }
-                    log.info('Rendering unbounded table');
                     return new Handlebars.SafeString(unboundPtr(table));
                 }
                 //Check if the table has headings

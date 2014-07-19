@@ -130,7 +130,6 @@ var asset = {};
         if (refUtil.isArray(assets)) {
             page.assets = assets;
         } else {
-            log.info('Asset: '+stringify(assets));
             page.assets = this.combineWithRxt(assets);
         }
         page.rxt = this.rxtTemplate;
