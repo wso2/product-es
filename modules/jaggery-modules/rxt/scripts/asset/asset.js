@@ -113,7 +113,7 @@ var asset = {};
                 field = fields[fieldName];
                 //log.info(stringify(field));
                 //Check if the field exists in the attributes list
-                attrFieldValue = resolveField(asset.attributes, table.name, fieldName, field, table);
+                attrFieldValue = resolveField(asset.attributes||{}, table.name, fieldName, field, table);
                 //If the field exists then update the value 
                 if (attrFieldValue) {
                     fields[fieldName].value = attrFieldValue;
@@ -125,10 +125,12 @@ var asset = {};
     };
     AssetManager.prototype.render = function(assets, page) {
         var refUtil = require('utils').reflection;
+
         //Combine with the rxt template only when dealing with a single asset
         if (refUtil.isArray(assets)) {
             page.assets = assets;
         } else {
+            log.info('Asset: '+stringify(assets));
             page.assets = this.combineWithRxt(assets);
         }
         page.rxt = this.rxtTemplate;
