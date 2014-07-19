@@ -100,18 +100,19 @@ asset.renderer = function(ctx) {
         }];
     };
     var buildDefaultLeftNav = function(page, util) {
+        var id=page.assets.id;
         return [{
             name: 'Overview',
             iconClass: 'icon-list-alt',
-            url: util.buildUrl('details')
+            url: util.buildUrl('details')+'/'+id
         }, {
             name: 'Edit',
             iconClass: 'icon-edit',
-            url: util.buildUrl('update')
+            url: util.buildUrl('update')+'/'+id
         }, {
             name: 'Life Cycle',
             iconClass: 'icon-retweet',
-            url: util.buildUrl('lifecycle')
+            url: util.buildUrl('lifecycle')+'/'+id
         }];
     };
     var isActivatedAsset = function(assetType) {
