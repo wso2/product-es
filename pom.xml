@@ -213,7 +213,7 @@
                 <artifactId>org.wso2.carbon.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
-            <!--dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
                 <version>${carbon.platform.version}</version>
@@ -227,7 +227,7 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
                 <version>${carbon.platform.version}</version>
-            </dependency-->
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
@@ -237,6 +237,11 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
                 <version>${carbon.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.social.core</artifactId>
+                <version>${carbon.social.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
@@ -446,6 +451,7 @@
         
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
         <carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.social.version>1.1.0-SNAPSHOT</carbon.social.version>
 
         <test.framwork.version>4.3.1-SNAPSHOT</test.framwork.version>
         <platform.integration.utils.version>4.3.0-SNAPSHOT</platform.integration.utils.version>
