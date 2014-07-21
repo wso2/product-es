@@ -267,7 +267,7 @@
                                     org.wso2.carbon:org.wso2.carbon.event.stream.manager.feature:${cep.component.version}
                                 </featureArtifactDef-->
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.social.feature:1.1.0
+                                    org.wso2.carbon:org.wso2.carbon.social.feature:${carbon.social.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -541,7 +541,7 @@
                                 </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.social.feature.group</id>
-                                    <version>1.1.0</version>
+                                    <version>${carbon.social.version}</version>
                                 </feature>
                             </features>
                         </configuration>
