@@ -1,12 +1,15 @@
- <form class="form-horizontal" id='form-asset-edit' data-asset-id='{{this.artifact.id}}'
-                          data-asset-type='{{this.artifact.type}}'
-                          data-use-plugins="FormMetaReader,UnboundDataCompiler">
-
+ <form class="form-horizontal" id='form-asset-edit' method='post' action='{{url ""}}/asts/gadget/api/assets'>
     <div class="control-group">
              {{#each assets.tables}}                                             
                 <tr>
                         {{renderTable .}}
                 </tr>                                    
             {{/each}}  
-    </div>    
+    </div> 
+    <div id="saveButtons" class="form-actions">
+                            <input type="submit" value="Update" class="btn btn-primary"
+                                   name="editAssetButton" id="editAssetButton">
+                            <input type="reset" value="Reset" class="btn">
+                            <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
+    </div>   
 </form>

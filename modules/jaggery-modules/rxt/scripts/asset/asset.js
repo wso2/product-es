@@ -111,6 +111,7 @@ var asset = {};
             //Go through each field in the table
             for (var fieldName in fields) {
                 field = fields[fieldName];
+                field.name.tableQualifiedName=table.name+'_'+fieldName;
                 //log.info(stringify(field));
                 //Check if the field exists in the attributes list
                 attrFieldValue = resolveField(asset.attributes||{}, table.name, fieldName, field, table);

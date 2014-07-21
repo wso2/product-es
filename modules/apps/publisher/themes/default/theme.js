@@ -154,11 +154,14 @@ var engine = caramel.engine('handlebars', (function() {
                 //Check if the table is a normal table
                 return new Handlebars.SafeString(defaultPtr(table));
             });
-            var renderFieldLabel = function(field) {
-                return '<b><label class="control-label">' + (field.name.label || field.name.name) + '</label>';
+            var renderFieldMetaData=function(field){
+                return ' name="'+field.name.tableQualifiedName+'" ';
             };
-            var renderOptions = function(value, values) {
-                var out = '<select>';
+            var renderFieldLabel = function(field) {
+                return '<b><label class="control-label">' + (field.name.label || field.name.name) + '</label></b>';
+            };
+            var renderOptions = function(value, values,field) {
+                var out = '<select '+renderFieldMetaData(field)+'>';
                 if (value) {
                     out += '<option selected>' + value + '</option>';
                 }
@@ -180,13 +183,13 @@ var engine = caramel.engine('handlebars', (function() {
                         var option = value.substring(0, delimter);
                         var text = value.substring(delimter + 1, value.length);
                         output += '<tr>';
-                        output += '<td>' + renderOptions(option, field.values) + '</td>';
-                        output += '<td><input type="text" value="'+text+'" /></td>';
+                        output += '<td>' + renderOptions(option, field.values,field) + '</td>';
+                        output += '<td><input type="text" value="'+text+'" '+renderFieldMetaData(field)+' /></td>';
                         output += '</tr>';
                     }
                 } else {
                     output += '<tr>';
-                    output += '<td>' + renderOptions(option, field.values[0].value) + '</td>';
+                    output += '<td>' + renderOptions(option, field.values[0].value,field) + '</td>';
                     output += '<td><input type="text" /></td>';
                     output += '</tr>';
                 }
@@ -197,13 +200,13 @@ var engine = caramel.engine('handlebars', (function() {
                 var value=field.value||'';
                 switch (field.type) {
                     case 'options':
-                        out = '<td>' + renderOptions(field.value, field.values[0].value) + '</td>';
+                        out = '<td>' + renderOptions(field.value, field.values[0].value,field) + '</td>';
                         break;
                     case 'text':
-                        out = '<td><input type="text" value="'+value+'"" >';
+                        out = '<td><input type="text" value="'+value+'"" '+renderFieldMetaData(field)+' >';
                         break;
                     case 'text-area':
-                        out = '<td><input type="text-area" value="'+value+'">';
+                        out = '<td><input type="text-area" value="'+value+'" '+renderFieldMetaData(field)+'>';
                         break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
@@ -215,13 +218,13 @@ var engine = caramel.engine('handlebars', (function() {
                 var out = '';
                 switch (field.type) {
                     case 'options':
-                        out = '<td>' + renderOptions(value, field.values[0].value) + '</td>';
+                        out = '<td>' + renderOptions(value, field.values[0].value,field) + '</td>';
                         break;
                     case 'text':
-                        out = '<td><input type="text" value="'+value+'"" >';
+                        out = '<td><input type="text" value="'+value+'"'+renderFieldMetaData(field)+' >';
                         break;
                     case 'text-area':
-                        out = '<td><input type="text-area" value="'+value+'">';
+                        out = '<td><input type="text-area" value="'+value+'"'+renderFieldMetaData(field)+'>';
                         break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
