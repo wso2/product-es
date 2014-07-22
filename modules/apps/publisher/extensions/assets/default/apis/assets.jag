@@ -1,28 +1,39 @@
-<%
-/*var log=new Log();
-	log.info('Recieved a request');
-	var obj=request.getAllParameters('UTF-8');
-
-	var files=request.getAllFiles();
-
-	for(var index in files){
-		log.info('File # '+index+' Details: '+files[index].getName());
-
-	}
-	
-	log.info('Finished servicing the request');*/
-require('/modules/publisher.js').exec(function(ctx) {
-    var asset = require('rxt').asset;
+<% require('/modules/publisher.js').exec(function(ctx) {
+    var log = new Log();
+    var res = ctx.response;
+    var req = ctx.request;
+    var session = ctx.session;
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
-    var options = uriMatcher.match('/{context}/asts/{type}/api/{pageName}');
-    var type = options.type;
-    var log=new Log();
-    var assetReq=ctx.request.getAllParameters('UTF-8');
-    var am = asset.createUserAssetManager(ctx.session, type);
-    var asset=am.importAssetFromHttpRequest(assetReq);
-    //log.info('Starting to create asset...');
-    am.create(asset);
-    //log.info('Finished creating asset.');
-}, request, response, session); 
-
-%>
+    var CREATE_URL = '/{context}/asts/{type}/api/assets';
+    var UPDATE_URL = '/{context}/asts/{type}/api/assets/{id}';
+    var method = request.getMethod();
+    var createAsset = function(options, req, res, session) {
+        var asset = require('rxt').asset;
+        var am = asset.createUserAssetManager(session, options.type);
+        var assetReq = req.getAllParameters('UTF-8');
+        var asset = am.importAssetFromHttpRequest(assetReq);
+        am.create(asset);
+        //Attach a lifecycle to the asset
+    };
+    var updateAsset = function(options, req, res, session) {
+        var asset = require('rxt').asset;
+        var am = asset.createUserAssetManager(session, options.type);
+        var assetReq = req.getAllParameters('UTF-8');
+        var asset = am.importAssetFromHttpRequest(assetReq);
+        asset.id = options.id;
+        log.info(asset);
+        am.update(asset);
+    };
+    if (method == 'POST') {
+        //Determine whether it is a create or update operation
+        if (uriMatcher.match(CREATE_URL)) {
+            options = uriMatcher.elements();
+            createAsset(options, req, res, session)
+        } else if (uriMatcher.match(UPDATE_URL)) {
+            options = uriMatcher.elements();
+            updateAsset(options, req, res, session);
+        }
+    } else {
+        res.sendError(404, 'Unable to locate endpoint');
+    }
+}, request, response, session); %>

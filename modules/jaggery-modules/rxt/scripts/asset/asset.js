@@ -83,7 +83,9 @@ var asset = {};
     AssetManager.prototype.create = function(options) {
         this.am.add(options);
     };
-    AssetManager.prototype.update = function(options) {};
+    AssetManager.prototype.update = function(options) {
+        this.am.update(options);
+    };
     AssetManager.prototype.remove = function(options) {};
     AssetManager.prototype.list = function(paging) {
         var paging = paging || this.defaultPaging;
