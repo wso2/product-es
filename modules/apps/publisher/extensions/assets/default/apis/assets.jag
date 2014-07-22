@@ -1,3 +1,14 @@
 <%
-	print(request.getAllParameters('UTF-8'));
+	var log=new Log();
+	log.info('Recieved a request');
+	var obj=request.getAllParameters('UTF-8');
+
+	var files=request.getAllFiles();
+
+	for(var index in files){
+		log.info('File # '+index+' Details: '+files[index].getName());
+		//files[index].saveAs('/test.png');		
+	}
+	
+	log.info('Finished servicing the request');
 %>

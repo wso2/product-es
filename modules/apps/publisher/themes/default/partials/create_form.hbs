@@ -1,4 +1,4 @@
-<form  method='post' action='{{url ""}}/asts/{{rxt.shortName}}/api/assets' class="form-horizontal" id="form-asset-create" >   
+<form  method='post' action='{{url ""}}/asts/{{rxt.shortName}}/api/assets' class="form-horizontal" id="form-asset-create" data-redirect-url='{{url ""}}/asts/{{rxt.shortName}}/list' >   
 	<input type='file' name='testFile1' >
     <div class="control-group">
              {{#each assets.tables}}                                             
