@@ -114,7 +114,7 @@ var core = {};
         var rxtPaths = GovernanceUtils.findGovernanceArtifacts(DEFAULT_MEDIA_TYPE, this.registry.registry);
         var content;
         var rxtDefinition;
-        log.info('RXT paths: '+stringify(rxtPaths));
+        log.info('RXT paths: ' + stringify(rxtPaths));
         for (var index in rxtPaths) {
             try {
                 content = this.registry.get(rxtPaths[index]);
@@ -188,6 +188,18 @@ var core = {};
             tables.push(table);
         }
         return tables;
+    };
+    RxtManager.prototype.getNameAttribute = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return tables');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return tables';
+        }
+        if ((rxtDefinition.nameAttribute) && (rxtDefinition.nameAttribute.length > 0)) {
+            return rxtDefinition.nameAttribute[0].nameAttribute;
+        }
+        log.warn('Unable to locate the name attribute for type: ' + type + '.Check if a nameAttribute is specified in the rxt definition.');
+        return '';
     };
     /*
     Creates an xml file from the contents of an Rxt file

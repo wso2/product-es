@@ -1,5 +1,5 @@
 <%
-	var log=new Log();
+/*var log=new Log();
 	log.info('Recieved a request');
 	var obj=request.getAllParameters('UTF-8');
 
@@ -7,8 +7,22 @@
 
 	for(var index in files){
 		log.info('File # '+index+' Details: '+files[index].getName());
-		//files[index].saveAs('/test.png');		
+
 	}
 	
-	log.info('Finished servicing the request');
+	log.info('Finished servicing the request');*/
+require('/modules/publisher.js').exec(function(ctx) {
+    var asset = require('rxt').asset;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var options = uriMatcher.match('/{context}/asts/{type}/api/{pageName}');
+    var type = options.type;
+    var log=new Log();
+    var assetReq=ctx.request.getAllParameters('UTF-8');
+    var am = asset.createUserAssetManager(ctx.session, type);
+    var asset=am.importAssetFromHttpRequest(assetReq);
+    //log.info('Starting to create asset...');
+    am.create(asset);
+    //log.info('Finished creating asset.');
+}, request, response, session); 
+
 %>

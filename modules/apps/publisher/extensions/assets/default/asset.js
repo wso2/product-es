@@ -2,8 +2,7 @@ log.info('Start of scriptqq!');
 asset.manager = function(ctx) {
     return {
         create: function(options) {
-            this._super.create(options);
-            log.info('Create called!');
+            this._super.create.call(this,options);
         },
         search: function(query, paging) {
             return this._super.search.call(this, query, paging);

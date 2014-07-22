@@ -190,7 +190,7 @@ var engine = caramel.engine('handlebars', (function() {
                 } else {
                     output += '<tr>';
                     output += '<td>' + renderOptions(option, field.values[0].value,field) + '</td>';
-                    output += '<td><input type="text" /></td>';
+                    output += '<td><input type="text" '+renderFieldMetaData(field)+' /></td>';
                     output += '</tr>';
                 }
                 return output;

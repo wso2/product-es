@@ -41,6 +41,24 @@ var asset = {};
         }
         return parse(stringify(value));
     };
+    var processOptionTextList=function(list){
+        var result=[];
+        //Squash the array by 2 as the data sent in the post request will be a single array
+        for(var index=0;index<=(list.length/2);index+=2){
+            result.push(list[index]+':'+list[index+1]);
+        }
+        return result;
+    };
+    var setField=function(field,attrName,data,attributes){
+        if(field.type=='option-text'){
+            var list=data[attrName];
+            attributes[attrName]=processOptionTextList(list);
+        }
+        else{
+            attributes[attrName]=data[attrName];
+        }
+        return attributes;
+    };
 
     function AssetManager(registry, type, rxtManager, renderer) {
         this.registry = registry;
@@ -62,7 +80,9 @@ var asset = {};
         GovernanceUtils.loadGovernanceArtifacts(this.registry.registry);
         this.am = new carbon.registry.ArtifactManager(this.registry, this.type);
     };
-    AssetManager.prototype.create = function(options) {};
+    AssetManager.prototype.create = function(options) {
+        this.am.add(options);
+    };
     AssetManager.prototype.update = function(options) {};
     AssetManager.prototype.remove = function(options) {};
     AssetManager.prototype.list = function(paging) {
@@ -90,6 +110,49 @@ var asset = {};
     };
     AssetManager.prototype.invokeAction = function(options) {};
     AssetManager.prototype.createVersion = function(options, newVersion) {};
+    AssetManager.prototype.getName=function(asset){
+        var nameAttribute=this.rxtManager.getNameAttribute(this.type);
+
+        if(asset.attributes){
+
+            var name=asset.attributes[nameAttribute];
+            if(!name){
+                log.warn('Unable to locate nameAttribute: '+nameAttribute+' in asset: '+stringify(asset));
+                return '';
+            }
+
+            return asset.attributes[nameAttribute];
+        }
+
+        return '';
+    };
+    AssetManager.prototype.importAssetFromHttpRequest=function(options){
+        var tables=this.rxtManager.listRxtTypeTables(this.type);
+        var asset={};
+        var attributes={};
+        var tables=this.rxtManager.listRxtTypeTables(this.type);
+        var table;
+        var fields;
+        var field;
+
+        if(options.id){
+            asset.id=options.id;
+        }
+        //Go through each table and obtain the value of each field
+        for(var tableIndex in tables){
+            table=tables[tableIndex];
+            fields=table.fields;
+            for(var fieldName in fields){
+                field=fields[fieldName];
+                var key=table.name+'_'+fieldName;
+                attributes=setField(field,key,options, attributes);
+            }
+        }
+
+        asset.attributes=attributes;
+        asset.name=this.getName(asset);
+        return asset;
+    };
     AssetManager.prototype.combineWithRxt = function(asset) {
         var modAsset = {};
         modAsset.tables = [];
@@ -131,6 +194,7 @@ var asset = {};
         if (refUtil.isArray(assets)) {
             page.assets = assets;
         } else {
+            //log.info(assets);
             page.assets = this.combineWithRxt(assets);
         }
         page.rxt = this.rxtTemplate;
