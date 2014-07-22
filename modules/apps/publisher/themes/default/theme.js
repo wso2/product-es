@@ -57,12 +57,20 @@ var engine = caramel.engine('handlebars', (function() {
                 var value;
                 var values = field.value;
                 var output = '';
-                for (var index in values) {
-                    value = values[index];
-                    var delimter = value.indexOf(':')
-                    var option = value.substring(0, delimter);
-                    var text = value.substring(delimter + 1, value.length);
-                    output += '<tr><td>' + option + '</td><td>' + text + '</td></tr>';
+                var ref = require('utils').reflection;
+                //If there is only a single entry then the registry API will send a string
+                //In order to uniformly handle these scenarios we must make it an array
+                if (values) {
+                    if (!ref.isArray(values)) {
+                        values = [values];
+                    }
+                    for (var index in values) {
+                        value = values[index];
+                        var delimter = value.indexOf(':')
+                        var option = value.substring(0, delimter);
+                        var text = value.substring(delimter + 1, value.length);
+                        output += '<tr><td>' + option + '</td><td>' + text + '</td></tr>';
+                    }
                 }
                 return output;
             };
@@ -76,7 +84,13 @@ var engine = caramel.engine('handlebars', (function() {
                 return 0;
             };
             var getNumOfRowsUnbound = function(table) {
+                var ref = require('utils').reflection;
                 for (var key in table.fields) {
+                    //If there is only a single entry it will be returned as a string as opposed to an array
+                    //We must convert it to an array to mainatain consistency
+                    if (!ref.isArray(table.fields[key].value)) {
+                        table.fields[key].value = [table.fields[key].value];
+                    }
                     return (table.fields[key].value) ? table.fields[key].value.length : 0;
                 }
                 return 0;
@@ -111,12 +125,17 @@ var engine = caramel.engine('handlebars', (function() {
             };
             Handlebars.registerHelper('renderUnboundTablePreview', function(table) {
                 //Get the number of rows in the table
-                var rowCount = getNumOfRows(table);
+                var rowCount = getNumOfRowsUnbound(table);
                 var fields = table.fields;
                 var out = '';
+                var ref=require('utils').reflection;
                 for (var index = 0; index < rowCount; index++) {
                     out += '<tr>';
                     for (var key in fields) {
+                        //Determine if the value is an array
+                        if (!ref.isArray(fields[key].value)) {
+                            fields[key].value = [fields[key].value];
+                        }
                         var value = fields[key].value[index] ? fields[key].value[index] : ' ';
                         out += '<td>' + value + '</td>';
                     }
@@ -154,14 +173,14 @@ var engine = caramel.engine('handlebars', (function() {
                 //Check if the table is a normal table
                 return new Handlebars.SafeString(defaultPtr(table));
             });
-            var renderFieldMetaData=function(field){
-                return ' name="'+field.name.tableQualifiedName+'" ';
+            var renderFieldMetaData = function(field) {
+                return ' name="' + field.name.tableQualifiedName + '" ';
             };
             var renderFieldLabel = function(field) {
                 return '<b><label class="control-label">' + (field.name.label || field.name.name) + '</label></b>';
             };
-            var renderOptions = function(value, values,field) {
-                var out = '<select '+renderFieldMetaData(field)+'>';
+            var renderOptions = function(value, values, field) {
+                var out = '<select ' + renderFieldMetaData(field) + '>';
                 if (value) {
                     out += '<option selected>' + value + '</option>';
                 }
@@ -176,37 +195,43 @@ var engine = caramel.engine('handlebars', (function() {
                 var value;
                 var values = field.value;
                 var output = '';
+                var ref = require('utils').reflection;
                 if (values) {
+                    //If there is only a single entry then the regis'try API will send a string
+                    //In order to uniformly handle these scenarios we must make it an array
+                    if (!ref.isArray(values)) {
+                        values = [values];
+                    }
                     for (var index in values) {
                         value = values[index];
                         var delimter = value.indexOf(':')
                         var option = value.substring(0, delimter);
                         var text = value.substring(delimter + 1, value.length);
                         output += '<tr>';
-                        output += '<td>' + renderOptions(option, field.values,field) + '</td>';
-                        output += '<td><input type="text" value="'+text+'" '+renderFieldMetaData(field)+' /></td>';
+                        output += '<td>' + renderOptions(option, field.values, field) + '</td>';
+                        output += '<td><input type="text" value="' + text + '" ' + renderFieldMetaData(field) + ' /></td>';
                         output += '</tr>';
                     }
                 } else {
                     output += '<tr>';
-                    output += '<td>' + renderOptions(option, field.values[0].value,field) + '</td>';
-                    output += '<td><input type="text" '+renderFieldMetaData(field)+' /></td>';
+                    output += '<td>' + renderOptions(option, field.values[0].value, field) + '</td>';
+                    output += '<td><input type="text" ' + renderFieldMetaData(field) + ' /></td>';
                     output += '</tr>';
                 }
                 return output;
             };
             var renderField = function(field) {
                 var out = '';
-                var value=field.value||'';
+                var value = field.value || '';
                 switch (field.type) {
                     case 'options':
-                        out = '<td>' + renderOptions(field.value, field.values[0].value,field) + '</td>';
+                        out = '<td>' + renderOptions(field.value, field.values[0].value, field) + '</td>';
                         break;
                     case 'text':
-                        out = '<td><input type="text" value="'+value+'"" '+renderFieldMetaData(field)+' >';
+                        out = '<td><input type="text" value="' + value + '"" ' + renderFieldMetaData(field) + ' >';
                         break;
                     case 'text-area':
-                        out = '<td><input type="text-area" value="'+value+'" '+renderFieldMetaData(field)+'>';
+                        out = '<td><input type="text-area" value="' + value + '" ' + renderFieldMetaData(field) + '>';
                         break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
@@ -214,17 +239,17 @@ var engine = caramel.engine('handlebars', (function() {
                 }
                 return out;
             };
-              var renderFieldValue = function(field,value) {
+            var renderFieldValue = function(field, value) {
                 var out = '';
                 switch (field.type) {
                     case 'options':
-                        out = '<td>' + renderOptions(value, field.values[0].value,field) + '</td>';
+                        out = '<td>' + renderOptions(value, field.values[0].value, field) + '</td>';
                         break;
                     case 'text':
-                        out = '<td><input type="text" value="'+value+'"'+renderFieldMetaData(field)+' >';
+                        out = '<td><input type="text" value="' + value + '"' + renderFieldMetaData(field) + ' >';
                         break;
                     case 'text-area':
-                        out = '<td><input type="text-area" value="'+value+'"'+renderFieldMetaData(field)+'>';
+                        out = '<td><input type="text-area" value="' + value + '"' + renderFieldMetaData(field) + '>';
                         break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
@@ -275,20 +300,25 @@ var engine = caramel.engine('handlebars', (function() {
                 var rowCount = getNumOfRowsUnbound(table);
                 var fields = table.fields;
                 var out = '';
+                var ref = require('utils').reflection;
+                //If there is no rows then a single empty row with the fields should be rendererd
                 if (rowCount == 0) {
-                    out+='<tr>';
-                    for(var key in fields){
-                        
-                        out+=renderField(fields[key]);
-            
+                    out += '<tr>';
+                    for (var key in fields) {
+                        out += renderField(fields[key]);
                     }
-                    out+='</tr>';
+                    out += '</tr>';
                 } else {
+                    //Go through each row 
                     for (var index = 0; index < rowCount; index++) {
                         out += '<tr>';
                         for (var key in fields) {
+                            //Determine if the value is an array
+                            if (!ref.isArray(fields[key].value)) {
+                                fields[key].value = [fields[key].value];
+                            }
                             var value = fields[key].value[index] ? fields[key].value[index] : ' ';
-                            var field=fields[key];
+                            var field = fields[key];
                             out += renderFieldValue(field, value);
                         }
                         out += '</tr>';

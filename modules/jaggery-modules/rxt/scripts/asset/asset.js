@@ -194,8 +194,9 @@ var asset = {};
         if (refUtil.isArray(assets)) {
             page.assets = assets;
         } else {
-            //log.info(assets);
             page.assets = this.combineWithRxt(assets);
+            page.assets.name=this.getName(assets);
+
         }
         page.rxt = this.rxtTemplate;
         var that = this;
@@ -242,6 +243,9 @@ var asset = {};
     };
     AssetRenderer.prototype.buildBaseUrl = function(type) {
         return this.assetsPagesRoot + type;
+    };
+    AssetRenderer.prototype.thumbnail=function(page){
+        return '';
     };
     AssetRenderer.prototype.create = function(page) {};
     AssetRenderer.prototype.update = function(page) {};
