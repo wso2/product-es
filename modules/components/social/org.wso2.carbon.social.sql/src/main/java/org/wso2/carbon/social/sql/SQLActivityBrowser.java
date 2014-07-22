@@ -21,7 +21,7 @@ import java.util.List;
 public class SQLActivityBrowser implements ActivityBrowser {
     private static final Log log = LogFactory.getLog(SQLActivityBrowser.class);
     public static final String SELECT_SQL = "SELECT * FROM ES_SOCIAL WHERE " +Constants.CONTEXT_ID_COLUMN + "=?";
-    public static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS ES_SOCIAL( id VARCHAR(250), payload_context_id VARCHAR(250),body CLOB );";
+    //public static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS ES_SOCIAL( id VARCHAR(250), payload_context_id VARCHAR(250),body CLOB );";
 
     private JsonParser parser = new JsonParser();
     
@@ -33,38 +33,16 @@ public class SQLActivityBrowser implements ActivityBrowser {
 	@Override
     public JsonObject getSocialObject(String targetId, String tenant, SortOrder order) {
         List<Activity> activities = listActivitiesChronologically(targetId, tenant);
-        //JsonArray attachments = new JsonArray();
+
         JsonArray attachments = new JsonArray();
         JsonObject jsonObj = new JsonObject();
+        
         jsonObj.add("attachments", attachments);
         
         for (Activity activity : activities) {
         	JsonObject body = activity.getBody();
-        	//jsonObj.add("attachments", body);
         	attachments.add(body);
         }
-        
-        /*
-        JsonElement attachmentsElement = to.get("attachments");
-        JsonArray attachments;
-        if (attachmentsElement == null) {
-            attachments = new JsonArray();
-            to.add("attachments", attachments);
-        } else {
-            attachments = attachmentsElement.getAsJsonArray();
-        }
-        attachments.add(activity.getBody());
-         * 
-         * */
-        
-        
-		/*Gson gson = new Gson();
-		//{"rating" : 4, "attachments" : [{"verb" : "post", "object" : {"objectType" : "review", "content" : "test12333", "rating" : 4}, "target" : {"id" : "gadget:c5da3589-8131-4201-85af-9d1c17383f70"}, "actor" : {"id" : "admin@carbon.super", "objectType" : "person"}, "id" : "2939ed64-8bf0-4896-977a-728290ccae4e"}]} 
-    	String jsonStr = gson.toJson(activities);
-    	JsonObject jsonObj = (JsonObject)  parser.parse(jsonStr);
-    	//JsonElement jsonElement = parser.parse(jsonStr);
-    	JsonElement jm = jsonObj.getAsJsonObject().get("body");
-    	//JsonObject jsonObject = (JsonObject) parser.parse(jsonStr).getAsJsonObject();*/
 
         return jsonObj;
     }
@@ -80,9 +58,9 @@ public class SQLActivityBrowser implements ActivityBrowser {
     		ResultSet resultSet = null;
             try{
             	//TODO ugly hack to initilize database table 
-            	tableCreate = connection.prepareStatement(CREATE_TABLE_SQL);
+            	/*tableCreate = connection.prepareStatement(CREATE_TABLE_SQL);
             	tableCreate.executeUpdate();
-            	connection.commit();
+            	connection.commit();*/
             statement = connection.prepareStatement(SELECT_SQL);
             statement.setString(1, contextId);
             resultSet = statement.executeQuery();
