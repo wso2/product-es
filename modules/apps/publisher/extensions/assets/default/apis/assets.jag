@@ -1,6 +1,3 @@
 <%
-	print('Assets page!');
 	print(request.getAllParameters('UTF-8'));
-	//print(request.getParameter('dummy'));
-	//print(request.getContent());
 %>
