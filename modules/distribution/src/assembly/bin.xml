@@ -377,6 +377,11 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/database</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/repository/database/WSO2SOCIAL_DB.h2.db</source>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/database</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <!--        <file>
             <source>conf/wso2is-user-certs.jks</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/resources/security/</outputDirectory>
