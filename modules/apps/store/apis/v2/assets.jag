@@ -8,7 +8,9 @@ require('/modules/store.js').exec(function (ctx) {
             server = require('store').server,
             start = request.getParameter('start') || 0,
             count = request.getParameter('count') || 10,
-            user = carbon.server.tenantUser(request.getUser()),
+            tenant = server.tenant(request, session),
+            tenantId = tenant.tenantId,
+            user = server.current(session),
             store = require('/modules/store.js'),
             reg = (function () {
                 var reg;
@@ -16,14 +18,16 @@ require('/modules/store.js').exec(function (ctx) {
                     return server.anonRegistry();
                 }
                 return new carbon.registry.Registry(server.instance(), {
-                    username: user.username,
-                    tenantId: user.tenantId
+                    //username: user.username,
+                    username: ctx.user.username,
+                    //tenantId: user.tenantId
+                    tenantId: tenantId
                 });
             }()),
             manager = function (type) {
                 return store.assetManager(type, reg);
             },
-            um = server.userManager(user.tenantId),
+            um = server.userManager(tenantId),
             authorize = function (man, options) {
                 if (!options.authorize) {
                     return;
