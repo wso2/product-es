@@ -108,7 +108,7 @@ var asset = {};
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
         }
-        return this.am.search(query, options);
+        return this.am.search(query, paging);
     };
     AssetManager.prototype.invokeAction = function(options) {};
     AssetManager.prototype.createVersion = function(options, newVersion) {};
