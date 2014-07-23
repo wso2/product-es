@@ -53,7 +53,7 @@ require('/modules/publisher.js').exec(function(ctx) {
         } else {
             //Obtain the username from the session and populate the provider field
             var username = server.current(session).username; //.get('LOGGED_IN_USER');
-        model.set('overview.provider', storeUser.cleanUsername(username));
+            model.set('overview.provider', storeUser.cleanUsername(username));
 
             var output = model.export('form');
             var title = shortName;
@@ -175,7 +175,7 @@ require('/modules/publisher.js').exec(function(ctx) {
 
             // getting the user roles
             var server = require('store').server,
-                um = server.userManager(server.current(session).tenantId);
+                    um = server.userManager(server.current(session).tenantId);
 
             var registry = new carbon.registry.Registry(server, {
                 username: server.current(session).username,
@@ -186,7 +186,7 @@ require('/modules/publisher.js').exec(function(ctx) {
 
             if(registry.properties(path)['overridden_permissions']) {
                 overridenPermissions = registry.properties(path)['overridden_permissions'][0];
-            } 
+            }
 
             if (overridenPermissions) {
                 output.permissions = JSON.parse(overridenPermissions.replace('\\', ''));
@@ -203,7 +203,7 @@ require('/modules/publisher.js').exec(function(ctx) {
                 tags: tags,
                 title: title
             });
-        } 
+        }
         catch (e) {
             log.debug('The asset with id ' + id + ' could not be found due to : ' + e);
             response.sendError(404, 'Asset with id ' + id + ' could not be found.Please check server log.');
@@ -293,11 +293,11 @@ require('/modules/publisher.js').exec(function(ctx) {
     });
 
     /*
-        The function is used to add tags to the provided asset id
-        @params: A post parameter object
-        @assetId: The id of the asset to which the tags will be applied
-        @artifactManager: An artifact manager instance
-        @reg: A registry instance
+     The function is used to add tags to the provided asset id
+     @params: A post parameter object
+     @assetId: The id of the asset to which the tags will be applied
+     @artifactManager: An artifact manager instance
+     @reg: A registry instance
      */
     function addTags(params, assetId, artifactManager, reg) {
 
@@ -323,11 +323,11 @@ require('/modules/publisher.js').exec(function(ctx) {
     }
 
     /*
-        The function is used to add/edit permissions to the provided asset id
-        @assetId: The id of the asset to which the tags will be applied
-        @artifactManager: An artifact manager instance
-        @permission: Requried permissions
-    */
+     The function is used to add/edit permissions to the provided asset id
+     @assetId: The id of the asset to which the tags will be applied
+     @artifactManager: An artifact manager instance
+     @permission: Requried permissions
+     */
     function overridePermissions(assetId, artifactManager, permissions) {
 
         // set a property in  the artifact indicating the permissions are overriden / remove the lifecycle
@@ -352,7 +352,7 @@ require('/modules/publisher.js').exec(function(ctx) {
                 permissions.splice(i, 1);
             }
         };
-                
+
         //  1. +get +edit +delete +authorize for asset_{owner}
         permissions.push({
             role: currentUserRole,
@@ -392,12 +392,12 @@ require('/modules/publisher.js').exec(function(ctx) {
 
 
     /*
-        The function inspects the files sent with a request.If files are found
-         they are added to Storage and then the generated uuids are added to
-         the POST parameter object
-         @req: A request object
-         @params: The POST parameters
-    */
+     The function inspects the files sent with a request.If files are found
+     they are added to Storage and then the generated uuids are added to
+     the POST parameter object
+     @req: A request object
+     @params: The POST parameters
+     */
     function inspectFiles(req, params) {
         var files = req.getAllFiles();
         var fileName;
@@ -440,25 +440,25 @@ require('/modules/publisher.js').exec(function(ctx) {
     routeManager.register('PUT', 'publisher', '/publisher/asset/{type}/{id}/{attr}/{value}', function(context) {
         log.debug('Unsupported method PUT for /asset called.');
         /*var shortName=context.params.type;
-     var id=context.params.id;
-     var attribute=context.params.attr;
-     var attributeValue=context.params.value;
-     var artifactManager=rxtManager.getArtifactManager(shortName);
+         var id=context.params.id;
+         var attribute=context.params.attr;
+         var attributeValue=context.params.value;
+         var artifactManager=rxtManager.getArtifactManager(shortName);
 
-     //Obtain the artifact
-     try{
-     var result=artifactManager.update({
-     id:id,
-     attributes: {
-     attribute:attributeValue,
-     overview_type:'default'
-     }
-     });
-     print(result);
+         //Obtain the artifact
+         try{
+         var result=artifactManager.update({
+         id:id,
+         attributes: {
+         attribute:attributeValue,
+         overview_type:'default'
+         }
+         });
+         print(result);
 
-     }catch(e){
-     print('unable to update artifact with id'+e);
-     }*/
+         }catch(e){
+         print('unable to update artifact with id'+e);
+         }*/
     });
 
     routeManager.register('DELETE', 'publisher', '/publisher/asset/{type}/{id}', function(context) {

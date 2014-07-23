@@ -18,23 +18,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <parent>
         <groupId>org.wso2.store.modules</groupId>
         <artifactId>sso-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.2.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sso.feature</artifactId>
     <packaging>pom</packaging>
     <name>sso Module - Feature</name>
-
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-p2.inf</id>
@@ -74,7 +71,6 @@
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
-                <version>${carbon.p2.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>p2-feature-generation</id>
@@ -111,15 +107,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <carbon.p2.plugin.version>1.5</carbon.p2.plugin.version>
-        <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
-    </properties>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>wso2-maven2-repository-1</id>
-            <url>http://dist.wso2.org/maven2</url>
-        </pluginRepository>
-    </pluginRepositories>
 </project>

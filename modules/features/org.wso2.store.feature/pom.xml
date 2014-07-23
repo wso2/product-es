@@ -18,64 +18,46 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <parent>
         <groupId>org.wso2.store</groupId>
-        <artifactId>wso2store-features</artifactId>
-        <version>1.1.0</version>
+        <artifactId>wso2es-features</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.store.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Enterprise Store Feature</name>
     <url>http://wso2.org</url>
-
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hostobjects.sso</artifactId>
-            <version>${sso.hostobjects.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.store</groupId>
             <artifactId>org.wso2.store.admin.styles</artifactId>
-            <version>${ues.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.store</groupId>
             <artifactId>org.wso2.store.sso.common</artifactId>
-            <version>${ues.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.databridge.datasink.cassandra</artifactId>
-            <version>4.2.0</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
             <artifactId>httpclient</artifactId>
-            <version>${httpcomponents-httpclient.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
             <artifactId>httpcore</artifactId>
-            <version>${httpcomponents-httpcore.wso2.version}</version>
         </dependency>
     </dependencies>
-
-    <properties>
-        <httpcomponents-httpclient.wso2.version>4.1.1-wso2v1</httpcomponents-httpclient.wso2.version>
-        <httpcomponents-httpcore.wso2.version>4.1.0-wso2v1</httpcomponents-httpcore.wso2.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
-                <version>${carbon.p2.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>p2-feature-generation</id>
@@ -95,13 +77,13 @@
                                 </properties>
                             </adviceFile>-->
                             <bundles>
-                                <bundleDef>slf4j.wso2:slf4j:1.5.10.wso2v1</bundleDef>
+                                <bundleDef>slf4j.wso2:slf4j:${slf4j.wso2.version}</bundleDef>
                                 <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso</bundleDef>-->
                                 <bundleDef>org.wso2.store:org.wso2.store.sso.common</bundleDef>
                                 <bundleDef>org.wso2.store:org.wso2.store.admin.styles</bundleDef>
-                                <bundleDef>org.wso2.store:org.wso2.carbon.social:1.0.0</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra</bundleDef>
-                                <bundleDef>org.wso2.store:jaggery-scxml-executors:1.0.1</bundleDef>
+                                <!--bundleDef>org.wso2.store:org.wso2.carbon.social:${project.version}</bundleDef-->
+                                <!--bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra:${carbon.platform.version}</bundleDef-->
+                                <bundleDef>org.wso2.store:jaggery-scxml-executors:${project.version}</bundleDef>
                             </bundles>
                             <importBundles>
                                 <!-- TODO: remove these when org.wso2.carbon.identity.sso.saml.server feature included proper bundleDefs for following jars -->
@@ -113,7 +95,7 @@
                                     org.jaggeryjs.server:${jaggery.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.webapp.mgt.server:${patch.version.421}
+                                    org.wso2.carbon.webapp.mgt.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.jaggeryjs.modules.caramel:${caramel.feature.version}
@@ -125,80 +107,80 @@
                                     org.jaggeryjs.modules.markdown:${markdown.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.event:${event.feature.version}
+                                    org.wso2.store.modules.event:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.login:${login.feature.version}
+                                    org.wso2.store.modules.login:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.permission:${permission.feature.version}
+                                    org.wso2.store.modules.permission:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.registration:${registration.feature.version}
+                                    org.wso2.store.modules.registration:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.sso:${sso.feature.version}
+                                    org.wso2.store.modules.sso:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.store:${store.feature.version}
+                                    org.wso2.store.modules.store:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.claims:${store.feature.version}
+                                    org.wso2.store.modules.claims:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.store.modules.ues:${ues.feature.version}
+                                    org.wso2.store.modules.ues:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.registry.associations.dependencies.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.community.features.server:${patch.version.421}
+                                    org.wso2.carbon.registry.community.features.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.registry.extensions.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.core.server:${patch.version.421}
+                                    org.wso2.carbon.registry.core.server:${carbon.platform.version}
                                 </importFeatureDef>
-                                <!--<importFeatureDef>
+                                <importFeatureDef>
                                     org.wso2.carbon.registry.ui.menu:${carbon.platform.version}
-                                </importFeatureDef>-->
+                                </importFeatureDef>>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.resource.properties.server:${patch.version.421}
+                                    org.wso2.carbon.registry.resource.properties.server:${carbon.platform.version}
                                 </importFeatureDef>
-                                <!--<importFeatureDef>
+                                <importFeatureDef>
                                     org.wso2.carbon.registry.ui.menu.governance:${carbon.platform.version}
-                                </importFeatureDef>-->
+                                </importFeatureDef>>
                                 <importFeatureDef>
-                                    org.wso2.carbon.registry.contentsearch.server:${patch.version.421}
+                                    org.wso2.carbon.registry.contentsearch.server:${carbon.platform.version}
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--importFeatureDef>
                                     org.wso2.carbon.jaxws.webapp.mgt.server:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef-->
                                 <!-- SSO -->
                                 <importFeatureDef>
-                                    org.wso2.carbon.security.mgt:${patch.version.421}
+                                    org.wso2.carbon.security.mgt:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.identity.application.authenticator.basicauth.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.identity.application.authentication.framework.server:${patch.version.421}
+                                    org.wso2.carbon.identity.application.authentication.framework.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.identity.authenticator.saml2.sso.server:${patch.version.421}
+                                    org.wso2.carbon.identity.authenticator.saml2.sso.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <feaureArtifactDef>
-                                    org.wso2.carbon.identity.sso.saml.server:${patch.version.421}
+                                    org.wso2.carbon.identity.sso.saml.server:${carbon.platform.version}
                                 </feaureArtifactDef>
+                                <!--feaureArtifactDef>
+                                    org.wso2.stratos.identity.saml2.sso.mgt.server:${carbon.platform.version}
+                                </feaureArtifactDef-->
                                 <feaureArtifactDef>
-                                    org.wso2.stratos.identity.saml2.sso.mgt.server:${stratos.version}
-                                </feaureArtifactDef>
-                                <feaureArtifactDef>
-                                    org.wso2.carbon.identity.core:${patch.version.421}
+                                    org.wso2.carbon.identity.core:${carbon.platform.version}
                                 </feaureArtifactDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.governance.metadata.server:${patch.version.421}
+                                    org.wso2.carbon.governance.metadata.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.governance.lifecycle.management.server:${carbon.platform.version}
@@ -207,61 +189,73 @@
                                     org.wso2.carbon.cassandra.explorer:${carbon.platform.version}
                                 </importFeatureDef>-->
                                 <!--casandra -->
-                                <importFeatureDef>
-                                    org.wso2.carbon.cassandra.server:4.2.3
-                                </importFeatureDef>
+                                <!--importFeatureDef>
+                                    org.wso2.carbon.cassandra.server:${carbon.platform.version}
+                                </importFeatureDef-->
                                 <!--<featureArtifactDef>-->
                                 <!--org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.patchrelease.version.422}-->
                                 <!--</featureArtifactDef>-->
-                                <importFeatureDef>
-                                    org.wso2.carbon.cassandra.mgt:4.2.2
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.cassandra.dataaccess:4.2.2
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.cassandra.common:4.2.2
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.cassandra-jdbc-1.1.1.server:4.0.1
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.databridge.datapublisher:4.2.2
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.databridge.datareceiver:4.2.1
-                                </importFeatureDef>
                                 <!--importFeatureDef>
-                                    org.wso2.carbon.databridge.commons.server:4.2.1
-                                </importFeatureDef-->
-                                <importFeatureDef>
-                                    org.wso2.carbon.databridge.cassandra:4.2.2
+                                    org.wso2.carbon.cassandra.mgt:${carbon.platform.version}
                                 </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.cassandra.dataaccess:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.cassandra.common:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.cassandra-jdbc-1.2.5.server:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.databridge.datapublisher:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.databridge.datareceiver:${carbon.platform.version}
+                                </importFeatureDef-->
+                                <!--<importFeatureDef>
+                                    org.wso2.carbon.databridge.cassandra:${carbon.platform.version}
+                                </importFeatureDef>-->
                                 <importFeatureDef>
                                     org.wso2.carbon.module.mgt.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.user.mgt:${patch.version.421}
+                                    org.wso2.carbon.user.mgt:${carbon.platform.version}
                                 </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.databridge.streamdefn.registry.server:4.2.1
-                                </importFeatureDef>
+                                <!--importFeatureDef>
+                                    org.wso2.carbon.databridge.streamdefn.registry.server:${carbon.platform.version}
+                                </importFeatureDef-->
+                                <!--importFeatureDef>
+                                    org.wso2.carbon.databridge.streamdefn.registry:4.2.0
+                                </importFeatureDef-->
                                 <!-- Stratos features    -->
-                                <importFeatureDef>
+                                <!--importFeatureDef>
                                     org.wso2.carbon.stratos.common.server:${stratos.patch.version.221}
-                                </importFeatureDef>
+                                </importFeatureDef-->
                                 <importFeatureDef>
-                                    org.wso2.carbon.event.server:${patch.version.421}
+                                    org.wso2.carbon.event.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.claim.mgt.server:${carbon.platform.version}
                                 </importFeatureDef>
+                                <!--importFeatureDef>
+                                    org.wso2.carbon.bam.toolbox.deployer:${carbon.platform.version}
+                                </importFeatureDef-->
                                 <importFeatureDef>
-                                    org.wso2.carbon.bam.toolbox.deployer:4.2.1
-                                </importFeatureDef>
-                                <!--<importFeatureDef>
                                     org.wso2.carbon.registry.ws:${carbon.platform.version}
-                                </importFeatureDef>-->
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.tenant.common.server:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.tenant.usage.agent:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.tenant.throttling.agent:${carbon.platform.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.tenant.deployment:${carbon.platform.version}
+                                </importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
@@ -269,7 +263,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>prefilter-resources</id>

@@ -119,6 +119,8 @@
 	    <SingleLogoutRetryCount>5</SingleLogoutRetryCount>
             <SingleLogoutRetryInterval>60000</SingleLogoutRetryInterval> <!-- in milli seconds -->
 	    <TenantPartitioningEnabled>false</TenantPartitioningEnabled>
+	    <SAMLSSOSigner>org.wso2.carbon.identity.sso.saml.builders.signature.DefaultSSOSigner</SAMLSSOSigner>
+	    <UseAuthenticatedUserDomainCrypto>true</UseAuthenticatedUserDomainCrypto>
     	</SSOService>
 
     	<EntitlementSettings>

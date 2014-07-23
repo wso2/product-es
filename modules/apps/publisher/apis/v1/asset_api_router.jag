@@ -168,7 +168,9 @@ if(context.post['images_banner'] instanceof Array){
         //Validation requires the lifecycle state
         modelA.set('*.lifecycleState',originalArtifact.lifecycleState);
 
+        log.info('###Validating model###');
         var report=modelA.validate();
+        log.info('###Finished validating###');
 
         //Check if the validation check has failed
         if((report)&&(report.failed)){
@@ -186,16 +188,19 @@ if(context.post['images_banner'] instanceof Array){
         modelB.import('asset', originalArtifact);
 
         //Checks whether two models are equal
-        var reqProps=['overview.name', 'overview.provider', 'overview.version']
+        var reqProps=['overview.name','overview.version'];//['overview.name', 'overview.provider', 'overview.version'];
 
+        log.info('###Checking if name,provider and version are same###');
         var isEqual = modelManager.assertEqual(modelA, modelB,reqProps);
+        log.info('###Finished checking if name,provider and version are same###');
 
         //If they are not equal,abort the operation
         if (!isEqual) {
-            log.debug('trying to get fields which are different');
+            log.info('trying to get fields which are different');
             var diff=modelManager.diff(modelA,modelB,reqProps);
             response.sendError(406, 'The name,provider and version of an asset cannot be changed.The following fields'
                     +' were modified: '+diff);
+            log.info('fields: '+diff);
             return;
         }
         modelA.set("overview.createdtime",modelB.get("overview.createdtime").value);
@@ -210,6 +215,8 @@ if(context.post['images_banner'] instanceof Array){
         msg['ok']=true;
         msg['message']='asset updated';
         msg['asset']=artifact;
+
+        log.info('###Finished updating asset ###');
         print(msg);
 
     } catch (e) {

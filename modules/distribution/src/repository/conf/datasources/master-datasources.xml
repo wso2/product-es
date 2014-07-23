@@ -87,7 +87,7 @@
             </definition>
         </datasource>
 
-        <datasource>
+        <!--datasource>
             <name>SOCIAL_CASSANDRA_DB</name>
             <description>The cassandra  datasource used for storing social activities</description>
             <definition type="RDBMS">
@@ -96,6 +96,27 @@
                     <username>admin</username>
                     <password>admin</password>
                      <driverClassName>org.apache.cassandra.cql.jdbc.CassandraDriver</driverClassName>
+                </configuration>
+            </definition>
+        </datasource-->
+
+        <datasource>
+            <name>WSO2_SOCIAL_DB</name>
+            <description>The datasource used for social framework</description>
+            <jndiConfig>
+                <name>jdbc/WSO2SocialDB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:h2:repository/database/WSO2SOCIAL_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                    <username>wso2carbon</username>
+                    <password>wso2carbon</password>
+                    <driverClassName>org.h2.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
                 </configuration>
             </definition>
         </datasource>

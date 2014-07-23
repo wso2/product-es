@@ -87,6 +87,9 @@ var module=function(){
 
             var artifactManager=rxtManager.getArtifactManager(shortName);
 
+            log.info('###Raw Asset###');
+            log.info(stringify(asset));
+            log.info('###End of Raw Asset###');
             artifactManager.add(asset);
 
             //name='test-gadget-7';
