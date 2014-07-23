@@ -21,7 +21,6 @@
         var assetReq = req.getAllParameters('UTF-8');
         var asset = am.importAssetFromHttpRequest(assetReq);
         asset.id = options.id;
-        log.info(asset);
         am.update(asset);
     };
     if (method == 'POST') {
