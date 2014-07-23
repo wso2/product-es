@@ -23,35 +23,15 @@ $(function() {
 	mouseStop();
 	applyTopAssetsSlideshow();
 
-	$("#top-asset-slideshow-gadget").carouFredSel({
+	$(".assetSlider").carouFredSel({
 		items : 4,
 		width : "100%",
 		infinite : false,
 		auto : false,
 		circular : false,
-		pagination : "#top-asset-slideshow-pag-gadget"
+		pagination : ".assetSliderPag"
 
 	});
-
-	$("#top-asset-slideshow-site").carouFredSel({
-		items : 4,
-		width : "100%",
-		infinite : false,
-		auto : false,
-		circular : false,
-		pagination : "#top-asset-slideshow-pag-site"
-
-	});
-
-    $("#top-asset-slideshow-ebook").carouFredSel({
-        items : 4,
-        width : "100%",
-        infinite : false,
-        auto : false,
-        circular : false,
-        pagination : "#top-asset-slideshow-pag-ebook"
-
-    });
 
 });
 

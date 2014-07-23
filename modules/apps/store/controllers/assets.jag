@@ -2,7 +2,7 @@
 var caramel;
 
 require('/modules/store.js').exec(function (ctx) {
-    var options, assets, paging, current, total, url, mainPage, subPage, title, selectedCategory, key,
+    var options, assets, paging, current, total, url, mainPage, subPage, title, selectedCategory, key,typeCount,
             log = ctx.log,
             sso = ctx.sso,
             query = ctx.params.query,
@@ -14,12 +14,14 @@ require('/modules/store.js').exec(function (ctx) {
             configs = ctx.configs,
             site = ctx.site,
             subscriptions = {},
+            types=store.assetTypes(),
             subscription = false;
 
     caramel = require('caramel');
 
     url = '/assets/' + type + '/?' + (tag ? 'tag=' + tag + '&' : '') + (query ? 'query=' + query + '&' : '');
 
+    typeCount=types.length;
     paging = store.assetsPaging(request);
 
     mainPage = type;
@@ -135,7 +137,8 @@ require('/modules/store.js').exec(function (ctx) {
         },
 
         myAssets : { user:user, type: type, title: title, subscriptions: subscriptions[type], subscription : subscription},
-        recentAssets: store.recentAssets(type)
+        recentAssets: store.recentAssets(type),
+        assetTypeCount: typeCount
 
     });
 }, request, response, session);

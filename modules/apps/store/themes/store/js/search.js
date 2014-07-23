@@ -16,35 +16,16 @@ $(function () {
             }, function (err, result) {
                 theme.loaded(el, result.sort);
                 el.html(result.topAssets);
-                $("#top-asset-slideshow-gadget").carouFredSel({
+                $(".assetSlider").carouFredSel({
                     items: 4,
                     width: "100%",
                     infinite: false,
                     auto: false,
                     circular: false,
-                    pagination: "#top-asset-slideshow-pag-gadget"
+                    pagination: ".assetSliderPag"
 
                 });
 
-                $("#top-asset-slideshow-site").carouFredSel({
-                    items: 4,
-                    width: "100%",
-                    infinite: false,
-                    auto: false,
-                    circular: false,
-                    pagination: "#top-asset-slideshow-pag-site"
-
-                });
-
-                $("#top-asset-slideshow-ebook").carouFredSel({
-                    items: 4,
-                    width: "100%",
-                    infinite: false,
-                    auto: false,
-                    circular: false,
-                    pagination: "#top-asset-slideshow-pag-ebook"
-
-                });
                 mouseStop();
                 /*el.append(result.paging);
                  caramel.js($('body'), data.body['assets'].resources.js, 'assets', function () {
@@ -194,7 +175,11 @@ $(function () {
 
     })
         .click(function (e) {
-            $(this).animate({width: '500px'}, 100);
+            if($('#search-dropdown-cont').hasClass('search-dropdown-cont-single')){
+                $(this).animate({width: '1170px'}, 100);
+            }else{
+                $(this).animate({width: '500px'}, 100);
+            }
             e.stopPropagation();
         })
         /*

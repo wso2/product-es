@@ -28,7 +28,7 @@ var getSocialAppDetails=function(){
 };
 
 require('/modules/store.js').exec(function (ctx) {
-    var asset, aid, title,
+    var asset, aid, title,typeCount,
             log = ctx.log,
             sso = ctx.sso,
             store = ctx.store,
@@ -38,10 +38,12 @@ require('/modules/store.js').exec(function (ctx) {
             site = ctx.site,
             matcher = ctx.matcher,
             inDashboard = false,
+            types = store.assetTypes(),
             utility = require('/modules/util.js');
 
     caramel = require('caramel');
 
+    typeCount=types.length;
     matcher.match('/{context}' + configs.assetsUrlPrefix + '/{type}/{aid}');
     aid = matcher.elements().aid;
     title = store.assetLinks(type).title;
@@ -97,7 +99,8 @@ require('/modules/store.js').exec(function (ctx) {
         myAssets: { user: user, type: type, title: title },
         recentAssets: store.recentAssets(type),
         moreAssetsFromProvider:store.assetsFromProvider(asset,type),
-        socialAppDetails:getSocialAppDetails()
+        socialAppDetails:getSocialAppDetails(),
+        assetTypeCount: typeCount
     });
 }, request, response, session);
 %>

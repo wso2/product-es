@@ -23,6 +23,19 @@ var render = function (theme, data, meta, require) {
 
 
 var render = function (theme, data, meta, require) {
+
+    var navigation='navigation';
+    var navigationContext=require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search);
+
+    switch(data.assetTypeCount) {
+        case 1:
+            navigation='navigation-single';
+            navigationContext=require('/helpers/navigation-single.js').currentPage(data.navigation, data.type, data.search);
+            break;
+        default:
+            break;
+    }
+
     theme('2-column-right', {
         title: data.title,
          header: [
@@ -33,8 +46,8 @@ var render = function (theme, data, meta, require) {
         ],
         navigation: [
             {
-                partial: 'navigation',
-                context: require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search)
+                partial: navigation,
+                context: navigationContext
             }
         ],
        /*

@@ -16,7 +16,7 @@
     }
 }
 html, body {
-min-width: 960px !important;
+    min-width: 960px !important;
 }
 @media all and (max-width:960px){
     min-width: 960px !important;
@@ -435,14 +435,26 @@ h3.asset-title-separator {
     background-color: #ffffff;
     /*width:500px;*/
 }
-#search-dropdown-arrow {
+.search-dropdown-arrow {
+    position: absolute;
+    z-index: 10;
+}
+.search-dropdown-arrow-single {
     position: absolute;
     z-index: 10;
 }
 
-#search-dropdown-arrow {
+.search-dropdown-arrow {
     position: absolute;
     right: 45px;
+    top: 4px;
+    color: #34495E;
+    padding-top: 4px;
+    opacity: 0.5;
+}
+.search-dropdown-arrow-single {
+    position: absolute;
+    right: 130px;
     top: 4px;
     color: #34495E;
     padding-top: 4px;
@@ -455,7 +467,7 @@ h3.asset-title-separator {
 }
 .search-bar .dropdown-toggle:first-child {
     margin-left: -14px;
-      margin-right: 3px;
+    margin-right: 3px;
 }
 .search-bar .dropdown-toggle{
     float: left;
@@ -481,10 +493,10 @@ h3.asset-title-separator {
 .search-bar .dropdown.selected, .search-bar .dropdown.selected:hover {
     background: #E84C3D;
     color: #fff;
-    opacity: 1; 
+    opacity: 1;
 }
 .search-bar .dropdown.selected .dropdown-icon-cont div{
-     background-position: bottom left;
+    background-position: bottom left;
 }
 .search-bar .dropdown:hover {
     background: #F7F9F9;
@@ -510,7 +522,9 @@ h3.asset-title-separator {
 .search-bar .span3 {
     margin-top: 12px;
 }
-
+.search-bar .span3-single {
+    margin-top: 12px;
+}
 .search-bar .span8 h2 {
     font-weight: normal;
     font-size: 26px;
@@ -528,18 +542,36 @@ h3.asset-title-separator {
     text-align: right;
     position: relative;
 }
-#search-dropdown-cont div {
+.search-bar > .row-fluid > .span3-single {
+    text-align: right;
+    position: relative;
+}
+.search-dropdown-cont div {
+    text-align: left;
+}
+.search-dropdown-cont-single div {
     text-align: left;
 }
 
-#search-dropdown-cont > a {
+.search-dropdown-cont > a {
+    position: absolute;
+    right: 8px;
+    top: 4px;
+    color: #34495E;
+}
+.search-dropdown-cont-single > a {
     position: absolute;
     right: 8px;
     top: 4px;
     color: #34495E;
 }
 
-#search-dropdown-cont > label {
+.search-dropdown-cont > label {
+    display: block;
+    font-size: 14px;
+    text-align: left;
+}
+.search-dropdown-cont-single > label {
     display: block;
     font-size: 14px;
     text-align: left;
@@ -556,13 +588,26 @@ h3.asset-title-separator {
     border-left: 1px solid #CCCCCC;
     padding-left: 7px;
 }
+#search-button-single {
+    color: #34495E;
+    font-size: 22px;
+    opacity: 1;
+    position: absolute;
+    right: 8px;
+    top: 2px;
+    transition: opacity .4s;
+    border-left: 1px solid #CCCCCC;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 3px;
+}
 #search-button:hover {
     opacity: 0.2;
 }
 #search-button2 {
     margin-left: 0;
 }
-#search-dropdown-cont {
+.search-dropdown-cont {
     background: none repeat scroll 0 0 #FFFFFF;
     box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
     position: absolute;
@@ -573,10 +618,27 @@ h3.asset-title-separator {
     padding: 11px;
     width: 444px;
 }
-#search-dropdown-arrow i {
+.search-dropdown-cont-single {
+    background: none repeat scroll 0 0 #FFFFFF;
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    /*right: 33px;*/
+    display: none;
+    top: 40px;
+    z-index: 1020;
+    padding: 11px;
+    width: 1147px;
+}
+.search-dropdown-arrow i {
     vertical-align: top;
 }
-#search-dropdown-arrow i.icon-sort-up {
+.search-dropdown-arrow-single i {
+    vertical-align: top;
+}
+.search-dropdown-arrow i.icon-sort-up {
+    vertical-align: middle;
+}
+.search-dropdown-arrow-single i.icon-sort-up {
     vertical-align: middle;
 }
 /*
@@ -1313,8 +1375,8 @@ ol.linenums li {
         bottom: 47px;
     }
     #container-search.affix {
-       /* margin: 0 0 0 -360px !important;*/
-      margin-left:0;
+        /* margin: 0 0 0 -360px !important;*/
+        margin-left:0;
     }
 }
 
@@ -1333,8 +1395,8 @@ ol.linenums li {
         border-left: 1px solid #CCCCCC;
     }
     #container-search.affix {
-       /* margin: 0 0 0 -468px;*/
-      margin-left:0;
+        /* margin: 0 0 0 -468px;*/
+        margin-left:0;
     }
     /*
      .asset-intro-box {
@@ -1384,13 +1446,13 @@ ol.linenums li {
         padding-bottom: 0;
     }
 
-   /*
-    .asset-description-header .asset-intro-box {
-           left: 56%;
-           right: -1px;
-           background: #fff;
-       }*/
-   
+    /*
+     .asset-description-header .asset-intro-box {
+            left: 56%;
+            right: -1px;
+            background: #fff;
+        }*/
+
 
     .container:not(#container-search) > .row > div:first-child {
         margin-left: 9px !important;
