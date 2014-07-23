@@ -15,9 +15,6 @@ asset.server = function(ctx) {
         onUserLoggedIn: function() {},
         endpoints: {
             apis: [{
-                url: 'asset',
-                path: 'asset.jag'
-            }, {
                 url: 'assets',
                 path: 'assets.jag'
             }],
@@ -76,8 +73,9 @@ asset.configure = function() {
         },
         meta: {
             lifecycle: {
-                name: 'SampleLifecycle2',
-                commentRequired: true
+                name: 'SampleLifeCycle2',
+                commentRequired: true,
+                defaultAction:'Promote'
             },
             ui: {
                 icon: 'icon-cog'

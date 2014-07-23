@@ -201,6 +201,30 @@ var core = {};
         log.warn('Unable to locate the name attribute for type: ' + type + '.Check if a nameAttribute is specified in the rxt definition.');
         return '';
     };
+    RxtManager.prototype.getLifecycleName = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return lifecycle ');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return lifecycle ';
+        }
+        if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
+            return rxtDefinition.meta.lifecycle.name || '';
+        }
+        log.warn('Unable to locate a meta property in order retrieve default lifecycle name for ' + type);
+        return '';
+    };
+    RxtManager.prototype.getDefaultLcAction = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the default lifecycle action.';
+        }
+        if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
+            return rxtDefinition.meta.lifecycle.defaultAction || '';
+        }
+        log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type);
+        return '';
+    };
     /*
     Creates an xml file from the contents of an Rxt file
     @rxtFile: An rxt file

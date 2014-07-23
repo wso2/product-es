@@ -41,23 +41,29 @@ var asset = {};
         }
         return parse(stringify(value));
     };
-    var processOptionTextList=function(list){
-        var result=[];
+    var processOptionTextList = function(list) {
+        var result = [];
         //Squash the array by 2 as the data sent in the post request will be a single array
-        for(var index=0;index<=(list.length/2);index+=2){
-            result.push(list[index]+':'+list[index+1]);
+        for (var index = 0; index <= (list.length / 2); index += 2) {
+            result.push(list[index] + ':' + list[index + 1]);
         }
         return result;
     };
-    var setField=function(field,attrName,data,attributes){
-        if(field.type=='option-text'){
-            var list=data[attrName];
-            attributes[attrName]=processOptionTextList(list);
-        }
-        else{
-            attributes[attrName]=data[attrName];
+    var setField = function(field, attrName, data, attributes) {
+        if (field.type == 'option-text') {
+            var list = data[attrName];
+            attributes[attrName] = processOptionTextList(list);
+        } else {
+            attributes[attrName] = data[attrName];
         }
         return attributes;
+    };
+    var dropEmptyFields = function(asset) {
+        for (var key in asset.attributes) {
+            if (asset.attributes[key] == '') {
+                delete asset.attributes[key];
+            }
+        }
     };
 
     function AssetManager(registry, type, rxtManager, renderer) {
@@ -81,12 +87,66 @@ var asset = {};
         this.am = new carbon.registry.ArtifactManager(this.registry, this.type);
     };
     AssetManager.prototype.create = function(options) {
-        this.am.add(options);
+        var id = this.am.add(options);
+        if (!id) {
+            log.warn('Unable to set the id of the newly created asset.The following asset may not have been created :' + stringif(asset));
+            return;
+        }
+        options.id = id;
     };
     AssetManager.prototype.update = function(options) {
         this.am.update(options);
     };
     AssetManager.prototype.remove = function(options) {};
+    /**
+     * The method is responsible for updating the provided asset with the latest
+     * values in the registry.If the asset is not succsessfully synched with the registry
+     * counterpart a false value is returned.It gurantees that all properties in the provided
+     * asset are returned
+     * @param  {[type]} asset An asset object
+     * @return {[type]}       True if the asset is succsessfully synched
+     */
+    AssetManager.prototype.synchAsset = function(asset) {
+        var locatedAsset = false;
+        var ref = require('utils').reflection;
+        //If the asset id is provided then we can use the get method to retrieve the asset
+        if (asset.id) {
+            var regCopy = this.get(asset.id);
+            if (regCopy) {
+                locatedAsset = true;
+                //Drop any hiddent methods since this is a Java object
+                regCopy=parse(stringify(regCopy));
+                ref.copyAllPropValues(regCopy,asset);
+            }
+            return locatedAsset;
+        }
+        log.warn('Switching to registry search to synch the provided asset as an id was not found in the provided asset: ' + stringify(asset));
+        //Construct a query which mimics the attributes in the asset
+        if (!asset.attributes) {
+            log.warn('Unable to locate the asset in the registry as the provided asset does not have attributes.');
+            return locatedAsset;
+        }
+        dropEmptyFields(asset);
+        var clone = parse(stringify(asset.attributes));
+        var result = this.am.find(function(instance) {
+            for (var key in clone) {
+                //Do not compare arrays.We assume that attribute properties are sufficient
+                //to guarantee uniqueness
+                if ((!ref.isArray(clone[key])) && (instance.attributes[key] != clone[key])) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        if (result.length > 1) {
+            log.warn('Too many assets matched the query.Unable to determine which asset to pick in order to synch: ' + stringify(asset));
+            return locatedAsset;
+        }
+        //Update the provided asset
+        ref.copyAllPropValues(result[0], asset);
+        locatedAsset = true;
+        return locatedAsset;
+    };
     AssetManager.prototype.list = function(paging) {
         var paging = paging || this.defaultPaging;
         if (!this.am) {
@@ -110,49 +170,112 @@ var asset = {};
         }
         return this.am.search(query, paging);
     };
-    AssetManager.prototype.invokeAction = function(options) {};
+    /**
+     * The function will attach a lifecycle to the provided asset.The type of
+     * lifecycle will be read from the configuration if a lifecycle is not provided.If a lifecycle cannot be found
+     * then then method return false.
+     * @param  {[type]} lifecycle An optional string that defines a lifecycle present for the tenant
+     * @return {[type]}
+     */
+    AssetManager.prototype.attachLifecycle = function(asset, lifecycle) {
+        var lifecycle = lifecycle || '';
+        var success = false;
+        if (!asset) {
+            log.error('Failed to attach a lifecycle as an asset object was not provided.');
+            return success;
+        }
+        //Check if a lifecycle was provided,if not check if it is provided in the 
+        //configuration
+        if (lifecycle == '') {
+            lifecycle = this.rxtManager.getLifecycleName(this.type);
+        }
+        //if the lifecycle is not present, then abort the operation
+        if (lifecycle == '') {
+            return success;
+        }
+        try {
+            this.am.attachLifecycle(lifecycle, asset);
+            success = true;
+        } catch (e) {
+            log.error('Failed to attach lifecycle: ' + lifecycle + ' to the asset: ' + stringify(asset) + '.The following exception was throw: ' + e);
+        }
+        return success;
+    };
+    AssetManager.prototype.invokeDefaultLcAction = function(asset) {
+        var success=false;
+        if (!asset) {
+            log.error('Failed to invoke default  lifecycle action as an asset object was not provided.');
+            return success;
+        }
+        var defaultAction=this.rxtManager.getDefaultLcAction(this.type);
+
+        if(defaultAction==''){
+            log.warn('Failed to invoke default action of lifecycle as one was not provided');
+            return success;
+        }
+        success=this.invokeLcAction(asset,defaultAction);
+        return success;
+    };
+    /**
+     * The function will invoke a provided lifecycle action
+     * @param  {[type]} asset  The asset for which a lifecycle action must be completed
+     * @param  {[type]} action The lifecycle action to be performed
+     * @return {[type]}        True if the action is invoked,else false
+     */
+    AssetManager.prototype.invokeLcAction = function(asset, action) {
+        var success = false;
+        if (!action) {
+            log.error('Failed to invokeAction as an action was not provided for asset: ' + stringify(asset));
+            return success;
+        }
+        if (!asset) {
+            log.error('Failed to invokeAction as an asset was not provided.');
+            return success;
+        }
+        try {
+            this.am.promoteLifecycleState(action, asset);
+            success = true;
+        } catch (e) {
+            log.error('Failed to invoke action: ' + action + ' for the asset: ' + stringify(asset) + '.The following exception was thrown: ' + e);
+        }
+        return success;
+    };
     AssetManager.prototype.createVersion = function(options, newVersion) {};
-    AssetManager.prototype.getName=function(asset){
-        var nameAttribute=this.rxtManager.getNameAttribute(this.type);
-
-        if(asset.attributes){
-
-            var name=asset.attributes[nameAttribute];
-            if(!name){
-                log.warn('Unable to locate nameAttribute: '+nameAttribute+' in asset: '+stringify(asset));
+    AssetManager.prototype.getName = function(asset) {
+        var nameAttribute = this.rxtManager.getNameAttribute(this.type);
+        if (asset.attributes) {
+            var name = asset.attributes[nameAttribute];
+            if (!name) {
+                log.warn('Unable to locate nameAttribute: ' + nameAttribute + ' in asset: ' + stringify(asset));
                 return '';
             }
-
             return asset.attributes[nameAttribute];
         }
-
         return '';
     };
-    AssetManager.prototype.importAssetFromHttpRequest=function(options){
-        var tables=this.rxtManager.listRxtTypeTables(this.type);
-        var asset={};
-        var attributes={};
-        var tables=this.rxtManager.listRxtTypeTables(this.type);
+    AssetManager.prototype.importAssetFromHttpRequest = function(options) {
+        var tables = this.rxtManager.listRxtTypeTables(this.type);
+        var asset = {};
+        var attributes = {};
+        var tables = this.rxtManager.listRxtTypeTables(this.type);
         var table;
         var fields;
         var field;
-
-        if(options.id){
-            asset.id=options.id;
+        if (options.id) {
+            asset.id = options.id;
         }
         //Go through each table and obtain the value of each field
-        for(var tableIndex in tables){
-            table=tables[tableIndex];
-            fields=table.fields;
-            for(var fieldName in fields){
-                field=fields[fieldName];
-                var key=table.name+'_'+fieldName;
-                attributes=setField(field,key,options, attributes);
+        for (var tableIndex in tables) {
+            table = tables[tableIndex];
+            fields = table.fields;
+            for (var fieldName in fields) {
+                field = fields[fieldName];
+                var key = table.name + '_' + fieldName;
+                attributes = setField(field, key, options, attributes);
             }
         }
-
-        asset.attributes=attributes;
-        asset.name=this.getName(asset);
+        asset.attributes = attributes;
+        asset.name = this.getName(asset);
         return asset;
     };
     AssetManager.prototype.combineWithRxt = function(asset) {
@@ -176,10 +299,10 @@ var asset = {};
             //Go through each field in the table
             for (var fieldName in fields) {
                 field = fields[fieldName];
-                field.name.tableQualifiedName=table.name+'_'+fieldName;
+                field.name.tableQualifiedName = table.name + '_' + fieldName;
                 //log.info(stringify(field));
                 //Check if the field exists in the attributes list
-                attrFieldValue = resolveField(asset.attributes||{}, table.name, fieldName, field, table);
+                attrFieldValue = resolveField(asset.attributes || {}, table.name, fieldName, field, table);
                 //If the field exists then update the value 
                 if (attrFieldValue) {
                     fields[fieldName].value = attrFieldValue;
@@ -191,14 +314,12 @@ var asset = {};
     };
     AssetManager.prototype.render = function(assets, page) {
         var refUtil = require('utils').reflection;
-
         //Combine with the rxt template only when dealing with a single asset
         if (refUtil.isArray(assets)) {
             page.assets = assets;
         } else {
             page.assets = this.combineWithRxt(assets);
-            page.assets.name=this.getName(assets);
-
+            page.assets.name = this.getName(assets);
         }
         page.rxt = this.rxtTemplate;
         var that = this;
@@ -246,7 +367,7 @@ var asset = {};
     AssetRenderer.prototype.buildBaseUrl = function(type) {
         return this.assetsPagesRoot + type;
     };
-    AssetRenderer.prototype.thumbnail=function(page){
+    AssetRenderer.prototype.thumbnail = function(page) {
         return '';
     };
     AssetRenderer.prototype.create = function(page) {};

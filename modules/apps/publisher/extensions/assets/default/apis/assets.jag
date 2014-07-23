@@ -12,8 +12,27 @@
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
         var asset = am.importAssetFromHttpRequest(assetReq);
-        am.create(asset);
-        //Attach a lifecycle to the asset
+
+        try{
+            am.create(asset);
+        }
+        catch(e){
+            log.error('Asset of type: '+options.type+' was not created due to '+e);
+            res.sendError(500,'Failed to create asset of type: '+options.type);
+            return;
+        } 
+
+        var isLcAttached = am.attachLifecycle(asset);
+        //Check if the lifecycle was attached
+        if (isLcAttached) {
+            var synched = am.synchAsset(asset);
+            if (synched) {
+                am.invokeDefaultLcAction(asset);
+                log.info('Finished invoking default action');
+            } else {
+                log.warn('Failed to invoke default action as the asset could not be synched.')
+            }
+        }
     };
     var updateAsset = function(options, req, res, session) {
         var asset = require('rxt').asset;
