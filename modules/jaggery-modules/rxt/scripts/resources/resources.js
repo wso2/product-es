@@ -48,8 +48,23 @@ var resources = {};
     };
     var loadAssetScript = function(options, type, assetResource) {
         var content = loadAssetScriptContent(getDefaultAssetTypeScriptPath(options, type));
+        var defConfiguration = assetResource.configure();
+        var ref = require('utils').reflection;
         if (content) {
             assetResource = evalAssetScript(content, assetResource);
+            var ptr = assetResource.configure;
+            //The configuration object of the default asset.js needs to be combined with 
+            //what is defined by the user in per type asset script
+            assetResource.configure = function() {
+                var configs = defConfiguration; //Assume the user has not defined a configuration
+                //If the user has defined some configuration logic
+                if (ptr) {
+                    var customConfig = ptr();
+                    //Combine the configuration
+                    ref.copyAllPropValues(customConfig, configs);
+                }
+                return configs;
+            };
         }
         return assetResource;
     }

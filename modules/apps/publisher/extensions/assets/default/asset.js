@@ -76,7 +76,7 @@ asset.configure = function() {
         },
         meta: {
             lifecycle: {
-                name: 'SimpleLifecycle',
+                name: 'SampleLifecycle2',
                 commentRequired: true
             },
             ui: {

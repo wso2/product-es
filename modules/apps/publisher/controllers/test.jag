@@ -4,8 +4,38 @@
 	var ref=require('utils').reflection;
 	var log=new Log();
 
-	print('Array: '+ref.isArray(['a','b']));
-	print('Object: '+ref.isArray({}));
+
+	var a={
+		name:'John',
+		age:'123',
+		inv:{
+			bottle:'7',
+			items:{
+				a:'a',
+				b:'b'
+			}
+		}
+	};
+
+	var b={
+		age:'58',
+		height:'q',
+		inv:{
+			items:{
+				b:'c'
+			}
+		}
+	};
+
+	ref.copyAllPropValues(a,a);
+
+	log.info('a:'+stringify(a));
+	log.info('b:'+stringify(b));
+
+
+
+	//print('Array: '+ref.isArray(['a','b']));
+	//print('Object: '+ref.isArray({}));
 	//var server=require('store').server;
 	//var registry=server.systemRegistry(-1234);
 	//core.init(-1234,registry);
