@@ -1,5 +1,5 @@
 <%
-	//var core=require('rxt').core;
+	var core=require('rxt').core;
 	//var resources=require('rxt').resources;
 	var ref=require('utils').reflection;
 	var time=require('utils').time;
@@ -30,9 +30,9 @@
 
 	ref.copyAllPropValues(a,a);
 
-	log.info('a:'+stringify(a));
-	log.info('b:'+stringify(b));
-	log.info(time.getCurrentTime());
+	//log.info('a:'+stringify(a));
+	//log.info('b:'+stringify(b));
+	//log.info(time.getCurrentTime());
 
 
 	//print('Array: '+ref.isArray(['a','b']));
@@ -41,7 +41,8 @@
 	//var registry=server.systemRegistry(-1234);
 	//core.init(-1234,registry);
 	//resources.manager(-1234);
-	//var manager=core.rxtManager(-1234);
+	 var manager=core.rxtManager(-1234);
+	 print(manager.listRxtFieldsOfType('gadget','file'));
 	//core.assetResources(-1234,'gadget');
 	//print(manager.listRxtTypeTables('gadget'));
 	//print(manager.listRxtTypes());

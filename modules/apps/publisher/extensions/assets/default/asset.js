@@ -1,15 +1,56 @@
 asset.manager = function(ctx) {
+    var rxtManager = ctx.rxtManager;
+    var fieldsInStorage = rxtManager.listRxtFieldsOfType(ctx.assetType, 'file');
+    var ref = require('utils').reflection;
+    var putInStorage = function(asset) {
+        var log = new Log();
+        log.info('Putting fields: ' + stringify(fieldsInStorage));
+    };
+    var getFromStorage = function(assets) {
+        var log = new Log();
+        var items=assets;
+        var item;
+        var field;
+        var id;
+        if(!ref.isArray(items)){
+            items=[assets];
+        }
+
+        //Go through each asset and get the neccessary items from storage
+        for(var index in items){
+            item=items[index];
+            for(var fieldIndex in fieldsInStorage){
+                field=fieldsInStorage[fieldIndex];
+                id=item.id;
+                if(item.attributes.hasOwnProperty(field)){
+                    //Build the url to server the content from storage
+                    item.attributes[field]='/storage/'+ctx.assetType+'/'+id+'/'+item.attributes[field];
+                }
+            }
+        }
+    };
     return {
         create: function(options) {
-            var ref=require('utils').time;
+            var ref = require('utils').time;
             //Check if the options object has a createdtime attribute and populate it 
             if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
-                options.attributes.overview_createdtime=ref.getCurrentTime();
+                options.attributes.overview_createdtime = ref.getCurrentTime();
             }
             this._super.create.call(this, options);
         },
         search: function(query, paging) {
-            return this._super.search.call(this, query, paging);
+            var assets=this._super.search.call(this, query, paging);
+            return assets;
+        },
+        list: function(paging) {
+            var assets = this._super.list.call(this, paging);
+            getFromStorage(assets);
+            return assets;
+        },
+        get: function(id) {
+            var asset=this._super.get.call(this, id);
+            getFromStorage(asset);
+            return asset;
         }
     };
 };
@@ -73,6 +114,16 @@ asset.configure = function() {
                         }
                     }
                 }
+            },
+            images: {
+                fields: {
+                    thumbnail: {
+                        type: 'file'
+                    },
+                    banner: {
+                        type: 'file'
+                    }
+                }
             }
         },
         meta: {
@@ -83,7 +134,8 @@ asset.configure = function() {
             },
             ui: {
                 icon: 'icon-cog'
-            }
+            },
+            thumbnail:'images_thumbnail'
         }
     };
 };

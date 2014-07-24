@@ -253,6 +253,18 @@ var asset = {};
         }
         return '';
     };
+    AssetManager.prototype.getThumbnail=function(asset){
+        var thumbnailAttribute=this.rxtManager.getThumbnailAttribute(this.type);
+        if(asset.attributes){
+            var thumb=asset.attributes[thumbnailAttribute];
+            if(!thumb){
+                log.warn('Unable to locate thumbnailAttribute '+thumbnailAttribute+' in asset '+stringify(asset));
+                return '';
+            }
+            return asset.attributes[thumbnailAttribute];
+        }
+        return '';
+    };  
     AssetManager.prototype.importAssetFromHttpRequest = function(options) {
         var tables = this.rxtManager.listRxtTypeTables(this.type);
         var asset = {};
@@ -320,6 +332,7 @@ var asset = {};
         } else {
             page.assets = this.combineWithRxt(assets);
             page.assets.name = this.getName(assets);
+            page.assets.thumbnail=this.getThumbnail(assets);
         }
         page.rxt = this.rxtTemplate;
         var that = this;

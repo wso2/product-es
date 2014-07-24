@@ -192,13 +192,25 @@ var core = {};
     RxtManager.prototype.getNameAttribute = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
-            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return tables');
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return name attribute');
             throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return tables';
         }
         if ((rxtDefinition.nameAttribute) && (rxtDefinition.nameAttribute.length > 0)) {
             return rxtDefinition.nameAttribute[0].nameAttribute;
         }
         log.warn('Unable to locate the name attribute for type: ' + type + '.Check if a nameAttribute is specified in the rxt definition.');
+        return '';
+    };
+    RxtManager.prototype.getThumbnailAttribute=function(type){
+        var rxtDefinition=this.rxtMap[type];
+        if(!rxtDefinition){
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return thumbail attribute');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return thumbail attribute';
+        }
+        if((rxtDefinition.meta)&&(rxtDefinition.meta.thumbnail)){
+            return rxtDefinition.meta.thumbnail;
+        }
+        log.warn('Unable to locate thumbnail attribute for type: '+type+'.Check if a thumbnail property is defined in the rxt configuration.');
         return '';
     };
     RxtManager.prototype.getLifecycleName = function(type) {
@@ -224,6 +236,33 @@ var core = {};
         }
         log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type);
         return '';
+    };
+    /**
+     * The function will retrieve all fields of the provided field type
+     * @param  {[type]} type      The Rxt type
+     * @param  {[type]} fieldType [description]
+     * @return {[type]}           An array of fields qualified by the table name
+     */
+    RxtManager.prototype.listRxtFieldsOfType = function(type, fieldType) {
+        var tables = this.listRxtTypeTables(type);
+        if (tables.length == 0) {
+            log.warn('The rxt definition for ' + type + ' does not have any tables.');
+            return [];
+        }
+        var table;
+        var field;
+        var result = [];
+        //Go through all of the tables
+        for (var key in tables) {
+            table = tables[key];
+            for (var fieldName in table.fields) {
+                field = table.fields[fieldName];
+                if (field.type == fieldType) {
+                    result.push(table.name + '_' + fieldName);
+                }
+            }
+        }
+        return result;
     };
     /*
     Creates an xml file from the contents of an Rxt file

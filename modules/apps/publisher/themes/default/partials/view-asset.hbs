@@ -1,12 +1,11 @@
 {{#with assets}}
-
 <div class='content-div'>
 	<div class="tab-content asset-tab-content">
 		<div id="view" class="asset-view-container">
             <div class="row-fluid asset-detail-top-row">
                 <div class="span2">
                             <div class="thumbnail-div">
-                                <img src="{{{snoop "fields(name=images_thumbnail).value" this.data}}}" class="" alt="Thumb"/>
+                                <img src='{{url ""}}{{thumbnail}}' class="" alt="Thumb"/>
 
                             </div>
                 </div>

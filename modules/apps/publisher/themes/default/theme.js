@@ -233,6 +233,9 @@ var engine = caramel.engine('handlebars', (function() {
                     case 'text-area':
                         out = '<td><input type="text-area" value="' + value + '" ' + renderFieldMetaData(field) + '>';
                         break;
+                    case 'file':
+                        out='<td><input type="text" value="' + value + '"" ' + renderFieldMetaData(field) + ' >';
+                        break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
                         break;
@@ -250,6 +253,9 @@ var engine = caramel.engine('handlebars', (function() {
                         break;
                     case 'text-area':
                         out = '<td><input type="text-area" value="' + value + '"' + renderFieldMetaData(field) + '>';
+                        break;
+                    case 'file':
+                        out = '<td><input type="text" value="' + value + '"' + renderFieldMetaData(field) + ' >';
                         break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
