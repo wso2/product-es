@@ -21,6 +21,11 @@ var putInStorage = function(options, asset, am, req, session) {
     var key;
     //Get all of the files that have been sent in the request
     var files = request.getAllFiles();
+
+    if(!files){
+        log.warn('User has not provided any resources');
+        return;
+    }
     for (var index in resourceFields) {
         key = resourceFields[index];
         if (files[key]) {
@@ -30,6 +35,18 @@ var putInStorage = function(options, asset, am, req, session) {
             resource.contentType = ref.getMimeType(extension);
             uuid = storageManager.put(resource);
             asset.attributes[key] = uuid;
+        }
+    }
+};
+var putInOldResources=function(original,asset,am){
+    var resourceFields = am.getAssetResources();
+    var resourceField;
+    for(var index in resourceFields){
+        resourceField=resourceFields[index];
+
+        //If the asset attribute value is null then use the old resource
+        if(asset.attributes[resourceField]==''){
+            asset.attributes[resourceField]=original.attributes[resourceField];
         }
     }
 };
@@ -63,7 +80,16 @@ var updateAsset = function(options, req, res, session) {
     var assetReq = req.getAllParameters('UTF-8');
     var asset = am.importAssetFromHttpRequest(assetReq);
     asset.id = options.id;
-    am.update(asset);
+    putInStorage(options, asset, am, req, session);
+    log.info('Asset after storing resources');
+    log.info(asset);
+    var original=am.get(options.id);
+    log.info('After replacing with old resources');
+    putInOldResources(original, asset,am);
+    log.info(asset);
+    //If the user has not uploaded any new resources then use the old resources
+    
+    //am.update(asset);
 };
 var fieldExpansion = function(options, req, res, session) {
     var fields = options.fields;

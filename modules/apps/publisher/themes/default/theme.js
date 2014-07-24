@@ -128,7 +128,7 @@ var engine = caramel.engine('handlebars', (function() {
                 var rowCount = getNumOfRowsUnbound(table);
                 var fields = table.fields;
                 var out = '';
-                var ref=require('utils').reflection;
+                var ref = require('utils').reflection;
                 for (var index = 0; index < rowCount; index++) {
                     out += '<tr>';
                     for (var key in fields) {
@@ -220,6 +220,11 @@ var engine = caramel.engine('handlebars', (function() {
                 }
                 return output;
             };
+            var renderFileField = function(field, value) {
+                var out = '<td><input type="hidden" name="old_' + field.name.tableQualifiedName + '" value="' + value + '" >';
+                out += '<input type="file" value="' + value + '" ' + renderFieldMetaData(field) + '></td>';
+                return out;
+            };
             var renderField = function(field) {
                 var out = '';
                 var value = field.value || '';
@@ -234,7 +239,7 @@ var engine = caramel.engine('handlebars', (function() {
                         out = '<td><input type="text-area" value="' + value + '" ' + renderFieldMetaData(field) + '>';
                         break;
                     case 'file':
-                        out='<td><input type="file" value="' + value + '"" ' + renderFieldMetaData(field) + ' >';
+                        out = '<td><input type="file" value="' + value + '" ' + renderFieldMetaData(field) + ' >';
                         break;
                     default:
                         out = '<td>Normal Field' + field.type + '</td>';
