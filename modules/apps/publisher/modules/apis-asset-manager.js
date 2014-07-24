@@ -81,15 +81,10 @@ var updateAsset = function(options, req, res, session) {
     var asset = am.importAssetFromHttpRequest(assetReq);
     asset.id = options.id;
     putInStorage(options, asset, am, req, session);
-    log.info('Asset after storing resources');
-    log.info(asset);
     var original=am.get(options.id);
-    log.info('After replacing with old resources');
     putInOldResources(original, asset,am);
-    log.info(asset);
-    //If the user has not uploaded any new resources then use the old resources
-    
-    //am.update(asset);
+    //If the user has not uploaded any new resources then use the old resources   
+    am.update(asset);
 };
 var fieldExpansion = function(options, req, res, session) {
     var fields = options.fields;
