@@ -1,0 +1,33 @@
+
+<%
+/**
+ * Description: The session of the currently authenticated user is invalidated
+ 				E.g. Invocation
+ 				POST /api/logout
+ */
+	var log=new Log('logout-api');
+	var result={};
+	var method=request.getMethod();
+
+
+	if(method=='POST'){
+
+		try{
+			var user=require('store').user;
+			user.logout();
+			session.invalidate();
+			response.status=200;
+			result.code=200;
+			result.message='Logged out successfully';
+		}
+		catch(e){
+			response.status=500;
+			result.code=500;
+			result.message='Unable to logout authenticated user.';
+		}
+			
+		response.contentType='application/json';
+		print(stringify(result));
+	}
+
+%>

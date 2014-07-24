@@ -1,0 +1,57 @@
+<%
+
+	var log=new Log('assets');
+	var matcher=new URIMatcher(request.getRequestURI());
+	var apiEndpoint='/publisher/apis/{+suffix}';	
+	var asset=require('rxt').asset;
+
+	var getPage=function(uri){
+		var comps=uri.split('/');
+		return comps.length>0?comps[0]:null;
+	};
+	var mapper=function(path){
+		return function(){
+			return path;
+		};
+	}
+
+	var handleApiEndpoint=function(request,session,uriParams){
+		var type=request.getParameter('type');
+		//log.info(uriParams);
+		var page=getPage(uriParams.suffix);
+		//var page ='assets';
+		var endPoints=asset.getAssetApiEndpoints(session,type);
+		var endpoint;
+		for(var index in endPoints){
+			if(endPoints[index].url==page){
+				endpoint=asset.getAssetApiEndpoint(type,endPoints[index].path);
+			}
+		}
+		if(endpoint){
+			request.getMappedPath=mapper(endpoint);
+			include(endpoint);
+		}
+		else{
+			response.sendError(404,'Unabled to locate an api endpoint for the type: '+type);
+		}
+	};
+
+	var server=require('store').server;
+	var user=server.current(session);
+
+	if(!user){
+		response.sendRedirect('/publisher/apis/authenticate');//TODO:Remove this
+	}
+ 	else{
+ 		//Check if options have been provided
+		if(matcher.match(apiEndpoint)){
+			handleApiEndpoint(request,session,matcher.elements());	
+			log.info(matcher.elements());	
+		}
+		
+		else{
+			response.sendError(404,'Unable to route the request to an appropriate endpoint');
+		}
+ 	}
+ 	
+%>

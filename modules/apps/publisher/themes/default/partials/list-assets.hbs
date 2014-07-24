@@ -1,8 +1,7 @@
 <div class="asset-being-added">
 </div>
-
 <div class="asset-thumb-container">
-	{{#if artifacts}}
+	{{#if assets}}
         <div class="row-fluid">
             <table class="table table-striped list-asset-table">
                 <thead>
@@ -14,14 +13,14 @@
                 <th></th>
                 </thead>
                 <tbody>
-                 {{#each artifacts}}
+                 {{#each assets}}
                 
                     <tr>
                         <td>
-                        <img src="{{this.attributes.images_thumbnail}}" class="" />
+                        <img src='{{url ""}}{{this.attributes.images_thumbnail}}' class="" />
                         </td>
                         <td class="asset-listing-name">
-                            <a href='/publisher/asset/{{../shortName}}/{{this.id}}'>
+                            <a href='{{url ""}}/asts/{{../rxt/shortName}}/details/{{this.id}}'>
                                 {{this.attributes.overview_name}}
                             </a>
                         </td>

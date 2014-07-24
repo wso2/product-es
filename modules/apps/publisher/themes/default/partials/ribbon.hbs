@@ -1,3 +1,4 @@
+{{#with ribbon}}
 <div class="span9 publisher-breadcrumb">
 	<!--<a href='/publisher/asset/{{shortName}}' class="btn btn-addNewAsset" type="button"><i class="icon-plus-sign-alt"></i>{{t "Add New Asset"}}</a>-->
 	<!--<div class="dropdown context_menu right">
@@ -23,7 +24,7 @@
 		<ul class="dropdown-menu">
 			{{#each breadcrumb}}
 			<li>
-				<a target="_self" href="{{this.url}}"><i class="{{this.assetIcon}}"></i>{{this.assetTitle}}</a>
+				<a target="_self" href='{{url ""}}{{this.url}}'><i class="{{this.assetIcon}}"></i>{{this.assetTitle}}</a>
 			</li>
 			{{/each}}
 		</ul>
@@ -88,4 +89,4 @@
 		</button>
 	</div>
 </div>
-
+{{/with}}

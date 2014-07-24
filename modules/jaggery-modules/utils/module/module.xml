@@ -1,0 +1,26 @@
+<module name="utils" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <script>
+        <name>reflection</name>
+        <path>scripts/reflection/reflection.js</path>
+    </script>
+    <script>
+        <name>file</name>
+        <path>scripts/file/file.js</path>
+    </script>
+    <script>
+        <name>patterns</name>
+        <path>scripts/patterns/patterns.js</path>
+    </script>
+    <script>
+        <name>xml</name>
+        <path>scripts/xml/xml.js</path>
+    </script>
+    <script>
+        <name>request</name>
+        <path>scripts/request/request.js</path>
+    </script>
+    <script>
+        <name>time</name>
+        <path>scripts/time/time.js</path>
+    </script>
+</module>

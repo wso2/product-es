@@ -1,0 +1,22 @@
+<module name="rxt" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <script>
+        <name>core</name>
+        <path>scripts/core/core.js</path>
+    </script>
+    <script>
+    	<name>resources</name>
+    	<path>scripts/resources/resources.js</path>
+    </script>
+    <script>
+    	<name>server</name>
+    	<path>scripts/server/server.js</path>
+    </script>
+        <script>
+        <name>asset</name>
+        <path>scripts/asset/asset.js</path>
+    </script>
+    <script>
+        <name>ui</name>
+        <path>scripts/ui/ui.js</path>
+    </script>
+</module>

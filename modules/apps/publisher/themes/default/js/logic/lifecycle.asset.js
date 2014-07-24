@@ -32,7 +32,7 @@ $(function() {
   //length=5
   //then: length-2 = {asset-type} length-1 = {asset-id}
   var id = comps[comps.length - 1];
-  var asset = comps[comps.length - 2];
+  var asset = comps[comps.length - 3];
 
   //console.log(asset);
   //console.log(id);

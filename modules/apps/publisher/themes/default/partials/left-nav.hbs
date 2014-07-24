@@ -5,8 +5,8 @@
             <li><a href="/publisher/asset/{{shortName}}"><i class="icon-plus-sign-alt"></i>{{t "Add "}}{{shortName}}</a></li>
             <li><a href="#"><i class="icon-dashboard"></i>Statistics</a></li>
             <li><a href="#"><i class="icon-gift"></i>Wishlist</a></li>-->
-        {{#each leftNavLinks}}
-            <li class="{{this.additionalClasses}}"><a href="{{this.url}}">
+        {{#each leftNav}}
+            <li class="{{this.additionalClasses}}"><a href='{{url ""}}{{this.url}}'>
                 {{#if this.iconClass}}
                     <i class="{{this.iconClass}}"></i>
                 {{/if}}

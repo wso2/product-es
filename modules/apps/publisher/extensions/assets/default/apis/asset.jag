@@ -1,0 +1,14 @@
+<%
+
+	print('Default asset api');
+			var matcher=new URIMatcher(request.getRequestURI());
+		var endpoint='/{context}/api/asset/{+id}';
+		log.info('Looking for sub routes');
+		if(matcher.match(endpoint)){
+			var id=uriMatcher.elements().id;
+			print('Id '+id);
+		}
+		else{
+			print('No id !!');
+		}
+%>
