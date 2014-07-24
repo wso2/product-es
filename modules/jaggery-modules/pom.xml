@@ -40,5 +40,7 @@
         <module>utils</module>
         <module>ues</module>
         <module>claims</module>
+        <module>rxt</module>
+        <module>utils</module>
     </modules>
 </project>
