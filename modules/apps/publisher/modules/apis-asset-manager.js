@@ -9,7 +9,7 @@ var createAsset = function(options, req, res, session) {
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
         var asset = am.importAssetFromHttpRequest(assetReq);
-
+        log.info('adding asset');
         try{
             am.create(asset);
         }
@@ -33,6 +33,7 @@ var createAsset = function(options, req, res, session) {
     };
 
     var updateAsset = function(options, req, res, session) {
+        log.info('updating asset');
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');

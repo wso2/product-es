@@ -13,20 +13,24 @@
     var session = ctx.session;
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
     var assetHandler = require('/modules/apis-asset-manager.js');
-    var CREATE_URL = '/{context}/asts/{type}/api/assets';
-    var UPDATE_URL = '/{context}/asts/{type}/api/assets/{id}';
+    //var CREATE_URL = '/{context}/asts/{type}/api/assets';
+    //var UPDATE_URL = '/{context}/asts/{type}/api/assets/{id}';
+    var CREATE_URL = '/{context}/apis/assets/';
+    var UPDATE_URL = '/{context}/apis/assets/{id}';
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
 
     var method = request.getMethod();    
 
     if (method == 'POST') {
+        options.type = request.getParameter('type');
         //Determine whether it is a create or update operation
         if (uriMatcher.match(CREATE_URL)) {
-            options = uriMatcher.elements();
+            //options = uriMatcher.elements();
             assetHandler.createAsset(options, req, res, session);
         } else if (uriMatcher.match(UPDATE_URL)) {
-            options = uriMatcher.elements();
+            //options = uriMatcher.elements();
+            options.id = uriMatcher.elements().id;
             assetHandler.updateAsset(options, req, res, session);
         }
     }

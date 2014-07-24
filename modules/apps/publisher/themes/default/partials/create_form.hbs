@@ -1,5 +1,5 @@
-<form  method='post' action='{{url ""}}/asts/{{rxt.shortName}}/api/assets' class="form-horizontal" id="form-asset-create" data-redirect-url='{{url ""}}/asts/{{rxt.shortName}}/list' >   
-	<input type='file' name='testFile1' >
+<form  method='post' action='{{url ""}}/apis/assets?type={{rxt.shortName}}' class="form-horizontal" id="form-asset-create" data-redirect-url='{{url ""}}/asts/{{rxt.shortName}}/list' >   
+    <input type='file' name='testFile1' >
     <div class="control-group">
              {{#each assets.tables}}                                             
                 <tr>
@@ -10,6 +10,6 @@
     <div id="saveButtons" class="form-actions">
         <input type='submit' id="btn-create-asset" class="btn btn-primary" name="addNewAssetButton" value='{{t "Create"}}'>
         <button class="btn" type="reset">{{t "Reset"}}</button>
-		<input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
+        <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
     </div>   
 </form>
