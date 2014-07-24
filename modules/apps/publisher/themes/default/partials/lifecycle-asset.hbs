@@ -1,13 +1,14 @@
+{{assets.lifecycleState}}
 <div class='content-div'>
 	<div class="row-fluid">
 		<div class="span12 asset-view-container">
 			<div class="widget wlightblue widget-lifecycle">
 				<div class="widget-head">
 					<div class="pull-left">
-						Lifecycle - {{{snoop "fields(name=overview_name).value" this.data}}}
+						Lifecycle - {{assets.name}}
 					</div>
-					{{#if data.info.lifecycleState}}
-					<span id='state' class="pull-right">{{data.info.lifecycleState}}</span>
+					{{#if assets.lifecycleState}}
+					<span id='state' class="pull-right">{{assets.lifecycleState}}</span>
 					{{/if}}
 					<div class="clearfix"></div>
 				</div>

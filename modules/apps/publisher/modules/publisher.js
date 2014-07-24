@@ -1,9 +1,11 @@
 var PUBLISHER_CONFIG_PATH = '/_system/config/publisher/configs/publisher.json';
 
+var ASSETS_EXT_PATH = '/extensions/assets/';
+
 var TENANT_PUBLISHER = 'tenant.publisher';
-var log=new Log('modules.publisher');
-var utility=require('/modules/utility.js').rxt_utility();
-var SUPER_TENANT=-1234;
+var log = new Log('modules.publisher');
+var utility = require('/modules/utility.js').rxt_utility();
+var SUPER_TENANT = -1234;
 
 var init = function (options) {
     var event = require('event');
@@ -49,13 +51,13 @@ var init = function (options) {
         var CommonUtil = Packages.org.wso2.carbon.governance.registry.extensions.utils.CommonUtil;
         var GovernanceConstants = org.wso2.carbon.governance.api.util.GovernanceConstants;
         var um = server.userManager(tenantId);
-        var publisherConfig=require('/config/publisher-tenant.json');
+        var publisherConfig = require('/config/publisher-tenant.json');
 
         //Load the tag dependencies
         loadTagDependencies(reg);
 
         //Check if the tenant is the super tenant
-        if(tenantId==SUPER_TENANT){
+        if (tenantId == SUPER_TENANT) {
 
             log.debug('executing default asset deployment logic since super tenant has been loaded.');
 
@@ -90,7 +92,6 @@ var init = function (options) {
     });
 
 
-
     event.on('login', function (tenantId, user, session) {
         configureUser(tenantId, user);
     });
@@ -115,19 +116,19 @@ var addLifecycles = function (registry) {
         file.close();
 
         //Create an xml from the contents
-        var lcXml=new XML(lc);
+        var lcXml = new XML(lc);
 
         //Create a JSON object
         //TODO:This could be a problem -we are passing xml to JSON everytime!
-        var lcJSON=utility.xml.convertE4XtoJSON(lcXml);
+        var lcJSON = utility.xml.convertE4XtoJSON(lcXml);
 
         //Check if the lifecycle is present
-        var isPresent=CommonUtil.lifeCycleExists(lcJSON.name,configReg);
+        var isPresent = CommonUtil.lifeCycleExists(lcJSON.name, configReg);
 
-        log.debug('Is life-cycle present: '+isPresent);
+        log.debug('Is life-cycle present: ' + isPresent);
 
         //Only add the lifecycle if it is not present in the registry
-        if(!isPresent){
+        if (!isPresent) {
 
             log.debug('Adding life-cycle since it is not deployed.');
 
@@ -159,12 +160,57 @@ var Publisher = function (tenantId, session) {
     this.modelManager = managers.modelManager;
     this.rxtManager = managers.rxtManager;
     this.routeManager = managers.routeManager;
-    this.dataInjector=managers.dataInjector;
-    this.DataInjectorModes=managers.DataInjectorModes;
-    this.filterManager=managers.filterManager;
-    this.storageSecurityProvider=managers.storageSecurityProvider;
+    this.dataInjector = managers.dataInjector;
+    this.DataInjectorModes = managers.DataInjectorModes;
+    this.filterManager = managers.filterManager;
+    this.storageSecurityProvider = managers.storageSecurityProvider;
 
 };
+
+/**
+ * Returns links of a asset for the current user
+ * @param type Asset type
+ */
+Publisher.prototype.assetLinks = function (type) {
+    var mod,
+        path = ASSETS_EXT_PATH + type + '/asset.js',
+        file = new File(path);
+    if (!file.isExists()) {
+        return [];
+    }
+    mod = require(path);
+    return mod.assetLinks(this.user);
+};
+
+/**
+ * Returns apis of a asset for the current user
+ * @param type Asset type
+ */
+Publisher.prototype.apiLinks = function (type) {
+    var mod,
+        path = ASSETS_EXT_PATH + type + '/asset.js',
+        file = new File(path);
+    if (!file.isExists()) {
+        return [];
+    }
+    mod = require(path);
+    return mod.apiLinks(this.user);
+};
+
+//TODO:
+var currentAsset = function () {
+    var prefix = require('/config/publisher.js').config().urls.ASSETS,
+        matcher = new URIMatcher(request.getRequestURI());
+    if (matcher.match('/{context}' + prefix + '/{type}/{+any}') || matcher.match('/{context}' + prefix + '/{type}')) {
+        return matcher.elements().type;
+    }
+    prefix = require('/config/publisher.js').config().urls.EXTENSIONS;
+    if (matcher.match('/{context}' + prefix + '/{type}/{+any}') || matcher.match('/{context}' + prefix + '/{type}')) {
+        return matcher.elements().type;
+    }
+    return null;
+};
+
 /*
 
  Publisher.prototype.rxtManager = function() {
@@ -176,29 +222,29 @@ var buildManagers = function (tenantId, registry) {
     var ext_domain = require('/modules/ext/core/extension.domain.js').extension_domain();
     var ext_core = require('/modules/ext/core/extension.core.js').extension_core();
     var ext_mng = require('/modules/ext/core/extension.management.js').extension_management();
-    var validationManagement=require('/modules/validations/validation.manager.js').validationManagement();
+    var validationManagement = require('/modules/validations/validation.manager.js').validationManagement();
     var rxt_management = require('/modules/rxt.manager.js').rxt_management();
     var route_management = require('/modules/router-g.js').router();
-    var dataInjectorModule=require('/modules/data/data.injector.js').dataInjectorModule();
-    var filterManagementModule=require('/modules/filter.manager.js').filterManagementModule();
-    var securityProviderModule=require('/modules/security/storage.security.provider.js').securityModule();
-    var server=require('store').server;
-    var userManager=server.userManager(tenantId);
-    var storageSecurityProvider=new securityProviderModule.SecurityProvider();
-    var filterManager=new filterManagementModule.FilterManager();
+    var dataInjectorModule = require('/modules/data/data.injector.js').dataInjectorModule();
+    var filterManagementModule = require('/modules/filter.manager.js').filterManagementModule();
+    var securityProviderModule = require('/modules/security/storage.security.provider.js').securityModule();
+    var server = require('store').server;
+    var userManager = server.userManager(tenantId);
+    var storageSecurityProvider = new securityProviderModule.SecurityProvider();
+    var filterManager = new filterManagementModule.FilterManager();
 
 
-    log.debug('tenant: '+tenantId);
+    log.debug('tenant: ' + tenantId);
 
     //The security provider requires the registry and user manager to work
-    storageSecurityProvider.provideContext(registry,userManager);
+    storageSecurityProvider.provideContext(registry, userManager);
 
     log.debug(userManager);
 
     filterManager.setContext(userManager);
 
-    var dataInjector=new dataInjectorModule.DataInjector();
-    var injectorModes=dataInjectorModule.Modes;
+    var dataInjector = new dataInjectorModule.DataInjector();
+    var injectorModes = dataInjectorModule.Modes;
 
     //var server=new carbon.server.Server(url);
     /*var registry=new carbon.registry.Registry(server,{
@@ -240,35 +286,35 @@ var buildManagers = function (tenantId, registry) {
     var actionManager = new ext_core.ActionManager({templates: parser.templates});
     actionManager.init();
 
-    var validationManager=new validationManagement.ValidationManager();
+    var validationManager = new validationManagement.ValidationManager();
 
     var modelManager = new ext_mng.ModelManager({parser: parser, adapterManager: adapterManager,
-        actionManager: actionManager, rxtManager: rxtManager ,validationManager:validationManager});
+        actionManager: actionManager, rxtManager: rxtManager, validationManager: validationManager});
 
     return {
         modelManager: modelManager,
         rxtManager: rxtManager,
         routeManager: routeManager,
-        dataInjector:dataInjector,
-        DataInjectorModes:injectorModes,
-        filterManager:filterManager,
-        storageSecurityProvider:storageSecurityProvider
+        dataInjector: dataInjector,
+        DataInjectorModes: injectorModes,
+        filterManager: filterManager,
+        storageSecurityProvider: storageSecurityProvider
     };
 };
 
 /*
-The function is used to load tag dependencies
+ The function is used to load tag dependencies
  */
-var loadTagDependencies=function(registry){
+var loadTagDependencies = function (registry) {
 
-    var TAGS_QUERY='SELECT RT.REG_TAG_ID FROM REG_RESOURCE_TAG RT ORDER BY RT.REG_TAG_ID';
-    var TAGS_QUERY_PATH='/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+    var TAGS_QUERY = 'SELECT RT.REG_TAG_ID FROM REG_RESOURCE_TAG RT ORDER BY RT.REG_TAG_ID';
+    var TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
 
     //Check if the tag path exists
-    var resource=registry.get(TAGS_QUERY_PATH);
+    var resource = registry.get(TAGS_QUERY_PATH);
 
     //Check if the tag is present
-    if(!resource){
+    if (!resource) {
 
         log.debug('tag query path does not exist.');
 
@@ -388,7 +434,7 @@ var configureUser = function (tenantId, user) {
 
     log.debug('Starting configuringUser.');
 
-    var cleanedUsername=store.user.cleanUsername(user.username);
+    var cleanedUsername = store.user.cleanUsername(user.username);
     //Create the permissions in the options configuration file
     perms = buildPermissionsList(tenantId, cleanedUsername, perms, server);
 
@@ -425,7 +471,7 @@ var exec = function (fn, request, response, session) {
         carbon = require('carbon'),
         tenant = es.server.tenant(request, session),
         user = es.server.current(session);
-    if(!user) {
+    if (!user) {
         response.sendError(401, 'Unauthorized');
         return;
     }

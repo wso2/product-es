@@ -1,0 +1,35 @@
+<%
+var caramel;
+var DEFAULT_PAGIN = {
+    'start': 0,
+    'count': 1000,
+    'sortOrder': 'desc',
+    'sortBy': 'overview_createdtime',
+    'paginationLimit': 1000
+};
+require('/modules/publisher.js').exec(function(ctx) {
+    caramel = require('caramel');
+    var ui = require('rxt').ui;
+    var reqUtil = require('utils').request;
+    var asset = require('rxt').asset;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var options = uriMatcher.match('/{context}/asts/{type}/{pageName}');
+    var q = ctx.request.getParameter('query');
+    var sortBy = ctx.request.getParameter('sortby');
+    var sort = ctx.request.getParameter('sort');
+    var type = options.type;
+    var am = asset.createUserAssetManager(ctx.session, type);
+    var page = ui.buildPage(ctx.session, ctx.request);
+    var assets;
+    if (q) {
+        assets = am.search(q);
+    } else if (sortBy && sort) {
+        DEFAULT_PAGIN.sortBy = sortBy;
+        DEFAULT_PAGIN.sortOrder = sort;
+        assets = am.search(null, DEFAULT_PAGIN);
+    } else {
+        assets = am.list();
+    }
+    var output = am.render(assets, page).list();
+    caramel.render(output);
+}, request, response, session); %>

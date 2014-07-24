@@ -35,9 +35,12 @@ process.setProperty('https.port', httpsPort.toString());
 var pubConfig = require('/config/publisher.js').config();
 
 var mod = require('store');
+var rxt=require('rxt');
 
 mod.server.init(pubConfig);
 mod.user.init(pubConfig);
+rxt.core.init();
+rxt.resources.init();
 
 var publisher = require('/modules/publisher.js');
 publisher.init(pubConfig);
@@ -52,7 +55,7 @@ publisher.init(pubConfig);
 //Configure Caramel
 caramel.configs({
     context: '/publisher',
-    cache: true,
+    cache: false,
     negotiation: true,
     themer: function () {
         //TODO: Hardcoded theme
