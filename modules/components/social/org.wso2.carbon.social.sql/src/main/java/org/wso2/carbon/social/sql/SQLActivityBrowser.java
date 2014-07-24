@@ -1,7 +1,6 @@
 package org.wso2.carbon.social.sql;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -10,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.social.core.Activity;
 import org.wso2.carbon.social.core.ActivityBrowser;
 import org.wso2.carbon.social.core.SortOrder;
+import org.wso2.carbon.social.sql.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,8 +20,7 @@ import java.util.List;
 
 public class SQLActivityBrowser implements ActivityBrowser {
     private static final Log log = LogFactory.getLog(SQLActivityBrowser.class);
-    public static final String SELECT_SQL = "SELECT * FROM ES_SOCIAL WHERE " +Constants.CONTEXT_ID_COLUMN + "=?";
-    //public static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS ES_SOCIAL( id VARCHAR(250), payload_context_id VARCHAR(250),body CLOB );";
+    public static final String SELECT_SQL = "SELECT * FROM " + Constants.ES_SOCIAL +" WHERE " + Constants.CONTEXT_ID_COLUMN + "=?";
 
     private JsonParser parser = new JsonParser();
     
@@ -54,13 +53,8 @@ public class SQLActivityBrowser implements ActivityBrowser {
     	Connection connection = con.getConnection();
     	if(connection != null){
     		PreparedStatement statement = null;
-    		PreparedStatement tableCreate = null;
     		ResultSet resultSet = null;
             try{
-            	//TODO ugly hack to initilize database table 
-            	/*tableCreate = connection.prepareStatement(CREATE_TABLE_SQL);
-            	tableCreate.executeUpdate();
-            	connection.commit();*/
             statement = connection.prepareStatement(SELECT_SQL);
             statement.setString(1, contextId);
             resultSet = statement.executeQuery();
@@ -89,12 +83,6 @@ public class SQLActivityBrowser implements ActivityBrowser {
     @Override
     public List<Activity> listActivitiesChronologically(String contextId, String tenantDomain) {
         List<Activity> activities = listActivities(contextId, tenantDomain);
-       /* Collections.sort(activities, new Comparator<Activity>() {
-            @Override
-            public int compare(Activity a1, Activity a2) {
-                return a1.getTimestamp() - a2.getTimestamp();
-            }
-        });*/
         return activities;
     }
     
