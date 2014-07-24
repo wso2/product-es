@@ -1,57 +1,54 @@
-<% require('/modules/publisher.js').exec(function(ctx) {
+
+<% 
+    var DEFAULT_PAGIN = {'start': 0,
+                    'count': 10,
+                    'sortOrder': 'desc',
+                    'sortBy': 'overview_createdtime',
+                    'paginationLimit': 1000};
+
+    require('/modules/publisher.js').exec(function(ctx) {
     var log = new Log();
     var res = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
-    var CREATE_URL = '/{context}/asts/{type}/api/assets';
-    var UPDATE_URL = '/{context}/asts/{type}/api/assets/{id}';
-    var method = request.getMethod();
-    var createAsset = function(options, req, res, session) {
-        var asset = require('rxt').asset;
-        var am = asset.createUserAssetManager(session, options.type);
-        var assetReq = req.getAllParameters('UTF-8');
-        var asset = am.importAssetFromHttpRequest(assetReq);
+    var assetHandler = require('/modules/apis-asset-manager.js');
+    //var CREATE_URL = '/{context}/asts/{type}/api/assets';
+    //var UPDATE_URL = '/{context}/asts/{type}/api/assets/{id}';
+    var CREATE_URL = '/{context}/apis/assets/';
+    var UPDATE_URL = '/{context}/apis/assets/{id}';
+    var LIST_ASSETS_URL = '/{context}/apis/assets/';
+    var GET_ASSET_URL = '/{context}/apis/assets/{id}';
 
-        try{
-            am.create(asset);
-        }
-        catch(e){
-            log.error('Asset of type: '+options.type+' was not created due to '+e);
-            res.sendError(500,'Failed to create asset of type: '+options.type);
-            return;
-        } 
+    var method = request.getMethod();    
 
-        var isLcAttached = am.attachLifecycle(asset);
-        //Check if the lifecycle was attached
-        if (isLcAttached) {
-            var synched = am.synchAsset(asset);
-            if (synched) {
-                am.invokeDefaultLcAction(asset);
-                log.info('Finished invoking default action');
-            } else {
-                log.warn('Failed to invoke default action as the asset could not be synched.')
-            }
-        }
-    };
-    var updateAsset = function(options, req, res, session) {
-        var asset = require('rxt').asset;
-        var am = asset.createUserAssetManager(session, options.type);
-        var assetReq = req.getAllParameters('UTF-8');
-        var asset = am.importAssetFromHttpRequest(assetReq);
-        asset.id = options.id;
-        am.update(asset);
-    };
     if (method == 'POST') {
+        options.type = request.getParameter('type');
         //Determine whether it is a create or update operation
         if (uriMatcher.match(CREATE_URL)) {
-            options = uriMatcher.elements();
-            createAsset(options, req, res, session)
+            //options = uriMatcher.elements();
+            assetHandler.createAsset(options, req, res, session);
         } else if (uriMatcher.match(UPDATE_URL)) {
-            options = uriMatcher.elements();
-            updateAsset(options, req, res, session);
+            //options = uriMatcher.elements();
+            options.id = uriMatcher.elements().id;
+            assetHandler.updateAsset(options, req, res, session);
         }
-    } else {
+    }
+    else if(method = 'GET'){
+        options.type = request.getParameter('type');
+        response.contentType = 'application/json';
+
+        if (uriMatcher.match(LIST_ASSETS_URL)) {
+            //options = uriMatcher.elements();            
+            assetHandler.listAssets(options, req, res, session);
+        } else if (uriMatcher.match(GET_ASSET_URL)) {
+            //options = uriMatcher.elements();
+            options.id = uriMatcher.elements().id;
+            assetHandler.getAsset(options, req, res, session);
+        }
+        } else {
         res.sendError(404, 'Unable to locate endpoint');
     }
 }, request, response, session); %>
+
+

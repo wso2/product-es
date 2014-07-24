@@ -1,4 +1,4 @@
- <form class="form-horizontal" id='form-asset-update' method='post' action='{{url ""}}/asts/{{rxt.shortName}}/api/assets/{{assets.id}}' >
+ <form class="form-horizontal" id='form-asset-update' method='post' action='{{url ""}}/apis/assets/{{assets.id}}?type={{rxt.shortName}}' >
     <div class="control-group">
              {{#each assets.tables}}                                             
                 <tr>
