@@ -1,4 +1,12 @@
-<% require('/modules/publisher.js').exec(function(ctx) {
+
+<% 
+    var DEFAULT_PAGIN = {'start': 0,
+                    'count': 10,
+                    'sortOrder': 'desc',
+                    'sortBy': 'overview_createdtime',
+                    'paginationLimit': 1000};
+
+    require('/modules/publisher.js').exec(function(ctx) {
     var log = new Log();
     var res = ctx.response;
     var req = ctx.request;
@@ -6,7 +14,11 @@
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
     var CREATE_URL = '/{context}/asts/{type}/api/assets';
     var UPDATE_URL = '/{context}/asts/{type}/api/assets/{id}';
+    var LIST_ASSETS_URL = '/{context}/apis/assets/';
+    var GET_ASSET_URL = '/{context}/apis/assets/{id}';
+
     var method = request.getMethod();
+
     var createAsset = function(options, req, res, session) {
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
@@ -20,7 +32,7 @@
             log.error('Asset of type: '+options.type+' was not created due to '+e);
             res.sendError(500,'Failed to create asset of type: '+options.type);
             return;
-        } 
+        }
 
         var isLcAttached = am.attachLifecycle(asset);
         //Check if the lifecycle was attached
@@ -34,6 +46,7 @@
             }
         }
     };
+
     var updateAsset = function(options, req, res, session) {
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
@@ -42,16 +55,168 @@
         asset.id = options.id;
         am.update(asset);
     };
+
+    var fieldExpansion = function(options, req, res, session) {
+        var fields = options.fields;  
+                   //print(fields);    
+        var artifacts = options.assets;
+                   //print(artifacts);
+                   //return;
+        var extendedAssetTemplate ={};
+
+        for(var val in fields){
+            var key = fields[val];
+            var value = '';
+            extendedAssetTemplate[key]=value;          
+
+        }    
+        var newArtifactTemplateString = stringify(extendedAssetTemplate);       
+        var modifiedArtifacts = [];
+       
+        for (var j in artifacts) {
+            //var artifactObject = extendedAssetTemplate; 
+            var artifactObject = parse(newArtifactTemplateString);
+            for(var i in extendedAssetTemplate){                       
+                //return;
+                
+                artifactObject[i] = artifacts[j].attributes[i];
+               // print(artifacts.length+'@@@@@@@@@@@@@@@@@@@@@');
+                //print(i);                          
+            }                    
+            modifiedArtifacts.push(artifactObject);                      
+        }
+        print(modifiedArtifacts);
+        return;
+    };
+
+
+    var listAssets = function(options, req, res, session) {
+        var assetManager = asset.createUserAssetManager(session, options.type); 
+        var sort = (request.getParameter("sort")||'');
+            
+        var sortOrder =DEFAULT_PAGIN.sortOrder;
+
+        if(sort){
+            var order = sort.charAt(0);
+            if(order == '+'|| order == ' '){
+                sortOrder = 'asc';
+                sort = sort.slice( 1 );
+
+            }else if(order == '-'){
+                sortOrder = 'desc';
+                sort = sort.slice( 1 );
+
+            }else{
+                sortOrder = DEFAULT_PAGIN.sortOrder;
+            }          
+        }
+        
+        var sortBy = (sort||DEFAULT_PAGIN.sortBy);
+        
+        var count = (request.getParameter("count")||DEFAULT_PAGIN.count);
+        var start = (request.getParameter("start")||DEFAULT_PAGIN.start);
+        var paginationLimit =(request.getParameter("paginationLimit")|| DEFAULT_PAGIN.paginationLimit);
+        var paging ={'start': start,
+                    'count': count,
+                    'sortOrder': sortOrder,
+                    'sortBy': sortBy,
+                    'paginationLimit': paginationLimit};
+
+        var q = (request.getParameter("q")||'');
+        
+        try {
+            if(q){                   
+                var qString ='{'+q+'}';                    
+                var query=parse(qString);
+                //print(query);
+                var assets = assetManager.search(query, paging); //doesnt work properly
+                           
+            }else{
+                //print(paging);
+                var assets = assetManager.list(paging);
+            }               
+               
+           // print(assets);
+            //return;  
+            var expansionFields = (request.getParameter('fields')||'');
+           // print(expansionFields);
+           // return;
+            if(expansionFields){
+
+                options.fields = expansionFields.split(',');
+                options.assets = assets;       
+                fieldExpansion(options, req, res, session);
+                //return;                    
+            }else{
+                print(assets);
+            }                  
+
+        } catch (e) {
+            res.sendError(400, "Your request is malformed");
+            log.info(e);
+        }
+    };
+
+    var getAsset = function(options, req, res, session) {
+        var assetManager = asset.createUserAssetManager(session, options.type); 
+        try{
+            var elems = uriMatcher.elements();              
+            var retrievedAsset = assetManager.get(elems.id);
+
+            if (!retrievedAsset) {
+                print({ error: "no matching asset found" });
+                res.sendError(400, "no matching asset found");
+                return;
+            }
+            else {
+                var expansionFields = (request.getParameter('fields')||'');
+                if(expansionFields){
+                    options.fields = expansionFields.split(',');
+                    var assets = [];
+                    assets.push(retrievedAsset);
+                    options.assets = assets;
+                    //print(assets);                
+                    fieldExpansion(options, req, res, session);
+                    //return;                    
+                }
+                else{
+                    print(retrievedAsset);
+                    return;
+                }
+                
+            }
+        }catch(e){
+            res.sendError(400, "Your Request Malformed");
+            log.info(e);
+        }
+
+    
+    };
+
     if (method == 'POST') {
         //Determine whether it is a create or update operation
         if (uriMatcher.match(CREATE_URL)) {
             options = uriMatcher.elements();
-            createAsset(options, req, res, session)
+            createAsset(options, req, res, session);
         } else if (uriMatcher.match(UPDATE_URL)) {
             options = uriMatcher.elements();
             updateAsset(options, req, res, session);
         }
-    } else {
+    }
+    else if(method = 'GET'){
+        options.type = request.getParameter('type');
+        response.contentType = 'application/json';
+
+        if (uriMatcher.match(LIST_ASSETS_URL)) {
+            //options = uriMatcher.elements();            
+            listAssets(options, req, res, session);
+        } else if (uriMatcher.match(GET_ASSET_URL)) {
+            //options = uriMatcher.elements();
+            getAsset(options, req, res, session);
+        }
+        } else {
         res.sendError(404, 'Unable to locate endpoint');
     }
 }, request, response, session); %>
+
+
