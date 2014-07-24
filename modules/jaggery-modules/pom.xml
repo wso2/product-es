@@ -36,8 +36,6 @@
         <module>registration</module>
         <module>sso</module>
         <module>store</module>
-        <module>rxt</module>
-        <module>utils</module>
         <module>ues</module>
         <module>claims</module>
         <module>rxt</module>
