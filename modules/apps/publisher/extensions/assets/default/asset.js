@@ -2,10 +2,6 @@ asset.manager = function(ctx) {
     var rxtManager = ctx.rxtManager;
     var fieldsInStorage = rxtManager.listRxtFieldsOfType(ctx.assetType, 'file');
     var ref = require('utils').reflection;
-    var putInStorage = function(asset) {
-        var log = new Log();
-        log.info('Putting fields: ' + stringify(fieldsInStorage));
-    };
     var getFromStorage = function(assets) {
         var log = new Log();
         var items=assets;

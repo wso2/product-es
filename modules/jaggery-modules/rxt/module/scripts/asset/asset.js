@@ -264,7 +264,15 @@ var asset = {};
             return asset.attributes[thumbnailAttribute];
         }
         return '';
-    };  
+    };
+    /**
+     * The function provides an array of all fields that represent resources of the asset
+     * such as thumbnails,banners and content
+     * @return {[type]} An array of attribute fields
+     */
+    AssetManager.prototype.getAssetResources=function(){
+        return this.rxtManager.listRxtFieldsOfType(ctx.assetType, 'file');
+    };
     AssetManager.prototype.importAssetFromHttpRequest = function(options) {
         var tables = this.rxtManager.listRxtTypeTables(this.type);
         var asset = {};
