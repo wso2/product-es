@@ -1,7 +1,7 @@
 /*
- Descripiton:The filter manager is used to filter assets before been presented to the user
- Filename: filter.manager.js
- Created Date: 7/10/2013
+ Descripiton:The apis-asset-manager is used to retriew assets for api calls
+ Filename: apis-asset-manager.js
+ Created Date: 7/24/2014
  */
 
 var createAsset = function(options, req, res, session) {
