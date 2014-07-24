@@ -89,7 +89,7 @@ var asset = {};
     AssetManager.prototype.create = function(options) {
         var id = this.am.add(options);
         if (!id) {
-            log.warn('Unable to set the id of the newly created asset.The following asset may not have been created :' + stringif(asset));
+            log.warn('Unable to set the id of the newly created asset.The following asset may not have been created :' + stringify(asset));
             return;
         }
         options.id = id;
