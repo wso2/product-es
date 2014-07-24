@@ -131,6 +131,12 @@
                                     org.wso2.store.modules.ues:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
+                                    org.wso2.store.modules.rxt:${project.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.store.modules.utils:${project.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
                                     org.wso2.carbon.registry.associations.dependencies.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
