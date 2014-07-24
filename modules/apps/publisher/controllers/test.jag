@@ -2,6 +2,7 @@
 	//var core=require('rxt').core;
 	//var resources=require('rxt').resources;
 	var ref=require('utils').reflection;
+	var time=require('utils').time;
 	var log=new Log();
 
 
@@ -31,7 +32,7 @@
 
 	log.info('a:'+stringify(a));
 	log.info('b:'+stringify(b));
-
+	log.info(time.getCurrentTime());
 
 
 	//print('Array: '+ref.isArray(['a','b']));

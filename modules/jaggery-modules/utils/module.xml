@@ -19,4 +19,8 @@
         <name>request</name>
         <path>scripts/request/request.js</path>
     </script>
+    <script>
+        <name>time</name>
+        <path>scripts/time/time.js</path>
+    </script>
 </module>

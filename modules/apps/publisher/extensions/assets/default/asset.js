@@ -1,8 +1,12 @@
-log.info('Start of scriptqq!');
 asset.manager = function(ctx) {
     return {
         create: function(options) {
-            this._super.create.call(this,options);
+            var ref=require('utils').time;
+            //Check if the options object has a createdtime attribute and populate it 
+            if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
+                options.attributes.overview_createdtime=ref.getCurrentTime();
+            }
+            this._super.create.call(this, options);
         },
         search: function(query, paging) {
             return this._super.search.call(this, query, paging);
@@ -75,7 +79,7 @@ asset.configure = function() {
             lifecycle: {
                 name: 'SampleLifeCycle2',
                 commentRequired: true,
-                defaultAction:'Promote'
+                defaultAction: 'Promote'
             },
             ui: {
                 icon: 'icon-cog'
@@ -97,19 +101,19 @@ asset.renderer = function(ctx) {
         }];
     };
     var buildDefaultLeftNav = function(page, util) {
-        var id=page.assets.id;
+        var id = page.assets.id;
         return [{
             name: 'Overview',
             iconClass: 'icon-list-alt',
-            url: util.buildUrl('details')+'/'+id
+            url: util.buildUrl('details') + '/' + id
         }, {
             name: 'Edit',
             iconClass: 'icon-edit',
-            url: util.buildUrl('update')+'/'+id
+            url: util.buildUrl('update') + '/' + id
         }, {
             name: 'Life Cycle',
             iconClass: 'icon-retweet',
-            url: util.buildUrl('lifecycle')+'/'+id
+            url: util.buildUrl('lifecycle') + '/' + id
         }];
     };
     var isActivatedAsset = function(assetType) {
@@ -128,10 +132,19 @@ asset.renderer = function(ctx) {
     return {
         create: function(page) {},
         update: function(page) {},
-        list: function(page) {},
-        details: function(page) {
-            
+        list: function(page) {
+            var assets = page.assets;
+            for (var index in assets) {
+                var asset = assets[index];
+                if (asset.attributes.overview_createdtime) {
+                    var value = asset.attributes.overview_createdtime;
+                    var date = new Date();
+                    date.setTime(value);
+                    asset.attributes.overview_createdtime = date.toUTCString();
+                }
+            }
         },
+        details: function(page) {},
         lifecycle: function(page) {},
         leftNav: function(page) {
             switch (page.meta.pageName) {

@@ -1,5 +1,3 @@
-log.info('This is a test!');
-
 var assetLinks = function (user) {
     return {
         title: 'Gadget',
