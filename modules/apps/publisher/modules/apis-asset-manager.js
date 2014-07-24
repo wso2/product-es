@@ -3,12 +3,42 @@
  Filename: apis-asset-manager.js
  Created Date: 7/24/2014
  */
+var putInStorage = function(options, asset, am, req, session) {
+    var resourceFields = am.getAssetResources();
+    var ref = require('utils').file;
+    var storageModule = require('/modules/data/storage.js').storageModule();
+    var storageConfig = require('/config/storage.json');
+    var storageManager = new storageModule.StorageManager({
+        context: 'storage',
+        isCached: false,
+        connectionInfo: {
+            dataSource: storageConfig.dataSource
+        }
+    });
+    var resource = {};
+    var extension = '';
+    var uuid;
+    var key;
+    //Get all of the files that have been sent in the request
+    var files = request.getAllFiles();
+    for (var index in resourceFields) {
+        key = resourceFields[index];
+        if (files[key]) {
+            resource = {};
+            resource.file = files[key];
+            extension = ref.getExtension(files[key]);
+            resource.contentType = ref.getMimeType(extension);
+            uuid = storageManager.put(resource);
+            asset.attributes[key] = uuid;
+        }
+    }
+};
 var createAsset = function(options, req, res, session) {
     var asset = require('rxt').asset;
     var am = asset.createUserAssetManager(session, options.type);
     var assetReq = req.getAllParameters('UTF-8');
     var asset = am.importAssetFromHttpRequest(assetReq);
-    log.info('adding asset');
+    putInStorage(options, asset, am, req, session);
     try {
         am.create(asset);
     } catch (e) {
@@ -22,14 +52,12 @@ var createAsset = function(options, req, res, session) {
         var synched = am.synchAsset(asset);
         if (synched) {
             am.invokeDefaultLcAction(asset);
-            log.info('Finished invoking default action');
         } else {
             log.warn('Failed to invoke default action as the asset could not be synched.')
         }
     }
 };
 var updateAsset = function(options, req, res, session) {
-    log.info('updating asset');
     var asset = require('rxt').asset;
     var am = asset.createUserAssetManager(session, options.type);
     var assetReq = req.getAllParameters('UTF-8');
@@ -108,13 +136,12 @@ var listAssets = function(options, req, res, session) {
         }
     } catch (e) {
         res.sendError(400, "Your request is malformed");
-        log.info(e);
+        log.error(e);
     }
 };
 var getAsset = function(options, req, res, session) {
     var assetManager = asset.createUserAssetManager(session, options.type);
     try {
-        log.info('--------------------------------------_____________');
         var retrievedAsset = assetManager.get(options.id);
         if (!retrievedAsset) {
             print({
@@ -137,6 +164,6 @@ var getAsset = function(options, req, res, session) {
         }
     } catch (e) {
         res.sendError(400, "No matching asset found");
-        log.info(e);
+        log.error(e);
     }
 };

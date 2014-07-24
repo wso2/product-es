@@ -271,7 +271,7 @@ var asset = {};
      * @return {[type]} An array of attribute fields
      */
     AssetManager.prototype.getAssetResources=function(){
-        return this.rxtManager.listRxtFieldsOfType(ctx.assetType, 'file');
+        return this.rxtManager.listRxtFieldsOfType(this.type, 'file');
     };
     AssetManager.prototype.importAssetFromHttpRequest = function(options) {
         var tables = this.rxtManager.listRxtTypeTables(this.type);

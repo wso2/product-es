@@ -8,6 +8,7 @@
 
     require('/modules/publisher.js').exec(function(ctx) {
     var log = new Log();
+    var ref=require('utils').request;
     var res = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
@@ -20,22 +21,26 @@
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
 
-    var method = request.getMethod();    
+    var method = req.getMethod();    
+    var options=ref.getQueryOptions(req.getQueryString());
 
     if (method == 'POST') {
-        options.type = request.getParameter('type');
+
+        //options.type = request.getParameter('type');
         //Determine whether it is a create or update operation
         if (uriMatcher.match(CREATE_URL)) {
+            log.info('Creating asset');
             //options = uriMatcher.elements();
             assetHandler.createAsset(options, req, res, session);
         } else if (uriMatcher.match(UPDATE_URL)) {
+            log.info('Updating asset');
             //options = uriMatcher.elements();
             options.id = uriMatcher.elements().id;
             assetHandler.updateAsset(options, req, res, session);
         }
     }
     else if(method = 'GET'){
-        options.type = request.getParameter('type');
+        options.type = req.getParameter('type');
         response.contentType = 'application/json';
 
         if (uriMatcher.match(LIST_ASSETS_URL)) {

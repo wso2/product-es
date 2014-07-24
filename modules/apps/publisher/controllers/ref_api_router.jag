@@ -4,6 +4,7 @@
 	var matcher=new URIMatcher(request.getRequestURI());
 	var apiEndpoint='/publisher/apis/{+suffix}';	
 	var asset=require('rxt').asset;
+	var ref=require('utils').request;
 
 	var getPage=function(uri){
 		var comps=uri.split('/');
@@ -16,10 +17,12 @@
 	}
 
 	var handleApiEndpoint=function(request,session,uriParams){
-		var type=request.getParameter('type');
+		var options=ref.getQueryOptions(request.getQueryString());
+		var type=options.type;
 		//log.info(uriParams);
 		var page=getPage(uriParams.suffix);
 		//var page ='assets';
+
 		var endPoints=asset.getAssetApiEndpoints(session,type);
 		var endpoint;
 		for(var index in endPoints){
@@ -35,7 +38,6 @@
 			response.sendError(404,'Unabled to locate an api endpoint for the type: '+type);
 		}
 	};
-
 	var server=require('store').server;
 	var user=server.current(session);
 
