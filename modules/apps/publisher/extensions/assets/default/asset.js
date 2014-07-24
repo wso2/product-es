@@ -40,12 +40,10 @@ asset.manager = function(ctx) {
         },
         list: function(paging) {
             var assets = this._super.list.call(this, paging);
-            getFromStorage(assets);
             return assets;
         },
         get: function(id) {
             var asset=this._super.get.call(this, id);
-            getFromStorage(asset);
             return asset;
         }
     };
