@@ -23,7 +23,15 @@ require('/modules/publisher.js').exec(function(ctx) {
     if (method == 'POST') {
         //Determine whether it is a create or update operation
         if (uriMatcher.match(CREATE_URL)) {
-            assetApi.create(options, req, res, session);
+            var asset = assetApi.create(options, req, res, session);
+            //If the asset is successfully created then return the asset
+            if (asset) {
+                res.status = 200;
+                var result = {};
+                result.code = 200;
+                result.message = stringify(asset);
+                print(stringify(result));
+            }
         } else if (uriMatcher.match(UPDATE_URL)) {
             options.id = uriMatcher.elements().id;
             assetApi.update(options, req, res, session);

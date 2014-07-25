@@ -45,7 +45,7 @@ var api = {};
         //Get all of the files that have been sent in the request
         var files = request.getAllFiles();
         if (!files) {
-            log.warn('User has not provided any resources');
+            log.debug('User has not provided any resources such any new images or files when updating the asset with id '+asset.id);
             return;
         }
         for (var index in resourceFields) {
@@ -82,7 +82,7 @@ var api = {};
         } catch (e) {
             log.error('Asset of type: ' + options.type + ' was not created due to ' + e);
             res.sendError(500, 'Failed to create asset of type: ' + options.type);
-            return;
+            return null;
         }
         var isLcAttached = am.attachLifecycle(asset);
         //Check if the lifecycle was attached
@@ -94,6 +94,7 @@ var api = {};
                 log.warn('Failed to invoke default action as the asset could not be synched.')
             }
         }
+        return asset;
     };;
     api.update = function(options, req, res, session) {
         var asset = require('rxt').asset;
