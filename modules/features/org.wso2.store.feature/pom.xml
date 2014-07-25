@@ -262,6 +262,9 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.tenant.deployment:${carbon.platform.version}
                                 </importFeatureDef>
+                                <importFeatureDef>
+                                    org.wso2.carbon.social:${carbon.social.version}
+                                </importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
