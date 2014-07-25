@@ -114,6 +114,7 @@ routeMnger.register('GET', 'publisher', '/publisher/assets/{operation}/{type}/',
             });
 
         } catch (e) {
+        	log.info(e);
             response.sendError(404, 'Asset type not found'); //TODO: Replace
         }
 

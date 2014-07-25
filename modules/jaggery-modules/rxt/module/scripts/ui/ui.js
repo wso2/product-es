@@ -13,7 +13,8 @@ var ui = {};
             meta: {
                 pageName: options.pageName,
                 currentPage:options.currentPage,
-                title: 'Empty'
+                title: 'Empty',
+                landingPage:options.landingPage
             }
         }
     };
@@ -32,13 +33,26 @@ var ui = {};
     }
     ui.buildPage = function(session, request) {
         var server = require('store').server;
+        var userMod=require('store').user;
         var user = server.current(session);
+        var tenantId=user.tenantId;
+        var configs=userMod.configs(tenantId);
+        var landingPage='';
+
+        //Determine landing page details
+        if(configs){
+            log.warn('Unable to locate tnenat configurations');
+            if((configs.application)&&(configs.application.landingPage)){
+                landingPage=configs.application.landingPage;
+            }
+        }
         var pageDetails = getPageName(request);
 
         var page = genericPage({
             username: user.username,
             pageName: pageDetails.pageName,
-            currentPage:pageDetails.currentPage
+            currentPage:pageDetails.currentPage,
+            landingPage:landingPage
         });
         return page;
     };

@@ -1,30 +1,4 @@
 asset.manager = function(ctx) {
-    var rxtManager = ctx.rxtManager;
-    var fieldsInStorage = rxtManager.listRxtFieldsOfType(ctx.assetType, 'file');
-    var ref = require('utils').reflection;
-    var getFromStorage = function(assets) {
-        var log = new Log();
-        var items=assets;
-        var item;
-        var field;
-        var id;
-        if(!ref.isArray(items)){
-            items=[assets];
-        }
-
-        //Go through each asset and get the neccessary items from storage
-        for(var index in items){
-            item=items[index];
-            for(var fieldIndex in fieldsInStorage){
-                field=fieldsInStorage[fieldIndex];
-                id=item.id;
-                if(item.attributes.hasOwnProperty(field)){
-                    //Build the url to server the content from storage
-                    item.attributes[field]='/storage/'+ctx.assetType+'/'+id+'/'+item.attributes[field];
-                }
-            }
-        }
-    };
     return {
         create: function(options) {
             var ref = require('utils').time;
@@ -35,7 +9,7 @@ asset.manager = function(ctx) {
             this._super.create.call(this, options);
         },
         search: function(query, paging) {
-            var assets=this._super.search.call(this, query, paging);
+            var assets = this._super.search.call(this, query, paging);
             return assets;
         },
         list: function(paging) {
@@ -43,7 +17,7 @@ asset.manager = function(ctx) {
             return assets;
         },
         get: function(id) {
-            var asset=this._super.get.call(this, id);
+            var asset = this._super.get.call(this, id);
             return asset;
         }
     };
@@ -129,11 +103,12 @@ asset.configure = function() {
             ui: {
                 icon: 'icon-cog'
             },
-            thumbnail:'images_thumbnail'
+            thumbnail: 'images_thumbnail'
         }
     };
 };
 asset.renderer = function(ctx) {
+    var type = ctx.assetType;
     var buildListLeftNav = function(page, util) {
         var log = new Log();
         return [{
@@ -143,7 +118,7 @@ asset.renderer = function(ctx) {
         }, {
             name: 'Statistics',
             iconClass: 'icon-dashboard',
-            url: util.buildUrl('stats')
+            url: '/assets/statistics/' + type + '/'
         }];
     };
     var buildDefaultLeftNav = function(page, util) {
@@ -161,6 +136,9 @@ asset.renderer = function(ctx) {
             iconClass: 'icon-retweet',
             url: util.buildUrl('lifecycle') + '/' + id
         }];
+    };
+    var buildAddLeftNav = function(page, util) {
+        return [];
     };
     var isActivatedAsset = function(assetType) {
         var activatedAssets = ctx.tenantConfigs.assets;
@@ -197,6 +175,9 @@ asset.renderer = function(ctx) {
                 case 'list':
                     page.leftNav = buildListLeftNav(page, this);
                     break;
+                case 'create':
+                    page.leftNav=buildAddLeftNav(page,this);
+                    break;
                 default:
                     page.leftNav = buildDefaultLeftNav(page, this);
                     break;
@@ -221,7 +202,7 @@ asset.renderer = function(ctx) {
             }
             ribbon.currentType = page.rxt.singularLabel;
             ribbon.currentTitle = page.rxt.singularLabel;
-            ribbon.currentUrl = page.meta.currentPage;
+            ribbon.currentUrl = this.buildBaseUrl(type) + '/list'; //page.meta.currentPage;
             ribbon.shortName = page.rxt.singularLabel;
             ribbon.query = 'Query';
             ribbon.breadcrumb = assetTypes;
