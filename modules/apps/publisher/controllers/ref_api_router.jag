@@ -42,13 +42,14 @@
 	var user=server.current(session);
 
 	if(!user){
-		response.sendRedirect('/publisher/apis/authenticate');//TODO:Remove this
+		log.info('Auth failure')
+		response.sendError(401);
+		//response.sendRedirect('/publisher/apis/authenticate');//TODO:Remove this
 	}
  	else{
  		//Check if options have been provided
 		if(matcher.match(apiEndpoint)){
 			handleApiEndpoint(request,session,matcher.elements());	
-			log.info(matcher.elements());	
 		}
 		
 		else{

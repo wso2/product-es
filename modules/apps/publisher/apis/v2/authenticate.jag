@@ -1,6 +1,4 @@
-
 <%
-
 /**
  * Description: The API accepts a set of credentials which it attempts to verify.If the 
  				provided credentials are authenticated , the logged in user is set to the provided
@@ -12,66 +10,61 @@
  				username={name}
  				password={password}
  */
-	var log=new Log('login-api');
-	var user=require('store').user;
-	var credentials={};
-	var result={};
-	var method=request.getMethod();
-	var SESSION_MAP='sso_sessions';	//We need to create the session map as it is required by the session listener
-
-	/**
-	 * The function adds the session to a session map.If a session map is not present
-	 * in the application context it is added 
-	 * @param {[type]} app             Application context
-	 * @param {[type]} sessionInstance The session to be added
-	 */
-	var addToSessionMap=function(app,sessionInstance){
-		var ssoSessions=app.get(SESSION_MAP);
-		var sessionId=sessionInstance.getId();
-
-		if(!ssoSessions){
-			app.put(SESSION_MAP,{});
-			ssoSessions=app.get(SESSION_MAP);
-			log.debug('Created session as session was not present');
-		}
-
-		if(!ssoSessions[sessionId]){
-			ssoSessions[sessionId]='';
-			log.debug('Added session: '+sessionId+' to session map');
-		}
-		else{
-			log.warn('Session already exists in the session map');
-		}
-		
-	};
-
-	if(method=='POST'){
-		
-		credentials.username=request.getParameter('username');
-		credentials.password=request.getParameter('password');
-
-		var isAuthenticated=user.login(credentials.username,credentials.password,session);
-
-		response.contentType='application/json';
-
-		if(isAuthenticated){
-			session.put("LOGGED_IN_USER", credentials.username);
-	    	session.put("Loged", "true");
-	    	response.status=200;
-	    	result.code=200;
-	    	result.message='Logged in successfully';
-	    	result.sessionId=session.getId();
-
-	    	//Add to the session map as it is required by the session listener
-	    	addToSessionMap(application,session);
-		}
-		else{
-			response.status=401;
-			result.code=401;
-			result.message='username/password is incorrect';
-		}	
-
-	    print(stringify(result));
-	}
-	
-%>
+var log = new Log('login-api');
+var user = require('store').user;
+var credentials = {};
+var result = {};
+var method = request.getMethod();
+var SESSION_MAP = 'sso_sessions'; //We need to create the session map as it is required by the session listener
+/**
+ * The function adds the session to a session map.If a session map is not present
+ * in the application context it is added
+ * @param {[type]} app             Application context
+ * @param {[type]} sessionInstance The session to be added
+ */
+var addToSessionMap = function(app, sessionInstance) {
+    var ssoSessions = app.get(SESSION_MAP);
+    var sessionId = sessionInstance.getId();
+    if (!ssoSessions) {
+        app.put(SESSION_MAP, {});
+        ssoSessions = app.get(SESSION_MAP);
+        log.debug('Created session as session was not present');
+    }
+    if (!ssoSessions[sessionId]) {
+        ssoSessions[sessionId] = '';
+        log.debug('Added session: ' + sessionId + ' to session map');
+    } else {
+        log.warn('Session already exists in the session map');
+    }
+};
+if (method == 'POST') {
+    credentials.username = request.getParameter('username');
+    credentials.password = request.getParameter('password');
+    response.contentType = 'application/json';
+    //Check if a username and password is provided
+    if ((!credentials.username) || (!credentials.password)) {
+        response.status = 400;
+        result.code = 400;
+        result.message = 'Username and Password must be provided';
+    } else {
+        var isAuthenticated = user.login(credentials.username, credentials.password, session);
+        if (isAuthenticated) {
+            session.put("LOGGED_IN_USER", credentials.username);
+            session.put("Loged", "true");
+            response.status = 200;
+            result.code = 200;
+            result.message = 'Logged in successfully';
+            result.sessionId = session.getId();
+            //Add to the session map as it is required by the session listener
+            addToSessionMap(application, session);
+        } else {
+            response.status = 401;
+            result.code = 401;
+            result.message = 'username/password is incorrect';
+        }
+    }
+    print(stringify(result));
+} else {
+    response.sendError(404);
+}
+ %>
