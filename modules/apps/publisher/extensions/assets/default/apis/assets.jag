@@ -1,59 +1,43 @@
-
-<% 
-    var DEFAULT_PAGIN = {'start': 0,
-                    'count': 10,
-                    'sortOrder': 'desc',
-                    'sortBy': 'overview_createdtime',
-                    'paginationLimit': 1000};
-
-    require('/modules/publisher.js').exec(function(ctx) {
+<%
+var DEFAULT_PAGIN = {
+    'start': 0,
+    'count': 10,
+    'sortOrder': 'desc',
+    'sortBy': 'overview_createdtime',
+    'paginationLimit': 1000
+};
+require('/modules/publisher.js').exec(function(ctx) {
     var log = new Log();
-    var ref=require('utils').request;
+    var ref = require('utils').request;
     var res = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
-    var assetHandler = require('/modules/apis-asset-manager.js');
-    //var CREATE_URL = '/{context}/asts/{type}/api/assets';
-    //var UPDATE_URL = '/{context}/asts/{type}/api/assets/{id}';
+    var assetApi = require('/modules/asset_api.js').api;
     var CREATE_URL = '/{context}/apis/assets/';
     var UPDATE_URL = '/{context}/apis/assets/{id}';
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
-
-    var method = req.getMethod();    
-    var options=ref.getQueryOptions(req.getQueryString());
-
+    var method = req.getMethod();
+    var options = ref.getQueryOptions(req.getQueryString());
     if (method == 'POST') {
-
-        //options.type = request.getParameter('type');
         //Determine whether it is a create or update operation
         if (uriMatcher.match(CREATE_URL)) {
-            log.info('Creating asset');
-            //options = uriMatcher.elements();
-            assetHandler.createAsset(options, req, res, session);
+            assetApi.create(options, req, res, session);
         } else if (uriMatcher.match(UPDATE_URL)) {
-            log.info('Updating asset');
-            //options = uriMatcher.elements();
             options.id = uriMatcher.elements().id;
-            assetHandler.updateAsset(options, req, res, session);
+            assetApi.update(options, req, res, session);
         }
-    }
-    else if(method = 'GET'){
+    } else if (method = 'GET') {
         options.type = req.getParameter('type');
         response.contentType = 'application/json';
-
         if (uriMatcher.match(LIST_ASSETS_URL)) {
-            //options = uriMatcher.elements();            
-            assetHandler.listAssets(options, req, res, session);
+            assetApi.search(options, req, res, session);
         } else if (uriMatcher.match(GET_ASSET_URL)) {
-            //options = uriMatcher.elements();
             options.id = uriMatcher.elements().id;
-            assetHandler.getAsset(options, req, res, session);
+            assetApi.get(options, req, res, session);
         }
-        } else {
+    } else {
         res.sendError(404, 'Unable to locate endpoint');
     }
 }, request, response, session); %>
-
-
