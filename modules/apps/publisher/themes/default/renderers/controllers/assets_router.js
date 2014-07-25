@@ -28,10 +28,6 @@ var render = function (theme, data, meta, require) {
             }
         ],
         ribbon: [
-            {
-                partial: 'ribbon',
-                context: require('/helpers/breadcrumb.js').generateBreadcrumbJson(data)
-            }
         ],
         leftnav: [
             {

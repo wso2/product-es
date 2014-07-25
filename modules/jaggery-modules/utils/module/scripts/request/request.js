@@ -12,6 +12,7 @@ var request = {};
         return decodeURIComponent(encodedURI);
     };
     request.getQueryOptions = function(queryString) {
+        var opt={};
         var sep = opt.sep || '&',
             assign = opt.assign || '=',
             compoArray = [];

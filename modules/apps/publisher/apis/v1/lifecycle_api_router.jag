@@ -37,7 +37,7 @@ require('/modules/publisher.js').exec(function(ctx) {
 
   routeManager.register('POST', 'publisher', '/publisher/api/lifecycle/{type}/{id}', function(context) {
 
-
+    log.info('Obtaining lifecycle');
     var shortName = context.params.type;
     var id = context.params.id;
     var lifecycle = context.post.lifecycle;
@@ -60,6 +60,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     });
 
     if (!lifecycle) {
+      log.info('A lifecycle has not been provided');
       response.sendError(400, 'Missing required parameter: lifecycle');
       return;
     }
@@ -81,7 +82,7 @@ require('/modules/publisher.js').exec(function(ctx) {
 
       print(msg);
     } catch (e) {
-      log.debug('The asset with id: ' + id + ' could not be found.The following exception was thrown: ' + e);
+      log.info('The asset with id: ' + id + ' could not be found.The following exception was thrown: ' + e);
       response.sendError(404, 'The asset with id: ' + id + ' could not be found.Please refere to the server log.');
     }
   });
@@ -169,7 +170,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     
     var artifactManager = rxtManager.getSystemArtifactManager(shortName,session);//rxtManager.getArtifactManager(shortName);
 
-    var commentNeeded = require('/config/ext/' + shortName + '.json').behavior.lifecycle_change_comment_required === 'true';
+    var commentNeeded = true;//require('/config/ext/' + shortName + '.json').behavior.lifecycle_change_comment_required === 'true';
 
     if (!comment && commentNeeded) {
       response.sendError(400, 'This change requires that you insert a comment');
@@ -215,7 +216,7 @@ require('/modules/publisher.js').exec(function(ctx) {
   /*
  The function returns the lifecycle structure of a given asset
  */
-  function obtainLifeCycle(type) {
+  function obtainLifeCycle(type,artifact) {
     CommonUtil = Packages.org.wso2.carbon.governance.lcm.util.CommonUtil;
     var rootReg = rxtManager.registry.registry;
     var configReg = rootReg.getChrootedRegistry('/_system/config');
@@ -223,7 +224,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     //Obtain a model of the type
     var model = modelManager.getModel(type);
 
-    var lifecycle = model.get('*.lifeCycle').value;
+    var lifecycle = artifact.lifecycle;//model.get('*.lifeCycle').value;
 
     var data = CommonUtil.getLifecycleConfiguration(lifecycle, configReg);
 
@@ -252,9 +253,7 @@ require('/modules/publisher.js').exec(function(ctx) {
       var state = artifactManager.getLifecycleState(artifact);
       var actions = artifactManager.availableActions(artifact);
 
-
-      var lcJSON = obtainLifeCycle(shortName);
-
+      var lcJSON = obtainLifeCycle(shortName,artifact);
 
       var msg = {};
       msg['status'] = 'ok';
@@ -266,7 +265,7 @@ require('/modules/publisher.js').exec(function(ctx) {
       log.debug(msg);
       print(msg);
     } catch (e) {
-      log.debug('The asset with id: ' + id + ' could not be found.The following exception was thrown: ' + e);
+      log.info('The asset with id: ' + id + ' could not be found.The following exception was thrown: ' + e);
       response.sendError(404, 'The asset with id: ' + id + ' could not be found.Please refere to the server log.');
     }
   });
