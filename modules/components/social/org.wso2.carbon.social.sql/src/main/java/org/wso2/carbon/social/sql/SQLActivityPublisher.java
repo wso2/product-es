@@ -26,7 +26,7 @@ public class SQLActivityPublisher extends ActivityPublisher {
 	            if (contextId == null) {
 	                contextId = JSONUtil.getProperty(activity, Constants.TARGET_JSON_PROP, Constants.ID_JSON_PROP);
 	            }
-	
+	            connection.setAutoCommit(false);
 	            statement = connection.prepareStatement(INSERT_SQL);
 	            statement.setString(1, id);
 	            statement.setString(2, contextId);
