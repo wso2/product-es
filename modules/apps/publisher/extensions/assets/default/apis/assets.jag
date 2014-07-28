@@ -2,7 +2,7 @@
 var DEFAULT_PAGIN = {
     'start': 0,
     'count': 10,
-    'sortOrder': 'desc',
+    'sortOrder': 'DESC',
     'sortBy': 'overview_createdtime',
     'paginationLimit': 1000
 };
