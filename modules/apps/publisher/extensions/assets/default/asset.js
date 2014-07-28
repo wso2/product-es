@@ -78,7 +78,7 @@ asset.configure = function() {
                     },
                     version: {
                         name: {
-                            label: 'Super Version'
+                            label: 'Version'
                         }
                     }
                 }
