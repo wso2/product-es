@@ -51,7 +51,7 @@ var asset = {};
     };
     var setField = function(field, attrName, data, attributes) {
         if (field.type == 'option-text') {
-            var list = data[attrName];
+            var list = data[attrName]||[];
             attributes[attrName] = processOptionTextList(list);
         } else {
             attributes[attrName] = data[attrName];
