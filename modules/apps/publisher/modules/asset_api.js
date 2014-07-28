@@ -115,10 +115,10 @@ var api = {};
         if (sort) {
             var order = sort.charAt(0);
             if (order == '+' || order == ' ') {
-                sortOrder = 'asc';
+                sortOrder = 'ASC';
                 sort = sort.slice(1);
             } else if (order == '-') {
-                sortOrder = 'desc';
+                sortOrder = 'DESC';
                 sort = sort.slice(1);
             } else {
                 sortOrder = DEFAULT_PAGIN.sortOrder;
