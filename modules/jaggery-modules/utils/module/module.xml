@@ -20,6 +20,10 @@
         <path>scripts/request/request.js</path>
     </script>
     <script>
+        <name>response</name>
+        <path>scripts/response/response.js</path>
+    </script>
+    <script>
         <name>time</name>
         <path>scripts/time/time.js</path>
     </script>
