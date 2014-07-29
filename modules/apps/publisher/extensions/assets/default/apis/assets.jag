@@ -24,11 +24,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     var UPDATE_URL = '/{context}/apis/assets/{id}';
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
-    var GET_LIFECYCLES_URL = '/{context}/apis/lifecycles/';
-    var GET_LIFECYCLE_BY_NAME_URL = '/{context}/apis/lifecycles/{lifecycle-name}';
-    var LIFECYCLE_ACTIONS_URL = '/{context}/apis/lifecycles/{lifecycle-name}/{current-state}';
-    var INVOKE_LIFECYCLE_ACTIONS_URL = '/{context}/apis/{id}/state';
-
+    
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
     response.contentType = 'application/json';
