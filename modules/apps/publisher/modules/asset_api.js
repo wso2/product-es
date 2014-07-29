@@ -16,16 +16,22 @@ var responseProcessor = require('utils').response;
             extendedAssetTemplate[key] = value;
         }
         var newArtifactTemplateString = stringify(extendedAssetTemplate);
-        var modifiedArtifacts = [];
+        var modifiedAssets = [];
+
         for (var j in artifacts) {
-            var artifactObject = parse(newArtifactTemplateString);
+            var artifactObject = parse(newArtifactTemplateString);            
             for (var i in extendedAssetTemplate) {
-                artifactObject[i] = artifacts[j].attributes[i];
+                if(artifacts[j][i]){
+                    artifactObject[i] = artifacts[j][i];
+                }else{
+                    artifactObject[i] = artifacts[j].attributes[i];    
+                }
+                
             }
-            modifiedArtifacts.push(artifactObject);
+            modifiedAssets.push(artifactObject);
         }
         //print(modifiedArtifacts);
-        return modifiedArtifacts;
+        return modifiedAssets;
     };
     var putInStorage = function(options, asset, am, req, session) {
         var resourceFields = am.getAssetResources();
