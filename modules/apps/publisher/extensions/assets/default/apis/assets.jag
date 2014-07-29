@@ -1,14 +1,20 @@
 <%
+/*
+ Descripiton: Invoke routed api endpoints
+
+ */
+
 var DEFAULT_PAGIN = {
     'start': 0,
     'count': 10,
-    'sortOrder': 'DESC',
-    'sortBy': 'overview_createdtime',
+    'sortOrder': 'ASC',
+    'sortBy': '',
     'paginationLimit': 1000
 };
 require('/modules/publisher.js').exec(function(ctx) {
     var log = new Log();
     var ref = require('utils').request;
+    var responseProcessor = require('utils').response;
     var res = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
@@ -20,32 +26,43 @@ require('/modules/publisher.js').exec(function(ctx) {
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
+    response.contentType = 'application/json';
+    var result = {};
     if (method == 'POST') {
         //Determine whether it is a create or update operation
         if (uriMatcher.match(CREATE_URL)) {
             var asset = assetApi.create(options, req, res, session);
             //If the asset is successfully created then return the asset
             if (asset) {
-                res.status = 200;
-                var result = {};
-                result.code = 200;
-                result.message = stringify(asset);
-                print(stringify(result));
+                //res.status = 200;
+                //result = responseProcessor.buildSuccessResponse(200,'Request Served Successfully',asset);
+                print(responseProcessor.buildSuccessResponse(200,'Request Served Successfully',asset));
             }
+
         } else if (uriMatcher.match(UPDATE_URL)) {
             options.id = uriMatcher.elements().id;
             assetApi.update(options, req, res, session);
+        }else {
+            //result = responseProcessor.buildErrorResponse(404, 'Unable to locate this POST endpoint');
+            print(responseProcessor.buildErrorResponse(404, 'Unable to locate this POST endpoint'));
+            //res.sendError(404, 'Unable to locate endpoint');
         }
-    } else if (method = 'GET') {
+    } else if (method == 'GET') {
         options.type = req.getParameter('type');
-        response.contentType = 'application/json';
+        
         if (uriMatcher.match(LIST_ASSETS_URL)) {
             assetApi.search(options, req, res, session);
-        } else if (uriMatcher.match(GET_ASSET_URL)) {
+        }else if (uriMatcher.match(GET_ASSET_URL)) {
             options.id = uriMatcher.elements().id;
             assetApi.get(options, req, res, session);
+        }else {
+            //result = responseProcessor.buildErrorResponse(404, 'Unable to locate this GET endpoint');
+            print(responseProcessor.buildErrorResponse(404, 'Unable to locate this GET endpoint'));
+            
         }
     } else {
-        res.sendError(404, 'Unable to locate endpoint');
+        //result = responseProcessor.buildErrorResponse(404, 'Unable to locate this endpoint for '+method);
+        print(responseProcessor.buildErrorResponse(404, 'Unable to locate this endpoint for '+method));
+        
     }
 }, request, response, session); %>
