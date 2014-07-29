@@ -8,26 +8,24 @@
 	var log=new Log('logout-api');
 	var result={};
 	var method=request.getMethod();
-
+	var responseProcessor = require('utils').response;
+	response.contentType='application/json';
 
 	if(method=='POST'){
 
 		try{
 			var user=require('store').user;
 			user.logout();
-			session.invalidate();
-			response.status=200;
-			result.code=200;
-			result.message='Logged out successfully';
+			session.invalidate();			
+			result = responseProcessor.buildSuccessResponse(200,'Logged out successfully',[]);
 		}
-		catch(e){
-			response.status=500;
-			result.code=500;
-			result.message='Unable to logout authenticated user.';
-		}
-			
-		response.contentType='application/json';
-		print(stringify(result));
+		catch(e){					
+			result = responseProcessor.buildErrorResponse(500, 'Unable to logout authenticated user!');			
+		}		
+		
+		print(result);
+	}else{
+		print(responseProcessor.buildErrorResponse(404,'Your request malformed'));
 	}
 
 %>
