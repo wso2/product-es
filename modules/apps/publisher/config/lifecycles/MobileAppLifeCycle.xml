@@ -39,6 +39,8 @@
                                 <parameter name="STATE_RULE1:In-Review"
                                            value="Internal/private_{asset_author}:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE2:In-Review" value="Internal/reviewer:+add,-delete,+authorize"/>
+                                <parameter name="STATE_RULE3:In-Review" value="Internal/everyone:-get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:In-Review" value="system/wso2.anonymous.role:-get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -72,6 +74,7 @@
                                 <parameter name="STATE_RULE1:Rejected"
                                            value="Internal/private_{asset_author}:+add,+delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Rejected" value="Internal/reviewer:-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE3:Rejected" value="system/wso2.anonymous.role:-get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -91,9 +94,13 @@
                                 <parameter name="PERMISSION:authorize" value="authorize"/>
 
                                 <parameter name="STATE_RULE1:Published"
-                                           value="Internal/private_{asset_author}:+add,+delete,+authorize"/>
+                                           value="Internal/private_{asset_author}:+get,+add,+delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Published"
-                                           value="Internal/reviewer:-add,-delete,-authorize"/>
+                                           value="Internal/reviewer:+get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE3:Published"
+                                           value="Internal/everyone:+get,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:Published"
+                                           value="system/wso2.anonymous.role:+get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -114,6 +121,8 @@
                                 <parameter name="STATE_RULE1:In-Review"
                                            value="Internal/private_{asset_author}:-add,-delete,-authorize"/>
                                 <parameter name="STATE_RULE2:In-Review" value="Internal/reviewer:+add,-delete,+authorize"/>
+                                <parameter name="STATE_RULE3:In-Review" value="Internal/everyone:-get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:In-Review" value="system/wso2.anonymous.role:-get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -135,6 +144,9 @@
                                            value="Internal/private_{asset_author}:+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Unpublished"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE3:Unpublished" value="Internal/everyone:-get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:Unpublished" value="system/wso2.anonymous.role:-get,-add,-delete,-authorize"/>
+
                             </execution>
                             <execution forEvent="Deprecate" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
                                 <parameter name="PERMISSION:get"
@@ -149,6 +161,8 @@
                                            value="Internal/private_{asset_author}:+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Deprecated"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE3:Deprecated" value="Internal/everyone:-get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:Deprecated" value="system/wso2.anonymous.role:-get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -171,6 +185,11 @@
                                            value="Internal/private_{asset_author}:+add,-delete,+authorize"/>
                                 <parameter name="STATE_RULE2:Published"
                                            value="Internal/reviewer:-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE3:Published"
+                                           value="Internal/everyone:+get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:Published"
+                                           value="system/wso2.anonymous.role:+get,-add,-delete,-authorize"/>
+
                             </execution>
                             <execution forEvent="Retire" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
                                 <parameter name="PERMISSION:get"
@@ -184,6 +203,8 @@
                                 <parameter name="STATE_RULE1:Retired"
                                            value="Internal/private_{asset_author}:-add,+delete,-authorize"/>
                                 <parameter name="STATE_RULE2:Retired" value="Internal/reviewer:-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE3:Retired" value="system/wso2.anonymous.role:-get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:Retired" value="Internal/everyone:-get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
@@ -205,6 +226,8 @@
                                 <parameter name="STATE_RULE1:Retired"
                                            value="Internal/private_{asset_author}:-add,+delete,-authorize"/>
                                 <parameter name="STATE_RULE2:Retired" value="Internal/reviewer:-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE3:Retired" value="system/wso2.anonymous.role:-get,-add,-delete,-authorize"/>
+                                <parameter name="STATE_RULE4:Retired" value="Internal/everyone:-get,-add,-delete,-authorize"/>
                             </execution>
                         </data>
                     </datamodel>
