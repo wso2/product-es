@@ -1,0 +1,53 @@
+<%
+	var core=require('rxt').core;
+	//var resources=require('rxt').resources;
+	var ref=require('utils').reflection;
+	var time=require('utils').time;
+	var log=new Log();
+
+
+	var a={
+		name:'John',
+		age:'123',
+		inv:{
+			bottle:'7',
+			items:{
+				a:'a',
+				b:'b'
+			}
+		}
+	};
+
+	var b={
+		age:'58',
+		height:'q',
+		inv:{
+			items:{
+				b:'c'
+			}
+		}
+	};
+
+	ref.copyAllPropValues(a,a);
+
+	//log.info('a:'+stringify(a));
+	//log.info('b:'+stringify(b));
+	//log.info(time.getCurrentTime());
+
+
+	//print('Array: '+ref.isArray(['a','b']));
+	//print('Object: '+ref.isArray({}));
+	//var server=require('store').server;
+	//var registry=server.systemRegistry(-1234);
+	//core.init(-1234,registry);
+	//resources.manager(-1234);
+	 var manager=core.rxtManager(-1234);
+	 print(manager.listRxtFieldsOfType('gadget','file'));
+	//core.assetResources(-1234,'gadget');
+	//print(manager.listRxtTypeTables('gadget'));
+	//print(manager.listRxtTypes());
+	//print(manager.getRxtDefinition('gadget'));
+	//print(manager.getRxtStoragePath('api'));
+
+	
+%>

@@ -13,7 +13,7 @@ import org.wso2.carbon.social.core.JSONUtil;
 public class SQLActivityPublisher extends ActivityPublisher {
 	
 	private static Log log = LogFactory.getLog(SQLActivityPublisher.class);
-	public static final String INSERT_SQL = "INSERT INTO ES_SOCIAL(id, payload_context_id, body) VALUES(?, ?, ?)";
+	public static final String INSERT_SQL = "INSERT INTO " + Constants.ES_SOCIAL + "(id, payload_context_id, body) VALUES(?, ?, ?)";
     @Override
     protected String publish(String id, NativeObject activity) {
     	DSConnection con = new DSConnection();
@@ -26,7 +26,7 @@ public class SQLActivityPublisher extends ActivityPublisher {
 	            if (contextId == null) {
 	                contextId = JSONUtil.getProperty(activity, Constants.TARGET_JSON_PROP, Constants.ID_JSON_PROP);
 	            }
-	
+	            connection.setAutoCommit(false);
 	            statement = connection.prepareStatement(INSERT_SQL);
 	            statement.setString(1, id);
 	            statement.setString(2, contextId);

@@ -1,0 +1,13 @@
+<%
+var log = new Log(),
+        caramel = require('caramel'),
+        publisher = require('/modules/publisher.js');
+var server = require('store').server;
+
+caramel.render({
+    op: 'test',
+    title: 'Publisher Extensions | Gadgets',
+    shortName: 'gadget',
+    cuser: server.current(session)
+});
+%>

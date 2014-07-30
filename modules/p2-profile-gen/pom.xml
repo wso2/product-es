@@ -97,6 +97,10 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.store.modules:claims.feature:${project.version}
                                 </featureArtifactDef>
+                                 <featureArtifactDef>org.wso2.store.modules:rxt.feature:${project.version}
+                                </featureArtifactDef>
+                                 <featureArtifactDef>org.wso2.store.modules:utils.feature:${project.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
                                 </featureArtifactDef>
@@ -353,6 +357,14 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.claims.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.store.modules.rxt.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.store.modules.utils.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>

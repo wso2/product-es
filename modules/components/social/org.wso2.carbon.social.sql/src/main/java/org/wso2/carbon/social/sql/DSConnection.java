@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceManager;
+import org.wso2.carbon.social.sql.Constants;
 
 
 public class DSConnection {
@@ -18,7 +19,7 @@ public class DSConnection {
 	public Connection getConnection() {
     	Connection conn = null;
             try {
-                CarbonDataSource carbonDataSource = DataSourceManager.getInstance().getDataSourceRepository().getDataSource("WSO2_SOCIAL_DB");
+                CarbonDataSource carbonDataSource = DataSourceManager.getInstance().getDataSourceRepository().getDataSource(Constants.SOCIAL_DB_NAME);
                 DataSource dataSource = (DataSource) carbonDataSource.getDSObject();
                 conn = dataSource.getConnection();
             } catch (SQLException e) {

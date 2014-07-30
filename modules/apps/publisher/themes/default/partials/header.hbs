@@ -28,7 +28,6 @@
 </div>
 
 -->
-
 <div class="container" id="container-header">
 	<div class="row">
 		<div class="span12">
@@ -36,15 +35,15 @@
 				<div class="navbar-inner">
 					<div class="container">
 
-						<a href="/publisher/" class="brand"></a>
-						<a href="/publisher/" class="back-office-label"></a>
+						<a href='{{url ""}}{{meta.landingPage}}' class="brand"></a>
+						<a href="{{url ""}}{{meta.landingPage}}" class="back-office-label"></a>
 
 						<ul class="nav menu pull-right">
 				
 							<li>
 
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i
-								class="icon-user"></i> {{cuser.username}} <b class="caret"></b></a>
+								class="icon-user"></i>{{cuser.username}} <b class="caret"></b></a>
 								<ul class="dropdown-menu dropdown-account" role="menu" aria-labelledby="dLabel">
 									<li>
 										<a onclick="window.location.href='{{url "/logout"}}'" href="#"><i class="icon-signout"></i>{{t "Sign out"}}</a>

@@ -1,0 +1,14 @@
+<form  method='post' action='{{url ""}}/apis/assets?type={{rxt.shortName}}' class="form-horizontal" id="form-asset-create" data-redirect-url='{{url ""}}/asts/{{rxt.shortName}}/list' >   
+    <div class="control-group">
+             {{#each assets.tables}}                                             
+                <tr>
+                        {{renderTable .}}
+                </tr>                                    
+            {{/each}}  
+    </div> 
+    <div id="saveButtons" class="form-actions">
+        <input type='submit' id="btn-create-asset" class="btn btn-primary" name="addNewAssetButton" value='{{t "Create"}}'>
+        <button class="btn" type="reset">{{t "Reset"}}</button>
+        <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
+    </div>   
+</form>

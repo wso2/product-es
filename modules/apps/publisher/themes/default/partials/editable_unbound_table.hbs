@@ -1,0 +1,11 @@
+<h3>{{label}}</h3>
+<table class='table'>
+	<thead>
+		{{#each subheading}}
+			<th>{{heading}}</th>
+		{{/each}}
+	</thead>
+	<tbody>
+		{{renderEditableUnboundTable .}}
+	</tbody>
+</table>
