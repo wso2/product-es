@@ -30,7 +30,7 @@ require('/modules/publisher.js').exec(function(ctx) {
                 var result = {};
                 result.code = 200;
                 result.message = stringify(asset);
-                print(stringify(result));
+                print(result);
             }
         } else if (uriMatcher.match(UPDATE_URL)) {
             options.id = uriMatcher.elements().id;
