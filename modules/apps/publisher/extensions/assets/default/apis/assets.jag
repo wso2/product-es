@@ -37,14 +37,20 @@ require('/modules/publisher.js').exec(function(ctx) {
             if (asset) {
                 print(responseProcessor.buildSuccessResponse(200,'Request Served Successfully',asset));
             }
-
+            else{
+                print(responseProcessor.buildErrorResponse(500,'Unable to create asset',{}));
+            }
         } else if (uriMatcher.match(UPDATE_URL)) {
             options.id = uriMatcher.elements().id;
-            assetApi.update(options, req, res, session);
+            var asset=assetApi.update(options, req, res, session);
+            if(asset){
+                print(responseProcessor.buildSuccessResponse(200,'Request Served Successfully',asset));
+            }
+            else{
+                print(responseProcessor.buildErrorResponse(500,'Unable to update the asset',{}));
+            }
         }else {
-            //result = responseProcessor.buildErrorResponse(404, 'Unable to locate this POST endpoint');
             print(responseProcessor.buildErrorResponse(404, 'Unable to locate this POST endpoint'));
-            //res.sendError(404, 'Unable to locate endpoint');
         }
     } else if (method == 'GET') {
         options.type = req.getParameter('type');
@@ -61,7 +67,7 @@ require('/modules/publisher.js').exec(function(ctx) {
         }
     } else {
         //result = responseProcessor.buildErrorResponse(404, 'Unable to locate this endpoint for '+method);
-        print(responseProcessor.buildErrorResponse(404, 'Unable to locate this endpoint for '+method));
+        print(responseProcessor.buildErrorResponse(501, 'The endpoint that you have requested is not implemented for the '+method+' method.Try making the request with the appropriate verb (hint: create/update operations use POST).'));
         
     }
 }, request, response, session); %>
