@@ -1,9 +1,10 @@
 /*
  Descripiton:The apis-asset-manager is used to retriew assets for api calls
- Filename: apis-asset-manager.js
+ Filename: asset_api.js
  Created Date: 7/24/2014
  */
 var api = {};
+var responseProcessor = require('utils').response;
 (function(api) {
     var fieldExpansion = function(options, req, res, session) {
         var fields = options.fields;
@@ -15,16 +16,22 @@ var api = {};
             extendedAssetTemplate[key] = value;
         }
         var newArtifactTemplateString = stringify(extendedAssetTemplate);
-        var modifiedArtifacts = [];
+        var modifiedAssets = [];
+
         for (var j in artifacts) {
-            var artifactObject = parse(newArtifactTemplateString);
+            var artifactObject = parse(newArtifactTemplateString);            
             for (var i in extendedAssetTemplate) {
-                artifactObject[i] = artifacts[j].attributes[i];
+                if(artifacts[j][i]){
+                    artifactObject[i] = artifacts[j][i];
+                }else{
+                    artifactObject[i] = artifacts[j].attributes[i];    
+                }
+                
             }
-            modifiedArtifacts.push(artifactObject);
+            modifiedAssets.push(artifactObject);
         }
-        print(modifiedArtifacts);
-        return;
+        //print(modifiedArtifacts);
+        return modifiedAssets;
     };
     var putInStorage = function(options, asset, am, req, session) {
         var resourceFields = am.getAssetResources();
@@ -81,7 +88,9 @@ var api = {};
             am.create(asset);
         } catch (e) {
             log.error('Asset of type: ' + options.type + ' was not created due to ' + e);
-            res.sendError(500, 'Failed to create asset of type: ' + options.type);
+            //res.sendError(500, 'Failed to create asset of type: ' + options.type);
+            //result = responseProcessor.buildErrorResponse(500, 'Failed to create asset of type: ' + options.type);
+            print(responseProcessor.buildErrorResponse(500, 'Failed to create asset of type: ' + options.type));
             return null;
         }
         var isLcAttached = am.attachLifecycle(asset);
@@ -115,10 +124,10 @@ var api = {};
         if (sort) {
             var order = sort.charAt(0);
             if (order == '+' || order == ' ') {
-                sortOrder = 'asc';
+                sortOrder = 'ASC';
                 sort = sort.slice(1);
             } else if (order == '-') {
-                sortOrder = 'desc';
+                sortOrder = 'DESC';
                 sort = sort.slice(1);
             } else {
                 sortOrder = DEFAULT_PAGIN.sortOrder;
@@ -140,36 +149,37 @@ var api = {};
             if (q) {
                 var qString = '{' + q + '}';
                 var query = parse(qString);
-                //print(query);
+                
                 var assets = assetManager.search(query, paging); //doesnt work properly
             } else {
-                //print(paging);
+                
                 var assets = assetManager.list(paging);
             }
             var expansionFields = (request.getParameter('fields') || '');
             if (expansionFields) {
                 options.fields = expansionFields.split(',');
                 options.assets = assets;
-                fieldExpansion(options, req, res, session);
+                result =fieldExpansion(options, req, res, session);
                 //return;                    
-            } else {
-                print(assets);
-                return assets;
+            } else {                
+                result = assets;
+                
             }
+            print(responseProcessor.buildSuccessResponse(200,'Request Served Sucessfully',result));
         } catch (e) {
-            res.sendError(400, "Your request is malformed");
+            
+            print(responseProcessor.buildErrorResponse(400, "Your request is malformed"));
             log.error(e);
         }
     };
+
     api.get = function(options, req, res, session) {
+        
         var assetManager = asset.createUserAssetManager(session, options.type);
         try {
             var retrievedAsset = assetManager.get(options.id);
             if (!retrievedAsset) {
-                print({
-                    error: "no matching asset found"
-                });
-                res.sendError(400, "no matching asset found");
+                print(responseProcessor.buildSuccessResponse(200,'No matching asset found by'+options.id,[]));
                 return;
             } else {
                 var expansionFields = (request.getParameter('fields') || '');
@@ -178,14 +188,16 @@ var api = {};
                     var assets = [];
                     assets.push(retrievedAsset);
                     options.assets = assets;
-                    fieldExpansion(options, req, res, session);
-                } else {
-                    print(retrievedAsset);
-                    return retrievedAsset;
+                    result = fieldExpansion(options, req, res, session);
+                } else {                    
+                    result = retrievedAsset;
                 }
+                print(responseProcessor.buildSuccessResponse(200,'Request Served Sucessfully',result));
             }
         } catch (e) {
-            res.sendError(400, "No matching asset found");
+            //res.sendError(400, "No matching asset found");
+            
+            print(responseProcessor.buildErrorResponse(400, "No matching asset found"));
             log.error(e);
         }
     };;

@@ -1,20 +1,22 @@
 <%
 /**
  * Description: The API accepts a set of credentials which it attempts to verify.If the 
- 				provided credentials are authenticated , the logged in user is set to the provided
- 				username and the session id is returned.If the authentication fails then the 
- 				a message indicating the failure is returned.
+                provided credentials are authenticated , the logged in user is set to the provided
+                username and the session id is returned.If the authentication fails then the 
+                a message indicating the failure is returned.
 
- 				E.g. invocation
- 				POST /api/login
- 				username={name}
- 				password={password}
+                E.g. invocation
+                POST /api/login
+                username={name}
+                password={password}
  */
 var log = new Log('login-api');
 var user = require('store').user;
 var credentials = {};
 var result = {};
 var method = request.getMethod();
+var responseProcessor = require('utils').response;
+response.contentType = 'application/json';
 var SESSION_MAP = 'sso_sessions'; //We need to create the session map as it is required by the session listener
 /**
  * The function adds the session to a session map.If a session map is not present
@@ -40,31 +42,26 @@ var addToSessionMap = function(app, sessionInstance) {
 if (method == 'POST') {
     credentials.username = request.getParameter('username');
     credentials.password = request.getParameter('password');
-    response.contentType = 'application/json';
     //Check if a username and password is provided
-    if ((!credentials.username) || (!credentials.password)) {
-        response.status = 400;
-        result.code = 400;
-        result.message = 'Username and Password must be provided';
+    if ((!credentials.username) || (!credentials.password)) {      
+        result = responseProcessor.buildErrorResponse(400,'Username and Password must be provided');
+
     } else {
         var isAuthenticated = user.login(credentials.username, credentials.password, session);
         if (isAuthenticated) {
             session.put("LOGGED_IN_USER", credentials.username);
-            session.put("Loged", "true");
-            response.status = 200;
-            result.code = 200;
-            result.message = 'Logged in successfully';
-            result.sessionId = session.getId();
+            session.put("Loged", "true");            
+            result = responseProcessor.buildSuccessResponse(200,'Logged in successfully',{'sessionId':session.getId()});
             //Add to the session map as it is required by the session listener
             addToSessionMap(application, session);
-        } else {
-            response.status = 401;
-            result.code = 401;
-            result.message = 'username/password is incorrect';
+        } else {            
+            result = responseProcessor.buildErrorResponse(401,'username/password is incorrect');
+
         }
     }
-    print(stringify(result));
+    print(result);
 } else {
-    response.sendError(404);
+    //response.sendError(404);
+    print(responseProcessor.buildErrorResponse(404,'Your request malformed'));
 }
  %>
