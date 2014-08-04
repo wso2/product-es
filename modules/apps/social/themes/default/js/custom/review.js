@@ -82,6 +82,11 @@ $btn.click(function (e) {
                         $textArea.val('');
 
                         activity.id = published.id;
+                      //Remove carbon.super tenant domain from username
+                        var pieces = user.split(/[\s@]+/);
+                        if(pieces[pieces.length-1] == 'carbon.super'){
+                        	user= pieces[pieces.length-2];
+                        }
                         activity.actor = {id: user};
                         usingTemplate(function (template) {
                             var newComment = template(activity);
