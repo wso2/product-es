@@ -197,7 +197,7 @@ var engine = caramel.engine('handlebars', (function() {
                 var output = '';
                 var ref = require('utils').reflection;
                 if (values) {
-                    //If there is only a single entry then the regis'try API will send a string
+                    //If there is only a single entry then the registry API will send a string
                     //In order to uniformly handle these scenarios we must make it an array
                     if (!ref.isArray(values)) {
                         values = [values];
@@ -208,7 +208,7 @@ var engine = caramel.engine('handlebars', (function() {
                         var option = value.substring(0, delimter);
                         var text = value.substring(delimter + 1, value.length);
                         output += '<tr>';
-                        output += '<td>' + renderOptions(option, field.values, field) + '</td>';
+                        output += '<td>' + renderOptions(option, field.values[0].value, field) + '</td>';
                         output += '<td><input type="text" value="' + text + '" ' + renderFieldMetaData(field) + ' /></td>';
                         output += '</tr>';
                     }

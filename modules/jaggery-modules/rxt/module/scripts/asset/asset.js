@@ -42,6 +42,14 @@ var asset = {};
         return parse(stringify(value));
     };
     var processOptionTextList = function(list) {
+        //If there is a list then  it can be either an array or a string(If it is an array it sends it back as a Java array which is not detected)
+        list=parse(stringify(list));
+        var ref=require('utils').reflection;
+        //Determine if the list is provided as a string 
+        if(!ref.isArray(list)){
+            list=list.split(',');
+        }
+        
         var result = [];
         //Squash the array by 2 as the data sent in the post request will be a single array
         for (var index = 0; index <= (list.length / 2); index += 2) {
@@ -49,9 +57,11 @@ var asset = {};
         }
         return result;
     };
-    var setField = function(field, attrName, data, attributes) {
+    var setField = function(field, attrName, data, attributes,table) {
         if (field.type == 'option-text') {
             var list = data[attrName]||[];
+            //The options text fields need to be sent in with the name of table and entry postfix
+            attrName=table.name+'_entry';
             attributes[attrName] = processOptionTextList(list);
         } else {
             attributes[attrName] = data[attrName];
@@ -258,7 +268,7 @@ var asset = {};
         if(asset.attributes){
             var thumb=asset.attributes[thumbnailAttribute];
             if(!thumb){
-                log.warn('Unable to locate thumbnailAttribute '+thumbnailAttribute+' in asset '+stringify(asset));
+                log.warn('Unable to locate thumbnailAttribute '+thumbnailAttribute+' in asset '+asset.id);
                 return '';
             }
             return asset.attributes[thumbnailAttribute];
@@ -291,7 +301,7 @@ var asset = {};
             for (var fieldName in fields) {
                 field = fields[fieldName];
                 var key = table.name + '_' + fieldName;
-                attributes = setField(field, key, options, attributes);
+                attributes = setField(field, key, options, attributes,table);
             }
         }
         asset.attributes = attributes;
