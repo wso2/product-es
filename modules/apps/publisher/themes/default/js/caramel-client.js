@@ -21,4 +21,9 @@
         return $.post.apply(this, args)
     };
 
+    caramel.ajax = function(options) {
+        options.url = caramel.url(options.url);
+        return $.ajax.call(this, options);
+    };
+
 })(caramel);
