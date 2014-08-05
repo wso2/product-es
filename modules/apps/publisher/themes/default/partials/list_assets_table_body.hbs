@@ -1,11 +1,11 @@
 {{#each .}}
-               
+
     <tr>
         <td>
-        <img src='{{url ""}}/storage/{{../rxt.shortName}}/{{id}}/{{this.attributes.images_thumbnail}}' class="" />
+        <img src='{{url ""}}/storage/{{type}}/{{id}}/{{this.attributes.images_thumbnail}}' class="" />
         </td>
         <td class="asset-listing-name">
-            <a href='{{url ""}}/asts/{{../rxt/shortName}}/details/{{this.id}}'>
+            <a href='{{url ""}}/asts/{{type}}/details/{{this.id}}'>
                 {{this.attributes.overview_name}}
             </a>
         </td>
