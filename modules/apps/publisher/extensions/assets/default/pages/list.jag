@@ -2,7 +2,7 @@
 var caramel;
 var DEFAULT_PAGIN = {
     'start': 0,
-    'count': 5,
+    'count': 12,
     'sortOrder': 'DESC',
     'sortBy': 'overview_createdtime',
     'paginationLimit': 100
