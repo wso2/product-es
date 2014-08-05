@@ -2,10 +2,10 @@
 var caramel;
 var DEFAULT_PAGIN = {
     'start': 0,
-    'count': 1000,
-    'sortOrder': 'desc',
+    'count': 5,
+    'sortOrder': 'DESC',
     'sortBy': 'overview_createdtime',
-    'paginationLimit': 1000
+    'paginationLimit': 100
 };
 require('/modules/publisher.js').exec(function(ctx) {
     caramel = require('caramel');
@@ -18,17 +18,18 @@ require('/modules/publisher.js').exec(function(ctx) {
     var sortBy = ctx.request.getParameter('sortby');
     var sort = ctx.request.getParameter('sort');
     var type = options.type;
+    
     var am = asset.createUserAssetManager(ctx.session, type);
     var page = ui.buildPage(ctx.session, ctx.request);
     var assets;
+
+    DEFAULT_PAGIN.sortBy = (sortBy||DEFAULT_PAGIN.sortBy);
+    DEFAULT_PAGIN.sortOrder = (sort||DEFAULT_PAGIN.sortOrder);
+
     if (q) {
-        assets = am.search(q);
-    } else if (sortBy && sort) {
-        DEFAULT_PAGIN.sortBy = sortBy;
-        DEFAULT_PAGIN.sortOrder = sort;
+        assets = am.search(q,DEFAULT_PAGIN);
+    }else {
         assets = am.search(null, DEFAULT_PAGIN);
-    } else {
-        assets = am.list();
     }
     var output = am.render(assets, page).list();
     caramel.render(output);
