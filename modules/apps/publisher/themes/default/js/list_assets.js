@@ -1,3 +1,4 @@
+var currentPage = 1, infiniteScroll = true, itemsForPage = 10;
 function renderView(partial, data, container, cb) {		
 		var obj = {};
 		obj[partial] = '/themes/default/partials/' + partial + '.hbs';
