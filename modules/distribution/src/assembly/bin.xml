@@ -128,7 +128,7 @@
         </fileSet>
         <fileSet>
             <directory>target/shindig</directory>
-            <outputDirectory>${project.artifactId}-${project.version}/repository/deployment/server/webapps/ROOT
+            <outputDirectory>${project.artifactId}-${project.version}/repository/deployment/server/webapps/SHINDIG
             </outputDirectory>
             <includes>
                 <include>**/**</include>
