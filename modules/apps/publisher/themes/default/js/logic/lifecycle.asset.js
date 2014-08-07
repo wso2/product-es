@@ -191,8 +191,8 @@ $(function() {
 	 */
   function buttonClickLogic(action, comment) {
     $.ajax({
-      url: '/publisher/api/lifecycle/' + action + '/' + asset + '/' + id,
-      type: 'PUT',
+      url: '/publisher/apis/assets/' + id+ '/' +action+'?type='+asset,
+      type: 'POST',
       data: JSON.stringify({
         'comment': comment
       }),
@@ -201,7 +201,7 @@ $(function() {
       success: function(response) {
         var actionName = action.toLowerCase();
         actionName += 'd';
-        showAlert('Asset was ' + actionName + ' successfully.', 'success');
+        showAlert('Asset was moved to state: ' + actionName + ' successfully.', 'success');
         $.ajax({
           url: '/publisher/api/lifecycle/' + asset + '/' + id,
           type: 'GET',
@@ -291,7 +291,7 @@ $(function() {
     var comment = $('#commentModalText').val();
     $('#commentModalText').val('');
 
-    buttonClickLogic(action, comment);
+    buttonClickLogic(thisState, comment);
   });
 
   /*
