@@ -1,5 +1,7 @@
 var api = {};
 (function(api, core) {
+    var log = new Log('lifecycle');
+
     function Lifecycle(definiton) {
         this.definition = definiton;
     }
@@ -51,12 +53,12 @@ var api = {};
     Lifecycle.prototype.transitionAction = function(fromState, toState) {
         //Get the list of states that can be reached from the fromState
         var states = this.nextStates(fromState);
-        if (states.length) {
+        if (states.length == 0) {
             log.warn('There is no way to move from ' + fromState + ' to ' + toState + ' in lifecycle: ' + this.getName());
             return null;
         }
         for (var index = 0; index < states.length; index++) {
-            if (states[index].state == toState) {
+            if (states[index].state.toLowerCase() == toState.toLowerCase()) {
                 return states[index].action;
             }
         }
@@ -70,7 +72,7 @@ var api = {};
     // };
     api.getLifecycle = function(lifecycleName, tenantId) {
         if (!tenantId) {
-        	throw 'Unable to locate lifecycle '+lifecycleName+' without a tenantId';
+            throw 'Unable to locate lifecycle ' + lifecycleName + ' without a tenantId';
         }
         var lcJSON = core.getJSONDef(lifecycleName, tenantId);
         if (!lcJSON) {

@@ -79,6 +79,7 @@ var core = {};
             jsonLifecycle = transformJSONLifecycle(jsonLifecycle);
             //Store the json lifecycle definition
             addJsonLifecycle(lifecycle, jsonLifecycle, tenantId);
+            log.info('Found lifecycle: ' + jsonLifecycle.name + ' tenant: ' + tenantId);
         }
     };
     var init = function(tenantId) {
@@ -103,7 +104,7 @@ var core = {};
             application.put(LC_MAP, lcMap);
         }
         if (!lcMap[tenantId]) {
-            log.debug('Creating lcMap for the tenant: ' + tenantId+' in application context');
+            log.debug('Creating lcMap for the tenant: ' + tenantId + ' in application context');
             lcMap[tenantId] = {};
         }
         return lcMap[tenantId];
