@@ -186,7 +186,7 @@
                                 </importFeatureDef>
                                 <!-- Stratos features    -->
                                 <importFeatureDef>
-                                    org.wso2.carbon.stratos.common:${stratos.patch.version.221}
+                                    org.wso2.carbon.stratos.common:2.3.0
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.event:${patch.version.421}
