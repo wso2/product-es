@@ -59,7 +59,36 @@ var asset = {};
     };
     var setField = function(field, attrName, data, attributes,table) {
         if (field.type == 'option-text') {
-            var list = data[attrName]||[];
+
+           var optionsSet = [];
+           var textSet = [];
+           var indexc;
+           var length;
+           var splitName;
+           for(var dataField in data){
+               if(dataField.indexOf(attrName+'_option')==0){
+                   splitName=dataField.split("_");
+                   length=splitName.length;
+                   indexc=splitName[length-1];
+                   optionsSet[indexc]=data[dataField];
+               }
+
+               if(dataField.indexOf(attrName+'_text')==0){
+                   splitName=dataField.split("_");
+                   length=splitName.length;
+                   indexc=splitName[length-1];
+                   textSet[indexc]=data[dataField];
+               }
+           }
+
+           var fullIndex=0;
+           var list=[];
+           for(var singleIndex=0; singleIndex<optionsSet.length; singleIndex++){
+                list[fullIndex]=optionsSet[singleIndex];
+                fullIndex++;
+                list[fullIndex]=textSet[singleIndex];
+                fullIndex++;
+           }
             //The options text fields need to be sent in with the name of table and entry postfix
             attrName=table.name+'_entry';
             attributes[attrName] = processOptionTextList(list);
