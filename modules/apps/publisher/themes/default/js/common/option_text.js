@@ -61,25 +61,25 @@ $(function() {
         var root = el.parentNode.parentNode.parentNode;
         //Check if there is a saved template in the root
         var template = $(root).data(ROW_TEMPLATE);
+        //Check if a template is present,if so generate an id
         if (template) {
             generateId(root, template);
             var clone = $(template).clone();
         } else {
+            //If a template is not present then use the second row 
             var row = root.childNodes[2];
             generateId(root, row);
             var clone = $(row).clone();
         }
+        //Remove content from the source row
         clearContent(clone[0]);
+        //Add the row to the table
         clone.appendTo(root);
     };
     removeOptionTextRow = function(el) {
         var row = el.parentNode.parentNode;
         var root = row.parentNode;
         var rowCount = $(root).data(ROW_COUNT);
-        if (!rowCount) {
-            rowCount = countRows(root);
-            $(root).data(ROW_COUNT, rowCount);
-        }
         //Cache this row before removal
         $(root).data(ROW_TEMPLATE, row);
         $(row).remove();
