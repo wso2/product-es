@@ -189,12 +189,7 @@ var engine = caramel.engine('handlebars', (function() {
                 return '<b><label class="control-label">' + (field.name.label || field.name.name) + '</label></b>';
             };
             var renderOptions = function(value, values, field,count) {
-                if(count){
-                    log.info('Count provided');
-                }
-                log.info(count);
                 var id=(count)?field.name.tableQualifiedName+'_option_'+count:undefined;
-                log.info(id);
                 var out = '<select ' + renderFieldMetaData(field,id) + '>';
                 if (value) {
                     out += '<option selected>' + value + '</option>';

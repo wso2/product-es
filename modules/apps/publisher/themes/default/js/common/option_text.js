@@ -1,23 +1,36 @@
 var addOptionTextRow = {};
 var removeOptionTextRow = {};
 $(function() {
-	var updateName=function(name,index){
-		var sub=name.substring(0,name.length-1);
-		return sub+index;
-	};
+    var updateName = function(name, index) {
+        var sub = name.substring(0, name.length - 1);
+        return sub + index;
+    };
+    var clearContent = function(row) {
+        for (var index = 0; index < row.childNodes.length; index++) {
+            var cell = row.childNodes[index];
+            var element = cell.childNodes[0];
+            var name = $(element).attr('name');
+            if (name) {
+                $(cell.childNodes[0]).val('');
+            }
+        }
+    };
     var generateId = function(root, row) {
         var rowCount = $(root).data('rowCount');
-        if(rowCount){
-        	rowCount=1;
-        	$(root).data('rowCount',rowCount);
+        if (!rowCount) {
+            rowCount = 1;
+            $(root).data('rowCount', rowCount);
+        } else {
+            rowCount++;
+            $(root).data('rowCount', rowCount);
         }
-        for(var index=0;index<row.childNodes.length;index++){
-        	var cell=row.childNodes[index];
-        	var element=cell.childNodes[0];
-        	var name=$(element).attr('name');
-        	if(name){
-        		$(element).attr('name',updateName(name, rowCount));
-        	}
+        for (var index = 0; index < row.childNodes.length; index++) {
+            var cell = row.childNodes[index];
+            var element = cell.childNodes[0];
+            var name = $(element).attr('name');
+            if (name) {
+                $(element).attr('name', updateName(name, rowCount));
+            }
         }
     };
     var countRows = function(root) {
@@ -36,6 +49,7 @@ $(function() {
             generateId(root, row);
             var clone = $(row).clone();
         }
+        clearContent(clone[0]);
         clone.appendTo(root);
     };
     removeOptionTextRow = function(el) {
