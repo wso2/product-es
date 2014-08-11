@@ -43,55 +43,52 @@ var asset = {};
     };
     var processOptionTextList = function(list) {
         //If there is a list then  it can be either an array or a string(If it is an array it sends it back as a Java array which is not detected)
-        list=parse(stringify(list));
-        var ref=require('utils').reflection;
+        list = parse(stringify(list));
+        var ref = require('utils').reflection;
         //Determine if the list is provided as a string 
-        if(!ref.isArray(list)){
-            list=list.split(',');
+        if (!ref.isArray(list)) {
+            list = list.split(',');
         }
-        
         var result = [];
         //Squash the array by 2 as the data sent in the post request will be a single array
-        for (var index = 0; index <= (list.length / 2); index += 2) {
+        for (var index = 0; index <= (list.length - 2); index += 2) {
             result.push(list[index] + ':' + list[index + 1]);
         }
         return result;
     };
-    var setField = function(field, attrName, data, attributes,table) {
+    var setField = function(field, attrName, data, attributes, table) {
         if (field.type == 'option-text') {
-
-           var optionsSet = [];
-           var textSet = [];
-           var indexc;
-           var length;
-           var splitName;
-           for(var dataField in data){
-               if(dataField.indexOf(attrName+'_option')==0){
-                   splitName=dataField.split("_");
-                   length=splitName.length;
-                   indexc=splitName[length-1];
-                   optionsSet[indexc]=data[dataField];
-               }
-
-               if(dataField.indexOf(attrName+'_text')==0){
-                   splitName=dataField.split("_");
-                   length=splitName.length;
-                   indexc=splitName[length-1];
-                   textSet[indexc]=data[dataField];
-               }
-           }
-
-           var fullIndex=0;
-           var list=[];
-           for(var singleIndex=0; singleIndex<optionsSet.length; singleIndex++){
-                list[fullIndex]=optionsSet[singleIndex];
+            var optionsSet = [];
+            var textSet = [];
+            var indexc;
+            var length;
+            var splitName;
+            for (var dataField in data) {
+                if (dataField.indexOf(attrName + '_option') == 0) {
+                    splitName = dataField.split("_");
+                    length = splitName.length;
+                    indexc = splitName[length - 1];
+                    optionsSet[indexc] = data[dataField];
+                }
+                if (dataField.indexOf(attrName + '_text') == 0) {
+                    splitName = dataField.split("_");
+                    length = splitName.length;
+                    indexc = splitName[length - 1];
+                    textSet[indexc] = data[dataField];
+                }
+            }
+            var fullIndex = 0;
+            var list = [];
+            for (var singleIndex = 0; singleIndex < optionsSet.length; singleIndex++) {
+                list[fullIndex] = optionsSet[singleIndex];
                 fullIndex++;
-                list[fullIndex]=textSet[singleIndex];
+                list[fullIndex] = textSet[singleIndex];
                 fullIndex++;
-           }
+            }
             //The options text fields need to be sent in with the name of table and entry postfix
-            attrName=table.name+'_entry';
-            attributes[attrName] = processOptionTextList(list);
+            attrName = table.name + '_entry';
+            var items = processOptionTextList(list);
+            attributes[attrName] = items;
         } else {
             attributes[attrName] = data[attrName];
         }
@@ -154,8 +151,8 @@ var asset = {};
             if (regCopy) {
                 locatedAsset = true;
                 //Drop any hiddent methods since this is a Java object
-                regCopy=parse(stringify(regCopy));
-                ref.copyAllPropValues(regCopy,asset);
+                regCopy = parse(stringify(regCopy));
+                ref.copyAllPropValues(regCopy, asset);
             }
             return locatedAsset;
         }
@@ -241,18 +238,17 @@ var asset = {};
         return success;
     };
     AssetManager.prototype.invokeDefaultLcAction = function(asset) {
-        var success=false;
+        var success = false;
         if (!asset) {
             log.error('Failed to invoke default  lifecycle action as an asset object was not provided.');
             return success;
         }
-        var defaultAction=this.rxtManager.getDefaultLcAction(this.type);
-
-        if(defaultAction==''){
+        var defaultAction = this.rxtManager.getDefaultLcAction(this.type);
+        if (defaultAction == '') {
             log.warn('Failed to invoke default action of lifecycle as one was not provided');
             return success;
         }
-        success=this.invokeLcAction(asset,defaultAction);
+        success = this.invokeLcAction(asset, defaultAction);
         return success;
     };
     /**
@@ -292,12 +288,12 @@ var asset = {};
         }
         return '';
     };
-    AssetManager.prototype.getThumbnail=function(asset){
-        var thumbnailAttribute=this.rxtManager.getThumbnailAttribute(this.type);
-        if(asset.attributes){
-            var thumb=asset.attributes[thumbnailAttribute];
-            if(!thumb){
-                log.warn('Unable to locate thumbnailAttribute '+thumbnailAttribute+' in asset '+asset.id);
+    AssetManager.prototype.getThumbnail = function(asset) {
+        var thumbnailAttribute = this.rxtManager.getThumbnailAttribute(this.type);
+        if (asset.attributes) {
+            var thumb = asset.attributes[thumbnailAttribute];
+            if (!thumb) {
+                log.warn('Unable to locate thumbnailAttribute ' + thumbnailAttribute + ' in asset ' + asset.id);
                 return '';
             }
             return asset.attributes[thumbnailAttribute];
@@ -309,7 +305,7 @@ var asset = {};
      * such as thumbnails,banners and content
      * @return {[type]} An array of attribute fields
      */
-    AssetManager.prototype.getAssetResources=function(){
+    AssetManager.prototype.getAssetResources = function() {
         return this.rxtManager.listRxtFieldsOfType(this.type, 'file');
     };
     AssetManager.prototype.importAssetFromHttpRequest = function(options) {
@@ -330,7 +326,7 @@ var asset = {};
             for (var fieldName in fields) {
                 field = fields[fieldName];
                 var key = table.name + '_' + fieldName;
-                attributes = setField(field, key, options, attributes,table);
+                attributes = setField(field, key, options, attributes, table);
             }
         }
         asset.attributes = attributes;
@@ -379,7 +375,7 @@ var asset = {};
         } else {
             page.assets = this.combineWithRxt(assets);
             page.assets.name = this.getName(assets);
-            page.assets.thumbnail=this.getThumbnail(assets);
+            page.assets.thumbnail = this.getThumbnail(assets);
         }
         page.rxt = this.rxtTemplate;
         var that = this;

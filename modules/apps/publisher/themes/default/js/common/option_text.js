@@ -19,6 +19,17 @@ $(function() {
         var sub = name.substring(0, name.length - 1);
         return sub + index;
     };
+    var countRows = function(root) {
+        var offset = 1; //We need to ignore the row that is used to house the add button
+        var count = 0;
+        for (var index = 0; index < root.childNodes.length; index++) {
+            var element = root.childNodes[index];
+            if ($(element).is('tr')) {
+                count++;
+            }
+        }
+        return count-offset;
+    };
     /**
      * The function resets the contents of the row since the new rows
      * which are added contain the values of the template
@@ -42,7 +53,8 @@ $(function() {
     var generateId = function(root, row) {
         var rowCount = $(root).data(ROW_COUNT);
         if (!rowCount) {
-            rowCount = 1;
+            //Count the number of rows
+            rowCount = countRows(root);
         } else {
             rowCount++;
         }
@@ -53,24 +65,20 @@ $(function() {
             $(element).attr('name', updateName(name, rowCount));
         });
     };
-    var countRows = function(root) {
-        var count = root.childNodes.length;
-        return count;
-    };
     addOptionTextRow = function(el) {
         var root = el.parentNode.parentNode.parentNode;
+        var clone;
         //Check if there is a saved template in the root
         var template = $(root).data(ROW_TEMPLATE);
         //Check if a template is present,if so generate an id
         if (template) {
-            generateId(root, template);
-            var clone = $(template).clone();
+            clone = $(template).clone();
         } else {
             //If a template is not present then use the second row 
             var row = root.childNodes[2];
-            generateId(root, row);
-            var clone = $(row).clone();
+            clone = $(row).clone();
         }
+        generateId(root, clone[0]); //Convert it back to an html element
         //Remove content from the source row
         clearContent(clone[0]);
         //Add the row to the table
