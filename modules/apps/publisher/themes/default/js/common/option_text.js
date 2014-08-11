@@ -19,6 +19,28 @@ $(function() {
         var sub = name.substring(0, name.length - 1);
         return sub + index;
     };
+    /**
+     * The function goes through each row in the table
+     * and updates the row name to reflect changes to the count
+     * @param  {[type]} root [description]
+     * @return {[type]}      [description]
+     */
+    var updateRows = function(root) {
+        var row;
+        var counter = -1;
+        for (var index = 0; index < root.childNodes.length; index++) {
+            row = root.childNodes[index];
+            if ($(row).is('tr')) {
+                iterateRow(row, function(cell) {
+                    var element = cell.childNodes[0];
+                    var name = $(element).attr('name');
+                    name = updateName(name, counter);
+                    $(element).attr('name', name);
+                });
+                counter++;
+            }
+        }
+    };
     var countRows = function(root) {
         var offset = 1; //We need to ignore the row that is used to house the add button
         var count = 0;
@@ -28,7 +50,7 @@ $(function() {
                 count++;
             }
         }
-        return count-offset;
+        return count - offset;
     };
     /**
      * The function resets the contents of the row since the new rows
@@ -51,14 +73,8 @@ $(function() {
         }
     };
     var generateId = function(root, row) {
-        var rowCount = $(root).data(ROW_COUNT);
-        if (!rowCount) {
-            //Count the number of rows
-            rowCount = countRows(root);
-        } else {
-            rowCount++;
-        }
-        $(root).data(ROW_COUNT, rowCount);
+        var rowCount;
+        rowCount = countRows(root);
         iterateRow(row, function(cell) {
             var element = cell.childNodes[0];
             var name = $(element).attr('name');
@@ -78,11 +94,13 @@ $(function() {
             var row = root.childNodes[2];
             clone = $(row).clone();
         }
-        generateId(root, clone[0]); //Convert it back to an html element
+        //generateId(root, clone[0]); //Convert it back to an html element
         //Remove content from the source row
         clearContent(clone[0]);
         //Add the row to the table
         clone.appendTo(root);
+        //Update the rows to have correct ids
+        updateRows(root);
     };
     removeOptionTextRow = function(el) {
         var row = el.parentNode.parentNode;
@@ -91,5 +109,7 @@ $(function() {
         //Cache this row before removal
         $(root).data(ROW_TEMPLATE, row);
         $(row).remove();
+        //Update the name of all the elements
+        updateRows(root);
     };
 });
