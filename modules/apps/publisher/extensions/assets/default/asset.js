@@ -68,12 +68,14 @@ asset.configure = function() {
         table: {
             overview: {
                 fields: {
+                    provider:{
+                        readonly:true
+                    },
                     name: {
                         name: {
                             name: 'name',
                             label: 'Name'
                         },
-                        required: false,
                         validation: function() {}
                     },
                     version: {

@@ -1343,3 +1343,11 @@ circle:hover {
     width: 100%;
     margin-top: 20px;
 }
+
+
+/**
+ * Temp fixes for the form
+ */
+.form-horizontal  .control-label{
+    text-align: left;
+}
