@@ -41,17 +41,6 @@ $(function() {
             }
         }
     };
-    var countRows = function(root) {
-        var offset = 1; //We need to ignore the row that is used to house the add button
-        var count = 0;
-        for (var index = 0; index < root.childNodes.length; index++) {
-            var element = root.childNodes[index];
-            if ($(element).is('tr')) {
-                count++;
-            }
-        }
-        return count - offset;
-    };
     /**
      * The function resets the contents of the row since the new rows
      * which are added contain the values of the template
@@ -72,15 +61,6 @@ $(function() {
             }
         }
     };
-    var generateId = function(root, row) {
-        var rowCount;
-        rowCount = countRows(root);
-        iterateRow(row, function(cell) {
-            var element = cell.childNodes[0];
-            var name = $(element).attr('name');
-            $(element).attr('name', updateName(name, rowCount));
-        });
-    };
     addOptionTextRow = function(el) {
         var root = el.parentNode.parentNode.parentNode;
         var clone;
@@ -94,7 +74,6 @@ $(function() {
             var row = root.childNodes[2];
             clone = $(row).clone();
         }
-        //generateId(root, clone[0]); //Convert it back to an html element
         //Remove content from the source row
         clearContent(clone[0]);
         //Add the row to the table
