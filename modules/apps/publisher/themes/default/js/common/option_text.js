@@ -20,6 +20,28 @@ $(function() {
         return sub + index;
     };
     /**
+     * The function goes through each row in the table
+     * and updates the row name to reflect changes to the count
+     * @param  {[type]} root [description]
+     * @return {[type]}      [description]
+     */
+    var updateRows = function(root) {
+        var row;
+        var counter = -1;
+        for (var index = 0; index < root.childNodes.length; index++) {
+            row = root.childNodes[index];
+            if ($(row).is('tr')) {
+                iterateRow(row, function(cell) {
+                    var element = cell.childNodes[0];
+                    var name = $(element).attr('name');
+                    name = updateName(name, counter);
+                    $(element).attr('name', name);
+                });
+                counter++;
+            }
+        }
+    };
+    /**
      * The function resets the contents of the row since the new rows
      * which are added contain the values of the template
      * @param  {[type]} row [description]
@@ -39,42 +61,25 @@ $(function() {
             }
         }
     };
-    var generateId = function(root, row) {
-        var rowCount = $(root).data(ROW_COUNT);
-        if (!rowCount) {
-            rowCount = 1;
-        } else {
-            rowCount++;
-        }
-        $(root).data(ROW_COUNT, rowCount);
-        iterateRow(row, function(cell) {
-            var element = cell.childNodes[0];
-            var name = $(element).attr('name');
-            $(element).attr('name', updateName(name, rowCount));
-        });
-    };
-    var countRows = function(root) {
-        var count = root.childNodes.length;
-        return count;
-    };
     addOptionTextRow = function(el) {
         var root = el.parentNode.parentNode.parentNode;
+        var clone;
         //Check if there is a saved template in the root
         var template = $(root).data(ROW_TEMPLATE);
         //Check if a template is present,if so generate an id
         if (template) {
-            generateId(root, template);
-            var clone = $(template).clone();
+            clone = $(template).clone();
         } else {
             //If a template is not present then use the second row 
             var row = root.childNodes[2];
-            generateId(root, row);
-            var clone = $(row).clone();
+            clone = $(row).clone();
         }
         //Remove content from the source row
         clearContent(clone[0]);
         //Add the row to the table
         clone.appendTo(root);
+        //Update the rows to have correct ids
+        updateRows(root);
     };
     removeOptionTextRow = function(el) {
         var row = el.parentNode.parentNode;
@@ -83,5 +88,7 @@ $(function() {
         //Cache this row before removal
         $(root).data(ROW_TEMPLATE, row);
         $(row).remove();
+        //Update the name of all the elements
+        updateRows(root);
     };
 });
