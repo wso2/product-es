@@ -16,6 +16,7 @@ var api = {};
      * @return An array containing the name of the next set of states
      */
     Lifecycle.prototype.nextStates = function(currentStateName) {
+        var currentStateName=currentStateName?currentStateName.toLowerCase():currentStateName;
         var states = this.definition.configuration.lifecycle.scxml.state;
         var nextStates = [];
         if (!states) {
@@ -51,6 +52,8 @@ var api = {};
      * @return {[type]}           [description]
      */
     Lifecycle.prototype.transitionAction = function(fromState, toState) {
+        var fromState=fromState?fromState.toLowerCase():fromState;
+        var toState=toState?toState.toLowerCase():toState;
         //Get the list of states that can be reached from the fromState
         var states = this.nextStates(fromState);
         if (states.length == 0) {
@@ -64,6 +67,51 @@ var api = {};
         }
         log.warn('There is no transition action to move from ' + fromState + ' to ' + toState + ' in lifecycle: ' + this.getName());
         return null;
+    };
+    /**
+     * The function will return an array of execution event parameters.These parameters
+     * are consumed by the executor for the event
+     * @param  {[type]} state The state for which the execution event must be returned
+     * @param  action The transition action for this state
+     * @return {[type]}       An array of transition execution event parameters
+     */
+    Lifecycle.prototype.transitionExecution = function(state, action) {
+        var state=state?state.toLowerCase():state;
+        var action=action?action.toLowerCase():action;
+        var states = this.definition.configuration.lifecycle.scxml.state;
+        var parameters = [];
+        if (!states) {
+            throw 'The lifecycle : ' + this.getName() + ' does not have any state information.Make sure that the states are defined in the scxml definition.';
+        }
+        if (!states[state]) {
+            log.warn('The state: ' + state + ' is not present in the lifecycle: ' + this.getName());
+            return parameters;
+        }
+        var data = states[state].datamodel.data;
+        if (!data) {
+            log.warn('The lifecycle: ' + this.getName() + ' does not have a data property declared.Unable to obtain execution events.');
+            return parameters;
+        }
+        var item;
+        for (var index in data) {
+            item = data[index];
+            if (item.name == 'transitionExecution') {
+                var executions = item.execution;
+                var execution;
+                if (executions) {
+                    //Look for the event triggered by the provided action
+                    for (var exIndex in executions) {
+                        execution = executions[exIndex];
+                        //Check if the event matches the action
+                        if (execution.forEvent.toLowerCase() == action) {
+                            parameters = execution.parameter || [];
+                            return parameters;
+                        }
+                    }
+                }
+            }
+        }
+        return parameters;
     };
     // var getTenantId = function(session) {
     //     var server = require('store').server;
