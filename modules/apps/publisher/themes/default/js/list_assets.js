@@ -105,6 +105,5 @@ function renderView(partial, data, container, cb) {
 
 	$(window).bind('scroll', scroll);
 	$( window ).load(function() {
-  // Run code
   		scroll();
     });
