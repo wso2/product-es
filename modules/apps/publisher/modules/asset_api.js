@@ -88,7 +88,8 @@ var responseProcessor = require('utils').response;
             am.create(asset);
         } catch (e) {
             log.error('Asset of type: ' + options.type + ' was not created due to ' + e);
-            print(responseProcessor.buildErrorResponse(500, 'Failed to create asset of type: ' + options.type));
+           // print(responseProcessor.buildErrorResponse(500, 'Failed to create asset of type: ' + options.type));
+            //res = responseProcessor.buildErrorResponse(res, 500, 'Failed to create asset of type: ' + options.type)
             return null;
         }
         var isLcAttached = am.attachLifecycle(asset);
@@ -172,13 +173,15 @@ var responseProcessor = require('utils').response;
             } else {                
                 result = assets;
                 
-            }
-            print(responseProcessor.buildSuccessResponse(200,'Request Served Sucessfully',result));
+            }            
+            //res = responseProcessor.buildSuccessResponse(res,200,result);
         } catch (e) {
-            
-            print(responseProcessor.buildErrorResponse(400, "Your request is malformed"));
+            //res = responseProcessor.buildErrorResponse(400, "Your request is malformed");
+            //print();
+            result = null;
             log.error(e);
         }
+        return result;
     };
 
     api.get = function(options, req, res, session) {
@@ -187,8 +190,9 @@ var responseProcessor = require('utils').response;
         try {
             var retrievedAsset = assetManager.get(options.id);
             if (!retrievedAsset) {
-                print(responseProcessor.buildSuccessResponse(200,'No matching asset found by'+options.id,[]));
-                return;
+                //print(responseProcessor.buildSuccessResponse(200,'No matching asset found by'+options.id,[]));
+                //res = responseProcessor.buildSuccessResponse(200,'No matching asset found by'+options.id,[])
+                return null;
             } else {
                 var expansionFields = (request.getParameter('fields') || '');
                 if (expansionFields) {
@@ -199,14 +203,18 @@ var responseProcessor = require('utils').response;
                     result = fieldExpansion(options, req, res, session);
                 } else {                    
                     result = retrievedAsset;
-                }
-                print(responseProcessor.buildSuccessResponse(200,'Request Served Sucessfully',result));
+                }                
+                //print(responseProcessor.buildSuccessResponse(200,'Request Served Sucessfully',result));
+                //res = responseProcessor.buildSuccessResponse(res,200,'Request Served Sucessfully',result)
             }
         } catch (e) {
             //res.sendError(400, "No matching asset found");
             
-            print(responseProcessor.buildErrorResponse(400, "No matching asset found"));
+            //print(responseProcessor.buildErrorResponse(400, "No matching asset found"));
+            //res = responseProcessor.buildErrorResponse(res,400, "No matching asset found");
             log.error(e);
+            result = null;            
         }
-    };;
+        return result;
+    };
 }(api))

@@ -29,48 +29,71 @@ require('/modules/publisher.js').exec(function(ctx) {
     var options = ref.getQueryOptions(req.getQueryString());
     response.contentType = 'application/json';
     var result = {};
-    if (method == 'POST') {
-        //Determine whether it is a create or update operation
-        if (uriMatcher.match(CREATE_URL)) {
-            var asset = assetApi.create(options, req, res, session);
-            //If the asset is successfully created then return the asset
-            if (asset) {
-                print(responseProcessor.buildSuccessResponse(200, 'Created the asset successfully', asset));
+
+    switch(method){
+        case 'POST':
+            if (uriMatcher.match(CREATE_URL)) {
+                var asset = assetApi.create(options, req, res, session);
+                //If the asset is successfully created then return the asset
+                if (asset) {
+                   // print(responseProcessor.buildSuccessResponse(res, 201, asset));
+                    response = responseProcessor.buildSuccessResponse(res, 201, asset)
+                } else {
+                    response = responseProcessor.buildErrorResponse(res, 500, 'Failed to create asset of type: ' + options.type);
+                    //print(responseProcessor.buildErrorResponse(res, 500, 'Unable to create asset', {}));
+                }
+            } else if (uriMatcher.match(UPDATE_URL)) {
+                options.id = uriMatcher.elements().id;
+                var asset = assetApi.update(options, req, res, session);
+                //if the asset is sucessfully updated
+                if (asset) {
+                    //print(responseProcessor.buildSuccessResponse(200, 'Updated the asset successfully', asset));
+                    response = responseProcessor.buildSuccessResponse(response,200, asset)
+                } else {
+                   // print(responseProcessor.buildErrorResponse(500, 'Unable to update the asset', {}));
+                    response = responseProcessor.buildErrorResponse(response, 500, 'Unable to update the asset');
+                }
+            } else if (uriMatcher.match(CHANGE_STATE_URL)) {
+                var elements = uriMatcher.elements();
+                options.id = elements.id;
+                options.nextState = elements.nextState;
+                var success = lcApi.changeState(options, req, res, session);
+
+                if (success == true) {
+                    //print(responseProcessor.buildSuccessResponse(200, 'Changed the state to ' + options.nextState));
+                    response = responseProcessor.buildSuccessResponse(response,200, 'Changed the state to ' + options.nextState);
+                } else {
+                    //print(responseProcessor.buildErrorResponse(500, 'Unable to change the state'));
+                    response = responseProcessor.buildErrorResponse(response, 500, 'Unable to change the state');
+                }
             } else {
-                print(responseProcessor.buildErrorResponse(500, 'Unable to create asset', {}));
+                //print(responseProcessor.buildErrorResponse(404, 'Unable to locate this POST endpoint'));
+                response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this POST endpoint');
             }
-        } else if (uriMatcher.match(UPDATE_URL)) {
-            options.id = uriMatcher.elements().id;
-            var asset = assetApi.update(options, req, res, session);
-            if (asset) {
-                print(responseProcessor.buildSuccessResponse(200, 'Updated the asset successfully', asset));
-            } else {
-                print(responseProcessor.buildErrorResponse(500, 'Unable to update the asset', {}));
+            break;
+
+        case 'GET':
+            options.type = req.getParameter('type');
+
+            if (uriMatcher.match(LIST_ASSETS_URL)) {
+                var assets = assetApi.search(options, req, res, session);                
+                response = responseProcessor.buildSuccessResponse(response,200, assets);
+
+            }else if (uriMatcher.match(GET_ASSET_URL)) {
+                options.id = uriMatcher.elements().id;                
+                var asset = assetApi.get(options, req, res, session);
+
+                if(asset){
+                        response = responseProcessor.buildSuccessResponse(response,200,asset);
+                    }else{
+                        response = responseProcessor.buildErrorResponse(response,400,"No matching asset found");
+                    }
+            }else {
+                response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
-        } else if (uriMatcher.match(CHANGE_STATE_URL)) {
-            var elements = uriMatcher.elements();
-            options.id = elements.id;
-            options.nextState = elements.nextState;
-            var success = lcApi.changeState(options, req, res, session);
-            if (success == true) {
-                print(responseProcessor.buildSuccessResponse(200, 'Changed the state to ' + options.nextState));
-            } else {
-                print(responseProcessor.buildErrorResponse(500, 'Unable to change the state'));
-            }
-        } else {
-            print(responseProcessor.buildErrorResponse(404, 'Unable to locate this POST endpoint'));
-        }
-    } else if (method == 'GET') {
-        options.type = req.getParameter('type');
-        if (uriMatcher.match(LIST_ASSETS_URL)) {
-            assetApi.search(options, req, res, session);
-        } else if (uriMatcher.match(GET_ASSET_URL)) {
-            options.id = uriMatcher.elements().id;
-            assetApi.get(options, req, res, session);
-        } else {
-            print(responseProcessor.buildErrorResponse(404, 'Unable to locate this GET endpoint'));
-        }
-    } else {
-        print(responseProcessor.buildErrorResponse(501, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb (hint: create/update operations use POST).'));
+            break;
+
+        default:
+            response = responseProcessor.buildErrorResponse(response,501, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb (hint: create/update operations use POST).'); 
     }
 }, request, response, session); %>
