@@ -39,9 +39,9 @@ var core = {};
         var state;
         for (var index = 0; index < states.length; index++) {
             state = states[index];
-            stateObj[state.id] = state;
-            if (stateObj[state.id].datamodel) {
-                stateObj[state.id].datamodel = stateObj[state.id].datamodel[0];
+            stateObj[state.id.toLowerCase()] = state;
+            if (stateObj[state.id.toLowerCase()].datamodel) {
+                stateObj[state.id.toLowerCase()].datamodel = stateObj[state.id.toLowerCase()].datamodel[0];
             }
         }
         obj.configuration.lifecycle.scxml.state = stateObj;
