@@ -25,6 +25,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     var CHANGE_STATE_URL = '/{context}/apis/assets/{id}/{nextState}';
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
+    var GET_CURRENT_STATE_URL = '/{context}/apis/assets/{id}/state';
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
     response.contentType = 'application/json';
@@ -88,7 +89,8 @@ require('/modules/publisher.js').exec(function(ctx) {
                     }else{
                         response = responseProcessor.buildErrorResponse(response,400,"No matching asset found");
                     }
-            }else {
+            }
+            else {
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
             break;

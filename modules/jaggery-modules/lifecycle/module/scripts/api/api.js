@@ -23,12 +23,10 @@ var api = {};
             throw 'The lifecycle : ' + this.getName() + ' does not have any state information.Make sure that the states are defined in the scxml definition.';
         }
         if (!states[currentStateName]) {
-            log.warn('The state: ' + currentStateName + ' is not present in the lifecycle: ' + this.getName());
-            return nextStates;
+            throw 'The state: ' + currentStateName + ' is not present in the lifecycle: ' + this.getName();        
         }
         if (!states[currentStateName].transition) {
-            log.warn('The state: ' + currentStateName + ' has not defined any transitions in the lifecycle: ' + this.getName());
-            return nextStates;
+           throw 'The state: ' + currentStateName + ' has not defined any transitions in the lifecycle: ' + this.getName(); 
         }
         var transitions = states[currentStateName].transition;
         for (var index = 0; index < transitions.length; index++) {
@@ -125,8 +123,26 @@ var api = {};
         var lcJSON = core.getJSONDef(lifecycleName, tenantId);
         if (!lcJSON) {
             log.warn('Unable to locate lifecycle ' + lifecycleName + ' for the tenant: ' + tenantId);
-            return null;
+            throw 'Unable to locate lifecycle ' + lifecycleName + ' for the tenant: ' + tenantId;
+            //return null;
         }
         return new Lifecycle(lcJSON);
+    };
+
+    /**
+     * The function will return a list of available lifecycles for the tenant
+     * @param  tenantId:
+     * @return {[type]}       An array of lifecycles
+     */
+    api.getLifecycleList = function(tenantId){
+        if (!tenantId) {
+            throw 'Unable to locate lifecycle without a tenantId';
+        }
+        var lcList = core.getLifecycleList(tenantId);
+        if (!lcList) {
+            throw 'Unable to locate lifecycles for the tenant: ' + tenantId;
+            //return null;
+        }
+        return lcList;
     };
 }(api, core));

@@ -8,9 +8,15 @@ require('/modules/publisher.js').exec(function(ctx) {
     var log = new Log();
     var ref = require('utils').request;
     var responseProcessor = require('utils').response;
+    var lcCore=require('lifecycle').core;
+    var lcApi=require('lifecycle').api;
+    var server = require('store').server;
+
     var res = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
+    var tenantId = server.current(session).tenantId;
+
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
     var assetApi = require('/modules/asset_api.js').api;
 
@@ -21,38 +27,58 @@ require('/modules/publisher.js').exec(function(ctx) {
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
     response.contentType = 'application/json';
-    var result = {};
-    if (method == 'POST') {
-        
-    } else if (method == 'GET') {
-        options.type = req.getParameter('type');
-        
-        if (uriMatcher.match(GET_LIFECYCLES_URL)) {
-            //options.id = uriMatcher.elements().id;
-            //TODO
-            //assetApi.getLifecycles(options, req, res, session);
-            print('not implemented!');
-        }
-        else if (uriMatcher.match(GET_LIFECYCLE_DEFINITION_BY_NAME_URL)) {
-            //options.id = uriMatcher.elements().id;
-            //TODO
-            //assetApi.getLifecycles(options, req, res, session);
-            print('not implemented!');    
-        }
-        else if (uriMatcher.match(GET_LIFECYCLE_ACTIONS_URL)) {
-            //options.id = uriMatcher.elements().id;
-            //TODO
-            //assetApi.getLifecycles(options, req, res, session);
-            print('not implemented!');    
-        }
-        else {
-            //result = responseProcessor.buildErrorResponse(404, 'Unable to locate this GET endpoint');
-            print(responseProcessor.buildErrorResponse(404, 'Unable to locate this GET endpoint'));
-            
-        }
-    } else {
-        //result = responseProcessor.buildErrorResponse(404, 'Unable to locate this endpoint for '+method);
-        print(responseProcessor.buildErrorResponse(404, 'Unable to locate this endpoint for '+method));
-        
+    var lifecycleName='';
+
+
+    switch(method){
+        case 'GET':
+            if (uriMatcher.match(GET_LIFECYCLES_URL)) {
+                try{                  
+                    var lcList = lcApi.getLifecycleList(tenantId);
+                    response = responseProcessor.buildSuccessResponse(response,200,lcList);                                   
+                    
+                }catch(e){
+                    log.error(e);
+                    response = responseProcessor.buildErrorResponse(response,404,e);
+                   
+                }             
+            }
+            else if (uriMatcher.match(GET_LIFECYCLE_DEFINITION_BY_NAME_URL)) {
+                try{                  
+                    lifecycleName = uriMatcher.elements().lifecycleName;
+                    var lc=lcApi.getLifecycle(lifecycleName,tenantId);
+                    response = responseProcessor.buildSuccessResponse(response,200,lc);                                    
+                    
+                }catch(e){
+                    log.error(e);
+                    response = responseProcessor.buildErrorResponse(response,404,e);
+                   
+                }  
+            }
+            else if (uriMatcher.match(GET_LIFECYCLE_ACTIONS_URL)) {
+
+                lifecycleName = uriMatcher.elements().lifecycleName;
+                var currentState = uriMatcher.elements().currentState;
+                
+                try{                  
+                    var lc=lcApi.getLifecycle(lifecycleName,tenantId);                    
+                    var nextStates = lc.nextStates(currentState);                    
+                    response = responseProcessor.buildSuccessResponse(response,200,nextStates);                                    
+                    
+                }catch(e){
+                    log.error(e);
+                    response = responseProcessor.buildErrorResponse(response,404,e);
+                   
+                }
+            }
+            else {
+                response = responseProcessor.buildErrorResponse(response,404, 'Unable to locate this GET endpoint');
+                
+            }
+            break;
+        default:
+            response = responseProcessor.buildErrorResponse(response,404, 'Unable to locate this endpoint for '+method)
+
     }
+
 }, request, response, session); %>
