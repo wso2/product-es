@@ -90,7 +90,11 @@ var asset = {};
             var items = processOptionTextList(list);
             attributes[attrName] = items;
         } else {
-            attributes[attrName] = data[attrName];
+            if (data[attrName]) {
+                attributes[attrName] = data[attrName];
+            } else {
+                log.debug(attrName + ' will not be saved.');
+            }
         }
         return attributes;
     };
