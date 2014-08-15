@@ -22,7 +22,7 @@ require('/modules/publisher.js').exec(function(ctx) {
 
     var GET_LIFECYCLES_URL = '/{context}/apis/lifecycles/';
     var GET_LIFECYCLE_DEFINITION_BY_NAME_URL = '/{context}/apis/lifecycles/{lifecycleName}';
-    var GET_LIFECYCLE_ACTIONS_URL = '/{context}/apis/lifecycles/{lifecycleName}/{currentState}';
+    var GET_LIFECYCLE_STATE_URL = '/{context}/apis/lifecycles/{lifecycleName}/{currentState}';
 
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
@@ -55,15 +55,15 @@ require('/modules/publisher.js').exec(function(ctx) {
                    
                 }  
             }
-            else if (uriMatcher.match(GET_LIFECYCLE_ACTIONS_URL)) {
+            else if (uriMatcher.match(GET_LIFECYCLE_STATE_URL)) {
 
                 lifecycleName = uriMatcher.elements().lifecycleName;
                 var currentState = uriMatcher.elements().currentState;
                 
                 try{                  
                     var lc=lcApi.getLifecycle(lifecycleName,tenantId);                    
-                    var nextStates = lc.nextStates(currentState);                    
-                    response = responseProcessor.buildSuccessResponse(response,200,nextStates);                                    
+                    var state = lc.state(currentState);                    
+                    response = responseProcessor.buildSuccessResponse(response,200,state);                                    
                     
                 }catch(e){
                     log.error(e);

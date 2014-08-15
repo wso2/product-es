@@ -173,7 +173,8 @@ public class StateExecutor {
             log.debug("Permission: " + rule + " REMOVED from role: " + role + " for " + target);
         } catch (Exception e) {
             String msg = "Permission: " + rule + " could NOT be removed from role: " + role + " for " + target;
-            log.debug(msg);
+            log.error(e);
+            log.error(msg);
         }
 
     }

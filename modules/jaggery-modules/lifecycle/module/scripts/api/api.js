@@ -36,13 +36,50 @@ var api = {};
             nextStates.push(transition);
         }
         return nextStates;
+        
     };
+
+    /**
+     * The function returns checklistItems binded with current state
+     * @param  {[type]} name The name of the state
+     * @return A json object representing the checklist items
+     */
+    Lifecycle.prototype.checklistItems = function(currentStateName) {
+        var currentStateName=currentStateName?currentStateName.toLowerCase():currentStateName;
+        var states = this.definition.configuration.lifecycle.scxml.state;
+        var checklistItems = [];
+        try{
+            var datamodel = states[currentStateName].datamodel.data;
+            log.info(datamodel);
+            for (var index = 0; index < datamodel.length; index++) {
+                if(datamodel[index].name == 'checkItems'){
+                    //var items = {};
+                    checklistItems = datamodel[index].item;
+                }
+            }
+        }catch(e){
+            log.warn(e);
+        }
+        return checklistItems;
+    };
+
     /**
      * The function returns details about the current state
      * @param  {[type]} name The name of the state
      * @return A json object representing the state
      */
-    Lifecycle.prototype.state = function(name) {};
+    Lifecycle.prototype.state = function(name) {
+        var state = {};        
+        try{
+            state.nextstates = this.nextStates(name);
+            state.checkList  = this.checklistItems(name);
+        }catch(e){
+            return e;
+        }
+        
+        return state;
+
+    };
     /**
      * The function returns the action that can cause transitions from the fromState to the toState
      * @param  {[type]} fromState The from state
