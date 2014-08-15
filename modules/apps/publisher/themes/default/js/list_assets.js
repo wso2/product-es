@@ -39,7 +39,7 @@ function renderView(partial, data, container, cb) {
             if(assets){
 		    	renderView('list_assets_table_body',assets,'#list-asset-table-body');
 
-		    	if(assets.length < $('#initial-num-of-items').val()){
+		    	if(assets.length < store.publisher.itemsPerPage){
 		           	infiniteScroll = false;
 	            }else{
 	            	infiniteScroll = true;
