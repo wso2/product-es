@@ -50,11 +50,11 @@ var api = {};
         var checklistItems = [];
         try{
             var datamodel = states[currentStateName].datamodel.data;
-            log.info(datamodel);
             for (var index = 0; index < datamodel.length; index++) {
                 if(datamodel[index].name == 'checkItems'){
                     //var items = {};
                     checklistItems = datamodel[index].item;
+                    return checklistItems;
                 }
             }
         }catch(e){
