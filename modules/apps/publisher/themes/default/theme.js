@@ -251,7 +251,7 @@ var engine = caramel.engine('handlebars', (function() {
                         out = '<td><input type="text" value="' + value + '"" ' + renderFieldMetaData(field) + ' class="span8" ></td>';
                         break;
                     case 'text-area':
-                        out = '<td><textarea row="3" value="' + value + '" ' + renderFieldMetaData(field) + ' class="span8"></textarea></td>';
+                        out = '<td><textarea row="3" ' + renderFieldMetaData(field) + ' class="span8">'+value+'</textarea></td>';
                         break;
                     case 'file':
                         out = '<td><input type="file" value="' + value + '" ' + renderFieldMetaData(field) + ' ></td>';
