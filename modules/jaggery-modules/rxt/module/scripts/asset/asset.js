@@ -279,6 +279,54 @@ var asset = {};
         }
         return success;
     };
+    /**
+     * The function sets the check item at the provided index to the given state
+     * @param  {[type]} asset          [description]
+     * @param  {[type]} checkItemIndex The index of the check list item to be invoked
+     * @param  {[type]} checkItemState A boolean value which indicates the state of the check item
+     *                                 (checked=true and unchecked=false)
+     * @return {[type]}                A boolean value indicating whether the check item state was changed
+     */
+    AssetManager.prototype.invokeLifecycleCheckItem = function(asset, checkItemIndex, checkItemState) {
+        var success = false;
+        if (!asset) {
+            log.warn('Unable to locate asset details in order to invoke check item state change');
+            return success;
+        }
+        //Check if a check item state has been provided
+        if (checkItemState == null) {
+            log.warn('The check item at index ' + checkItemIndex + ' cannot be changed as the check item state is not provided.');
+            return success;
+        }
+        //Obtain the number of check items for this state
+        var checkItems = this.getLifecycleCheckItems(asset);
+        //Check if the check item index is valid
+        if ((checkItemIndex < 0) || (checkItemIndex > checkItems.length)) {
+            log.error('The provided check item index ' + checkItemIndex + ' is not valid.It must be between 0 and ' + checkItems.length);
+            throw 'The provided check item index ' + checkItemIndex + ' is not valid.It must be between 0 and ' + checkItems.length;
+        }
+        success = true; //Assume the check item invocation will succeed
+        try {
+            if (checkItemState == true) {
+                this.am.checkItem(checkItemIndex, asset);
+            } else {
+                this.am.checkItem(checkItemIndex, asset);
+            }
+        } catch (e) {
+            log.error(e);
+            success = false;
+        }
+        return success;
+    };
+    /**
+     * The function returns all of the check items for the current state in which the provided
+     * asset is in
+     * @param  {[type]} asset [description]
+     * @return {[type]}       [description]
+     */
+    AssetManager.prototype.getLifecycleCheckItems = function(asset) {
+        return this.am.getCheckListItemNames(asset);
+    };
     AssetManager.prototype.createVersion = function(options, newVersion) {};
     AssetManager.prototype.getName = function(asset) {
         var nameAttribute = this.rxtManager.getNameAttribute(this.type);
