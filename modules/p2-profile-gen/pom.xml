@@ -452,10 +452,11 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <!-- End of SSO Fix -->
-                                <feature>
+                                <!--Commented to remove SAML SSO menu item-->
+                                <!--<feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+                                </feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.core.feature.group</id>
                                     <version>${carbon.platform.version}</version>
