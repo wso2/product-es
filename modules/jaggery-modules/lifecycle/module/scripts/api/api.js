@@ -66,8 +66,9 @@ var api = {};
         var items = [];
         for (var index in data) {
             item = data[index];
+            //There can be multiple checklist items define din a data model
             if (item.name == CHECKITEM_TOKEN) {
-                return item.item || [];
+                items.push(item.item || []);
             }
         }
         return items;
