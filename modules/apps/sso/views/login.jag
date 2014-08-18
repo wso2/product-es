@@ -48,7 +48,7 @@ var e = request.getParameter('authFailure');
 							<div class="span12">
 								<div class="row-fluid">
 									<div class="span6">
-										<form id="loginForm" action="/admin/commonauth" method="POST" >
+										<form id="loginForm" action="/commonauth" method="POST" >
 									        <h2 class="form-signin-heading">Sign in</h2>
 									        <% if(e){ %>
 									            <div class="alert alert-error">Username or password is invalid</div>
