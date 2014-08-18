@@ -1,6 +1,8 @@
 var api = {};
 (function(api, core) {
     var log = new Log('lifecycle');
+    var CHECKITEM_TOKEN = 'checkItems';
+    var TRANSITION_EXECUTION = 'transitionExecution';
 
     function Lifecycle(definiton) {
         this.definition = definiton;
@@ -39,20 +41,36 @@ var api = {};
         }
         return nextStates;
     };
-
-    var buildStateObject=function(rawState){
-        var state={};
-        state.id=rawState.id;
-        if(!rawState.datamodel){
+    /**
+     * The function builds a state object given raw state information
+     * @param  {[type]} rawState [description]
+     * @return {[type]}          [description]
+     */
+    var buildStateObject = function(rawState) {
+        var state = {};
+        state.id = rawState.id;
+        if (!rawState.datamodel) {
             log.warn('Unable to read data model of the state ');
             return state;
         }
+        var checkItems = getCheckitems(rawState.data);
+        state.checkItems = checkItems;
+        return state;
     };
-    var getCheckitems=function(data){
-        var item;
-        for(var index in data){
-            item=data[index];
+    /**
+     * The function returns the check list items for the current state
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    var getCheckitems = function(data) {
+        var items = [];
+        for (var index in data) {
+            item = data[index];
+            if (item.name == CHECKITEM_TOKEN) {
+                return item.item || [];
+            }
         }
+        return items;
     };
     /**
      * The function returns details about the current state
@@ -71,10 +89,11 @@ var api = {};
             log.warn('The state: ' + stateName + ' is not present in the lifecycle: ' + this.getName());
             return state;
         }
-        var rawState=states[stateName];
-
+        var rawState = states[stateName];
         //Process the raw state 
-        state.id=rawState.id;
+        state= buildStateObject(rawState);
+        //Add the next states
+        state.nextStates = this.nextStates(stateName);
         return state;
     };
     /**

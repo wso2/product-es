@@ -9,7 +9,7 @@ var log = new Log();
 //var carbon = require('carbon');
 //log.info('Starting to force load');
 //lcCore.force(-1234);
-var simplelc=lcCore.getJSONDef('ServiceLifeCycle',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
+var simplelc=lcCore.getJSONDef('MobileAppLifeCycle',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
 var lc=lcApi.getLifecycle('SampleLifeCycle2',-1234);
 print(simplelc);
 
