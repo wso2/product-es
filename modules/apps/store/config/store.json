@@ -6,7 +6,7 @@
     "socialCommentsEnable": true,
     "cached": false,
     "server": {
-        "https": "%https.host%/admin",
+        "https": "%https.host%",
         "http": "%http.host%"
     },
     "lifeCycleBehaviour":{
@@ -20,7 +20,7 @@
     "ssoConfiguration": {
         "enabled": true,
         "issuer": "store",
-        "identityProviderURL": "%https.carbon.local.ip%/admin/samlsso",
+        "identityProviderURL": "%https.carbon.local.ip%/samlsso",
         "keyStorePassword": "wso2carbon",
         "identityAlias": "wso2carbon",
         "responseSigningEnabled": "true",

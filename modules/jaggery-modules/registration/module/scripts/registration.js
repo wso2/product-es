@@ -5,7 +5,7 @@
 	var ws = require('ws');
 	var request = new ws.WSRequest();
 	var options = new Array();
-	this.urlWs = "https://localhost:9443/admin/services/UserAdmin/";
+	this.urlWs = "https://localhost:9443/services/UserAdmin/";
 
 
 

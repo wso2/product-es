@@ -1,6 +1,6 @@
 {
     "server": {
-        "https": "%https.host%/admin",
+        "https": "%https.host%",
         "http": "%http.host%"
     },
     "roles": {
@@ -22,7 +22,7 @@
         "space": "publisher",
         "options": {
             "type": "registry",
-            "serverUrl": "%https.host%/admin",
+            "serverUrl": "%https.host%",
             "path": "/_system/governance/users",
             "username": "admin",
             "password": "admin"
