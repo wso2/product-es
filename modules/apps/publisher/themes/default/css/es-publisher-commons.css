@@ -1358,3 +1358,10 @@ circle:hover {
 .form-horizontal  .control-label{
     text-align: left;
 }
+/**
+ * Temp fix for table headings
+ */
+
+.rxt-table-heading {
+    padding-left: 10px;
+}
