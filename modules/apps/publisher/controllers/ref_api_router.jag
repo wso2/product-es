@@ -39,10 +39,12 @@
 				include(endpoint);
 			}
 			else{				
-				print(responseProcessor.buildErrorResponse(404,'Unabled to locate an api endpoint for the type: '+type));
+				//print(responseProcessor.buildErrorResponse(404,'Unabled to locate an api endpoint for the type: '+type));
+				response = responseProcessor.buildErrorResponse(response,404,'Unabled to locate an api endpoint for the type: '+type)
 			}
 		}catch(e){
-			print(responseProcessor.buildErrorResponse(404,e));
+			//print(responseProcessor.buildErrorResponse(404,e));
+			response = responseProcessor.buildErrorResponse(response,404,e);
 			
 		}
 	};
@@ -52,8 +54,8 @@
 
 	if(!user){//unless user is authenticated		
 		 log.info('Auth failure')
-		 print(responseProcessor.buildErrorResponse(400, "Authorization Error"));
-		
+		 //print(responseProcessor.buildErrorResponse(response, 400, "Authorization Error"));
+		response = responseProcessor.buildErrorResponse(response, 400, "Authorization Error");
 	}
  	else{//for authenticated users
  		//Check if options have been provided
@@ -63,7 +65,8 @@
 		
 		else{
 			//response.sendError();
-			print(responseProcessor.buildErrorResponse(404,'Unable to route the request to an appropriate endpoint'));
+			//print(responseProcessor.buildErrorResponse(404,'Unable to route the request to an appropriate endpoint'));
+			response = responseProcessor.buildErrorResponse(response,404,'Unable to route the request to an appropriate endpoint');
 		}
  	}
  	

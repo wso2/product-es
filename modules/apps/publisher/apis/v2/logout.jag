@@ -11,21 +11,29 @@
 	var responseProcessor = require('utils').response;
 	response.contentType='application/json';
 
-	if(method=='POST'){
+	switch(method){
+		case 'POST':
+			try{
+				var user=require('store').user;
+				user.logout();
+				session.invalidate();						
+				response = responseProcessor.buildSuccessResponse(response,200,{'message':'User Logged out succesfully'});
+								
+			}
+			catch(e){					
+				//result = responseProcessor.buildErrorResponse(500, 'Unable to logout authenticated user!');	
+				//response.status = 500;
+				//response.status = 500;
+                response = responseProcessor.buildErrorResponse(response,500,'Unable to logout user!');
+				//response.sendError(500,'Unable to logout authenticated user!');
+				//log.error(e);
+			}
+			break;	
+		default:
+			//response.status = 404;
+			result = responseProcessor.buildErrorResponse(response,404,'Your request is malformed');
 
-		try{
-			var user=require('store').user;
-			user.logout();
-			session.invalidate();			
-			result = responseProcessor.buildSuccessResponse(200,'Logged out successfully',[]);
-		}
-		catch(e){					
-			result = responseProcessor.buildErrorResponse(500, 'Unable to logout authenticated user!');			
-		}		
-		
-		print(result);
-	}else{
-		print(responseProcessor.buildErrorResponse(404,'Your request malformed'));
+        	//print(result);
+
 	}
-
 %>
