@@ -25,9 +25,7 @@ function renderView(partial, data, container, cb) {
                 }
             }
 		return assets;
-
 	}
-
 
 	function getNextPage(param){
 		var assetType = store.publisher.type;//$('#meta-asset-type').val();
@@ -37,19 +35,21 @@ function renderView(partial, data, container, cb) {
           url: url,
           type: 'GET',
           success: function(response) {
-            var assets = convertTimeToUTC(response.data);        
-               
-            if(response.data){
+            var assets = convertTimeToUTC(response.data);     
+            if(assets){
 		    	renderView('list_assets_table_body',assets,'#list-asset-table-body');
-			}
 
-           	if(response.data.length < $('#initial-num-of-items').val()){
-	           	$('.loading-inf-scroll').hide();
-	           	$(window).unbind('scroll', scroll);
+		    	if(assets.length < store.publisher.itemsPerPage){
+		           	infiniteScroll = false;
+		           	$('.loading-inf-scroll').hide();
+	            }else{
+	            	infiniteScroll = true;
+	            }
+			}
+			else{
 	           	infiniteScroll = false;
-            }else{
-            	infiniteScroll = true;
             }
+           	
           },
           error: function(response) {
              $('.loading-inf-scroll').hide();
@@ -88,14 +88,15 @@ function renderView(partial, data, container, cb) {
 				var param = '&&start='+start+'&&count='+startInitItems+setSortingParams(path);				
 				
 				getNextPage(param);
-				
+				$('.loading-inf-scroll').hide();
 				$(window).unbind('scroll', scroll);
 				infiniteScroll = false;
-				setTimeout(function() {
-					$(window).bind('scroll', scroll);
-					
-					$('.loading-inf-scroll').show();
-				}, 1000);
+				setTimeout(function() {	
+					if(infiniteScroll){				
+						$(window).bind('scroll', scroll);					
+						$('.loading-inf-scroll').show();
+					}
+				}, 500);
 			}
 		} else {
 			$('.loading-inf-scroll').hide();
@@ -104,3 +105,6 @@ function renderView(partial, data, container, cb) {
 	}
 
 	$(window).bind('scroll', scroll);
+	$( window ).load(function() {
+  		scroll();
+    });
