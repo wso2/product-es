@@ -17,14 +17,16 @@ var responseProcessor = require('utils').response;
         }
         var newArtifactTemplateString = stringify(extendedAssetTemplate);
         var modifiedAssets = [];
+
         for (var j in artifacts) {
-            var artifactObject = parse(newArtifactTemplateString);
+            var artifactObject = parse(newArtifactTemplateString);            
             for (var i in extendedAssetTemplate) {
-                if (artifacts[j][i]) {
+                if(artifacts[j][i]){
                     artifactObject[i] = artifacts[j][i];
-                } else {
-                    artifactObject[i] = artifacts[j].attributes[i];
+                }else{
+                    artifactObject[i] = artifacts[j].attributes[i];    
                 }
+                
             }
             modifiedAssets.push(artifactObject);
         }
@@ -50,7 +52,7 @@ var responseProcessor = require('utils').response;
         //Get all of the files that have been sent in the request
         var files = request.getAllFiles();
         if (!files) {
-            log.debug('User has not provided any resources such any new images or files when updating the asset with id ' + asset.id);
+            log.debug('User has not provided any resources such any new images or files when updating the asset with id '+asset.id);
             return;
         }
         for (var index in resourceFields) {
@@ -71,25 +73,8 @@ var responseProcessor = require('utils').response;
         for (var index in resourceFields) {
             resourceField = resourceFields[index];
             //If the asset attribute value is null then use the old resource
-            if ((!asset.attributes[resourceField]) || (asset.attributes[resourceField] == '')) {
-                log.debug('Copying old resource attribute value for ' + resourceField);
+            if (asset.attributes[resourceField] == '') {
                 asset.attributes[resourceField] = original.attributes[resourceField];
-            }
-        }
-    };
-    var isPresent=function(key,data){
-        if((data[key])||(data[key]=='')){
-            return true;
-        }
-        return false;
-    }
-    var putInUnchangedValues = function(original, asset, sentData) {
-        for (var key in original.attributes) {
-            //We need to add the original values if the attribute was not present in the data object sent from the client
-            //and it was not deleted by the user (the sent data has an empty value)
-            if ((!asset.attributes[key]) && (!isPresent(key,sentData))) {
-                log.debug('Copying old attribute value for '+key);
-                asset.attributes[key] = original.attributes[key];
             }
         }
     };
@@ -103,7 +88,8 @@ var responseProcessor = require('utils').response;
             am.create(asset);
         } catch (e) {
             log.error('Asset of type: ' + options.type + ' was not created due to ' + e);
-            print(responseProcessor.buildErrorResponse(500, 'Failed to create asset of type: ' + options.type));
+           // print(responseProcessor.buildErrorResponse(500, 'Failed to create asset of type: ' + options.type));
+            //res = responseProcessor.buildErrorResponse(res, 500, 'Failed to create asset of type: ' + options.type)
             return null;
         }
         var isLcAttached = am.attachLifecycle(asset);
@@ -127,15 +113,16 @@ var responseProcessor = require('utils').response;
         putInStorage(options, asset, am, req, session);
         var original = am.get(options.id);
         putInOldResources(original, asset, am);
-        putInUnchangedValues(original, asset, assetReq);
         //If the user has not uploaded any new resources then use the old resources 
-        try {
+        try{
             am.update(asset);
-        } catch (e) {
-            log.debug('Failed to update the asset ' + stringify(asset));
-            log.debug(e);
-            asset = null;
         }
+        catch(e){
+            log.debug('Failed to update the asset '+stringify(asset));
+            log.debug(e);
+            asset=null; 
+        }
+        
         return asset;
     };;
     api.search = function(options, req, res, session) {
@@ -171,33 +158,41 @@ var responseProcessor = require('utils').response;
             if (q) {
                 var qString = '{' + q + '}';
                 var query = parse(qString);
+                
                 var assets = assetManager.search(query, paging); //doesnt work properly
             } else {
+                
                 var assets = assetManager.list(paging);
             }
             var expansionFields = (request.getParameter('fields') || '');
             if (expansionFields) {
                 options.fields = expansionFields.split(',');
                 options.assets = assets;
-                result = fieldExpansion(options, req, res, session);
+                result =fieldExpansion(options, req, res, session);
                 //return;                    
-            } else {
+            } else {                
                 result = assets;
-            }
-            print(responseProcessor.buildSuccessResponse(200, 'Request Served Sucessfully', result));
+                
+            }            
+            //res = responseProcessor.buildSuccessResponse(res,200,result);
         } catch (e) {
-            print(responseProcessor.buildErrorResponse(400, "Your request is malformed"));
+            //res = responseProcessor.buildErrorResponse(400, "Your request is malformed");
+            //print();
+            result = null;
             log.error(e);
         }
+        return result;
     };
+
     api.get = function(options, req, res, session) {
         var asset = require('rxt').asset;
         var assetManager = asset.createUserAssetManager(session, options.type);
         try {
             var retrievedAsset = assetManager.get(options.id);
             if (!retrievedAsset) {
-                print(responseProcessor.buildSuccessResponse(200, 'No matching asset found by' + options.id, []));
-                return;
+                //print(responseProcessor.buildSuccessResponse(200,'No matching asset found by'+options.id,[]));
+                //res = responseProcessor.buildSuccessResponse(200,'No matching asset found by'+options.id,[])
+                return null;
             } else {
                 var expansionFields = (request.getParameter('fields') || '');
                 if (expansionFields) {
@@ -206,15 +201,20 @@ var responseProcessor = require('utils').response;
                     assets.push(retrievedAsset);
                     options.assets = assets;
                     result = fieldExpansion(options, req, res, session);
-                } else {
+                } else {                    
                     result = retrievedAsset;
-                }
-                print(responseProcessor.buildSuccessResponse(200, 'Request Served Sucessfully', result));
+                }                
+                //print(responseProcessor.buildSuccessResponse(200,'Request Served Sucessfully',result));
+                //res = responseProcessor.buildSuccessResponse(res,200,'Request Served Sucessfully',result)
             }
         } catch (e) {
             //res.sendError(400, "No matching asset found");
-            print(responseProcessor.buildErrorResponse(400, "No matching asset found"));
+            
+            //print(responseProcessor.buildErrorResponse(400, "No matching asset found"));
+            //res = responseProcessor.buildErrorResponse(res,400, "No matching asset found");
             log.error(e);
+            result = null;            
         }
-    };;
+        return result;
+    };
 }(api))
