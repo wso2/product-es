@@ -42,6 +42,7 @@ function renderView(partial, data, container, cb) {
 		    	if(assets.length < store.publisher.itemsPerPage){
 		           	infiniteScroll = false;
 		           	$('.loading-inf-scroll').hide();
+
 	            }else{
 	            	infiniteScroll = true;
 	            }

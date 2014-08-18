@@ -135,4 +135,20 @@ var core = {};
         }
         return lcMap.json[lifecycleName];
     };
+    core.getLifecycleList = function(tenantId){
+        var lcMap = core.configs(tenantId);
+        if (!lcMap) {
+            throw 'There is no lifecycle information for the tenant: ' + tenantId;
+        }
+        if (!lcMap.json) {
+            throw 'There is no json lifecycle information' + tenantId;
+        }
+        var map = lcMap.json;
+        var list = [];
+        for(var i in map){
+            list.push(i);
+        }
+        return list;
+    }
+
 }(core));

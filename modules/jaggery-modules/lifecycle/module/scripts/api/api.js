@@ -23,12 +23,10 @@ var api = {};
             throw 'The lifecycle : ' + this.getName() + ' does not have any state information.Make sure that the states are defined in the scxml definition.';
         }
         if (!states[currentStateName]) {
-            log.warn('The state: ' + currentStateName + ' is not present in the lifecycle: ' + this.getName());
-            return nextStates;
+            throw 'The state: ' + currentStateName + ' is not present in the lifecycle: ' + this.getName();        
         }
         if (!states[currentStateName].transition) {
-            log.warn('The state: ' + currentStateName + ' has not defined any transitions in the lifecycle: ' + this.getName());
-            return nextStates;
+           throw 'The state: ' + currentStateName + ' has not defined any transitions in the lifecycle: ' + this.getName(); 
         }
         var transitions = states[currentStateName].transition;
         for (var index = 0; index < transitions.length; index++) {
@@ -38,13 +36,50 @@ var api = {};
             nextStates.push(transition);
         }
         return nextStates;
+        
     };
+
+    /**
+     * The function returns checklistItems binded with current state
+     * @param  {[type]} name The name of the state
+     * @return A json object representing the checklist items
+     */
+    Lifecycle.prototype.checklistItems = function(currentStateName) {
+        var currentStateName=currentStateName?currentStateName.toLowerCase():currentStateName;
+        var states = this.definition.configuration.lifecycle.scxml.state;
+        var checklistItems = [];
+        try{
+            var datamodel = states[currentStateName].datamodel.data;
+            for (var index = 0; index < datamodel.length; index++) {
+                if(datamodel[index].name == 'checkItems'){
+                    //var items = {};
+                    checklistItems = datamodel[index].item;
+                    return checklistItems;
+                }
+            }
+        }catch(e){
+            log.warn(e);
+        }
+        return checklistItems;
+    };
+
     /**
      * The function returns details about the current state
      * @param  {[type]} name The name of the state
      * @return A json object representing the state
      */
-    Lifecycle.prototype.state = function(name) {};
+    Lifecycle.prototype.state = function(name) {
+        var state = {};        
+        try{
+            state.nextstates = this.nextStates(name);
+            state.checkList  = this.checklistItems(name);
+        }catch(e){
+            return e;
+        }
+        
+        return state;
+
+    };
     /**
      * The function returns the action that can cause transitions from the fromState to the toState
      * @param  {[type]} fromState The from state
@@ -125,8 +160,26 @@ var api = {};
         var lcJSON = core.getJSONDef(lifecycleName, tenantId);
         if (!lcJSON) {
             log.warn('Unable to locate lifecycle ' + lifecycleName + ' for the tenant: ' + tenantId);
-            return null;
+            throw 'Unable to locate lifecycle ' + lifecycleName + ' for the tenant: ' + tenantId;
+            //return null;
         }
         return new Lifecycle(lcJSON);
+    };
+
+    /**
+     * The function will return a list of available lifecycles for the tenant
+     * @param  tenantId:
+     * @return {[type]}       An array of lifecycles
+     */
+    api.getLifecycleList = function(tenantId){
+        if (!tenantId) {
+            throw 'Unable to locate lifecycle without a tenantId';
+        }
+        var lcList = core.getLifecycleList(tenantId);
+        if (!lcList) {
+            throw 'Unable to locate lifecycles for the tenant: ' + tenantId;
+            //return null;
+        }
+        return lcList;
     };
 }(api, core));

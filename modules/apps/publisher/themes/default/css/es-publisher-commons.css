@@ -20,6 +20,7 @@ body {
     color: #34495E;
     height: 100%;
     background: url(../img/header-bg.gif) repeat-x left -10px #ecf0f1;
+    overflow-y: scroll;
 }
 a:focus, a:active {
     outline: none;
@@ -1358,6 +1359,7 @@ circle:hover {
 .form-horizontal  .control-label{
     text-align: left;
 }
+
 /**
  * Temp fix for table headings
  */
