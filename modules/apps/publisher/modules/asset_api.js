@@ -88,7 +88,7 @@ var responseProcessor = require('utils').response;
         for (var key in original.attributes) {
             //We need to add the original values if the attribute was not present in the data object sent from the client
             //and it was not deleted by the user (the sent data has an empty value)
-            if ((!asset.attributes[key]) && (!isPresent(key,sentData))) {
+            if (((!asset.attributes[key]) || (asset.attributes[key].length==0)) && (!isPresent(key,sentData))) {
                 log.debug('Copying old attribute value for '+key);
                 asset.attributes[key] = original.attributes[key];
             }
@@ -130,6 +130,9 @@ var responseProcessor = require('utils').response;
         putInOldResources(original, asset, am);
         putInUnchangedValues(original, asset, assetReq);
         //If the user has not uploaded any new resources then use the old resources
+        if(!asset.name){
+            asset.name=am.getName(asset);
+        }
         try {
             am.update(asset);
         } catch (e) {
