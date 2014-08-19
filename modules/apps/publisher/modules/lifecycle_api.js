@@ -56,14 +56,27 @@ var api = {};
         success = am.invokeLcAction(asset, action);
         return success;
     };
-    var isDeletable=function(assetState,deletableStates){
-        var assetState=assetState?assetState.toLowerCase():assetState;
-        for(var index in deletableStates){
-            if(deletableStates[index].toLowerCase()==assetState){
+    var isDeletable = function(assetState, deletableStates) {
+        var assetState = assetState ? assetState.toLowerCase() : assetState;
+        for (var index in deletableStates) {
+            if (deletableStates[index].toLowerCase() == assetState) {
                 return true;
             }
         }
         return false;
+    };
+    var setCheckItemState = function(checkItems, asset, am) {
+        //Obtain the check item states for the asset
+        //TODO; This method throws an exception if check list items are not present
+        var assetCheckItems = am.getLifecycleCheckItems(asset);
+        var item;
+        for (var index in assetCheckItems) {
+            item = assetCheckItems[index];
+            if (checkItems[index]) {
+                checkItems[index].checked = item.checked;
+            }
+        }
+        return checkItems;
     };
     api.getState = function(options, req, res, session) {
         var state = {};
@@ -87,7 +100,9 @@ var api = {};
         //Obtain the deletable states 
         state.deletableStates = rxtManager.getDeletableStates(options.type);
         //Determine if the current state is a deletable state
-        state.isDeletable = isDeletable(asset.lifecycleState,state.deletableStates);
+        state.isDeletable = isDeletable(asset.lifecycleState, state.deletableStates);
+        //Update the state of the check items
+        state.checkItems = setCheckItemState(state.checkItems, asset, am);
         return state;
     };
 }(api));

@@ -306,11 +306,14 @@ var asset = {};
             throw 'The provided check item index ' + checkItemIndex + ' is not valid.It must be between 0 and ' + checkItems.length;
         }
         success = true; //Assume the check item invocation will succeed
+
+        //These methods do not return a boolean value indicating if the item was checked or unchecked
+        //TODO: We could invoke getCheckLifecycleCheckItems and check the item index to see if the operation was successfull.
         try {
             if (checkItemState == true) {
                 this.am.checkItem(checkItemIndex, asset);
             } else {
-                this.am.checkItem(checkItemIndex, asset);
+                this.am.uncheckItem(checkItemIndex, asset);
             }
         } catch (e) {
             log.error(e);
@@ -322,10 +325,17 @@ var asset = {};
      * The function returns all of the check items for the current state in which the provided
      * asset is in
      * @param  {[type]} asset [description]
-     * @return {[type]}       [description]
+     * @return {[type]}       An array of check items along with the checked state
      */
     AssetManager.prototype.getLifecycleCheckItems = function(asset) {
-        return this.am.getCheckListItemNames(asset);
+        var checkItems=[];
+        try{
+            checkItems=this.am.getCheckListItemNames(asset);    
+        }
+        catch(e){
+            log.error(e);
+        }
+        return checkItems;
     };
     AssetManager.prototype.createVersion = function(options, newVersion) {};
     AssetManager.prototype.getName = function(asset) {

@@ -53,7 +53,7 @@ var api = {};
             log.warn('Unable to read data model of the state ');
             return state;
         }
-        var checkItems = getCheckitems(rawState.data);
+        var checkItems = getCheckitems(rawState.datamodel.data||{});
         state.checkItems = checkItems;
         return state;
     };
@@ -68,7 +68,7 @@ var api = {};
             item = data[index];
             //There can be multiple checklist items define din a data model
             if (item.name == CHECKITEM_TOKEN) {
-                items.push(item.item || []);
+                return item.item || [];
             }
         }
         return items;
@@ -95,6 +95,7 @@ var api = {};
         state= buildStateObject(rawState);
         //Add the next states
         state.nextStates = this.nextStates(stateName);
+        //log.info(rawState);
         return state;
     };
     /**
