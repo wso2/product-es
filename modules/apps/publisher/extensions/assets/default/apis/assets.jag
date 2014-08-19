@@ -58,8 +58,11 @@ require('/modules/publisher.js').exec(function(ctx) {
                 var elements = uriMatcher.elements();
                 options.id = elements.id;
                 options.nextState = elements.nextState;
-                var success = lcApi.changeState(options, req, res, session);
-
+                try{
+                    var success = lcApi.changeState(options, req, res, session);
+                }catch(e){
+                    success = false;
+                }
                 if (success == true) {
                     //print(responseProcessor.buildSuccessResponse(200, 'Changed the state to ' + options.nextState));
                     response = responseProcessor.buildSuccessResponse(response,200, 'Changed the state to ' + options.nextState);
