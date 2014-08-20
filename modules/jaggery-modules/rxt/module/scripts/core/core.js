@@ -268,6 +268,33 @@ var core = {};
         }
         return result;
     };
+    /**
+     * The function returns an array of states in which an asset can be deleted
+     * @param  {[type]} type The rxt type
+     * @return {[type]}      An array of states in which an rxt instance can be deleted
+     */
+    RxtManager.prototype.getDeletableStates = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        var deletableStates = [];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the deletable states.';
+        }
+        if (!rxtDefinition.meta) {
+            log.warn('Unable to locate meta information in the rxt definition for type: ' + type + '.Cannot fetch deletable states.');
+            return deletableStates;
+        }
+        if (!rxtDefinition.meta.lifecycle) {
+            log.warn('Unable to locate lifecycle information in the rxt definition for type ' + type + '.Cannot fetch lifecycle data.');
+            return deletableStates;
+        }
+        if (!rxtDefinition.meta.lifecycle.deletableStates) {
+            log.warn('No deletable states have been defined for the rxt definition of type: ' + type + '.');
+            return deletableStates;
+        }
+        deletableStates = rxtDefinition.meta.lifecycle.deletableStates;
+        return deletableStates;
+    };
     /*
     Creates an xml file from the contents of an Rxt file
     @rxtFile: An rxt file
