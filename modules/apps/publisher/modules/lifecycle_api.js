@@ -119,11 +119,13 @@ var api = {};
             log.warn('Unable to change the state of the check item as the current state(' + state.id + ') does not have any check items');
             return success;
         }
+        //Check if the check items has been provided
         if (!options.checkItems) {
-            log.warn('Unable to change the state of the check item as the indexes of the check items to change was not provided');
+            log.warn('Unable to update check items as no check items have been provided.');
+            success = true;
             return success;
         }
-        //Assume checking items will succed
+        //Assume checking items will succeed
         success = true;
         var checkItemIndex;
         var checkItemIndexState;
@@ -195,7 +197,7 @@ var api = {};
         return lifecycles;
     };
     /**
-     * The function changes the state of a set of check items
+     * The function changes the state of a set of check items sent as an array with each element been  { index: number , checked:true}
      * @return {[type]}         A boolean value indicating the success of the operation
      */
     api.checkItems = function(options, req, res, session) {
