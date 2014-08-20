@@ -181,7 +181,7 @@
 
                                 <!-- Stratos features    -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.patch.version.221}
+                                    org.wso2.carbon:org.wso2.carbon.stratos.common.feature:2.3.0
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
