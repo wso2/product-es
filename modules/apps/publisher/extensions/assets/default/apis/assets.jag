@@ -23,6 +23,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     var CREATE_URL = '/{context}/apis/assets/';
     var UPDATE_URL = '/{context}/apis/assets/{id}';
     var CHANGE_STATE_URL = '/{context}/apis/assets/{id}/{nextState}';
+    var GET_STATE_URL='/{context}/apis/assets/{id}/state';
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
     var GET_CURRENT_STATE_URL = '/{context}/apis/assets/{id}/state';
@@ -90,6 +91,11 @@ require('/modules/publisher.js').exec(function(ctx) {
                         response = responseProcessor.buildErrorResponse(response,400,"No matching asset found");
                     }
             }
+            else if(uriMatcher.match(GET_STATE_URL)){
+                options.id=uriMatcher.elements().id;
+                var state=lcApi.getState(options,req,res,session);
+                response=responseProcessor.buildSuccessResponse(response,200,'Successfully obtained state information',state);
+            }
             else {
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
@@ -97,5 +103,6 @@ require('/modules/publisher.js').exec(function(ctx) {
 
         default:
             response = responseProcessor.buildErrorResponse(response,501, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb (hint: create/update operations use POST).'); 
+        }
     }
 }, request, response, session); %>

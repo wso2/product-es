@@ -9,13 +9,13 @@ var log = new Log();
 //var carbon = require('carbon');
 //log.info('Starting to force load');
 //lcCore.force(-1234);
-var simplelc=lcCore.getJSONDef('SampleLifeCycle2',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
+var simplelc=lcCore.getJSONDef('MobileAppLifeCycle',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
 var lc=lcApi.getLifecycle('SampleLifeCycle2',-1234);
 print(simplelc);
 
-log.info(lc.nextStates('initial'));
-log.info(lc.transitionAction('Initial','Creaated'));
-log.info(lc.transitionExecution('initial','promote'));
+//log.info(lc.nextStates('initial'));
+//log.info(lc.transitionAction('Initial','Creaated'));
+//log.info(lc.transitionExecution('initial','promote'));
 //log.info('Finished force load');
 /*var reg = org.wso2.carbon.context.RegistryType;
 var CarbonConstants = Packages.org.wso2.carbon.CarbonConstants;
