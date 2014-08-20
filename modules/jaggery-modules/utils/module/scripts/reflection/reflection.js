@@ -181,6 +181,28 @@ var reflection = {};
         //Allow the child object to call methods of the parent
         parent._super = super;
     };
+    reflection.overrideAll=function(parent,child){
+       //Make a clone of the parent
+        var super = parse(stringify(parent));
+        for (var childKey in child) {
+            for (var parentKey in parent) {
+                //Only override those methods that are common
+                if ( (child.hasOwnProperty(childKey))&&(parent.hasOwnProperty(parentKey)) ) {
+                    var parentPtr = parent[parentKey];
+                    var childPtr = child[childKey];
+                    //Update the clone with the old parent method
+                    super[parentKey] = parentPtr;
+                    parent[parentKey] = childPtr;
+                    /*parent[parentKey] = function() {
+                        var result=childPtr.apply(this, arguments)||null;
+                        return result;
+                    };*/
+                }
+            }
+        }
+        //Allow the child object to call methods of the parent
+        parent._super = super; 
+    };
     reflection.isArray = function(object) {
         if (Object.prototype.toString.call(object) === '[object Array]') {
             return true;

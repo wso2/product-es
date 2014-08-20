@@ -306,7 +306,6 @@ var asset = {};
             throw 'The provided check item index ' + checkItemIndex + ' is not valid.It must be between 0 and ' + checkItems.length;
         }
         success = true; //Assume the check item invocation will succeed
-
         //These methods do not return a boolean value indicating if the item was checked or unchecked
         //TODO: We could invoke getCheckLifecycleCheckItems and check the item index to see if the operation was successfull.
         try {
@@ -328,11 +327,10 @@ var asset = {};
      * @return {[type]}       An array of check items along with the checked state
      */
     AssetManager.prototype.getLifecycleCheckItems = function(asset) {
-        var checkItems=[];
-        try{
-            checkItems=this.am.getCheckListItemNames(asset);    
-        }
-        catch(e){
+        var checkItems = [];
+        try {
+            checkItems = this.am.getCheckListItemNames(asset);
+        } catch (e) {
             log.error(e);
         }
         return checkItems;
@@ -430,14 +428,19 @@ var asset = {};
         return modAsset;
     };
     AssetManager.prototype.render = function(assets, page) {
-        var refUtil = require('utils').reflection;
-        //Combine with the rxt template only when dealing with a single asset
-        if (refUtil.isArray(assets)) {
-            page.assets = assets;
-        } else {
-            page.assets = this.combineWithRxt(assets);
-            page.assets.name = this.getName(assets);
-            page.assets.thumbnail = this.getThumbnail(assets);
+        //Only process assets if both assets and pages are provided
+        if (arguments.length == 2) {
+            var refUtil = require('utils').reflection;
+            //Combine with the rxt template only when dealing with a single asset
+            if (refUtil.isArray(assets)) {
+                page.assets = assets;
+            } else {
+                page.assets = this.combineWithRxt(assets);
+                page.assets.name = this.getName(assets);
+                page.assets.thumbnail = this.getThumbnail(assets);
+            }
+        } else if (arguments.length == 1) {
+            page = arguments[0];
         }
         page.rxt = this.rxtTemplate;
         var that = this;
@@ -468,6 +471,11 @@ var asset = {};
             },
             lifecycle: function() {
                 page = that.r.lifecycle(page) || page;
+                page = that.r.leftNav(page) || page;
+                page = that.r.ribbon(page) || page;
+                return page;
+            },
+            _custom: function() {
                 page = that.r.leftNav(page) || page;
                 page = that.r.ribbon(page) || page;
                 return page;
