@@ -7,6 +7,9 @@ var api = {};
     function Lifecycle(definiton) {
         this.definition = definiton;
     }
+    Lifecycle.prototype.getDefinition = function() {
+        return this.definition;
+    };
     Lifecycle.prototype.getName = function() {
         if (!this.definition.name) {
             throw 'Unable to locate name attribute in the lifecycle definition ';
@@ -25,10 +28,10 @@ var api = {};
             throw 'The lifecycle : ' + this.getName() + ' does not have any state information.Make sure that the states are defined in the scxml definition.';
         }
         if (!states[currentStateName]) {
-            throw 'The state: ' + currentStateName + ' is not present in the lifecycle: ' + this.getName();        
+            throw 'The state: ' + currentStateName + ' is not present in the lifecycle: ' + this.getName();
         }
         if (!states[currentStateName].transition) {
-           throw 'The state: ' + currentStateName + ' has not defined any transitions in the lifecycle: ' + this.getName(); 
+            throw 'The state: ' + currentStateName + ' has not defined any transitions in the lifecycle: ' + this.getName();
         }
         var transitions = states[currentStateName].transition;
         for (var index = 0; index < transitions.length; index++) {
@@ -38,33 +41,30 @@ var api = {};
             nextStates.push(transition);
         }
         return nextStates;
-        
     };
-
     /**
      * The function returns checklistItems binded with current state
      * @param  {[type]} name The name of the state
      * @return A json object representing the checklist items
      */
     Lifecycle.prototype.checklistItems = function(currentStateName) {
-        var currentStateName=currentStateName?currentStateName.toLowerCase():currentStateName;
+        var currentStateName = currentStateName ? currentStateName.toLowerCase() : currentStateName;
         var states = this.definition.configuration.lifecycle.scxml.state;
         var checklistItems = [];
-        try{
+        try {
             var datamodel = states[currentStateName].datamodel.data;
             for (var index = 0; index < datamodel.length; index++) {
-                if(datamodel[index].name == 'checkItems'){
+                if (datamodel[index].name == 'checkItems') {
                     //var items = {};
                     checklistItems = datamodel[index].item;
                     return checklistItems;
                 }
             }
-        }catch(e){
+        } catch (e) {
             log.warn(e);
         }
         return checklistItems;
     };
-
     /**
      * The function builds a state object given raw state information
      * @param  {[type]} rawState [description]
@@ -77,7 +77,7 @@ var api = {};
             log.warn('Unable to read data model of the state ');
             return state;
         }
-        var checkItems = getCheckitems(rawState.datamodel.data||{});
+        var checkItems = getCheckitems(rawState.datamodel.data || {});
         state.checkItems = checkItems;
         return state;
     };
@@ -116,7 +116,7 @@ var api = {};
         }
         var rawState = states[stateName];
         //Process the raw state 
-        state= buildStateObject(rawState);
+        state = buildStateObject(rawState);
         //Add the next states
         state.nextStates = this.nextStates(stateName);
         //log.info(rawState);
@@ -202,18 +202,16 @@ var api = {};
         var lcJSON = core.getJSONDef(lifecycleName, tenantId);
         if (!lcJSON) {
             log.warn('Unable to locate lifecycle ' + lifecycleName + ' for the tenant: ' + tenantId);
-            throw 'Unable to locate lifecycle ' + lifecycleName + ' for the tenant: ' + tenantId;
-            //return null;
+            return null;
         }
         return new Lifecycle(lcJSON);
     };
-
     /**
      * The function will return a list of available lifecycles for the tenant
      * @param  tenantId:
      * @return {[type]}       An array of lifecycles
      */
-    api.getLifecycleList = function(tenantId){
+    api.getLifecycleList = function(tenantId) {
         if (!tenantId) {
             throw 'Unable to locate lifecycle without a tenantId';
         }
