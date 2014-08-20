@@ -106,6 +106,5 @@ require('/modules/publisher.js').exec(function(ctx) {
 
         default:
             response = responseProcessor.buildErrorResponse(response,501, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb (hint: create/update operations use POST).'); 
-        }
-    }
+        }    
 }, request, response, session); %>
