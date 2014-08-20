@@ -78,6 +78,67 @@ var api = {};
         }
         return checkItems;
     };
+    /**
+     * The function changes the state of a single check item
+     * @param  {[type]} checkItemIndex      The index of the check item to be changed
+     * @param  {[type]} checkItemIndexState The new state of the check item
+     * @param  {[type]} asset               The asset on which the operation needs to be performed
+     * @param  {[type]} state               The state information of the current asset
+     * @param  {[type]} am                  [description]
+     */
+    var updateCheckItemState = function(checkItemIndex, checkItemIndexState, asset, state, am) {
+        //Check if the index provided is valid
+        if ((checkItemIndex > 0) && (checkItemIndex < state.checkItems.length)) {
+            log.warn('Unable to change the state of the check item as the index does not point to a valid check item.The check item index must be between 0 and ' + state.checkItems.length);
+            return;
+        }
+        //Check if the check item state is the same as the next state
+        if (state.checkItems[checkItemIndex].checked == checkItemIndexState) {
+            log.warn('The state of the check item at index ' + checkItemIndex + ' was not changed as it is already ' + checkItemIndexState);
+        }
+        //Invoke the state change
+        try {
+            am.invokeLifecycleCheckItem(asset, checkItemIndex, checkItemIndexState);
+        } catch (e) {
+            log.error(e);
+            log.warn('Unable to change the state of check item ' + checkItemIndex + ' to ' + checkItemIndexState);
+        }
+    };
+    /**
+     * The function updates the check items for a given asset
+     * @param  {[type]} options [description]
+     * @param  {[type]} asset   [description]
+     * @param  {[type]} am      [description]
+     * @param  {[type]} state   [description]
+     * @return {[type]}         [description]
+     */
+    var updateCheckItemStates = function(options, asset, am, state) {
+        var success = false;
+        //Check if the current state has any check items
+        if ((state.checkItems) && (state.checkItems.length > 0)) {
+            log.warn('Unable to change the state of the check item as the current state(' + state.id + ') does not have any check items');
+            return success;
+        }
+        if (!options.checkItems) {
+            log.warn('Unable to change the state of the check item as the indexes of the check items to change was not provided');
+            return success;
+        }
+        //Assume checking items will succed
+        success = true;
+        var checkItemIndex;
+        var checkItemIndexState;
+        var checkItem;
+        //Go through each check item in the check items
+        for (var index in options.checkItems) {
+            checkItem = options.checkItems[index];
+            checkItemIndex = checkItem.index;
+            checkItemIndexState = checkItem.checked;
+            if ((checkItemIndex) && (checkItemIndexState)) {
+                updateCheckItemState(checkItemIndex, checkItemIndexState, asset, state, am);
+            }
+        }
+        return success;
+    };
     api.getState = function(options, req, res, session) {
         var state = {};
         validateOptions(options, req, res, session);
@@ -104,5 +165,48 @@ var api = {};
         //Update the state of the check items
         state.checkItems = setCheckItemState(state.checkItems, asset, am);
         return state;
+    };
+    /**
+     * The function will obtain the definition of the requested lifecycle
+     * @return {[type]}         A JSON object definining the structure of the lifecycle
+     */
+    api.getLifecycle = function(options, req, res, session) {
+        var lcApi = require('lifecycle').api;
+        var server = require('store').server;
+        var lifecycle = null;
+        var user = server.current(session);
+        if (!options.name) {
+            log.warn('Unable to locate lifecycle definition as a name has not been provided.Please invoke the API with a lifecycle name');
+            return lifecycle;
+        }
+        lifecycle = lcApi.getLifecycle(options.name, user.tenantId);
+        if (!lifecycle) {
+            log.warn('A lifecycle was not located for the lifecycle name: ' + options.name);
+        }
+        return lifecycle;
+    };
+    /**
+     * The function will return a list of all available lifecycles for the currently logged in user's tenant.
+     * @return {[type]}         An array of strings with the names of the lifecycles
+     */
+    api.getLifecycles = function(options, req, res, session) {
+        var lcApi = require('lifecycle').api;
+        var lifecycles = lcApi.getLifecycles();
+        return lifecycles;
+    };
+    /**
+     * The function changes the state of a set of check items
+     * @return {[type]}         A boolean value indicating the success of the operation
+     */
+    api.checkItems = function(options, req, res, session) {
+        var success = false;
+        validateOptions(options, req, res, session);
+        var assetApi = require('rxt').asset;
+        var am = assetApi.createUserAssetManager(session, options.type);
+        var asset = getAsset(options, am);
+        validateAsset(asset, options);
+        var state = this.getState(options, req, res, session);
+        success = changeCheckitemState(options, asset, am, state, true);
+        return success;
     };
 }(api));
