@@ -27,6 +27,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
     var GET_CURRENT_STATE_URL = '/{context}/apis/assets/{id}/state';
+    var DELETE_ASSET_URL = '/{context}/apis/assets/{id}';
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
     response.contentType = 'application/json';
@@ -92,6 +93,24 @@ require('/modules/publisher.js').exec(function(ctx) {
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
             break;
+
+        case 'DELETE':
+            options.type = req.getParameter('type');
+            if (uriMatcher.match(DELETE_ASSET_URL)) {
+                options.id = uriMatcher.elements().id;
+                var done=assetApi.remove(options, req, res, session);
+                var result = [];
+                if(done){
+                    response = responseProcessor.buildSuccessResponse(response,200,result);
+                }else{
+                    response = responseProcessor.buildErrorResponse(response,400,"No matching asset found");
+                }
+            }
+            else {
+                response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
+            }
+            break;
+
         default:
             response = responseProcessor.buildErrorResponse(response, 501, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb (hint: create/update operations use POST).');
     }
