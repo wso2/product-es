@@ -74,37 +74,52 @@ var resources = {};
         modulePtr.call(this, assetResource, log);
         return assetResource;
     };
+    var buildDefaultResources = function(options, type, assetResource) {
+        var asset = {};
+        asset.manager = null;
+        asset.renderer = null;
+        asset.server = null;
+        asset.configure = null;
+        asset = loadDefaultAssetScript(options, type, asset);
+        assetResource._default = asset;
+        assetResource.configure=asset.configure;
+    };
+    var buildAssetResources = function(options, type, assetResource) {
+        var asset = {};
+        asset.manager = null;
+        asset.renderer = null;
+        asset.server = null;
+        asset.configure = assetResource.configure;
+        asset = loadAssetScript(options, type, asset);
+        assetResource.manager=asset.manager;
+        assetResource.renderer=asset.renderer;
+        assetResource.server=asset.server;
+        assetResource.configure=asset.configure;
+    };
     var loadResources = function(options, tenantId, sysRegistry) {
         var manager = core.rxtManager(tenantId);
         var rxts = manager.listRxtTypes();
-        var resourcePath;
+        // var resourcePath;
         var type;
         var map = {};
         for (var index in rxts) {
             type = rxts[index];
-            resourcePath = getAssetScriptPath(type, options);
-            var content = sysRegistry.content(resourcePath);
-            //if (!content) {
-            //log.debug('Asset script for ' + type + ' could not be found.The default asset script will be loaded from file system');
-            //content = loadDefaultAssetScript(options, resourcePath, sysRegistry, type);
-            //}
-            //
-            //Load the default script first
-            //Then load the type specific script so the methods are overloaded
-            //var module = 'function(asset,log){  ' + content + ' };';
-            //var modulePtr = eval(module);
+            // resourcePath = getAssetScriptPath(type, options);
+            // var content = sysRegistry.content(resourcePath);
             var asset = {};
-            asset.manager = null;
-            asset.renderer = null;
-            asset.server = null;
-            asset.configure = null;
-            asset = loadDefaultAssetScript(options, type, asset);
-            asset = loadAssetScript(options, type, asset);
-            //modulePtr.call(this, asset, log);
+            // asset.manager = null;
+            // asset.renderer = null;
+            // asset.server = null;
+            // asset.configure = null;
+            // asset = loadDefaultAssetScript(options, type, asset);
+            // asset = loadAssetScript(options, type, asset);
+            buildDefaultResources(options, type, asset);
+            buildAssetResources(options,type,asset);
             //Perform any rxt mutations
             if (asset.configure) {
                 manager.applyMutator(type, asset.configure());
             }
+            // log.info('Configuration: '+asset.toSource());
             addToConfigs(tenantId, type, asset);
         }
     };

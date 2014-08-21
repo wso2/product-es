@@ -1,17 +1,17 @@
 <%
-//var core=require('rxt').core;
+var core=require('rxt').core;
 //var resources=require('rxt').resources;
 //var ref=require('utils').reflection;
 //var time=require('utils').time;
-var lcCore=require('lifecycle').core;
-var lcApi=require('lifecycle').api;
-var log = new Log();
+// var lcCore=require('lifecycle').core;
+// var lcApi=require('lifecycle').api;
+// var log = new Log();
 //var carbon = require('carbon');
 //log.info('Starting to force load');
 //lcCore.force(-1234);
-var simplelc=lcCore.getJSONDef('MobileAppLifeCycle',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
-var lc=lcApi.getLifecycle('SampleLifeCycle2',-1234);
-print(simplelc);
+// var simplelc=lcCore.getJSONDef('MobileAppLifeCycle',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
+// var lc=lcApi.getLifecycle('SampleLifeCycle2',-1234);
+// print(simplelc);
 
 //log.info(lc.nextStates('initial'));
 //log.info(lc.transitionAction('Initial','Creaated'));
@@ -66,7 +66,7 @@ try {
 //var registry=server.systemRegistry(-1234);
 //core.init(-1234,registry);
 //resources.manager(-1234);
-//var manager=core.rxtManager(-1234);
+var manager=core.rxtManager(-1234);
 //print(manager.listRxtFieldsOfType('gadget','file'));
 //core.assetResources(-1234,'gadget');
 //print(manager.listRxtTypeTables('gadget'));
