@@ -100,7 +100,8 @@ asset.configure = function() {
             lifecycle: {
                 name: 'SampleLifeCycle2',
                 commentRequired: true,
-                defaultAction: 'Promote'
+                defaultAction: 'Promote',
+                deletableStates:[]
             },
             ui: {
                 icon: 'icon-cog'

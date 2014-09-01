@@ -137,7 +137,15 @@ var asset = {};
     AssetManager.prototype.update = function(options) {
         this.am.update(options);
     };
-    AssetManager.prototype.remove = function(options) {};
+    AssetManager.prototype.remove = function(id) {
+        if (!id) {
+            throw 'The asset manager delete method requires an id to be provided.';
+        }
+        if (!this.am) {
+            throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
+        }
+        this.am.remove(id);
+    };
     /**
      * The method is responsible for updating the provided asset with the latest
      * values in the registry.If the asset is not succsessfully synched with the registry

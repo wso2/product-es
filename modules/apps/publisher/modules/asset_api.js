@@ -229,4 +229,16 @@ var responseProcessor = require('utils').response;
         }
         return result;
     };
+    api.remove = function(options, req, res, session) {
+        var asset = require('rxt').asset;
+        var am = asset.createUserAssetManager(session, options.type);
+        try {
+            am.remove(options.id);
+            result=true;
+        } catch (e) {
+            log.error('Asset with id: ' + asset.id + ' was not deleted due to ' + e);
+            result = false;
+        }
+        return result;
+    };
 }(api))
