@@ -539,10 +539,86 @@ var asset = {};
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
         var renderer = new AssetRenderer(asset.getAssetPageUrl(type), asset.getBaseUrl());
-        var defaultRenderer = assetResources._default.renderer?assetResources._default.renderer(context):{};
-        reflection.override(customRenderer,defaultRenderer);
+        //var defaultRenderer = assetResources._default.renderer?assetResources._default.renderer(context):{};
+        //reflection.override(renderer,defaultRenderer);
         reflection.override(renderer, customRenderer);
+        //reflection.override(renderer, defaultRenderer);
+        //reflection.override(renderer, customRenderer);
         return renderer;
+    };
+    /**
+     * The function will combine two arrays of endpoints together.If a common endpoint is found then
+     * the information in the otherEndpoints array will be used to update the endpoints array.
+     * @param  {[type]} endpoints      [description]
+     * @param  {[type]} otherEndpoints [description]
+     */
+    var combineEndpoints = function(endpoints, otherEndpoints) {
+        for (var index in otherEndpoints) {
+            var found = false; //Assume the endpoint will not be located
+            for (var endpointIndex = 0;
+                ((endpointIndex < endpoints.length) && (!found)); endpointIndex++) {
+                //Check if there is a similar endpoint and override the title and path
+                if (otherEndpoints[index].url == endpoints[endpointIndex].url) {
+                    endpoints[endpointIndex].url = otherEndpoints[index].url;
+                    endpoints[endpointIndex].path = otherEndpoints[index].path;
+                    found = true; //break the loop since we have already located the endpoint
+                    log.debug('Overriding existing endpoint ' + otherEndpoints[index].url);
+                }
+            }
+            //Only add the endpoint if it has not already been defined
+            if (!found) {
+                log.debug('Adding new endpoint ' + otherEndpoints[index].url);
+                endpoints.push(otherEndpoints[index]);
+            }
+        }
+    };
+    /**
+     * The method is used to build a server object that has knowledge about the available endpoints of an
+     * asset type.It will first check if the asset type has defined a server callback in an asset.js.If one is present
+     * then it will used to override the default server call back defined in the default asset.js.In the case of the
+     * endpoint property it will combine the endpoints defined in the default asset.js.
+     * @param  {[type]} session [description]
+     * @param  {[type]} type    The type of asset
+     * @return {[type]}
+     */
+    var createServer = function(session, type) {
+        var context = core.createAssetContext(session, type);
+        var assetResources = core.assetResources(context.tenantId, type);
+        var reflection = require('utils').reflection;
+        var serverCb = assetResources.server;
+        var defaultCb = assetResources._default.server;
+        if (!assetResources._default) {
+            log.warn('A default object has not been defined for the type: ' + type + ' for tenant: ' + context.tenantId);
+            throw 'A default object has not been defined for the type: ' + type + ' for tenant: ' + context.tenantId + '.Check if a default folder is present';
+        }
+        //Check if there is a type level server callback
+        if (!serverCb) {
+            defaultCb = defaultCb(context);
+            serverCb = defaultCb;
+        } else {
+            defaultCb = defaultCb(context);
+            serverCb = serverCb(context);
+            //Combine the endpoints 
+            var defaultApiEndpoints = ((defaultCb.endpoints) && (defaultCb.endpoints.apis)) ? defaultCb.endpoints.apis : [];
+            var defaultPageEndpoints = ((defaultCb.endpoints) && (defaultCb.endpoints.pages)) ? defaultCb.endpoints.pages : [];
+            var serverApiEndpoints = ((serverCb.endpoints) && (serverCb.endpoints.apis)) ? serverCb.endpoints.apis : [];
+            var serverPageEndpoints = ((serverCb.endpoints) && (serverCb.endpoints.pages)) ? serverCb.endpoints.pages : [];
+            combineEndpoints(defaultApiEndpoints, serverApiEndpoints);
+            combineEndpoints(defaultPageEndpoints, serverPageEndpoints);
+            if (!defaultCb.endpoints) {
+                throw 'No endpoints found for the type: ' + type;
+            }
+            if (!serverCb.endpoints) {
+                serverCb.endpoints = {};
+                log.warn('Creating endpoints object for type: ' + type);
+            }
+            defaultCb.endpoints.apis = defaultApiEndpoints;
+            serverCb.endpoints.apis = defaultApiEndpoints;
+            defaultCb.endpoints.pages = defaultPageEndpoints;
+            serverCb.endpoints.pages = defaultPageEndpoints;
+            reflection.override(defaultCb, serverCb);
+        }
+        return defaultCb;
     };
     /**
      * The function will create an Asset Manager instance using the registry of the currently
@@ -579,8 +655,10 @@ var asset = {};
      */
     asset.getAssetEndpoints = function(session, type) {
         var context = core.createAssetContext(session, type);
-        var assetResources = core.assetResources(context.tenantId, type);
-        return assetResources.server ? assetResources.server(context).endpoints : {};
+        //var assetResources = core.assetResources(context.tenantId, type);
+        var serverCb = createServer(session, type);
+        return serverCb ? serverCb.endpoints : {};
+        //return assetResources.server ? assetResources.server(context).endpoints : {};
     };
     asset.getAssetApiEndpoints = function(session, type) {
         var endpoints = this.getAssetEndpoints(session, type);

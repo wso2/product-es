@@ -4,39 +4,7 @@ asset.server = function(ctx) {
     return {
         onUserLoggedIn: function() {},
         endpoints: {
-            apis: [{
-                url: 'assets',
-                path: 'assets.jag'
-            }],
             pages: [{
-                title: 'Asset: ' + type,
-                url: 'asset',
-                path: 'asset.jag'
-            }, {
-                title: 'Assets ' + type,
-                url: 'assets',
-                path: 'assets.jag'
-            }, {
-                title: 'Create ' + type,
-                url: 'create',
-                path: 'create.jag'
-            }, {
-                title: 'Update ' + type,
-                url: 'update',
-                path: 'update.jag'
-            }, {
-                title: 'Details ' + type,
-                url: 'details',
-                path: 'details.jag'
-            }, {
-                title: 'List ' + type,
-                url: 'list',
-                path: 'list.jag'
-            }, {
-                title: 'Lifecycle',
-                url: 'lifecycle',
-                path: 'lifecycle.jag'
-            },{
                 title:'Configuration',
                 url:'configuration',
                 path:'configuration.jag'
@@ -113,6 +81,7 @@ asset.renderer = function(ctx) {
         details: function(page) {},
         lifecycle: function(page) {},
         leftNav: function(page) {
+            log.info('Building leftNav for gadget');
             switch (page.meta.pageName) {
                 case 'list':
                     page.leftNav = buildListLeftNav(page, this);

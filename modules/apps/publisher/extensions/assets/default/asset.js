@@ -175,6 +175,7 @@ asset.renderer = function(ctx) {
         details: function(page) {},
         lifecycle: function(page) {},
         leftNav: function(page) {
+            log.info('Using default leftNav');
             switch (page.meta.pageName) {
                 case 'list':
                     page.leftNav = buildListLeftNav(page, this);
