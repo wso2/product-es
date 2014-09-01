@@ -4,6 +4,10 @@ asset.server = function(ctx) {
     return {
         onUserLoggedIn: function() {},
         endpoints: {
+            apis:[{
+                url:'configs',
+                path:'config.jag'
+            }],
             pages: [{
                 title:'Configuration',
                 url:'configuration',
