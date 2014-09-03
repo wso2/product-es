@@ -455,54 +455,59 @@ var asset = {};
         return {
             create: function() {
                 page = that.r.create(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             update: function() {
                 page = that.r.update(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             list: function() {
                 page = that.r.list(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             details: function() {
                 page = that.r.details(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             lifecycle: function() {
                 page = that.r.lifecycle(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             _custom: function() {
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             }
         };
     };
 
-    function NavList(){
-        this.items=[];
+    function NavList() {
+        this.items = [];
     }
-    NavList.prototype.push=function(label,icon,url){
+    NavList.prototype.push = function(label, icon, url) {
         this.items.push({
-            name:label,
-            iconClass:icon,
-            url:url
+            name: label,
+            iconClass: icon,
+            url: url
         });
     };
-
-    NavList.prototype.list=function(){
+    NavList.prototype.list = function() {
         return this.items;
     };
 
@@ -519,7 +524,7 @@ var asset = {};
     AssetRenderer.prototype.thumbnail = function(page) {
         return '';
     };
-    AssetRenderer.prototype.navList=function(){
+    AssetRenderer.prototype.navList = function() {
         return new NavList();
     };
     AssetRenderer.prototype.create = function(page) {};
@@ -528,10 +533,18 @@ var asset = {};
     AssetRenderer.prototype.list = function(page) {};
     AssetRenderer.prototype.lifecycle = function(page) {};
     AssetRenderer.prototype.leftNav = function(page) {
-        var log = new Log();
-        log.info('Default leftnav');
+        //var log = new Log();
+        //log.info('Default leftnav');
     };
     AssetRenderer.prototype.ribbon = function(page) {};
+    AssetRenderer.prototype.applyPageDecorators = function(page) {
+        var pageDecorators = this.pageDecorators || {};
+        for (var key in pageDecorators) {
+
+            page = pageDecorators[key].call(this,page) || page;
+        }
+        return page;
+    };
     /**
      * The function create an asset manage given a registry instance,type and tenantId
      * @param  {[type]} tenantId The id of the tenant
@@ -551,19 +564,34 @@ var asset = {};
         assetManager.init();
         return assetManager;
     };
+    var overridePageDecorators = function(to, from) {
+        var fromPageDecorators = from.pageDecorators || {};
+        var toPageDecorators = to.pageDecorators|| {};
+        if(!to.pageDecorators){
+            to.pageDecorators={};
+        }
+        for (var key in fromPageDecorators) {
+           to.pageDecorators[key] = fromPageDecorators[key];
+        }
+    };
     var createRenderer = function(session, tenantId, type) {
         var reflection = require('utils').reflection;
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
         var renderer = new AssetRenderer(asset.getAssetPageUrl(type), asset.getBaseUrl());
-        var defaultRenderer = assetResources._default.renderer?assetResources._default.renderer(context):{};
-        reflection.override(renderer,defaultRenderer);
+        var defaultRenderer = assetResources._default.renderer ? assetResources._default.renderer(context) : {};
+        reflection.override(renderer, defaultRenderer);
         reflection.override(renderer, customRenderer);
+        //Override the page decorators
+        
+        overridePageDecorators(renderer, defaultRenderer);
+        overridePageDecorators(renderer, customRenderer);
         //reflection.override(renderer, defaultRenderer);
         //reflection.override(renderer, customRenderer);
         //log.info(assetResources.renderer.toSource());
         //log.info(renderer.toSource());
+        //log.info('defaultRenderer: '+renderer.toSource());
         return renderer;
     };
     /**

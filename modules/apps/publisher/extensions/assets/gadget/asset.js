@@ -49,43 +49,46 @@ asset.renderer = function(ctx) {
         return false;
     };
     return {
-        leftNav: function(page) {
-            switch (page.meta.pageName) {
-                case 'list':
-                    page.leftNav = buildListLeftNav(page, this);
-                    break;
-                case 'create':
-                    page.leftNav = buildAddLeftNav(page, this);
-                    break;
-                default:
-                    page.leftNav = buildDefaultLeftNav(page, this);
-                    break;
-            }
-            return page;
-        },
-        ribbon: function(page) {
-            var ribbon = page.ribbon = {};
-            var DEFAULT_ICON = 'icon-cog';
-            var assetTypes = [];
-            var assetType;
-            var assetList = ctx.rxtManager.listRxtTypeDetails();
-            for (var index in assetList) {
-                assetType = assetList[index];
-                if (isActivatedAsset(assetType.shortName)) {
-                    assetTypes.push({
-                        url: this.buildBaseUrl(assetType.shortName) + '/list',
-                        assetIcon: assetType.ui.icon || DEFAULT_ICON,
-                        assetTitle: assetType.singularLabel
-                    });
+        pageDecorators: {
+            leftNav: function(page) {
+                switch (page.meta.pageName) {
+                    case 'list':
+                    //log.info('Rendering list');
+                        page.leftNav = buildListLeftNav(page, this);
+                        break;
+                    case 'create':
+                        page.leftNav = buildAddLeftNav(page, this);
+                        break;
+                    default:
+                        page.leftNav = buildDefaultLeftNav(page, this);
+                        break;
                 }
+                return page;
+            },
+            ribbon: function(page) {
+                var ribbon = page.ribbon = {};
+                var DEFAULT_ICON = 'icon-cog';
+                var assetTypes = [];
+                var assetType;
+                var assetList = ctx.rxtManager.listRxtTypeDetails();
+                for (var index in assetList) {
+                    assetType = assetList[index];
+                    if (isActivatedAsset(assetType.shortName)) {
+                        assetTypes.push({
+                            url: this.buildBaseUrl(assetType.shortName) + '/list',
+                            assetIcon: assetType.ui.icon || DEFAULT_ICON,
+                            assetTitle: assetType.singularLabel
+                        });
+                    }
+                }
+                ribbon.currentType = page.rxt.singularLabel;
+                ribbon.currentTitle = page.rxt.singularLabel;
+                ribbon.currentUrl = this.buildBaseUrl(type) + '/list'; //page.meta.currentPage;
+                ribbon.shortName = page.rxt.singularLabel;
+                ribbon.query = 'Query';
+                ribbon.breadcrumb = assetTypes;
+                return page;
             }
-            ribbon.currentType = page.rxt.singularLabel;
-            ribbon.currentTitle = page.rxt.singularLabel;
-            ribbon.currentUrl = this.buildBaseUrl(type) + '/list'; //page.meta.currentPage;
-            ribbon.shortName = page.rxt.singularLabel;
-            ribbon.query = 'Query';
-            ribbon.breadcrumb = assetTypes;
-            return page;
         }
     };
 };
