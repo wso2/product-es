@@ -491,6 +491,21 @@ var asset = {};
         };
     };
 
+    function NavList(){
+        this.items=[];
+    }
+    NavList.prototype.push=function(label,icon,url){
+        this.items.push({
+            name:label,
+            iconClass:icon,
+            url:url
+        });
+    };
+
+    NavList.prototype.list=function(){
+        return this.items;
+    };
+
     function AssetRenderer(pagesRoot, assetsRoot) {
         this.assetPagesRoot = pagesRoot;
         this.assetsPagesRoot = assetsRoot;
@@ -503,6 +518,9 @@ var asset = {};
     };
     AssetRenderer.prototype.thumbnail = function(page) {
         return '';
+    };
+    AssetRenderer.prototype.navList=function(){
+        return new NavList();
     };
     AssetRenderer.prototype.create = function(page) {};
     AssetRenderer.prototype.update = function(page) {};

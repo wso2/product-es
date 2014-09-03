@@ -68,8 +68,8 @@ asset.configure = function() {
         table: {
             overview: {
                 fields: {
-                    provider:{
-                        readonly:true
+                    provider: {
+                        readonly: true
                     },
                     name: {
                         name: {
@@ -114,32 +114,18 @@ asset.configure = function() {
 asset.renderer = function(ctx) {
     var type = ctx.assetType;
     var buildListLeftNav = function(page, util) {
-        var log = new Log();
-        return [{
-            name: 'Add ',
-            iconClass: 'icon-plus-sign-alt',
-            url: util.buildUrl('create')
-        }, {
-            name: 'Statistics',
-            iconClass: 'icon-dashboard',
-            url: '/assets/statistics/' + type + '/'
-        }];
+        var navList = util.navList();
+        navList.push('Add', 'icon-plus-sign-alt', util.buildUrl('create'));
+        navList.push('Statistics', 'icon-dashboard', '/assets/statistics/' + type + '/');
+        return navList.list();
     };
     var buildDefaultLeftNav = function(page, util) {
         var id = page.assets.id;
-        return [{
-            name: 'Overview',
-            iconClass: 'icon-list-alt',
-            url: util.buildUrl('details') + '/' + id
-        }, {
-            name: 'Edit',
-            iconClass: 'icon-edit',
-            url: util.buildUrl('update') + '/' + id
-        }, {
-            name: 'Life Cycle',
-            iconClass: 'icon-retweet',
-            url: util.buildUrl('lifecycle') + '/' + id
-        }];
+        var navList = util.navList();
+        navList.push('Overview', 'icon-list-alt', util.buildUrl('details') + '/' + id);
+        navList.push('Edit', 'icon-edit', util.buildUrl('update') + '/' + id);
+        navList.push('Life Cycle', 'icon-retweet', util.buildUrl('lifecycle') + '/' + id);
+        return navList.list();
     };
     var buildAddLeftNav = function(page, util) {
         return [];
@@ -181,7 +167,7 @@ asset.renderer = function(ctx) {
                     page.leftNav = buildListLeftNav(page, this);
                     break;
                 case 'create':
-                    page.leftNav=buildAddLeftNav(page,this);
+                    page.leftNav = buildAddLeftNav(page, this);
                     break;
                 default:
                     page.leftNav = buildDefaultLeftNav(page, this);

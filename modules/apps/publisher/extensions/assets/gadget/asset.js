@@ -1,55 +1,36 @@
-
 asset.server = function(ctx) {
     var type = ctx.type;
     return {
         onUserLoggedIn: function() {},
         endpoints: {
-            apis:[{
-                url:'configs',
-                path:'config.jag'
+            apis: [{
+                url: 'configs',
+                path: 'config.jag'
             }],
             pages: [{
-                title:'Configuration',
-                url:'configuration',
-                path:'configuration.jag'
+                title: 'Configuration',
+                url: 'configuration',
+                path: 'configuration.jag'
             }]
         }
     };
 };
-
 asset.renderer = function(ctx) {
     var type = ctx.assetType;
     var buildListLeftNav = function(page, util) {
-        var log = new Log();
-        return [{
-            name: 'Add ',
-            iconClass: 'icon-plus-sign-alt',
-            url: util.buildUrl('create')
-        }, {
-            name: 'Statistics',
-            iconClass: 'icon-dashboard',
-            url: '/assets/statistics/' + type + '/'
-        },{
-            name:'Configuration',
-            iconClass:'icon-dashboard',
-            url:util.buildUrl('configuration')
-        }];
+        var navList = util.navList();
+        navList.push('Add', 'icon-plus-sign-alt', util.buildUrl('create'));
+        navList.push('Statistics', 'icon-dashboard', '/assets/statistics/' + type + '/');
+        navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
+        return navList.list();
     };
     var buildDefaultLeftNav = function(page, util) {
         var id = page.assets.id;
-        return [{
-            name: 'Overview',
-            iconClass: 'icon-list-alt',
-            url: util.buildUrl('details') + '/' + id
-        }, {
-            name: 'Edit',
-            iconClass: 'icon-edit',
-            url: util.buildUrl('update') + '/' + id
-        }, {
-            name: 'Life Cycle',
-            iconClass: 'icon-retweet',
-            url: util.buildUrl('lifecycle') + '/' + id
-        }];
+        var navList = util.navList();
+        navList.push('Overview', 'icon-list-alt', util.buildUrl('details') + '/' + id);
+        navList.push('Edit', 'icon-edit', util.buildUrl('update') + '/' + id);
+        navList.push('Life Cycle', 'icon-retweet', util.buildUrl('lifecycle') + '/' + id);
+        return navList.list();
     };
     var buildAddLeftNav = function(page, util) {
         return [];
@@ -69,13 +50,12 @@ asset.renderer = function(ctx) {
     };
     return {
         leftNav: function(page) {
-            log.info('Building leftNav for gadget');
             switch (page.meta.pageName) {
                 case 'list':
                     page.leftNav = buildListLeftNav(page, this);
                     break;
                 case 'create':
-                    page.leftNav=buildAddLeftNav(page,this);
+                    page.leftNav = buildAddLeftNav(page, this);
                     break;
                 default:
                     page.leftNav = buildDefaultLeftNav(page, this);
@@ -109,4 +89,3 @@ asset.renderer = function(ctx) {
         }
     };
 };
-
