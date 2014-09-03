@@ -99,9 +99,10 @@ asset.configure = function() {
         meta: {
             lifecycle: {
                 name: 'SampleLifeCycle2',
-                commentRequired: true,
+                commentRequired: false,
                 defaultAction: 'Promote',
-                deletableStates:[]
+                deletableStates:[],
+                publishedStates:['Published']
             },
             ui: {
                 icon: 'icon-cog'
