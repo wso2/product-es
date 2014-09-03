@@ -539,11 +539,13 @@ var asset = {};
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
         var renderer = new AssetRenderer(asset.getAssetPageUrl(type), asset.getBaseUrl());
-        //var defaultRenderer = assetResources._default.renderer?assetResources._default.renderer(context):{};
-        //reflection.override(renderer,defaultRenderer);
+        var defaultRenderer = assetResources._default.renderer?assetResources._default.renderer(context):{};
+        reflection.override(renderer,defaultRenderer);
         reflection.override(renderer, customRenderer);
         //reflection.override(renderer, defaultRenderer);
         //reflection.override(renderer, customRenderer);
+        //log.info(assetResources.renderer.toSource());
+        //log.info(renderer.toSource());
         return renderer;
     };
     /**

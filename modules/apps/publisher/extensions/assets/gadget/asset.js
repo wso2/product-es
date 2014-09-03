@@ -68,22 +68,6 @@ asset.renderer = function(ctx) {
         return false;
     };
     return {
-        create: function(page) {},
-        update: function(page) {},
-        list: function(page) {
-            var assets = page.assets;
-            for (var index in assets) {
-                var asset = assets[index];
-                if (asset.attributes.overview_createdtime) {
-                    var value = asset.attributes.overview_createdtime;
-                    var date = new Date();
-                    date.setTime(value);
-                    asset.attributes.overview_createdtime = date.toUTCString();
-                }
-            }
-        },
-        details: function(page) {},
-        lifecycle: function(page) {},
         leftNav: function(page) {
             log.info('Building leftNav for gadget');
             switch (page.meta.pageName) {
@@ -125,3 +109,4 @@ asset.renderer = function(ctx) {
         }
     };
 };
+
