@@ -5,6 +5,7 @@ var core = {};
     var RXT_MAP = 'rxt.manager.map';
     var EMPTY = '';
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
+    var DEFAULT_TENANT = -1234;
     var utils = require('utils');
     var log = new Log('rxt.core');
     var applyDefinitionMutation = function(rxtDefinition, rxtMutation) {
@@ -238,7 +239,7 @@ var core = {};
         if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
             return rxtDefinition.meta.lifecycle.defaultAction || '';
         }
-        log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type+'.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
+        log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type + '.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
         return '';
     };
     /**
@@ -247,8 +248,8 @@ var core = {};
      * @param  {[type]}  type The type of the asset
      * @return {Boolean}      True if comments are required
      */
-    RxtManager.prototype.isLCCommentRequired=function(type){
-      var rxtDefinition = this.rxtMap[type];
+    RxtManager.prototype.isLCCommentRequired = function(type) {
+        var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
             log.error('Unable to locate the rxt definition for type: ' + type);
             throw 'Unable to locate the rxt definition for type: ' + type + ' in order to determine if lifecycle comments are required';
@@ -256,8 +257,8 @@ var core = {};
         if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
             return rxtDefinition.meta.lifecycle.commentRequired || false;
         }
-        log.warn('Unable to locate the lifecycle meta property to determine whether comments are required ' + type+'.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
-        return false;  
+        log.warn('Unable to locate the lifecycle meta property to determine whether comments are required ' + type + '.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
+        return false;
     };
     /**
      * The function will retrieve all fields of the provided field type
@@ -319,8 +320,8 @@ var core = {};
      * @param  {[type]} type The type of the asset
      * @return {[type]}      An array of strings indicating the set of published states
      */
-    RxtManager.prototype.getPublishedStates=function(type){
-       var rxtDefinition = this.rxtMap[type];
+    RxtManager.prototype.getPublishedStates = function(type) {
+        var rxtDefinition = this.rxtMap[type];
         var publishedStates = [];
         if (!rxtDefinition) {
             log.error('Unable to locate the rxt definition for type: ' + type);
@@ -339,7 +340,7 @@ var core = {};
             return publishedStates;
         }
         publishedStates = rxtDefinition.meta.lifecycle.publishedStates;
-        return publishedStates; 
+        return publishedStates;
     };
     /*
     Creates an xml file from the contents of an Rxt file
@@ -408,6 +409,41 @@ var core = {};
         var user = require('store').user;
         var server = require('store').server;
         var userDetails = server.current(session);
+        //If there is no user then build an anonymous registry for the super tenant
+        if (!userDetails) {
+            log.debug('Obtaining anon asset context for ' + type);
+            return this.createAnonAssetContext(session, type);
+        } else {
+            return this.createUserAssetContext(session, type);
+        }
+    };
+    core.createAnonAssetContext = function(session, type) {
+        var server = require('store').server;
+        var user = require('store').user;
+        var tenantId = DEFAULT_TENANT;
+        var sysRegistry = server.anonRegistry(tenantId);
+        var userManager = server.userManager(tenantId);
+        var tenatConfigs = user.configs(tenantId);
+        var serverConfigs = server.configs(tenantId);
+        var rxtManager = core.rxtManager(tenantId);
+        var username = "wso2.anonymous";
+        return {
+            username: username,
+            userManager: userManager,
+            username: username,
+            tenantId: tenantId,
+            systemRegistry: sysRegistry,
+            assetType: type,
+            rxtManager: rxtManager,
+            tenantConfigs: tenatConfigs,
+            serverConfigs: serverConfigs,
+            isAnonContext:true
+        };
+    };
+    core.createUserAssetContext = function(session, type) {
+        var user = require('store').user;
+        var server = require('store').server;
+        var userDetails = server.current(session);
         var tenantId = userDetails.tenantId;
         var sysRegistry = server.systemRegistry(tenantId);
         var userManager = server.userManager(tenantId);
@@ -424,7 +460,8 @@ var core = {};
             assetType: type,
             rxtManager: rxtManager,
             tenantConfigs: tenatConfigs,
-            serverConfigs: serverConfigs
+            serverConfigs: serverConfigs,
+            isAnonContext:false
         };
     };
 }(core));

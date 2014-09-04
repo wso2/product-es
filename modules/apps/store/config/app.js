@@ -48,13 +48,22 @@ caramel.configs({
 
 var configs = require('/config/store.js').config();
 
+var log=new Log();
+log.info('#### STORE CONFIG LOGIC ####');
+
 var mod = require('store');
 mod.server.init(configs);
 
 mod.user.init(configs);
+var rxt=require('rxt');
+var lifecycle=require('lifecycle');
+rxt.core.init();
+rxt.resources.init();
+lifecycle.core.init();
 
 var store = require('/modules/store.js');
 store.init(configs);
+
 
 /*
 var url='https://localhost:9443/admin',
@@ -70,9 +79,11 @@ var registry=new carbon.registry.Registry(server,{
  */
 
 //TODO : fix this
-/*var tenantId = -1234;
+var tenantId = -1234;
 var event = require('event');
-event.emit('tenantLoad', tenantId);*/
+event.emit('tenantLoad', tenantId);
+
+log.info('#### FINISHED STORE CONFIG LOGIC #####');
 
 //for server startup log for informing store URL
 var logStoreUrl = function() {
