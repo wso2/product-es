@@ -313,6 +313,24 @@ var core = {};
         }
         return result;
     };
+    RxtManager.prototype.listRxtFields = function(type) {
+        var tables = this.listRxtTypeTables(type);
+        var fields = [];
+        if (tables.length == 0) {
+            log.warn('Unable to return list of rxt fields for type: ' + type + ' as tables were defined in the rxt definition');
+            return fields;
+        }
+        var table;
+        var field;
+        for (var key in tables) {
+            table = tables[key];
+            for (var fieldName in table.fields) {
+                field = table.fields[fieldName];
+                fields.push(field);
+            }
+        }
+        return fields;
+    };
     /**
      * The function returns an array of states in which an asset can be deleted
      * @param  {[type]} type The rxt type
@@ -397,6 +415,33 @@ var core = {};
         return categoryField;
     };
     /**
+     * The function returns an array of fields that can be used to search the asset
+     * @param  {[type]} type [description]
+     * @return {[type]}      [description]
+     */
+    RxtManager.prototype.getSearchableFields = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        var searchableFields = [];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the searchable fields';
+        }
+        if (!rxtDefinition.meta) {
+            log.warn('Unable to locate meta information in the rxt definition for type: ' + type + '.Cannot fetch searchable fields');
+            return searchableFields;
+        }
+        if (!rxtDefinition.meta.search) {
+            log.warn('Unable to locate search information in the rxt definition for type: ' + type + '.Cannot fetch searchable fields');
+            return searchableFields;
+        }
+        if (!rxtDefinition.meta.search.searchableFields) {
+            log.warn('No searchable fields defined in the rxt definition for type: ' + type + '.Cannot fetch searchable fields');
+            return searchableFields;
+        }
+        searchableFields = rxtDefinition.meta.search.searchableFields;
+        return searchableFields;
+    };
+    /**
      * The function fetches the field definition for a given field.If the definition is not found then null is returned
      * @param  {[type]} type      [description]
      * @param  {[type]} tableName [description]
@@ -438,7 +483,7 @@ var core = {};
             return values;
         }
         var fieldValuesObject = field.values || {};
-        var fieldValueItems = fieldValuesObject.value || [];
+        var fieldValueItems = fieldValuesObject[0] ? fieldValuesObject[0].value : [];
         for (var index in fieldValueItems) {
             values.push(fieldValueItems[index].value);
         }
@@ -466,7 +511,7 @@ var core = {};
         var field = null;
         for (var key in table.fields) {
             if (key == fieldName) {
-                field = tables.fields[key];
+                field = table.fields[key];
                 return field;
             }
         }

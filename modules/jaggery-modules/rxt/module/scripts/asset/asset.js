@@ -453,6 +453,8 @@ var asset = {};
                 page.assets = this.combineWithRxt(assets);
                 page.assets.name = this.getName(assets);
                 page.assets.thumbnail = this.getThumbnail(assets);
+                page.assets.categories=this.getCategories();
+                page.assets.searchFields=this.getSearchableFields();
             }
         } else if (arguments.length == 1) {
             page = arguments[0];
@@ -510,6 +512,7 @@ var asset = {};
                 page.assets.name = this.getName(assets);
                 page.assets.thumbnail = this.getThumbnail(assets);
                 page.assets.categories=this.getCategories();
+                page.assets.searchFields=this.getSearchableFields();
             }
         } else if (arguments.length == 1) {
             page = arguments[0];
@@ -557,6 +560,30 @@ var asset = {};
         }
         categories=this.rxtManager.getRxtFieldValue(this.type,categoryField);
         return categories;
+    };
+    AssetManager.prototype.getSearchableFields=function(){
+        var searchFields=[];
+        var fieldName;
+        var field;
+        var definedFields=this.rxtManager.getSearchableFields(this.type);
+
+        //Deteremine if the user has specified keyword all.if so then all
+        //fields can be searched
+        if((definedFields.length==1)&&(definedFields[0]=='all')){
+            log.warn('Search fiels of '+this.type+' is set to all.');
+            searchFields=this.rxtManager.listRxtFields(this.type);
+            return searchFields;
+        }
+
+        //Obtain the field definitions for each of the fields
+        for(var index in definedFields){
+            fieldName=definedFields[index];
+            field=this.rxtManager.getRxtField(this.type,fieldName);
+            if(field){
+                searchFields.push(field);
+            }
+        }
+        return searchFields;
     };
 
     function NavList() {

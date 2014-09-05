@@ -84,9 +84,12 @@ asset.configure = function() {
             ui: {
                 icon: 'icon-cog'
             },
-            categories:{
-                categoryField:'overview_categories'
-            },
+            // categories:{
+            //     categoryField:'overview_category'
+            // },
+            // search:{
+            //     searchableFields:['all']
+            // },
             thumbnail: 'images_thumbnail'
         }
     };

@@ -27,7 +27,7 @@ require('/modules/store.js').exec(function(ctx) {
             response.sendError(404, 'The asset with id: ' + options.id + ' could not be located.');
         } else {
             var output = am.renderBasic(assets, page).details();
-            log.info(output);
+            //log.info(output);
             caramel.render(output);
         }
     }
