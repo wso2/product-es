@@ -570,7 +570,7 @@ var asset = {};
         //Deteremine if the user has specified keyword all.if so then all
         //fields can be searched
         if((definedFields.length==1)&&(definedFields[0]=='all')){
-            log.warn('Search fiels of '+this.type+' is set to all.');
+            log.warn('All of the '+this.type+' fields can be searched.');
             searchFields=this.rxtManager.listRxtFields(this.type);
             return searchFields;
         }

@@ -84,21 +84,24 @@ asset.configure = function() {
             ui: {
                 icon: 'icon-cog'
             },
-            // categories:{
-            //     categoryField:'overview_category'
-            // },
-            // search:{
-            //     searchableFields:['all']
-            // },
+            categories:{
+                categoryField:'overview_category'
+            },
+            search:{
+                searchableFields:['all']
+            },
             thumbnail: 'images_thumbnail'
         }
     };
 };
 asset.renderer = function(ctx) {
-    //var decoratorApi=require('modules/page_decorators.js').pageDecorators;
+    var decoratorApi=require('/modules/page_decorators.js').pageDecorators;
 
     return {
         pageDecorators: {
+            navigationBar:function(page){
+                return decoratorApi.navigationBar(ctx,page);
+            }
         }
     };
 };

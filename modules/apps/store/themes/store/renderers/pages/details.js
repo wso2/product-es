@@ -11,7 +11,8 @@ var render = function (theme, data, meta, require) {
         default:
             break;
     }*/
-
+    var log=new Log();
+    log.info(data);
     theme('2-column-right', {
         title: data.meta.title,
         header: [
