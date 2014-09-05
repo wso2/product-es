@@ -29,11 +29,11 @@ asset.server = function(ctx) {
                 path: 'assets.jag'
             }],
             pages: [ {
-                title: 'Details ' + typeSingularLabel,
+                title: 'Store |  ' + typeSingularLabel,
                 url: 'details',
                 path: 'details.jag'
             }, {
-                title: 'List ' + typeSingularLabel,
+                title: 'Store | ' + typeSingularLabel,
                 url: 'list',
                 path: 'list.jag'
             }]
