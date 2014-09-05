@@ -66,14 +66,18 @@ var engine = caramel.engine('handlebars', (function () {
 }()));
 
 var resolve = function (path) {
-    var p,
-        store = require('/modules/store.js'),
-        asset = store.currentAsset();
-    if (asset) {
-        p = store.ASSETS_EXT_PATH + asset + '/themes/' + this.name + '/' + path;
-        if (new File(p).isExists()) {
-            return p;
-        }
-    }
-    return this.__proto__.resolve.call(this, path);
+    var themeResolver = this.__proto__.resolve;
+    var asset = require('rxt').asset;
+    path = asset.resolve(request, path, this.name, this, themeResolver);
+    // var p,
+    //     store = require('/modules/store.js'),
+    //     asset = store.currentAsset();
+    // if (asset) {
+    //     p = store.ASSETS_EXT_PATH + asset + '/themes/' + this.name + '/' + path;
+    //     if (new File(p).isExists()) {
+    //         return p;
+    //     }
+    // }
+    // return this.__proto__.resolve.call(this, path);
+    return path;
 };

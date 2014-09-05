@@ -157,7 +157,34 @@ var core = {};
         }
         return list;
     };
+    /**
+     * The function will returns details about the rxts.If no arguments are provided
+     * then details of all the rxt types are returned
+     * @return {[type]} [description]
+     */
     RxtManager.prototype.listRxtTypeDetails = function() {
+        if(arguments.length==1){
+            return this.getRxtTypeDetails(arguments[0]);
+        }
+        else{
+            return this.getRxtTypesDetails();
+        }
+    };
+    RxtManager.prototype.getRxtTypeDetails = function(type) {
+        var template = this.rxtMap[type];
+        if (!template) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return rxt details');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return rxt details';
+        }
+        var details = {};
+        details.shortName = type;
+        details.singularLabel = template.singularLabel;
+        details.pluralLabel = template.pluralLabel;
+        details.ui = (template.meta) ? (template.meta.ui || {}) : {};
+        details.lifecycle = (template.meta) ? (template.meta.lifecycle || {}) : {};
+        return details;
+    };
+    RxtManager.prototype.getRxtTypesDetails = function() {
         var list = [];
         for (var type in this.rxtMap) {
             var details = {};
@@ -437,7 +464,7 @@ var core = {};
             rxtManager: rxtManager,
             tenantConfigs: tenatConfigs,
             serverConfigs: serverConfigs,
-            isAnonContext:true
+            isAnonContext: true
         };
     };
     core.createUserAssetContext = function(session, type) {
@@ -461,7 +488,7 @@ var core = {};
             rxtManager: rxtManager,
             tenantConfigs: tenatConfigs,
             serverConfigs: serverConfigs,
-            isAnonContext:false
+            isAnonContext: false
         };
     };
 }(core));

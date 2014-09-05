@@ -1,6 +1,7 @@
 var ui = {};
-(function(ui, core) {
+(function(ui, core,asset) {
     var log = new Log();
+    var DEFAULT_TITLE="Empty";
     var genericPage = function(options) {
         return {
             rxt: {},
@@ -14,7 +15,7 @@ var ui = {};
             meta: {
                 pageName: options.pageName,
                 currentPage: options.currentPage,
-                title: 'Empty',
+                title: options.title,
                 landingPage: options.landingPage
             }
         }
@@ -23,15 +24,27 @@ var ui = {};
         var comps = suffix.split('/');
         return comps[0];
     };
-    var getPageName = function(request) {
+    var getPageName = function(request,session) {
         var uriMatcher = new URIMatcher(request.getRequestURI());
         uriMatcher.match('/{context}/asts/{type}/{+suffix}');
         var options = uriMatcher.elements() || {};
         var page = {};
         page.currentPage = options.pageName;
-        page.pageName = processPageName(options.suffix)
+        page.pageName = processPageName(options.suffix);
+        page.title=getPageTitle(session, options.type, page.pageName);
         return page;
-    }
+    };
+    var getPageTitle=function(session,type,pageName){
+        var pages=asset.getAssetPageEndpoints(session,type);
+        var page;
+        for(var index=0;index<pages.length;index++){
+            page=pages[index];
+            if(page.url==pageName){
+                return page.title;
+            }
+        }
+        return DEFAULT_TITLE;
+    };
     ui.buildPage = function(session, request) {
         var server = require('store').server;
         // var userMod = require('store').user;
@@ -41,23 +54,6 @@ var ui = {};
         } else {
             return buildAnonPage(session, request);
         }
-        // var tenantId = user.tenantId;
-        // var configs = userMod.configs(tenantId);
-        // var landingPage = '';
-        //Determine landing page details
-        // if (configs) {
-        //     if ((configs.application) && (configs.application.landingPage)) {
-        //         landingPage = configs.application.landingPage;
-        //     }
-        // }
-        //var pageDetails = getPageName(request);
-        // var page = genericPage({
-        //     username: user.username,
-        //     pageName: pageDetails.pageName,
-        //     currentPage: pageDetails.currentPage,
-        //     landingPage: landingPage
-        // });
-        // return page;
     };
     var buildUserPage = function(session, request, user) {
         var userMod = require('store').user;
@@ -65,14 +61,15 @@ var ui = {};
         var configs = userMod.configs(tenantId);
         var tenantId = user.tenantId;
         var configs = userMod.configs(tenantId);
-        var pageDetails = getPageName(request);
+        var pageDetails = getPageName(request,session);
         var landingPage = getLandingPage(configs);
         var page = genericPage({
             username: user.username,
             pageName: pageDetails.pageName,
             isAnon: false,
             currentPage: pageDetails.currentPage,
-            landingPage: landingPage
+            landingPage: landingPage,
+            title:pageDetails.title
         });
         return page;
     };
@@ -80,14 +77,15 @@ var ui = {};
         var userMod = require('store').user;
         var tenantId = getTenantIdFromUrl(request);
         var configs = userMod.configs(tenantId);
-        var pageDetails = getPageName(request);
+        var pageDetails = getPageName(request,session);
         var landingPage = getLandingPage(configs);
         var page = genericPage({
             username: null,
             pageName: pageDetails.pageName,
             isAnon: true,
             currentPage: pageDetails.currentPage,
-            landingPage: landingPage
+            landingPage: landingPage,
+            title:pageDetails.title
         });
         return page;
     };
@@ -101,4 +99,4 @@ var ui = {};
     var getTenantIdFromUrl = function(request) {
         return -1234;
     };
-}(ui, core));
+}(ui, core,asset));

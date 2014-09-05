@@ -15,7 +15,12 @@ asset.manager = function(ctx) {
     };
 };
 asset.server = function(ctx) {
-    var type = ctx.type;
+    var type = ctx.assetType;
+    var typeDetails=ctx.rxtManager.listRxtTypeDetails(type);
+    var typeSingularLabel=type;//Assume the type details are not returned
+    if(typeDetails){
+        typeSingularLabel=typeDetails.singularLabel;
+    }
     return {
         onUserLoggedIn: function() {},
         endpoints: {
@@ -24,11 +29,11 @@ asset.server = function(ctx) {
                 path: 'assets.jag'
             }],
             pages: [ {
-                title: 'Details ' + type,
+                title: 'Details ' + typeSingularLabel,
                 url: 'details',
                 path: 'details.jag'
             }, {
-                title: 'List ' + type,
+                title: 'List ' + typeSingularLabel,
                 url: 'list',
                 path: 'list.jag'
             }]
