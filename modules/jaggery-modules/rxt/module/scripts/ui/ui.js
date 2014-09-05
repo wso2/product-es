@@ -5,7 +5,8 @@ var ui = {};
         return {
             rxt: {},
             cuser: {
-                username: options.username
+                username: options.username,
+                isAnon: options.isAnon
             },
             assets: {},
             leftNav: [],
@@ -33,24 +34,71 @@ var ui = {};
     }
     ui.buildPage = function(session, request) {
         var server = require('store').server;
-        var userMod = require('store').user;
+        // var userMod = require('store').user;
         var user = server.current(session);
+        if (user) {
+            return buildUserPage(session, request, user);
+        } else {
+            return buildAnonPage(session, request);
+        }
+        // var tenantId = user.tenantId;
+        // var configs = userMod.configs(tenantId);
+        // var landingPage = '';
+        //Determine landing page details
+        // if (configs) {
+        //     if ((configs.application) && (configs.application.landingPage)) {
+        //         landingPage = configs.application.landingPage;
+        //     }
+        // }
+        //var pageDetails = getPageName(request);
+        // var page = genericPage({
+        //     username: user.username,
+        //     pageName: pageDetails.pageName,
+        //     currentPage: pageDetails.currentPage,
+        //     landingPage: landingPage
+        // });
+        // return page;
+    };
+    var buildUserPage = function(session, request, user) {
+        var userMod = require('store').user;
         var tenantId = user.tenantId;
         var configs = userMod.configs(tenantId);
-        var landingPage = '';
-        //Determine landing page details
+        var tenantId = user.tenantId;
+        var configs = userMod.configs(tenantId);
+        var pageDetails = getPageName(request);
+        var landingPage = getLandingPage(configs);
+        var page = genericPage({
+            username: user.username,
+            pageName: pageDetails.pageName,
+            isAnon: false,
+            currentPage: pageDetails.currentPage,
+            landingPage: landingPage
+        });
+        return page;
+    };
+    var buildAnonPage = function(session, request) {
+        var userMod = require('store').user;
+        var tenantId = getTenantIdFromUrl(request);
+        var configs = userMod.configs(tenantId);
+        var pageDetails = getPageName(request);
+        var landingPage = getLandingPage(configs);
+        var page = genericPage({
+            username: null,
+            pageName: pageDetails.pageName,
+            isAnon: true,
+            currentPage: pageDetails.currentPage,
+            landingPage: landingPage
+        });
+        return page;
+    };
+    var getLandingPage = function(configs) {
         if (configs) {
             if ((configs.application) && (configs.application.landingPage)) {
                 landingPage = configs.application.landingPage;
             }
         }
-        var pageDetails = getPageName(request);
-        var page = genericPage({
-            username: user.username,
-            pageName: pageDetails.pageName,
-            currentPage: pageDetails.currentPage,
-            landingPage: landingPage
-        });
-        return page;
+    };
+    var getTenantIdFromUrl = function(request) {
+        return -1234;
     };
 }(ui, core));

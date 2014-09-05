@@ -1,3 +1,34 @@
 <%
-	print('Details page');
-%>
+var caramel;
+require('/modules/store.js').exec(function(ctx) {
+    caramel = require('caramel');
+    var asset = require('rxt').asset;
+    var ui = require('rxt').ui;
+    var user = ctx.user;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var log = ctx.log;
+    var options = uriMatcher.match('/{context}/asts/{type}/{pageName}/{+id}') || uriMatcher.match('/{context}/asts/{type}/{pageName}');
+    if (!options) {
+        response.sendError(400, 'Could not locate an endpoint for your request.Make sure that you provide an id');
+    } else if (!options.id) {
+        response.sendError(400, 'An id must be provided when viewing details of a particular asset');
+    } else {
+        var type = options.type;
+        var am;
+        if (user) {
+            am = asset.createUserAssetManager(session, type);
+        }
+        else{
+        	am=asset.createAnonAssetManager(session, type, -1234);
+        }
+        var page = ui.buildPage(session, request);
+        var assets = am.get(options.id);
+        if (assets == null) {
+            response.sendError(404, 'The asset with id: ' + options.id + ' could not be located.');
+        } else {
+            var output = am.renderBasic(assets, page).details();
+            print(output);
+            //caramel.render(output);
+        }
+    }
+}, request, response, session); %>

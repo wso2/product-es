@@ -435,6 +435,13 @@ var asset = {};
         modAsset.tables = tables;
         return modAsset;
     };
+    /**
+     * The function will a render page with the asset details combined with the rxt template.If an array of assets
+     * is provided then the assets are not merged with the rxt template
+     * @param  {[type]} assets [description]
+     * @param  {[type]} page   [description]
+     * @return {[type]}        [description]
+     */
     AssetManager.prototype.render = function(assets, page) {
         //Only process assets if both assets and pages are provided
         if (arguments.length == 2) {
@@ -455,42 +462,86 @@ var asset = {};
         return {
             create: function() {
                 page = that.r.create(page) || page;
-                //page = that.r.leftNav(page) || page;
-                //page = that.r.ribbon(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             update: function() {
                 page = that.r.update(page) || page;
-                //page = that.r.leftNav(page) || page;
-                //page = that.r.ribbon(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             list: function() {
                 page = that.r.list(page) || page;
-                //page = that.r.leftNav(page) || page;
-                //page = that.r.ribbon(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             details: function() {
                 page = that.r.details(page) || page;
-                //page = that.r.leftNav(page) || page;
-                //page = that.r.ribbon(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             lifecycle: function() {
                 page = that.r.lifecycle(page) || page;
-                //page = that.r.leftNav(page) || page;
-                //page = that.r.ribbon(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             _custom: function() {
-                //page = that.r.leftNav(page) || page;
-                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
+                return page;
+            }
+        };
+    };
+    /**
+     * The function will not combine the assets details with the rxt template.Instead
+     * it will return the asset as a simple JSON object containing no extra meta data
+     * @param  {[type]} assets [description]
+     * @param  {[type]} page   [description]
+     * @return {[type]}        [description]
+     */
+    AssetManager.prototype.renderBasic = function(assets, page) {
+        //Only process assets if both assets and pages are provided
+        if (arguments.length == 2) {
+            var refUtil = require('utils').reflection;
+            //Combine with the rxt template only when dealing with a single asset
+            if (refUtil.isArray(assets)) {
+                page.assets = assets;
+            } else {
+                page.assets=assets;
+                page.assets.name = this.getName(assets);
+                page.assets.thumbnail = this.getThumbnail(assets);
+            }
+        } else if (arguments.length == 1) {
+            page = arguments[0];
+        }
+        page.rxt = this.rxtTemplate;
+        var that = this;
+        return {
+            create: function() {
+                page = that.r.create(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
+                return page;
+            },
+            update: function() {
+                page = that.r.update(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
+                return page;
+            },
+            list: function() {
+                page = that.r.list(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
+                return page;
+            },
+            details: function() {
+                page = that.r.details(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
+                return page;
+            },
+            lifecycle: function() {
+                page = that.r.lifecycle(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
+                return page;
+            },
+            _custom: function() {
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             }
@@ -540,8 +591,7 @@ var asset = {};
     AssetRenderer.prototype.applyPageDecorators = function(page) {
         var pageDecorators = this.pageDecorators || {};
         for (var key in pageDecorators) {
-
-            page = pageDecorators[key].call(this,page) || page;
+            page = pageDecorators[key].call(this, page) || page;
         }
         return page;
     };
@@ -566,12 +616,12 @@ var asset = {};
     };
     var overridePageDecorators = function(to, from) {
         var fromPageDecorators = from.pageDecorators || {};
-        var toPageDecorators = to.pageDecorators|| {};
-        if(!to.pageDecorators){
-            to.pageDecorators={};
+        var toPageDecorators = to.pageDecorators || {};
+        if (!to.pageDecorators) {
+            to.pageDecorators = {};
         }
         for (var key in fromPageDecorators) {
-           to.pageDecorators[key] = fromPageDecorators[key];
+            to.pageDecorators[key] = fromPageDecorators[key];
         }
     };
     var createRenderer = function(session, tenantId, type) {
@@ -584,7 +634,6 @@ var asset = {};
         reflection.override(renderer, defaultRenderer);
         reflection.override(renderer, customRenderer);
         //Override the page decorators
-        
         overridePageDecorators(renderer, defaultRenderer);
         overridePageDecorators(renderer, customRenderer);
         //reflection.override(renderer, defaultRenderer);
@@ -690,6 +739,13 @@ var asset = {};
         var server = require('store').server;
         var sysRegistry = server.systemRegistry(tenantId);
         return createAssetManager(tenantId, sysRegistry, type);
+    };
+    asset.createAnonAssetManager = function(session, type, tenantId) {
+        var server = require('store').server;
+        var anonRegistry = server.anonRegistry(tenantId);
+        var am = createAssetManager(session, tenantId, anonRegistry, type);
+        am.r = createRenderer(session, tenantId, type);
+        return am;
     };
     asset.createRenderer = function(session, type) {
         return createRenderer(session, type);

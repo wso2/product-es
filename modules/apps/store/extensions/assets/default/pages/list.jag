@@ -1,4 +1,41 @@
 <%
-
-	print('Listing Page')
-%>
+var caramel;
+var DEFAULT_PAGIN = {
+    'start': 0,
+    'count': 20,
+    'sortOrder': 'DESC',
+    'sortBy': 'overview_createdtime',
+    'paginationLimit': 100
+};
+require('/modules/store.js').exec(function(ctx) {
+    caramel = require('caramel');
+    var asset = require('rxt').asset;
+    var ui = require('rxt').ui;
+    var log = ctx.log;
+    var query = ctx.params.query;
+    var store = ctx.store;
+    var user = ctx.user;
+    var am;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var options = uriMatcher.match('/{context}/asts/{type}/{pageName}');
+    var type = options.type;
+    var assets = [];
+    var q = ctx.request.getParameter('query');
+    var sortBy = ctx.request.getParameter('sortBy');
+    var sortOrder = ctx.request.getParameter('sortOrder');
+    var page = ui.buildPage(ctx.session,ctx.request);
+    var output = {};
+    DEFAULT_PAGIN.sortBy = (sortBy || DEFAULT_PAGIN.sortBy);
+    DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
+    if (!user) {
+        am = asset.createAnonAssetManager(ctx.session, type, -1234);
+    } else {
+        am = asset.createUserAssetManager(ctx.session, type);
+    }
+    if (q) {
+        assets = am.search(q, DEFAULT_PAGIN);
+    } else {
+        assets = am.search(null, DEFAULT_PAGIN);
+    }
+    print(assets);
+}, request, response, session); %>
