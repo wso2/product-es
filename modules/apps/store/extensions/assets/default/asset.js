@@ -84,23 +84,18 @@ asset.configure = function() {
             ui: {
                 icon: 'icon-cog'
             },
+            categories:{
+                categoryField:'overview_categories'
+            },
             thumbnail: 'images_thumbnail'
         }
     };
 };
 asset.renderer = function(ctx) {
+    //var decoratorApi=require('modules/page_decorators.js').pageDecorators;
 
     return {
-        list: function(page) {
-            return page;
-        },
         pageDecorators: {
-            leftNav: function(page) {
-                return page;
-            },
-            ribbon: function(page) {
-                return page;
-            }
         }
     };
 };

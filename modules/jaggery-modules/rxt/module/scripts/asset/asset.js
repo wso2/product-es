@@ -509,6 +509,7 @@ var asset = {};
                 page.assets=assets;
                 page.assets.name = this.getName(assets);
                 page.assets.thumbnail = this.getThumbnail(assets);
+                page.assets.categories=this.getCategories();
             }
         } else if (arguments.length == 1) {
             page = arguments[0];
@@ -546,6 +547,16 @@ var asset = {};
                 return page;
             }
         };
+    };
+    AssetManager.prototype.getCategories=function(){
+        var categoryField=this.rxtManager.getCategoryField(this.type);
+        var categories=[];
+        if(!categoryField){
+            log.warn('Unable to locate a categories field.Make sure a categories section has been provided in configuration callback ');
+            return categories;
+        }
+        categories=this.rxtManager.getRxtFieldValue(this.type,categoryField);
+        return categories;
     };
 
     function NavList() {

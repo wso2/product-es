@@ -163,10 +163,9 @@ var core = {};
      * @return {[type]} [description]
      */
     RxtManager.prototype.listRxtTypeDetails = function() {
-        if(arguments.length==1){
+        if (arguments.length == 1) {
             return this.getRxtTypeDetails(arguments[0]);
-        }
-        else{
+        } else {
             return this.getRxtTypesDetails();
         }
     };
@@ -368,6 +367,110 @@ var core = {};
         }
         publishedStates = rxtDefinition.meta.lifecycle.publishedStates;
         return publishedStates;
+    };
+    /**
+     * The function will return the field which is designated as the category field.If a category field
+     * has not been defined by the user then null will be returned
+     * @param  {[type]} type [description]
+     * @return {[type]}      [description]
+     */
+    RxtManager.prototype.getCategoryField = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        var categoryField = null;
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the category field.';
+        }
+        if (!rxtDefinition.meta) {
+            log.warn('Unable to locate meta information in the rxt definition for type: ' + type + '.Cannot fetch category field');
+            return categoryField;
+        }
+        if (!rxtDefinition.meta.categories) {
+            log.warn('Unable to locate category information in the rxt definition for type: ' + type + '.Cannot fetch category field');
+            return categoryField;
+        }
+        if (!rxtDefinition.meta.categories.categoryField) {
+            log.warn('No category details have been defined for the rxt definition of type: ' + type + '.');
+            return categoryField;
+        }
+        categoryField = rxtDefinition.meta.categories.categoryField;
+        return categoryField;
+    };
+    /**
+     * The function fetches the field definition for a given field.If the definition is not found then null is returned
+     * @param  {[type]} type      [description]
+     * @param  {[type]} tableName [description]
+     * @param  {[type]} fieldName [description]
+     * @return {[type]}           [description]
+     */
+    RxtManager.prototype.getRxtField = function(type, name) {
+        var template = this.rxtMap[type];
+        var tableName;
+        var fieldName;
+        var components = getFieldNameParts(name);
+        tableName = components.tableName;
+        fieldName = components.fieldName;
+        //Convert the table and field names to lowercase
+        tableName = tableName ? tableName.toLowerCase() : '';
+        fieldName = fieldName ? fieldName.toLowerCase() : '';
+        var field = null;
+        if (!template) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to retrieve field data for ' + tableName + '_' + fieldName;
+        }
+        if ((!template.content) && (!template.content.table)) {
+            log.warn('Content or table definition was not found in the rxt definition of type: ' + type + '.Cannot fetch field data for ' + tableName + '_' + fieldName);
+            return field;
+        }
+        var table = getRxtTable(template.content.table, tableName);
+        if (!table) {
+            log.warn('Unable to locate table definition : ' + tableName + ' in rxt definition of type: ' + type + '.Cannot fetch field data for ' + tableName + '_' + fieldName);
+            return field;
+        }
+        field = getRxtField(table, fieldName);
+        return field;
+    };
+    RxtManager.prototype.getRxtFieldValue = function(type, name) {
+        var field = this.getRxtField(type, name);
+        var values = [];
+        if (!field) {
+            log.warn('Unable to locate values for field ' + name + ' as the field was not located in the rxt definition');
+            return values;
+        }
+        var fieldValuesObject = field.values || {};
+        var fieldValueItems = fieldValuesObject.value || [];
+        for (var index in fieldValueItems) {
+            values.push(fieldValueItems[index].value);
+        }
+        return values;
+    };
+    var getFieldNameParts = function(fieldName) {
+        //Break the field by the _
+        var components = fieldName.split('_');
+        return {
+            tableName: components[0],
+            fieldName: components[1]
+        };
+    };
+    var getRxtTable = function(tables, tableName) {
+        var table = null;
+        for (var key in tables) {
+            if (key == tableName) {
+                table = tables[key];
+                return table;
+            }
+        }
+        return table;
+    };
+    var getRxtField = function(table, fieldName) {
+        var field = null;
+        for (var key in table.fields) {
+            if (key == fieldName) {
+                field = tables.fields[key];
+                return field;
+            }
+        }
+        return field;
     };
     /*
     Creates an xml file from the contents of an Rxt file

@@ -1,6 +1,4 @@
 var render = function (theme, data, meta, require) {
-    var log=new Log();
-    log.info('Rendering details page ......'+data.title);
 
    /*var navigation='navigation';
     var navigationContext=require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search);
@@ -15,14 +13,13 @@ var render = function (theme, data, meta, require) {
     }*/
 
     theme('2-column-right', {
-        title: data.meta.title
-
-        // header: [
-        //     {
-        //         partial: 'header',
-        //         context: data.header
-        //     }
-        // ],
+        title: data.meta.title,
+        header: [
+            {
+                partial: 'header',
+                context: data.meta
+            }
+        ],
         // navigation: [
         //     {
         //         partial: navigation,
