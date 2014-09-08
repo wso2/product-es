@@ -83,10 +83,10 @@ var core = {};
             tableName = createCamelCaseName(table.name);
             rxtDefinition.content.table[tableName] = {};
             rxtDefinition.content.table[tableName] = table;
-            transformTable(rxtDefinition.content.table[table.name], table);
+            transformTable(rxtDefinition.content.table[table.name], table,tableName);
         }
     };
-    var transformTable = function(rxtDefinition, rxtTable) {
+    var transformTable = function(rxtDefinition, rxtTable,tableName) {
         var fields = rxtTable.field;
         var field;
         var name;
@@ -101,6 +101,7 @@ var core = {};
                 field.name.label = field.name.name;
             }
             field.name.name = name;
+            field.name.fullName=tableName+'_'+name;
         }
         delete rxtTable.field;
     };
