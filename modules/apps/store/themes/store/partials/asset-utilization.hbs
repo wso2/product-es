@@ -1,5 +1,5 @@
-{{#with asset}}
-    {{#attributes}}
+{{#with assets}}
+    {{#with attributes}}
         {{#if ../../inDashboard}}
             <a id="btn-add-gadget" class="btn disabled" href="#modal-add-gadget"
                data-toggle="modal"
@@ -35,7 +35,7 @@
         <a class="btn btn-href" href="{{overview_url}}" target="_blank" data-placement="bottom"
            data-toggle="tooltip" title="{{>asset-overview-text}}">
             <i class="icon-{{../../asset_css}}"></i></a>
-    {{/attributes}}
+    {{/with}}
 {{/with}}
 
 

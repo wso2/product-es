@@ -83,10 +83,10 @@ var core = {};
             tableName = createCamelCaseName(table.name);
             rxtDefinition.content.table[tableName] = {};
             rxtDefinition.content.table[tableName] = table;
-            transformTable(rxtDefinition.content.table[table.name], table,tableName);
+            transformTable(rxtDefinition.content.table[table.name], table, tableName);
         }
     };
-    var transformTable = function(rxtDefinition, rxtTable,tableName) {
+    var transformTable = function(rxtDefinition, rxtTable, tableName) {
         var fields = rxtTable.field;
         var field;
         var name;
@@ -101,7 +101,7 @@ var core = {};
                 field.name.label = field.name.name;
             }
             field.name.name = name;
-            field.name.fullName=tableName+'_'+name;
+            field.name.fullName = tableName + '_' + name;
         }
         delete rxtTable.field;
     };
@@ -243,6 +243,18 @@ var core = {};
             return rxtDefinition.meta.thumbnail;
         }
         log.warn('Unable to locate thumbnail attribute for type: ' + type + '.Check if a thumbnail property is defined in the rxt configuration.');
+        return '';
+    };
+    RxtManager.prototype.getBannerAttribute = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return banner attribute');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return thumbail attribute';
+        }
+        if ((rxtDefinition.meta) && (rxtDefinition.meta.banner)) {
+            return rxtDefinition.meta.banner;
+        }
+        log.warn('Unable to locate thumbnail attribute for type: ' + type + '.Check if a banner property is defined in the rxt configuration.');
         return '';
     };
     RxtManager.prototype.getLifecycleName = function(type) {

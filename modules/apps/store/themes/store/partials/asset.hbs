@@ -2,8 +2,8 @@
     var isSocial = ('{{isSocial}}' == 'true');
 </script>
 <div class="asset-description">
-    {{#with asset}}
-        {{#attributes}}
+    {{#with assets}}
+        {{#with attributes}}
             <div class="asset-description-header">
                 <div class="row">
                     <div class="span9">
@@ -16,10 +16,12 @@
                             <h3>{{overview_name}}</h3>
                             <small> {{t "Version"}} {{overview_version}}</small>
                             <small> {{t "by"}} {{overview_provider}} </small>
-					<span class="asset-rating">
+                    <span class="asset-rating">
                             <div style="width:{{../rating.ratingPx}}px"></div>
                     </span>
-                          {{>asset-utilization ../../.}}
+                          
+                          {{>asset-utilization ../..}}
+                          
                          </div>
 
                     </div>
@@ -27,6 +29,7 @@
                 </div>
 
             </div>
+            
             <div class="assetp-properties">
 
                 <ul class="nav nav-tabs" id="assetp-tabs" data-aid="{{../path}}">
@@ -58,7 +61,7 @@
                 </div>
 
             </div>
-        {{/attributes}}
+        {{/with}}
     {{/with}}
 </div>
 <!-- Modal -->
