@@ -18,5 +18,9 @@ var pageDecorators = {};
         page.navigationBar.types = types;
         return page;
     };
-    pageDecorators.searchBar = function(ctx, page) {};
+    pageDecorators.searchBar = function(ctx, page) {
+    	page.searchBar={};
+    	page.searchBar.searchFields=page.assets.searchFields;
+    	return page;
+    };
 }());

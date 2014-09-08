@@ -1,33 +1,28 @@
-var render = function (theme, data, meta, require) {
-
-   /*var navigation='navigation';
-    var navigationContext=require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search);
-
-    switch(data.assetTypeCount) {
+var render = function(theme, data, meta, require) {
+    var log = new Log();
+    var navigation = 'navigation';
+    log.info(data);
+    var navigationContext=data;
+    //var navigationContext = require('/helpers/navigation.js').currentPage(data.navigationBar, data.type, data.search);
+    switch (data.assetTypeCount) {
         case 1:
-            navigation='navigation-single';
-            navigationContext=require('/helpers/navigation-single.js').currentPage(data.navigation, data.type, data.search);
+            navigation = 'navigation-single';
+            //navigationContext=require('/helpers/navigation-single.js').currentPage(data.navigation, data.type, data.search);
             break;
         default:
             break;
-    }*/
-    var log=new Log();
-    log.info(data);
+    }
+
     theme('2-column-right', {
         title: data.meta.title,
-        header: [
-            {
-                partial: 'header',
-                context: data.meta
-            }
-        ],
-        // navigation: [
-        //     {
-        //         partial: navigation,
-        //         context: navigationContext
-        //     }
-        // ],
-
+        header: [{
+            partial: 'header',
+            context: data.meta
+        }],
+        navigation: [{
+            partial: navigation,
+            context: navigationContext
+        }]
         // body: [
         //     {
         //         partial: 'asset',

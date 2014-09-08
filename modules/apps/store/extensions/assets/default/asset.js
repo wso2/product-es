@@ -101,6 +101,9 @@ asset.renderer = function(ctx) {
         pageDecorators: {
             navigationBar:function(page){
                 return decoratorApi.navigationBar(ctx,page);
+            },
+            searchBar:function(page){
+                return decoratorApi.searchBar(ctx,page);
             }
         }
     };
