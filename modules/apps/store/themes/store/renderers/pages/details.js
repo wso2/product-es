@@ -1,7 +1,7 @@
 var render = function(theme, data, meta, require) {
     var log = new Log();
     var navigation = 'navigation';
-    log.info(data);
+    //log.info(data);
     var navigationContext=data;
     //var navigationContext = require('/helpers/navigation.js').currentPage(data.navigationBar, data.type, data.search);
     switch (data.assetTypeCount) {

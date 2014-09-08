@@ -29,7 +29,7 @@ var pageDecorators = {};
         page.searchBar.searchFields = [];
         var searchFields = page.assets.searchFields;
         for (var index in searchFields) {
-            if (searchFields[index].type == 'text') {
+            if ((searchFields[index].type == 'text') ||(searchFields[index].type=='options')){
                 page.searchBar.searchFields.push(searchFields[index]);
             }
         }
