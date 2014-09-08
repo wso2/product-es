@@ -6,7 +6,7 @@
     <a href="#" id="search-dropdown-close"><i class="icon-remove"></i></a>
 
     {{#each searchFields}}
-    	{{name.label}}
+    	{{renderEditableField .}}
     {{/each}}
 
     <button id="search-button2" class="btn span3">
