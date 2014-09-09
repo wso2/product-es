@@ -101,10 +101,13 @@ asset.renderer = function(ctx) {
     return {
         pageDecorators: {
             navigationBar:function(page){
-                return decoratorApi.navigationBar(ctx,page);
+                return decoratorApi.navigationBar(ctx,page,this);
             },
             searchBar:function(page){
-                return decoratorApi.searchBar(ctx,page);
+                return decoratorApi.searchBar(ctx,page,this);
+            },
+            categoryBox:function(page){
+                return decoratorApi.categoryBox(ctx,page,this);
             }
         }
     };

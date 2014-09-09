@@ -35,4 +35,17 @@ var pageDecorators = {};
         }
         return page;
     };
+
+    /**
+     * The function populates the categories for the category box
+     * @param  {[type]} ctx  [description]
+     * @param  {[type]} page [description]
+     * @return {[type]}      [description]
+     */
+    pageDecorators.categoryBox=function(ctx,page){
+        page.categoryBox={};
+        page.categoryBox.categories=page.assetMeta.categories;
+        page.categoryBox.searchEndpoint='/apis/assets?type='+ctx.assetType;
+        return page;
+    };
 }());

@@ -674,13 +674,27 @@ var asset = {};
         //log.info('Default leftnav');
     };
     AssetRenderer.prototype.ribbon = function(page) {};
-    AssetRenderer.prototype.applyPageDecorators = function(page) {
+    /**
+     * The function will apply decorators to a given page.If a user passes in an array of decorators to use
+     * then only those decorators are applied.If an array is not provided then all registered decorators are applied
+     * to the page
+     * @param  {[type]} page            [description]
+     * @param  {[type]} decoratorsToUse [description]
+     * @return {[type]}                 [description]
+     */
+    AssetRenderer.prototype.applyPageDecorators = function(page,decoratorsToUse) {
         var pageDecorators = this.pageDecorators || {};
         for (var key in pageDecorators) {
             page = pageDecorators[key].call(this, page) || page;
         }
         return page;
     };
+    var isSelectedDecorator=function(decorator,decoratorsToUse){
+        if(decoratorsToUse.indexOf(decorator)>-1){
+            return true;
+        }
+        return false;
+    }
     /**
      * The function create an asset manage given a registry instance,type and tenantId
      * @param  {[type]} tenantId The id of the tenant

@@ -37,5 +37,6 @@ require('/modules/store.js').exec(function(ctx) {
     } else {
         assets = am.search(null, DEFAULT_PAGIN);
     }
-    print(assets);
+    var output=am.render(assets,page).list();
+    caramel.render(output);
 }, request, response, session); %>

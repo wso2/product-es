@@ -1,7 +1,7 @@
-var render = function (theme, data, meta, require) {
+var render = function(theme, data, meta, require) {
     var log = new Log();
     var navigation = 'navigation';
-    var navigationContext=data;
+    var navigationContext = data;
     switch (data.assetTypeCount) {
         case 1:
             navigation = 'navigation-single';
@@ -9,38 +9,33 @@ var render = function (theme, data, meta, require) {
         default:
             break;
     }
-   //var assets = require('/helpers/assets.js');
-
+    //var assets = require('/helpers/assets.js');
     theme('2-column-right', {
-        title: data.title,
-        header: [
+        title: data.meta.title,
+        header: [{
+            partial: 'header',
+            context: data.meta
+        }],
+        navigation: [{
+            partial: navigation,
+            context: navigationContext
+        }],
+        body: [
             {
-                partial: 'header',
-                context: data.header
-            }
-        ],
-        navigation: [
+                partial: 'sort-assets',
+                context: data
+            },
             {
-                partial: navigation,
-                context: navigationContext
+                partial: 'assets',
+                context: data
             }
-        ]       
-        // body: [
-        // 	{
-        //         partial: 'sort-assets',
-        //         context: require('/helpers/sort-assets.js').format(data.sorting, data.paging, data.navigation, data.type, data.selectedCategory)
-        //     },
-        //     {
-        //         partial: 'assets',
-        //         context: assets.currentPage(data.assets,data.sso,data.user, data.paging)
-        //     },
-        //     {
-        //         partial: 'pagination',
-        //         context: require('/helpers/pagination.js').format(data.paging)
-        //     } 
-        // ],
+            // {
+            //     partial: 'pagination',
+            //     context: require('/helpers/pagination.js').format(data.paging)
+            // } 
+        ]
         // right: [
-        // 	{
+        //  {
         //         partial: 'my-assets-link',
         //         context: data.myAssets
         //     },
