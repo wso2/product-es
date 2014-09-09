@@ -90,7 +90,8 @@ asset.configure = function() {
             search:{
                 searchableFields:['all']
             },
-            thumbnail: 'images_thumbnail'
+            thumbnail: 'images_thumbnail',
+            banner:'images_banner'
         }
     };
 };

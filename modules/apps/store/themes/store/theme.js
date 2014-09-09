@@ -45,8 +45,6 @@ var engine = caramel.engine('handlebars', (function() {
                 return options.fn(this);
             });
             Handlebars.registerHelper('renderSearchField', function(options) {
-                var log = new Log();
-                log.info(options);
                 var output = '';
                 switch (options.type) {
                     case 'text':
@@ -55,7 +53,6 @@ var engine = caramel.engine('handlebars', (function() {
                     case 'options':
                         output = '<select id="'+options.name.fullName+'" class="span12 selectpicker " name="'+options.name.fullName+'">';
                         var valueObj=options.values?options.values[0]:{};
-                        log.info('Values: '+stringify(valueObj));
                         var values=valueObj.value?valueObj.value:[];
                         for(var index in values){
                             output+='<option>'+values[index].value+'</option>';

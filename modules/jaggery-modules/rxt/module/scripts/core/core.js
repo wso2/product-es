@@ -249,12 +249,12 @@ var core = {};
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
             log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return banner attribute');
-            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return thumbail attribute';
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return banner attribute';
         }
         if ((rxtDefinition.meta) && (rxtDefinition.meta.banner)) {
             return rxtDefinition.meta.banner;
         }
-        log.warn('Unable to locate thumbnail attribute for type: ' + type + '.Check if a banner property is defined in the rxt configuration.');
+        log.warn('Unable to locate banner attribute for type: ' + type + '.Check if a banner property is defined in the rxt configuration.');
         return '';
     };
     RxtManager.prototype.getLifecycleName = function(type) {

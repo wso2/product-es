@@ -27,7 +27,7 @@ var pageDecorators = {};
     pageDecorators.searchBar = function(ctx, page) {
         page.searchBar = {};
         page.searchBar.searchFields = [];
-        var searchFields = page.assets.searchFields;
+        var searchFields = page.assetMeta.searchFields;
         for (var index in searchFields) {
             if ((searchFields[index].type == 'text') ||(searchFields[index].type=='options')){
                 page.searchBar.searchFields.push(searchFields[index]);

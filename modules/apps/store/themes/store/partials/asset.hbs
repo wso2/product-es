@@ -3,15 +3,16 @@
 </script>
 <div class="asset-description">
     {{#with assets}}
+
         {{#with attributes}}
             <div class="asset-description-header">
                 <div class="row">
                     <div class="span9">
                         <div class="asset-banner">
-                            <img src="{{#if images_banner}}{{images_banner}}{{/if}}">
+                            <img src="{{#if images_banner}}{{url ""}}/storage/{{../../../rxt.shortName}}/{{../../id}}/{{../../banner}}{{/if}}">
                         </div>
                         <div class="asset-introduction-box">
-                            <img src="{{#if images_thumbnail}}{{images_thumbnail}}{{/if}}">
+                            <img src="{{#if images_thumbnail}}{{url ""}}/storage/{{../../../rxt.shortName}}/{{../../id}}/{{../../thumbnail}}{{/if}}">
 
                             <h3>{{overview_name}}</h3>
                             <small> {{t "Version"}} {{overview_version}}</small>

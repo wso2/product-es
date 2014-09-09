@@ -368,6 +368,18 @@ var asset = {};
         }
         return '';
     };
+    AssetManager.prototype.getBanner=function(asset){
+        var bannerAttribute=this.rxtManager.getBannerAttribute(this.type);
+        if(asset.attributes){
+            var banner=asset.attributes[bannerAttribute];
+            if(!banner){
+                log.warn('Unable to locate bannerAttribute '+bannerAttribute+' in asset '+asset.id);
+                return '';
+            }
+            return asset.attributes[bannerAttribute];
+        }
+        return '';
+    };
     /**
      * The function provides an array of all fields that represent resources of the asset
      * such as thumbnails,banners and content
@@ -435,6 +447,36 @@ var asset = {};
         modAsset.tables = tables;
         return modAsset;
     };
+    var renderSingleAssetPage = function(page, assets, am) {
+        page.assets.name = am.getName(assets);
+        page.assets.thumbnail = am.getThumbnail(assets);
+        page.assets.banner=am.getBanner(assets);
+        page.assetMeta.categories = am.getCategories();
+        page.assetMeta.searchFields = am.getSearchableFields();
+        return page;
+    };
+    var renderSingleAssetPageCombined = function(page, assets, am) {
+        page.assets = am.combineWithRxt(assets);
+        renderSingleAssetPage(page,assets,am);
+        return page;
+    };
+    var renderSingleAssetPageBasic = function(page, assets, am) {
+        page.assets = assets;
+        renderSingleAssetPage(page,assets,am);
+        return page;
+    };
+    var renderMultipleAssetsPage = function(page, assets, am) {
+        page.assets = assets;
+        //Go through each asset determine their thumbnail and name
+        for (var index in assets) {
+            page.assets[index].name = am.getName(assets[index]);
+            page.assets[index].thumbnail = am.getThumbnail(assets[index]);
+            page.assets[index].banner=am.getBanner(assets[index]);
+        }
+        page.assetMeta.categories = am.getCategories();
+        page.assetMeta.searchFields = am.getSearchableFields();
+        return page;
+    };
     /**
      * The function will a render page with the asset details combined with the rxt template.If an array of assets
      * is provided then the assets are not merged with the rxt template
@@ -448,13 +490,17 @@ var asset = {};
             var refUtil = require('utils').reflection;
             //Combine with the rxt template only when dealing with a single asset
             if (refUtil.isArray(assets)) {
-                page.assets = assets;
+                // page.assets = assets;
+                // page.assetMeta.categories = this.getCategories();
+                // page.assetMeta.searchFields = this.getSearchableFields();
+                page = renderMultipleAssetsPage(page, assets, this);
             } else {
-                page.assets = this.combineWithRxt(assets);
-                page.assets.name = this.getName(assets);
-                page.assets.thumbnail = this.getThumbnail(assets);
-                page.assets.categories=this.getCategories();
-                page.assets.searchFields=this.getSearchableFields();
+                // page.assets = this.combineWithRxt(assets);
+                // page.assets.name = this.getName(assets);
+                // page.assets.thumbnail = this.getThumbnail(assets);
+                // page.assets.categories = this.getCategories();
+                // page.assets.searchFields = this.getSearchableFields();
+                page = renderSingleAssetPageCombined(page, assets, this);
             }
         } else if (arguments.length == 1) {
             page = arguments[0];
@@ -506,13 +552,17 @@ var asset = {};
             var refUtil = require('utils').reflection;
             //Combine with the rxt template only when dealing with a single asset
             if (refUtil.isArray(assets)) {
-                page.assets = assets;
+                // page.assets = assets;
+                // page.assetMeta.categories = this.getCategories();
+                // page.assetMeta.searchFields = this.getSearchableFields();
+                page = renderMultipleAssetsPage(page, assets, this);
             } else {
-                page.assets=assets;
-                page.assets.name = this.getName(assets);
-                page.assets.thumbnail = this.getThumbnail(assets);
-                page.assets.categories=this.getCategories();
-                page.assets.searchFields=this.getSearchableFields();
+                // page.assets = assets;
+                // page.assets.name = this.getName(assets);
+                // page.assets.thumbnail = this.getThumbnail(assets);
+                // page.assets.categories = this.getCategories();
+                // page.assets.searchFields = this.getSearchableFields();
+                page = renderSingleAssetPageBasic(page, assets, this);
             }
         } else if (arguments.length == 1) {
             page = arguments[0];
@@ -551,35 +601,33 @@ var asset = {};
             }
         };
     };
-    AssetManager.prototype.getCategories=function(){
-        var categoryField=this.rxtManager.getCategoryField(this.type);
-        var categories=[];
-        if(!categoryField){
+    AssetManager.prototype.getCategories = function() {
+        var categoryField = this.rxtManager.getCategoryField(this.type);
+        var categories = [];
+        if (!categoryField) {
             log.warn('Unable to locate a categories field.Make sure a categories section has been provided in configuration callback ');
             return categories;
         }
-        categories=this.rxtManager.getRxtFieldValue(this.type,categoryField);
+        categories = this.rxtManager.getRxtFieldValue(this.type, categoryField);
         return categories;
     };
-    AssetManager.prototype.getSearchableFields=function(){
-        var searchFields=[];
+    AssetManager.prototype.getSearchableFields = function() {
+        var searchFields = [];
         var fieldName;
         var field;
-        var definedFields=this.rxtManager.getSearchableFields(this.type);
-
+        var definedFields = this.rxtManager.getSearchableFields(this.type);
         //Deteremine if the user has specified keyword all.if so then all
         //fields can be searched
-        if((definedFields.length==1)&&(definedFields[0]=='all')){
-            log.warn('All of the '+this.type+' fields can be searched.');
-            searchFields=this.rxtManager.listRxtFields(this.type);
+        if ((definedFields.length == 1) && (definedFields[0] == 'all')) {
+            log.warn('All of the ' + this.type + ' fields can be searched.');
+            searchFields = this.rxtManager.listRxtFields(this.type);
             return searchFields;
         }
-
         //Obtain the field definitions for each of the fields
-        for(var index in definedFields){
-            fieldName=definedFields[index];
-            field=this.rxtManager.getRxtField(this.type,fieldName);
-            if(field){
+        for (var index in definedFields) {
+            fieldName = definedFields[index];
+            field = this.rxtManager.getRxtField(this.type, fieldName);
+            if (field) {
                 searchFields.push(field);
             }
         }
