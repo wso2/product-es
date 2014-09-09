@@ -1,9 +1,0 @@
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/DSConnection.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/JDBCPersistenceManager.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/SQLActivityPublisher.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/SQLActivityBrowser.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/SocialDBInitilizer.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/SQLActivity.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/service/SQLActivityService.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/internal/SQLSocialComponent.java
-/home/dinusha/wso2_products/wso2-dev/product-es/modules/components/social/org.wso2.carbon.social.sql/src/main/java/org/wso2/carbon/social/sql/Constants.java
