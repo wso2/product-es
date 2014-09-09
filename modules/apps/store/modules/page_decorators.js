@@ -1,15 +1,17 @@
 var pageDecorators = {};
 (function() {
-    pageDecorators.navigationBar = function(ctx, page) {
+    pageDecorators.navigationBar = function(ctx, page,utils) {
         var rxtManager = ctx.rxtManager;
         //Obtain all of the available rxt types
         var availableTypes = rxtManager.listRxtTypeDetails();
         var types = [];
         var currentType = ctx.assetType;
+        var log=new Log();
         page.navigationBar = {};
         for (var index in availableTypes) {
             currentType = availableTypes[index];
             currentType.selected = false;
+            currentType.listingUrl=utils.buildBaseUrl(availableTypes[index].shortName)+'/list';
             if (currentType.shortName == ctx.assetType) {
                 currentType.selected = true;
             }

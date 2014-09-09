@@ -5,7 +5,7 @@
 				{{#with navigationBar}}
 				<div class="span9">
 					{{#each types}}
-					<a href="{{url "/asts/"}}" data-toggle="dropdown" class="dropdown-toggle">
+					<a href="{{url ""}}{{this.listingUrl}}" data-toggle="dropdown" class="dropdown-toggle">
 					<li class="dropdown {{#if selected}} selected {{/if}}">
 						<div class="dropdown-icon-cont">
 							{{#if value.icon}}
