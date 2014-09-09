@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Axis2Module: org.wso2.carbon.social.core-1.1.0
-Bnd-LastModified: 1410059219540
+Bnd-LastModified: 1410250709752
 Build-Jdk: 1.6.0_21
 Built-By: dinusha
 Bundle-Description: WSO2 Enterprise Store
