@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Axis2Module: org.wso2.carbon.social.core-1.1.0
+Bnd-LastModified: 1410059219540
+Build-Jdk: 1.6.0_21
+Built-By: dinusha
+Bundle-Description: WSO2 Enterprise Store
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.wso2.carbon.social.core
+Bundle-SymbolicName: org.wso2.carbon.social.core
+Bundle-Version: 1.1.0
+Created-By: Apache Maven Bundle Plugin
+DynamicImport-Package: *
+Export-Package: org.wso2.carbon.social.core;uses:="com.google.gson,org.j
+ son,org.mozilla.javascript";version="1.1.0",org.wso2.carbon.social.core
+ .service;uses:="org.mozilla.javascript,org.wso2.carbon.social.core";ver
+ sion="1.1.0"
+Import-Package: com.google.gson;resolution:=optional;version="[2.1,3)",o
+ rg.json;resolution:=optional,org.mozilla.javascript;resolution:=optiona
+ l;version="[1.7,2)",javax.servlet.http;version="[2.6.0,3.0.0)",javax.se
+ rvlet;version="[2.6.0,3.0.0)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.5))"
+Tool: Bnd-2.3.0.201405100607
