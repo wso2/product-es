@@ -107,7 +107,8 @@ asset.configure = function() {
             ui: {
                 icon: 'icon-cog'
             },
-            thumbnail: 'images_thumbnail'
+            thumbnail: 'images_thumbnail',
+            banner:'images_banner'
         }
     };
 };

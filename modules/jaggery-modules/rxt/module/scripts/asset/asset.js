@@ -1,6 +1,6 @@
 var asset = {};
 (function(asset, core) {
-    var log = new Log('asset');
+    var log = new Log('rxt.asset');
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
     /**
      * The function locates the provided field and table name within an attributes
