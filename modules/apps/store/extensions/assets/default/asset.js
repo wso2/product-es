@@ -108,6 +108,9 @@ asset.renderer = function(ctx) {
             },
             categoryBox:function(page){
                 return decoratorApi.categoryBox(ctx,page,this);
+            },
+            authenticationDetails:function(page){
+                return decoratorApi.authenticationDetails(ctx,page,this);
             }
         }
     };

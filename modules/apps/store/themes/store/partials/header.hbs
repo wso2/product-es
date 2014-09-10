@@ -8,7 +8,7 @@
 						<a class="brand" href="{{url "/"}}"></a>
 						<ul class="nav menu pull-right">
 
-							{{#if cuser}}
+							{{#if cuser.username}}
 							<li class="nav-separator">
 								<a href="{{url "/dashboard"}}"><i
 								class="icon-bookmark store-topnav-bookmark"></i> {{t "My Items"}}</a>
@@ -25,25 +25,7 @@
 
 							</li>
 							{{else}}
-
-							{{#if sso}}
-							<li>
-								<a href="{{url "/login"}}">{{t "Sign in"}}</a>
-							</li>
-							<li>
-								<a href="{{url "/login"}}" id="btn-register"
-								class="btn btn-primary">{{t "Register"}}</a>
-							</li>
-							{{else}}
-							<li>
-								<a href="#" data-toggle="modal" data-target="#modal-login">{{t "Sign in"}}</a>
-							</li>
-							<li>
-								<a id="btn-register" class="btn btn-primary" data-toggle="modal"
-								data-target="#modal-register">{{t "Register"}}</a>
-							</li>
-							{{/if}}
-
+							{{authentication .}}
 							{{/if}}
 
 						</ul>

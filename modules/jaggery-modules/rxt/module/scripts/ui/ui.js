@@ -13,6 +13,7 @@ var ui = {};
             leftNav: [],
             ribbon: {},
             assetMeta:{},
+            security:{},
             meta: {
                 pageName: options.pageName,
                 currentPage: options.currentPage,

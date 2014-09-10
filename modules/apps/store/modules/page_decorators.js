@@ -50,4 +50,24 @@ var pageDecorators = {};
         page.categoryBox.searchEndpoint='/apis/assets?type='+ctx.assetType;
         return page;
     };
+
+    pageDecorators.authenticationDetails=function(ctx,page){
+        var authenticationMethods=ctx.tenantConfigs.authentication?ctx.tenantConfigs.authentication:{};
+        var activeMethod=authenticationMethods.activeMethod?authenticationMethods.activeMethod:'';
+        //Obtain the details for this method of authentication
+        var authDetails=fetchActiveAuthDetails(activeMethod, authenticationMethods.methods||[]);
+
+        page.security.method=activeMethod;
+        page.security.details=authDetails;
+        return page;
+    };
+
+    var fetchActiveAuthDetails=function(method,methods){
+        for(var key in methods){
+            if(key==method){
+                return methods[key];
+            }
+        }
+        return null;
+    };
 }());

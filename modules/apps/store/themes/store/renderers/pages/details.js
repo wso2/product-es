@@ -14,7 +14,7 @@ var render = function(theme, data, meta, require) {
         title: data.meta.title,
         header: [{
             partial: 'header',
-            context: data.meta
+            context: data
         }],
         navigation: [{
             partial: navigation,

@@ -65,6 +65,33 @@ var engine = caramel.engine('handlebars', (function() {
                 }
                 return new Handlebars.SafeString(output);
             });
+            Handlebars.registerHelper('authentication',function(options){
+                var log=new Log();
+                //Determine if security details are present
+                var security=options.security;
+                var output="";
+                var ptr;
+                if(!security){
+                    log.warn('Unable to locate security details in order to render authentication ui elements');
+                    return;
+                }
+                log.info('Active authentication method: '+security.method);
+                //Determine the authentication method
+                switch(security.method){
+                    case 'sso':
+                        log.info('Placing sso related partials');
+                        output="{{> sso_auth .}}";
+                        break;
+                    case 'basic':
+                        log.info('Placing basic authentication partials');
+                        output="{{> basic_auth .}}";
+                        break;
+                    default:
+                        break;
+                }
+                ptr=Handlebars.compile(output);
+                return new Handlebars.SafeString(ptr(security));
+            });
         },
         render: function(data, meta) {
             if (request.getParameter('debug') == '1') {
