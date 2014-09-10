@@ -205,6 +205,29 @@
                     </execution>
                     <!-- End of fix -->
                     <execution>
+                        <id>social-h2-table-gen</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <echo message="########### Create Social Database ##############"/>
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/social"
+                                      overwrite="false">
+                                    <fileset
+                                            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/social/">
+                                    </fileset>
+                                </copy>
+                                <path id="h2.classpath">
+                                    <path refid="maven.compile.classpath"/>
+                                </path>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <!-- End of fix -->
+                    
+                    <execution>
                         <id>clean_target</id>
                         <phase>install</phase>
                         <configuration>
