@@ -48,12 +48,12 @@
             <artifactId>org.wso2.store.sso.common</artifactId>
             <version>${ues.version}</version>
         </dependency>
-        <dependency>
+       <!-- <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.databridge.datasink.cassandra</artifactId>
             <version>4.2.0</version>
-        </dependency>
-    </dependencies>
+        </dependency>-->
+    </dependencies> 
 
     <build>
         <plugins>
@@ -85,7 +85,7 @@
                                 <bundleDef>org.wso2.store:org.wso2.store.sso.common</bundleDef>
                                 <bundleDef>org.wso2.store:org.wso2.store.admin.styles</bundleDef>
                                 <bundleDef>org.wso2.store:org.wso2.carbon.social:1.0.0</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra</bundleDef>
+                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra</bundleDef>-->
                                 <bundleDef>org.wso2.store:jaggery-scxml-executors:1.0.0</bundleDef>
                             </bundles>
                             <importBundles/>
@@ -154,39 +154,39 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.governance.lifecycle.management:${carbon.platform.version}
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.cassandra.explorer:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.cassandra:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef>-->
                                 <importFeatureDef>
                                     org.wso2.carbon.cassandra-jdbc-1.1.1.server:4.0.1
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.databridge.datapublisher:4.2.1
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.databridge.datareceiver:${carbon.platform.version}
-                                </importFeatureDef>
-                                <importFeatureDef>
+                                </importFeatureDef>-->
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.databridge.commons.server:4.2.1
-                                </importFeatureDef>
-                                <importFeatureDef>
+                                </importFeatureDef>-->
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.databridge.cassandra:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef>-->
                                 <importFeatureDef>
                                     org.wso2.carbon.module.mgt.server:${carbon.platform.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.user.mgt:${patch.version.421}
                                 </importFeatureDef>
-                                <importFeatureDef>
+                                <!--<importFeatureDef>
                                     org.wso2.carbon.databridge.streamdefn.cassandra:${carbon.platform.version}
-                                </importFeatureDef>
+                                </importFeatureDef>-->
                                 <!-- Stratos features    -->
                                 <importFeatureDef>
-                                    org.wso2.carbon.stratos.common:${stratos.patch.version.221}
+                                    org.wso2.carbon.stratos.common:2.3.0
                                 </importFeatureDef>
                                 <importFeatureDef>
                                     org.wso2.carbon.event:${patch.version.421}
