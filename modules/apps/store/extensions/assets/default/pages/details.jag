@@ -16,13 +16,22 @@ require('/modules/store.js').exec(function(ctx) {
         var type = options.type;
         var am;
         if (user) {
-            am = asset.createUserAssetManager(ctx.session,ctx.type);
+            am = asset.createUserAssetManager(ctx.session,type);
         }
         else{
-        	am=asset.createAnonAssetManager(ctx.session,ctx.type, -1234);
+        	am=asset.createAnonAssetManager(ctx.session,type, -1234);
         }
         var page = ui.buildPage(ctx.session, ctx.request);
-        var assets = am.get(options.id);
+        var assets=null;
+
+        //The asset retrieval may fail when attempting to obtain an asset which is not accessible
+        try{
+            assets = am.get(options.id);
+        }
+        catch(e){
+            log.warn('Unable to retrieve asset with id: '+options.id+' due to '+e);
+        }
+        
         if (assets == null) {
             response.sendError(404, 'The asset with id: ' + options.id + ' could not be located.');
         } else {
