@@ -20,8 +20,8 @@
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <!--version>${maven.resourcesplugin.version}</version-->
-                <!--executions>
+                <!--<version>${maven.resourcesplugin.version}</version> -->
+                <executions>
                     <execution>
                         <id>copy-p2.inf</id>
                         <phase>generate-resources</phase>
@@ -41,7 +41,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-tbox</id>
+                        <id>copy-init-db-scripts</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -51,14 +51,11 @@
                             <resources>
                                 <resource>
                                     <directory>resources</directory>
-                                    <includes>
-                                        <include>social.tbox</include>
-                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
-                </executions-->
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.wso2.maven</groupId>
