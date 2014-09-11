@@ -137,7 +137,15 @@ var asset = {};
     AssetManager.prototype.update = function(options) {
         this.am.update(options);
     };
-    AssetManager.prototype.remove = function(options) {};
+    AssetManager.prototype.remove = function(id) {
+        if (!id) {
+            throw 'The asset manager delete method requires an id to be provided.';
+        }
+        if (!this.am) {
+            throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
+        }
+        this.am.remove(id);
+    };
     /**
      * The method is responsible for updating the provided asset with the latest
      * values in the registry.If the asset is not succsessfully synched with the registry
@@ -279,6 +287,62 @@ var asset = {};
         }
         return success;
     };
+    /**
+     * The function sets the check item at the provided index to the given state
+     * @param  {[type]} asset          [description]
+     * @param  {[type]} checkItemIndex The index of the check list item to be invoked
+     * @param  {[type]} checkItemState A boolean value which indicates the state of the check item
+     *                                 (checked=true and unchecked=false)
+     * @return {[type]}                A boolean value indicating whether the check item state was changed
+     */
+    AssetManager.prototype.invokeLifecycleCheckItem = function(asset, checkItemIndex, checkItemState) {
+        var success = false;
+        if (!asset) {
+            log.warn('Unable to locate asset details in order to invoke check item state change');
+            return success;
+        }
+        //Check if a check item state has been provided
+        if (checkItemState == null) {
+            log.warn('The check item at index ' + checkItemIndex + ' cannot be changed as the check item state is not provided.');
+            return success;
+        }
+        //Obtain the number of check items for this state
+        var checkItems = this.getLifecycleCheckItems(asset);
+        //Check if the check item index is valid
+        if ((checkItemIndex < 0) || (checkItemIndex > checkItems.length)) {
+            log.error('The provided check item index ' + checkItemIndex + ' is not valid.It must be between 0 and ' + checkItems.length);
+            throw 'The provided check item index ' + checkItemIndex + ' is not valid.It must be between 0 and ' + checkItems.length;
+        }
+        success = true; //Assume the check item invocation will succeed
+        //These methods do not return a boolean value indicating if the item was checked or unchecked
+        //TODO: We could invoke getCheckLifecycleCheckItems and check the item index to see if the operation was successfull.
+        try {
+            if (checkItemState == true) {
+                this.am.checkItem(checkItemIndex, asset);
+            } else {
+                this.am.uncheckItem(checkItemIndex, asset);
+            }
+        } catch (e) {
+            log.error(e);
+            success = false;
+        }
+        return success;
+    };
+    /**
+     * The function returns all of the check items for the current state in which the provided
+     * asset is in
+     * @param  {[type]} asset [description]
+     * @return {[type]}       An array of check items along with the checked state
+     */
+    AssetManager.prototype.getLifecycleCheckItems = function(asset) {
+        var checkItems = [];
+        try {
+            checkItems = this.am.getCheckListItemNames(asset);
+        } catch (e) {
+            log.error(e);
+        }
+        return checkItems;
+    };
     AssetManager.prototype.createVersion = function(options, newVersion) {};
     AssetManager.prototype.getName = function(asset) {
         var nameAttribute = this.rxtManager.getNameAttribute(this.type);
@@ -372,49 +436,79 @@ var asset = {};
         return modAsset;
     };
     AssetManager.prototype.render = function(assets, page) {
-        var refUtil = require('utils').reflection;
-        //Combine with the rxt template only when dealing with a single asset
-        if (refUtil.isArray(assets)) {
-            page.assets = assets;
-        } else {
-            page.assets = this.combineWithRxt(assets);
-            page.assets.name = this.getName(assets);
-            page.assets.thumbnail = this.getThumbnail(assets);
+        //Only process assets if both assets and pages are provided
+        if (arguments.length == 2) {
+            var refUtil = require('utils').reflection;
+            //Combine with the rxt template only when dealing with a single asset
+            if (refUtil.isArray(assets)) {
+                page.assets = assets;
+            } else {
+                page.assets = this.combineWithRxt(assets);
+                page.assets.name = this.getName(assets);
+                page.assets.thumbnail = this.getThumbnail(assets);
+            }
+        } else if (arguments.length == 1) {
+            page = arguments[0];
         }
         page.rxt = this.rxtTemplate;
         var that = this;
         return {
             create: function() {
                 page = that.r.create(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             update: function() {
                 page = that.r.update(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             list: function() {
                 page = that.r.list(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             details: function() {
                 page = that.r.details(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
             lifecycle: function() {
                 page = that.r.lifecycle(page) || page;
-                page = that.r.leftNav(page) || page;
-                page = that.r.ribbon(page) || page;
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
+                return page;
+            },
+            _custom: function() {
+                //page = that.r.leftNav(page) || page;
+                //page = that.r.ribbon(page) || page;
+                page = that.r.applyPageDecorators(page) || page;
                 return page;
             }
         };
+    };
+
+    function NavList() {
+        this.items = [];
+    }
+    NavList.prototype.push = function(label, icon, url) {
+        this.items.push({
+            name: label,
+            iconClass: icon,
+            url: url
+        });
+    };
+    NavList.prototype.list = function() {
+        return this.items;
     };
 
     function AssetRenderer(pagesRoot, assetsRoot) {
@@ -430,16 +524,27 @@ var asset = {};
     AssetRenderer.prototype.thumbnail = function(page) {
         return '';
     };
+    AssetRenderer.prototype.navList = function() {
+        return new NavList();
+    };
     AssetRenderer.prototype.create = function(page) {};
     AssetRenderer.prototype.update = function(page) {};
     AssetRenderer.prototype.details = function(page) {};
     AssetRenderer.prototype.list = function(page) {};
     AssetRenderer.prototype.lifecycle = function(page) {};
     AssetRenderer.prototype.leftNav = function(page) {
-        var log = new Log();
-        log.info('Default leftnav');
+        //var log = new Log();
+        //log.info('Default leftnav');
     };
     AssetRenderer.prototype.ribbon = function(page) {};
+    AssetRenderer.prototype.applyPageDecorators = function(page) {
+        var pageDecorators = this.pageDecorators || {};
+        for (var key in pageDecorators) {
+
+            page = pageDecorators[key].call(this,page) || page;
+        }
+        return page;
+    };
     /**
      * The function create an asset manage given a registry instance,type and tenantId
      * @param  {[type]} tenantId The id of the tenant
@@ -459,14 +564,109 @@ var asset = {};
         assetManager.init();
         return assetManager;
     };
+    var overridePageDecorators = function(to, from) {
+        var fromPageDecorators = from.pageDecorators || {};
+        var toPageDecorators = to.pageDecorators|| {};
+        if(!to.pageDecorators){
+            to.pageDecorators={};
+        }
+        for (var key in fromPageDecorators) {
+           to.pageDecorators[key] = fromPageDecorators[key];
+        }
+    };
     var createRenderer = function(session, tenantId, type) {
         var reflection = require('utils').reflection;
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(tenantId, type);
         var customRenderer = (assetResources.renderer) ? assetResources.renderer(context) : {};
         var renderer = new AssetRenderer(asset.getAssetPageUrl(type), asset.getBaseUrl());
+        var defaultRenderer = assetResources._default.renderer ? assetResources._default.renderer(context) : {};
+        reflection.override(renderer, defaultRenderer);
         reflection.override(renderer, customRenderer);
+        //Override the page decorators
+        
+        overridePageDecorators(renderer, defaultRenderer);
+        overridePageDecorators(renderer, customRenderer);
+        //reflection.override(renderer, defaultRenderer);
+        //reflection.override(renderer, customRenderer);
+        //log.info(assetResources.renderer.toSource());
+        //log.info(renderer.toSource());
+        //log.info('defaultRenderer: '+renderer.toSource());
         return renderer;
+    };
+    /**
+     * The function will combine two arrays of endpoints together.If a common endpoint is found then
+     * the information in the otherEndpoints array will be used to update the endpoints array.
+     * @param  {[type]} endpoints      [description]
+     * @param  {[type]} otherEndpoints [description]
+     */
+    var combineEndpoints = function(endpoints, otherEndpoints) {
+        for (var index in otherEndpoints) {
+            var found = false; //Assume the endpoint will not be located
+            for (var endpointIndex = 0;
+                ((endpointIndex < endpoints.length) && (!found)); endpointIndex++) {
+                //Check if there is a similar endpoint and override the title and path
+                if (otherEndpoints[index].url == endpoints[endpointIndex].url) {
+                    endpoints[endpointIndex].url = otherEndpoints[index].url;
+                    endpoints[endpointIndex].path = otherEndpoints[index].path;
+                    found = true; //break the loop since we have already located the endpoint
+                    log.debug('Overriding existing endpoint ' + otherEndpoints[index].url);
+                }
+            }
+            //Only add the endpoint if it has not already been defined
+            if (!found) {
+                log.debug('Adding new endpoint ' + otherEndpoints[index].url);
+                endpoints.push(otherEndpoints[index]);
+            }
+        }
+    };
+    /**
+     * The method is used to build a server object that has knowledge about the available endpoints of an
+     * asset type.It will first check if the asset type has defined a server callback in an asset.js.If one is present
+     * then it will used to override the default server call back defined in the default asset.js.In the case of the
+     * endpoint property it will combine the endpoints defined in the default asset.js.
+     * @param  {[type]} session [description]
+     * @param  {[type]} type    The type of asset
+     * @return {[type]}
+     */
+    var createServer = function(session, type) {
+        var context = core.createAssetContext(session, type);
+        var assetResources = core.assetResources(context.tenantId, type);
+        var reflection = require('utils').reflection;
+        var serverCb = assetResources.server;
+        var defaultCb = assetResources._default.server;
+        if (!assetResources._default) {
+            log.warn('A default object has not been defined for the type: ' + type + ' for tenant: ' + context.tenantId);
+            throw 'A default object has not been defined for the type: ' + type + ' for tenant: ' + context.tenantId + '.Check if a default folder is present';
+        }
+        //Check if there is a type level server callback
+        if (!serverCb) {
+            defaultCb = defaultCb(context);
+            serverCb = defaultCb;
+        } else {
+            defaultCb = defaultCb(context);
+            serverCb = serverCb(context);
+            //Combine the endpoints 
+            var defaultApiEndpoints = ((defaultCb.endpoints) && (defaultCb.endpoints.apis)) ? defaultCb.endpoints.apis : [];
+            var defaultPageEndpoints = ((defaultCb.endpoints) && (defaultCb.endpoints.pages)) ? defaultCb.endpoints.pages : [];
+            var serverApiEndpoints = ((serverCb.endpoints) && (serverCb.endpoints.apis)) ? serverCb.endpoints.apis : [];
+            var serverPageEndpoints = ((serverCb.endpoints) && (serverCb.endpoints.pages)) ? serverCb.endpoints.pages : [];
+            combineEndpoints(defaultApiEndpoints, serverApiEndpoints);
+            combineEndpoints(defaultPageEndpoints, serverPageEndpoints);
+            if (!defaultCb.endpoints) {
+                throw 'No endpoints found for the type: ' + type;
+            }
+            if (!serverCb.endpoints) {
+                serverCb.endpoints = {};
+                log.warn('Creating endpoints object for type: ' + type);
+            }
+            defaultCb.endpoints.apis = defaultApiEndpoints;
+            serverCb.endpoints.apis = defaultApiEndpoints;
+            defaultCb.endpoints.pages = defaultPageEndpoints;
+            serverCb.endpoints.pages = defaultPageEndpoints;
+            reflection.override(defaultCb, serverCb);
+        }
+        return defaultCb;
     };
     /**
      * The function will create an Asset Manager instance using the registry of the currently
@@ -503,8 +703,10 @@ var asset = {};
      */
     asset.getAssetEndpoints = function(session, type) {
         var context = core.createAssetContext(session, type);
-        var assetResources = core.assetResources(context.tenantId, type);
-        return assetResources.server ? assetResources.server(context).endpoints : {};
+        //var assetResources = core.assetResources(context.tenantId, type);
+        var serverCb = createServer(session, type);
+        return serverCb ? serverCb.endpoints : {};
+        //return assetResources.server ? assetResources.server(context).endpoints : {};
     };
     asset.getAssetApiEndpoints = function(session, type) {
         var endpoints = this.getAssetEndpoints(session, type);

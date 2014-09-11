@@ -238,8 +238,26 @@ var core = {};
         if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
             return rxtDefinition.meta.lifecycle.defaultAction || '';
         }
-        log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type);
+        log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type+'.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
         return '';
+    };
+    /**
+     * The function checks whether an asset type requires comments when changing state.If the user has not configured
+     * this property then it will return false, meaning comments will not be required when changing the lifecycle state
+     * @param  {[type]}  type The type of the asset
+     * @return {Boolean}      True if comments are required
+     */
+    RxtManager.prototype.isLCCommentRequired=function(type){
+      var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to determine if lifecycle comments are required';
+        }
+        if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
+            return rxtDefinition.meta.lifecycle.commentRequired || false;
+        }
+        log.warn('Unable to locate the lifecycle meta property to determine whether comments are required ' + type+'.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
+        return false;  
     };
     /**
      * The function will retrieve all fields of the provided field type
@@ -267,6 +285,61 @@ var core = {};
             }
         }
         return result;
+    };
+    /**
+     * The function returns an array of states in which an asset can be deleted
+     * @param  {[type]} type The rxt type
+     * @return {[type]}      An array of states in which an rxt instance can be deleted
+     */
+    RxtManager.prototype.getDeletableStates = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        var deletableStates = [];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the deletable states.';
+        }
+        if (!rxtDefinition.meta) {
+            log.warn('Unable to locate meta information in the rxt definition for type: ' + type + '.Cannot fetch deletable states.');
+            return deletableStates;
+        }
+        if (!rxtDefinition.meta.lifecycle) {
+            log.warn('Unable to locate lifecycle information in the rxt definition for type ' + type + '.Cannot fetch lifecycle data.');
+            return deletableStates;
+        }
+        if (!rxtDefinition.meta.lifecycle.deletableStates) {
+            log.warn('No deletable states have been defined for the rxt definition of type: ' + type + '.');
+            return deletableStates;
+        }
+        deletableStates = rxtDefinition.meta.lifecycle.deletableStates;
+        return deletableStates;
+    };
+    /**
+     * The function indicates a set of states in which an asset is deemed to be
+     * in the published state.An asset in the published state is visible in the Store
+     * @param  {[type]} type The type of the asset
+     * @return {[type]}      An array of strings indicating the set of published states
+     */
+    RxtManager.prototype.getPublishedStates=function(type){
+       var rxtDefinition = this.rxtMap[type];
+        var publishedStates = [];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the published states.';
+        }
+        if (!rxtDefinition.meta) {
+            log.warn('Unable to locate meta information in the rxt definition for type: ' + type + '.Cannot fetch published states.');
+            return publishedStates;
+        }
+        if (!rxtDefinition.meta.lifecycle) {
+            log.warn('Unable to locate lifecycle information in the rxt definition for type ' + type + '.Cannot fetch lifecycle data.');
+            return publishedStates;
+        }
+        if (!rxtDefinition.meta.lifecycle.publishedStates) {
+            log.warn('No published states have been defined for the rxt definition of type: ' + type + '.');
+            return publishedStates;
+        }
+        publishedStates = rxtDefinition.meta.lifecycle.publishedStates;
+        return publishedStates; 
     };
     /*
     Creates an xml file from the contents of an Rxt file
