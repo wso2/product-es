@@ -111,6 +111,9 @@ asset.renderer = function(ctx) {
             },
             authenticationDetails:function(page){
                 return decoratorApi.authenticationDetails(ctx,page,this);
+            },
+            recentAssets:function(page){
+                return decoratorApi.recentAssets(ctx,page);
             }
         }
     };

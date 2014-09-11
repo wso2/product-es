@@ -1,6 +1,8 @@
 var asset = {};
 (function(asset, core) {
     var log = new Log('rxt.asset');
+    var DEFAULT_TIME_STAMP_FIELD = 'overview_createdtime';
+    var DEFAULT_RECENT_ASSET_COUNT=5;
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
     /**
      * The function locates the provided field and table name within an attributes
@@ -329,6 +331,39 @@ var asset = {};
         return success;
     };
     /**
+     * The function obtains all recent assets with an optional query object to filter the results
+     * @param  {[type]} query An optional query object
+     * @return {[type]}       [description]
+     */
+    AssetManager.prototype.recentAssets = function() {
+        var timeStampField = this.rxtManager.getTimeStampAttribute(this.type);
+        var ref=require('utils').reflection;
+        var results = [];
+        if (!timeStampField) {
+            log.warn('A timestamp field has not been defined for type: ' + this.type + '. Default time stamp field ' + DEFAULT_TIME_STAMP_FIELD + ' will be used.');
+            timeStampField = DEFAULT_TIME_STAMP_FIELD;
+        }
+        var query = {};
+        var options = {
+            start: 0,
+            count: DEFAULT_RECENT_ASSET_COUNT,
+            sortBy: timeStampField,
+            sort: 'older'
+        };
+
+        //Options object provided
+        if(arguments.length==1){
+            ref.copyAllPropValues(arguments[0],options);
+        }
+        //Options and Query object provided
+        else if(arguments.length==2){
+            ref.copyAllPropValues(arguments[0],options);
+            query=arguments[1];
+        }
+        results = this.am.search(query, options);
+        return results;
+    };
+    /**
      * The function returns all of the check items for the current state in which the provided
      * asset is in
      * @param  {[type]} asset [description]
@@ -368,12 +403,12 @@ var asset = {};
         }
         return '';
     };
-    AssetManager.prototype.getBanner=function(asset){
-        var bannerAttribute=this.rxtManager.getBannerAttribute(this.type);
-        if(asset.attributes){
-            var banner=asset.attributes[bannerAttribute];
-            if(!banner){
-                log.warn('Unable to locate bannerAttribute '+bannerAttribute+' in asset '+asset.id);
+    AssetManager.prototype.getBanner = function(asset) {
+        var bannerAttribute = this.rxtManager.getBannerAttribute(this.type);
+        if (asset.attributes) {
+            var banner = asset.attributes[bannerAttribute];
+            if (!banner) {
+                log.warn('Unable to locate bannerAttribute ' + bannerAttribute + ' in asset ' + asset.id);
                 return '';
             }
             return asset.attributes[bannerAttribute];
@@ -450,19 +485,19 @@ var asset = {};
     var renderSingleAssetPage = function(page, assets, am) {
         page.assets.name = am.getName(assets);
         page.assets.thumbnail = am.getThumbnail(assets);
-        page.assets.banner=am.getBanner(assets);
+        page.assets.banner = am.getBanner(assets);
         page.assetMeta.categories = am.getCategories();
         page.assetMeta.searchFields = am.getSearchableFields();
         return page;
     };
     var renderSingleAssetPageCombined = function(page, assets, am) {
         page.assets = am.combineWithRxt(assets);
-        renderSingleAssetPage(page,assets,am);
+        renderSingleAssetPage(page, assets, am);
         return page;
     };
     var renderSingleAssetPageBasic = function(page, assets, am) {
         page.assets = assets;
-        renderSingleAssetPage(page,assets,am);
+        renderSingleAssetPage(page, assets, am);
         return page;
     };
     var renderMultipleAssetsPage = function(page, assets, am) {
@@ -471,7 +506,7 @@ var asset = {};
         for (var index in assets) {
             page.assets[index].name = am.getName(assets[index]);
             page.assets[index].thumbnail = am.getThumbnail(assets[index]);
-            page.assets[index].banner=am.getBanner(assets[index]);
+            page.assets[index].banner = am.getBanner(assets[index]);
         }
         page.assetMeta.categories = am.getCategories();
         page.assetMeta.searchFields = am.getSearchableFields();
@@ -682,26 +717,26 @@ var asset = {};
      * @param  {[type]} decoratorsToUse [description]
      * @return {[type]}                 [description]
      */
-    AssetRenderer.prototype.applyPageDecorators = function(page,decoratorsToUse) {
+    AssetRenderer.prototype.applyPageDecorators = function(page, decoratorsToUse) {
         var pageDecorators = this.pageDecorators || {};
         for (var key in pageDecorators) {
             page = pageDecorators[key].call(this, page) || page;
         }
         return page;
     };
-    var isSelectedDecorator=function(decorator,decoratorsToUse){
-        if(decoratorsToUse.indexOf(decorator)>-1){
-            return true;
+    var isSelectedDecorator = function(decorator, decoratorsToUse) {
+            if (decoratorsToUse.indexOf(decorator) > -1) {
+                return true;
+            }
+            return false;
         }
-        return false;
-    }
-    /**
-     * The function create an asset manage given a registry instance,type and tenantId
-     * @param  {[type]} tenantId The id of the tenant
-     * @param  {[type]} registry The registry instance used to create the underlying artifact manager
-     * @param  {[type]} type     The type of the assets managed by the asset manager
-     * @return An asset manager instance
-     */
+        /**
+         * The function create an asset manage given a registry instance,type and tenantId
+         * @param  {[type]} tenantId The id of the tenant
+         * @param  {[type]} registry The registry instance used to create the underlying artifact manager
+         * @param  {[type]} type     The type of the assets managed by the asset manager
+         * @return An asset manager instance
+         */
     var createAssetManager = function(session, tenantId, registry, type) {
         var reflection = require('utils').reflection;
         var rxtManager = core.rxtManager(tenantId);

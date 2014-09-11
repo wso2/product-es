@@ -257,6 +257,18 @@ var core = {};
         log.warn('Unable to locate banner attribute for type: ' + type + '.Check if a banner property is defined in the rxt configuration.');
         return '';
     };
+    RxtManager.prototype.getTimeStampAttribute=function(type){
+       var rxtDefinition=this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return timestamp attribute');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return timestamp attribute';
+        }
+        if ((rxtDefinition.meta) && (rxtDefinition.meta.timestamp)) {
+            return rxtDefinition.meta.timestamp;
+        }
+        log.warn('Unable to locate banner attribute for type: ' + type + '.Check if a timestamp property is defined in the rxt configuration.');
+        return null;
+    };
     RxtManager.prototype.getLifecycleName = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -625,7 +637,8 @@ var core = {};
             rxtManager: rxtManager,
             tenantConfigs: tenatConfigs,
             serverConfigs: serverConfigs,
-            isAnonContext: true
+            isAnonContext: true,
+            session:session
         };
     };
     core.createUserAssetContext = function(session, type) {
@@ -649,7 +662,8 @@ var core = {};
             rxtManager: rxtManager,
             tenantConfigs: tenatConfigs,
             serverConfigs: serverConfigs,
-            isAnonContext: false
+            isAnonContext: false,
+            session:session
         };
     };
 }(core));
