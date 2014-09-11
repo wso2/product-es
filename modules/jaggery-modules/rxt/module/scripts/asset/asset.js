@@ -360,7 +360,7 @@ var asset = {};
             query = arguments[1];
         }
         results = this.am.search(query, options);
-        addAssetsMetaData(results,this);
+        addAssetsMetaData(results, this);
         return results;
     };
     /**
@@ -415,8 +415,8 @@ var asset = {};
         }
         return '';
     };
-    AssetManager.prototype.getTimeStamp=function(asset){
-       var timestampAttribute = this.rxtManager.getTimeStampAttribute(this.type);
+    AssetManager.prototype.getTimeStamp = function(asset) {
+        var timestampAttribute = this.rxtManager.getTimeStampAttribute(this.type);
         if (asset.attributes) {
             var banner = asset.attributes[timestampAttribute];
             if (!banner) {
@@ -425,7 +425,7 @@ var asset = {};
             }
             return asset.attributes[timestampAttribute];
         }
-        return ''; 
+        return '';
     };
     /**
      * The function provides an array of all fields that represent resources of the asset
@@ -514,12 +514,7 @@ var asset = {};
     };
     var renderMultipleAssetsPage = function(page, assets, am) {
         page.assets = assets;
-        //Go through each asset determine their thumbnail and name
-        for (var index in assets) {
-            page.assets[index].name = am.getName(assets[index]);
-            page.assets[index].thumbnail = am.getThumbnail(assets[index]);
-            page.assets[index].banner = am.getBanner(assets[index]);
-        }
+        addAssetsMetaData(page.assets, am);
         page.assetMeta.categories = am.getCategories();
         page.assetMeta.searchFields = am.getSearchableFields();
         return page;
@@ -535,7 +530,7 @@ var asset = {};
         if (ref.isArray(asset)) {
             var assets = asset;
             for (var index in assets) {
-                addAssetMetaData(assets[index],am);
+                addAssetMetaData(assets[index], am);
             }
         } else {
             addAssetMetaData(asset, am);
@@ -545,6 +540,9 @@ var asset = {};
         asset.name = am.getName(asset);
         asset.thumbnail = am.getThumbnail(asset);
         asset.banner = am.getBanner(asset);
+        //log.info(asset);
+        log.info('Name: ' + am.getName(asset));
+        log.info('Thumbnail: ' + am.getThumbnail(asset));
     };
     /**
      * The function will a render page with the asset details combined with the rxt template.If an array of assets
