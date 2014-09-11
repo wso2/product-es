@@ -249,6 +249,9 @@
                                 <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
+                            
+
+          
                         </configuration>
                     </execution>
                     <execution>
@@ -268,6 +271,8 @@
                             <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
+                    
+
                 </executions>
             </plugin>
             <plugin>

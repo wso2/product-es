@@ -216,6 +216,8 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
+        
+        
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${project.artifactId}-${project.version}/repository/components/patches/</outputDirectory>
@@ -264,10 +266,7 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--        <file>
-            <source>target/shindig</source>
-            <outputDirectory>${project.artifactId}-${project.version}/repository/deployment/server/webapps/ROOT</outputDirectory>
-        </file>-->
+
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${project.artifactId}-${project.version}</outputDirectory>
@@ -382,6 +381,13 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/database</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        
+        
+         <file>
+            <source>src/repository/resources/build.xml</source>
+            <outputDirectory>${project.artifactId}-${project.version}/resources</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <!--        <file>
             <source>conf/wso2is-user-certs.jks</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/resources/security/</outputDirectory>
@@ -392,6 +398,29 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>-->
+        
 
     </files>
+    
+      <moduleSets>
+    <moduleSet>
+    
+      <!-- Enable access to all projects in the current multimodule build! -->
+      <useAllReactorProjects>true</useAllReactorProjects>
+      
+      <!-- Now, select which projects to include in this module-set. -->
+      <includes>
+        <include>org.wso2.store:asset-client</include>
+      </includes>
+      <binaries>
+        <attachmentClassifier>jar-with-dependencies</attachmentClassifier>
+        <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
+
+
+
+        
+    </moduleSet>
+  </moduleSets>
 </assembly>
