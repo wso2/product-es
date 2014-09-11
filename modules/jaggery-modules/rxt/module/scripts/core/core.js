@@ -266,7 +266,7 @@ var core = {};
         if ((rxtDefinition.meta) && (rxtDefinition.meta.timestamp)) {
             return rxtDefinition.meta.timestamp;
         }
-        log.warn('Unable to locate banner attribute for type: ' + type + '.Check if a timestamp property is defined in the rxt configuration.');
+        log.warn('Unable to locate timestamp attribute for type: ' + type + '.Check if a timestamp property is defined in the rxt configuration.');
         return null;
     };
     RxtManager.prototype.getLifecycleName = function(type) {

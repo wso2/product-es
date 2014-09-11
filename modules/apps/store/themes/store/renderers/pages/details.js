@@ -24,23 +24,23 @@ var render = function(theme, data, meta, require) {
             partial: 'asset',
             context: data
         }],
-        // right: [
-        //     {
-        //         partial: 'my-assets-link',
-        //         context: data.myAssets
-        //     },
-        //     {
-        //         partial: 'recent-assets',
-        //         context: require('/helpers/asset.js').formatRatings(data.recentAssets)
-        //     },
-        //     {
-        //         partial: 'tags',
-        //         context: data.tags
-        //     },
-        //     {
-        //         partial: 'more-assets-from-provider',
-        //         context: require('/helpers/asset.js').formatAssetFromProviderRatings(data.moreAssetsFromProvider)
-        //     }
-        // ]
+        right: [
+            // {
+            //     partial: 'my-assets-link',
+            //     context: data.myAssets
+            // },
+            {
+                partial: 'recent-assets',
+                context: data
+            }
+            // {
+            //     partial: 'tags',
+            //     context: data.tags
+            // },
+            // {
+            //     partial: 'more-assets-from-provider',
+            //     context: require('/helpers/asset.js').formatAssetFromProviderRatings(data.moreAssetsFromProvider)
+            // }
+        ]
     });
 };

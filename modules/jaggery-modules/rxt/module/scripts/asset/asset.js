@@ -2,7 +2,7 @@ var asset = {};
 (function(asset, core) {
     var log = new Log('rxt.asset');
     var DEFAULT_TIME_STAMP_FIELD = 'overview_createdtime';
-    var DEFAULT_RECENT_ASSET_COUNT=5;
+    var DEFAULT_RECENT_ASSET_COUNT = 5;
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
     /**
      * The function locates the provided field and table name within an attributes
@@ -337,7 +337,7 @@ var asset = {};
      */
     AssetManager.prototype.recentAssets = function() {
         var timeStampField = this.rxtManager.getTimeStampAttribute(this.type);
-        var ref=require('utils').reflection;
+        var ref = require('utils').reflection;
         var results = [];
         if (!timeStampField) {
             log.warn('A timestamp field has not been defined for type: ' + this.type + '. Default time stamp field ' + DEFAULT_TIME_STAMP_FIELD + ' will be used.');
@@ -350,17 +350,17 @@ var asset = {};
             sortBy: timeStampField,
             sort: 'older'
         };
-
         //Options object provided
-        if(arguments.length==1){
-            ref.copyAllPropValues(arguments[0],options);
+        if (arguments.length == 1) {
+            ref.copyAllPropValues(arguments[0], options);
         }
         //Options and Query object provided
-        else if(arguments.length==2){
-            ref.copyAllPropValues(arguments[0],options);
-            query=arguments[1];
+        else if (arguments.length == 2) {
+            ref.copyAllPropValues(arguments[0], options);
+            query = arguments[1];
         }
         results = this.am.search(query, options);
+        addAssetsMetaData(results,this);
         return results;
     };
     /**
@@ -414,6 +414,18 @@ var asset = {};
             return asset.attributes[bannerAttribute];
         }
         return '';
+    };
+    AssetManager.prototype.getTimeStamp=function(asset){
+       var timestampAttribute = this.rxtManager.getTimeStampAttribute(this.type);
+        if (asset.attributes) {
+            var banner = asset.attributes[timestampAttribute];
+            if (!banner) {
+                log.warn('Unable to locate bannerAttribute ' + timestampAttribute + ' in asset ' + asset.id);
+                return '';
+            }
+            return asset.attributes[timestampAttribute];
+        }
+        return ''; 
     };
     /**
      * The function provides an array of all fields that represent resources of the asset
@@ -511,6 +523,28 @@ var asset = {};
         page.assetMeta.categories = am.getCategories();
         page.assetMeta.searchFields = am.getSearchableFields();
         return page;
+    };
+    /**
+     * The function is used to add meta data of assets such as the name , thumbnail and banner attributes
+     * to an asset
+     * @param {[type]} asset [description]
+     * @param {[type]} am    [description]
+     */
+    var addAssetsMetaData = function(asset, am) {
+        var ref = require('utils').reflection;
+        if (ref.isArray(asset)) {
+            var assets = asset;
+            for (var index in assets) {
+                addAssetMetaData(assets[index],am);
+            }
+        } else {
+            addAssetMetaData(asset, am);
+        }
+    };
+    var addAssetMetaData = function(asset, am) {
+        asset.name = am.getName(asset);
+        asset.thumbnail = am.getThumbnail(asset);
+        asset.banner = am.getBanner(asset);
     };
     /**
      * The function will a render page with the asset details combined with the rxt template.If an array of assets
