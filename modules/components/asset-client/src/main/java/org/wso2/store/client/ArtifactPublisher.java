@@ -2,7 +2,6 @@ package org.wso2.store.client;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import org.apache.http.HttpEntity;
@@ -30,6 +29,8 @@ public class ArtifactPublisher {
 	static CloseableHttpResponse response = null;
 	protected static final Logger log = Logger.getLogger(ArtifactPublisher.class);
 
+	
+	
 	public static void main(String args[]) {
 
 		String hostName = args[0].equals("") ? "localhost":args[0];
@@ -58,19 +59,15 @@ public class ArtifactPublisher {
 
 	}
 
-	private static String getSession(SSLConnectionSocketFactory sslsf,
-			HttpContext httpContext, String hostName, String port,
-			String userName, String pwd) throws Exception {
+	private static String getSession(SSLConnectionSocketFactory sslsf, HttpContext httpContext, String hostName, String port, String userName, String pwd) throws Exception {
 
-		// TODO Auto-generated method stub
 		gson = new Gson();
-		String authUrl = "https://" + hostName + ":" + port
-				+ IConstants.PUBLISHER_AUTHORIZATION_URL + "?username="
-				+ userName + "&password=" + pwd;
+		
+		String authUrl = "https://" + hostName + ":" + port + IConstants.PUBLISHER_AUTHORIZATION_URL + "?username=" + userName + "&password=" + pwd;
+		
 		httppost = new HttpPost(authUrl);
 
-		CloseableHttpClient httpclient = HttpClients.custom()
-				.setSSLSocketFactory(sslsf).build();
+		CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
 
 		String sessionid = "";
 
@@ -241,7 +238,6 @@ public class ArtifactPublisher {
 					br = new BufferedReader(new FileReader(file));  
 					assetArr = gson.fromJson(br, Asset[].class); 
 					resourcePath = file.getParent();
-					System.out.println();
 				}
 				
 				if (file.list() !=null && file.list().length>0){
