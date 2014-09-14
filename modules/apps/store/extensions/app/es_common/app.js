@@ -1,8 +1,4 @@
-app.extensions=function(){
-	return{
-		dependencies:['es_common']
-	};
-};
+app.extensionDependencies=['es_subscriptions'];
 
 app.server=function(ctx){
 
