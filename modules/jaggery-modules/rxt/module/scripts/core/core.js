@@ -593,6 +593,15 @@ var core = {};
         }
         return assetResource;
     };
+    core.appResources=function(tenantId){
+        var configs=core.configs(tenantId);
+        var appResources=configs.appResources;
+        if(!appResources){
+            log.error('Unable to locate appResources from tenant '+tenantId);
+            throw 'Unable to locate appResources for tenant: '+tenantId;
+        }
+        return appResources;
+    };
     core.init = function() {
         var event = require('event');
         var server = require('store').server;

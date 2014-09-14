@@ -19,4 +19,8 @@
         <name>ui</name>
         <path>scripts/ui/ui.js</path>
     </script>
+    <script>
+        <name>appCore</name>
+        <path>scripts/app-core/app-core.js</path>
+    </script>
 </module>
