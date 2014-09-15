@@ -151,7 +151,7 @@ var app = {};
             log.info('Processing app extension: ' + key);
             //Look for the dependencies
             appExtension = appExtensions[key];
-            if (!appExtension.extensionDependencies) {
+            if (!appExtension.dependencies) {
                 //Get all of the endpoints
                 processExtension(key, appExtensions, app);
             } else {
@@ -173,7 +173,7 @@ var app = {};
             log.warn('Extension: ' + extName + ' does not exist');
             return stack;
         }
-        var dependencies = map[extName].extensionDependencies;
+        var dependencies = map[extName].dependencies;
         if (!dependencies) {
             stack.push(extName);
             return stack;

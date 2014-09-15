@@ -1,4 +1,4 @@
-app.extensionDependencies=['es_common'];
+app.dependencies=['es_common'];
 app.ignoreExtension=true;
 
 app.server=function(ctx){
