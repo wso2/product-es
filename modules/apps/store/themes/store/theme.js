@@ -113,7 +113,10 @@ var engine = caramel.engine('handlebars', (function() {
 var resolve = function(path) {
     var themeResolver = this.__proto__.resolve;
     var asset = require('rxt').asset;
+    var app=require('rxt').app;
     path = asset.resolve(request, path, this.name, this, themeResolver);
+
+    //path=app.resolve(request,path,this.name,this,themeResolver,session);
     // var p,
     //     store = require('/modules/store.js'),
     //     asset = store.currentAsset();

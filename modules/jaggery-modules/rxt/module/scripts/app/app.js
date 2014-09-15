@@ -22,7 +22,7 @@ var app = {};
         if (existingEndpoint) {
             existingEndpoint.path = endpoint.path;
             existingEndpoint.title = endpoint.title;
-            existingEndpoint.owner=endpoint.owner;
+            existingEndpoint.owner = endpoint.owner;
             return;
         }
         this.endpoints.push(endpoint);
@@ -100,11 +100,10 @@ var app = {};
             evalAppScript(appExtensionName, appExtensionFilePath, appResources);
         }
         var app = processAppExtensions(appResources);
-
         //Save the app object and appResources 
-        var configs=core.configs(tenantId);
-        configs.appResources=appResources;
-        configs.appConfig=app;
+        var configs = core.configs(tenantId);
+        configs.appResources = appResources;
+        configs.appConfig = app;
     };
     var setExtensionName = function(items, extName) {
         for (var index in items) {
@@ -228,7 +227,7 @@ var app = {};
         app.server = null;
         app.extensionName = appExtensionName;
         app.process = false;
-        app.ignoreExtension=false;
+        app.ignoreExtension = false;
         var content = getScriptContent(appExtensionFile, appExtensionFilePath);
         if (!content) {
             log.warn('The app extension file: ' + appExtensionFilePath + ' does not contain any content.The extension will not be loaded.');
@@ -246,8 +245,8 @@ var app = {};
             log.warn('Unable to load app extension ' + appExtensionName + ' as evaluation exceptions have occured when loading app.js');
             return;
         }
-        if(app.ignoreExtension){
-                    log.info('Successfully loaded app extension: ' + appExtensionName+' but ignoring extension due to ignoreExtension property been true.');
+        if (app.ignoreExtension) {
+            log.info('Successfully loaded app extension: ' + appExtensionName + ' but ignoring extension due to ignoreExtension property been true.');
             return;
         }
         extensionMap[appExtensionName] = app;
@@ -265,39 +264,96 @@ var app = {};
     app.force = function() {
         init(-1234);
     }
-    app.getPageEndpoint=function(tenantId,url){
-        var configs=core.configs(tenantId);
-        if(!configs){
-            log.warn('Unable to locate configuration of tenant '+tenantId+'.Cannot locate page endpoint');
-            throw 'Unable to locate configuration of tenant '+tenantId+'.Cannot locate page endpoint';
+    app.getPageEndpoint = function(tenantId, url) {
+        var configs = core.configs(tenantId);
+        if (!configs) {
+            log.warn('Unable to locate configuration of tenant ' + tenantId + '.Cannot locate page endpoint');
+            throw 'Unable to locate configuration of tenant ' + tenantId + '.Cannot locate page endpoint';
         }
-        var appConfig=configs.appConfig;
-        if(!appConfig){
-            log.warn('The app configuration details could not be loaded for tenant: '+tenantId);
-            throw 'The app configuration details could not be loaded for tenant: '+tenantId;
+        var appConfig = configs.appConfig;
+        if (!appConfig) {
+            log.warn('The app configuration details could not be loaded for tenant: ' + tenantId);
+            throw 'The app configuration details could not be loaded for tenant: ' + tenantId;
         }
         return appConfig.getPageEndpoint(url);
     };
-    app.getPageEndpoints=function(tenantId){
+    app.getPageEndpoints = function(tenantId) {
         //Obtain the app object
-        var configs=core.configs(tenantId);
-        if(!configs){
+        var configs = core.configs(tenantId);
+        if (!configs) {
             log.warn('Unable to locate the tenant configuration');
             throw 'Unable to locate tenant configuration';
         }
-        var appConfig=configs.appConfig;
-        if(!appConfig){
-            log.warn('The app configuration details could not be loaded for tenant: '+tenantId);
+        var appConfig = configs.appConfig;
+        if (!appConfig) {
+            log.warn('The app configuration details could not be loaded for tenant: ' + tenantId);
             throw 'Unable to locate app configuration';
         }
         return appConfig.getPageEndpoints();
     };
-    app.getPageEndpointPath=function(tenantId,url){
-        var endpoint=this.getPageEndpoint(tenantId,url);
-        if(!endpoint){
-            log.warn('Could not locate the endpoint '+url);
+    app.getPageEndpointPath = function(tenantId, url) {
+        var endpoint = this.getPageEndpoint(tenantId, url);
+        if (!endpoint) {
+            log.warn('Could not locate the endpoint ' + url);
             return null;
         }
-        return getAppExtensionBasePath()+'/'+endpoint.owner+'/pages/'+endpoint.path;
+        return getAppExtensionBasePath() + '/' + endpoint.owner + '/pages/' + endpoint.path;
+    };
+    app.resolve = function(request, path, themeName, themeObj, themeResolver,session) {
+        log.info('Path: ' + path);
+        var resPath = path;
+        path = '/' + path;
+        var uriMatcher = new URIMatcher(request.getRequestURI());
+        var extensionMatcher = new URIMatcher(path);
+        var extensionPattern = '/{root}/extensions/app/{name}/{+suffix}';
+        var uriPattern = '/{context}/pages/{+suffix}';
+        extensionMatcher.match(extensionPattern);
+        uriMatcher.match(uriPattern);
+        var options = extensionMatcher.elements() || {};
+        var uriOptions = uriMatcher.elements() || {};
+        log.info('Looking for uri options: ' + stringify(uriOptions));
+        log.info('Looking for extension options ' + stringify(options));
+        log.info('Page name: ' + pageName);
+        //Determine if the path references an extension,if not just return the path
+        if (!options.name) {
+            log.info('Resource not located in the app extensions: ' + resPath);
+            //Determine if the uri references an extension page
+            var pageName = getPage(uriOptions.suffix);
+            log.info('Checking page : ' + pageName);
+            var server=require('store').server;
+            var user=server.current(session);
+            var tenantId=-1234;
+            if(user){
+                tenantId=user.tenantId;
+            }
+            var endpoint=this.getPageEndpoint(tenantId,pageName);
+            if(!endpoint){
+                return themeResolver.call(themeObj, resPath);
+            }
+
+            var mod='/extensions/app/'+endpoint.owner+'/themes/'+themeName+'/'+resPath;
+
+            //Check if the resource exists
+            var file=new File(mod);
+            if(file.isExists()){
+                return mod;
+            }
+            return themeResolver.call(themeObj, resPath);;
+        }
+        var extensionPath = '/extensions/app/' + options.name + '/themes/' + themeName + '/' + options.root + '/' + options.suffix;
+        log.info('Looking for file: ' + extensionPath);
+        var extensionFile = new File(extensionPath);
+        if (extensionFile.isExists()) {
+            log.info('Resolved path: ' + extensionPath);
+            return extensionPath;
+        }
+        extensionPath = options.root + '/' + options.suffix;
+        var modPath = themeResolver.call(themeObj, extensionPath);
+        log.info('Resolved path: ' + modPath);
+        return modPath;
+    };
+    var getPage = function(uri) {
+        var comps = uri.split('/');
+        return comps.length > 0 ? comps[0] : null;
     };
 }(app, core));

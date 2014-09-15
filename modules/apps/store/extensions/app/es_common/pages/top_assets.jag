@@ -1,3 +1,7 @@
 <%
-	print('Top Assets Page');
+	//print('Top Assets Page');
+	var caramel;
+	caramel=require('caramel');
+
+	caramel.render({}); 
 %>
