@@ -59,6 +59,7 @@ var rxt=require('rxt');
 var lifecycle=require('lifecycle');
 rxt.core.init();
 rxt.resources.init();
+rxt.app.init();
 lifecycle.core.init();
 
 var store = require('/modules/store.js');

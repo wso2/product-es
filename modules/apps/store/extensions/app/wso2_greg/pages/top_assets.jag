@@ -1,0 +1,5 @@
+<%
+
+	print('WSO2 GREG Top Assets Page');
+
+%>

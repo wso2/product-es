@@ -20,7 +20,7 @@
         <path>scripts/ui/ui.js</path>
     </script>
     <script>
-        <name>appCore</name>
-        <path>scripts/app-core/app-core.js</path>
+        <name>app</name>
+        <path>scripts/app/app.js</path>
     </script>
 </module>

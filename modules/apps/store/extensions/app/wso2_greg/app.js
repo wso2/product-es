@@ -1,3 +1,5 @@
+app.extensionDependencies=['es_common'];
+app.ignoreExtension=true;
 
 app.server=function(ctx){
 
@@ -5,16 +7,10 @@ app.server=function(ctx){
 		endpoints:{
 			pages:[
 				{
-					title:'Top Assets',
+					title:'WSO2 GREG Top Assets',
 					url:'top-assets',
 					path:'top_assets.jag'
-				},
-				{
-					title:'My Items',
-					url:'my_items',
-					path:'my_items.jag'
 				}
-
 			]
 
 		}
