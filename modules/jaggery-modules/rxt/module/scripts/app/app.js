@@ -228,6 +228,8 @@ var app = {};
         app.extensionName = appExtensionName;
         app.process = false;
         app.ignoreExtension = false;
+        app.renderer=null;
+        app.pageHandlers=null;
         var content = getScriptContent(appExtensionFile, appExtensionFilePath);
         if (!content) {
             log.warn('The app extension file: ' + appExtensionFilePath + ' does not contain any content.The extension will not be loaded.');
@@ -359,5 +361,12 @@ var app = {};
         extensionPath = extensionOptions.root + '/' + extensionOptions.suffix;
         var themeContextPath = themeResolver.call(themeObj, extensionPath);
         return themeContextPath;
+    };
+
+    app.pageHandlers=function(handler,req,res,session,pageName){
+
+    };
+    app.renderer=function(assets,page){
+
     };
 }(app, core));
