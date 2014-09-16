@@ -114,8 +114,16 @@ var resolve = function(path) {
     var themeResolver = this.__proto__.resolve;
     var asset = require('rxt').asset;
     var app=require('rxt').app;
-    path = asset.resolve(request, path, this.name, this, themeResolver);
 
+    var appPath=app.resolve(request,path,this.name,this,themeResolver,session);
+    if(!appPath){
+    	path = asset.resolve(request, path, this.name, this, themeResolver);
+    }
+    else{
+    	path=appPath;
+    }
+
+    //log.info('Final path: '+path);
     //path=app.resolve(request,path,this.name,this,themeResolver,session);
     // var p,
     //     store = require('/modules/store.js'),

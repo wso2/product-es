@@ -255,6 +255,10 @@ var app = {};
     var init = function(tenantId) {
         load(tenantId);
     };
+    var getPage = function(uri) {
+        var comps = uri.split('/');
+        return comps.length > 0 ? comps[0] : null;
+    };
     app.init = function() {
         var event = require('event');
         event.on('tenantLoad', function(tenantId) {
@@ -299,61 +303,61 @@ var app = {};
         }
         return getAppExtensionBasePath() + '/' + endpoint.owner + '/pages/' + endpoint.path;
     };
-    app.resolve = function(request, path, themeName, themeObj, themeResolver,session) {
-        log.info('Path: ' + path);
+    /**
+     * The function is responsible for routing requests for resources to appropriate path
+     * @param  {[type]} request       [description]
+     * @param  {[type]} path          [description]
+     * @param  {[type]} themeName     [description]
+     * @param  {[type]} themeObj      [description]
+     * @param  {[type]} themeResolver [description]
+     * @param  {[type]} session       [description]
+     * @return {[type]}               [description]
+     */
+    app.resolve = function(request, path, themeName, themeObj, themeResolver, session) {
         var resPath = path;
-        path = '/' + path;
+        path = '/' + path; 
         var uriMatcher = new URIMatcher(request.getRequestURI());
         var extensionMatcher = new URIMatcher(path);
         var extensionPattern = '/{root}/extensions/app/{name}/{+suffix}';
         var uriPattern = '/{context}/pages/{+suffix}';
         extensionMatcher.match(extensionPattern);
         uriMatcher.match(uriPattern);
-        var options = extensionMatcher.elements() || {};
+        var extensionOptions = extensionMatcher.elements() || {};
         var uriOptions = uriMatcher.elements() || {};
-        log.info('Looking for uri options: ' + stringify(uriOptions));
-        log.info('Looking for extension options ' + stringify(options));
-        log.info('Page name: ' + pageName);
-        //Determine if the path references an extension,if not just return the path
-        if (!options.name) {
-            log.info('Resource not located in the app extensions: ' + resPath);
-            //Determine if the uri references an extension page
-            var pageName = getPage(uriOptions.suffix);
-            log.info('Checking page : ' + pageName);
-            var server=require('store').server;
-            var user=server.current(session);
-            var tenantId=-1234;
-            if(user){
-                tenantId=user.tenantId;
+        //Determine if the path does not reference an app extension
+        if (!extensionOptions.name) {
+            //Determine if the uri references an extension page even though the resource does not reference one
+            //This will allow resources to be overridden by the extension
+            var pageName = getPage(uriOptions.suffix || '');
+            var server = require('store').server;
+            var user = server.current(session);
+            var tenantId = -1234;
+            if (user) {
+                tenantId = user.tenantId;
             }
-            var endpoint=this.getPageEndpoint(tenantId,pageName);
-            if(!endpoint){
-                return themeResolver.call(themeObj, resPath);
+            var endpoint = this.getPageEndpoint(tenantId, pageName);
+            //If the uri does not point to an app extension endpoint then do nothing
+            if (!endpoint) {
+                return null; //themeResolver.call(themeObj, resPath);
             }
-
-            var mod='/extensions/app/'+endpoint.owner+'/themes/'+themeName+'/'+resPath;
-
+            var extensionResourcePath = '/extensions/app/' + endpoint.owner + '/themes/' + themeName + '/' + resPath;
             //Check if the resource exists
-            var file=new File(mod);
-            if(file.isExists()){
-                return mod;
+            var extensionResource = new File(extensionResourcePath);
+            if (extensionResource.isExists()) {
+                return extensionResourcePath;
             }
-            return themeResolver.call(themeObj, resPath);;
+            //If the resource does not exist then do nothing
+            return null; //themeResolver.call(themeObj, resPath);;
         }
-        var extensionPath = '/extensions/app/' + options.name + '/themes/' + themeName + '/' + options.root + '/' + options.suffix;
-        log.info('Looking for file: ' + extensionPath);
+        //The resource path references an app extension 
+        var extensionPath = '/extensions/app/' + extensionOptions.name + '/themes/' + themeName + '/' + extensionOptions.root + '/' + extensionOptions.suffix;
         var extensionFile = new File(extensionPath);
         if (extensionFile.isExists()) {
-            log.info('Resolved path: ' + extensionPath);
             return extensionPath;
         }
-        extensionPath = options.root + '/' + options.suffix;
-        var modPath = themeResolver.call(themeObj, extensionPath);
-        log.info('Resolved path: ' + modPath);
-        return modPath;
-    };
-    var getPage = function(uri) {
-        var comps = uri.split('/');
-        return comps.length > 0 ? comps[0] : null;
+        //There is no matching resource in the app extension so look for one in the themes directory
+        extensionPath = extensionOptions.root + '/' + extensionOptions.suffix;
+        var themeContextPath = themeResolver.call(themeObj, extensionPath);
+        return themeContextPath;
     };
 }(app, core));
