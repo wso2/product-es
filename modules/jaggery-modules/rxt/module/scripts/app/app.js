@@ -228,8 +228,8 @@ var app = {};
         app.extensionName = appExtensionName;
         app.process = false;
         app.ignoreExtension = false;
-        app.renderer=null;
-        app.pageHandlers=null;
+        app.renderer = null;
+        app.pageHandlers = null;
         var content = getScriptContent(appExtensionFile, appExtensionFilePath);
         if (!content) {
             log.warn('The app extension file: ' + appExtensionFilePath + ' does not contain any content.The extension will not be loaded.');
@@ -305,6 +305,41 @@ var app = {};
         }
         return getAppExtensionBasePath() + '/' + endpoint.owner + '/pages/' + endpoint.path;
     };
+    app.getApiEndpoint = function(tenantId, url) {
+        var configs = core.configs(tenantId);
+        if (!configs) {
+            log.warn('Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint');
+            throw 'Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint';
+        }
+        var appConfig = configs.appConfig;
+        if (!appConfig) {
+            log.warn('The app configuration details could not be loaded for tenant: ' + tenantId);
+            throw 'The app configuration details could not be loaded for tenant: ' + tenantId;
+        }
+        return appConfig.getApiEndpoint(url);
+    };
+    app.getApiEndpoints = function(tenantId) {
+        //Obtain the app object
+        var configs = core.configs(tenantId);
+        if (!configs) {
+            log.warn('Unable to locate the tenant configuration');
+            throw 'Unable to locate tenant configuration';
+        }
+        var appConfig = configs.appConfig;
+        if (!appConfig) {
+            log.warn('The app configuration details could not be loaded for tenant: ' + tenantId);
+            throw 'Unable to locate app configuration';
+        }
+        return appConfig.getApiEndpoints();
+    };
+    app.getApiEndpointPath = function(tenantId, url) {
+        var endpoint = this.getApiEndpoint(tenantId, url);
+        if (!endpoint) {
+            log.warn('Could not locate the endpoint ' + url);
+            return null;
+        }
+        return getAppExtensionBasePath() + '/' + endpoint.owner + '/apis/' + endpoint.path;
+    };
     /**
      * The function is responsible for routing requests for resources to appropriate path
      * @param  {[type]} request       [description]
@@ -317,7 +352,7 @@ var app = {};
      */
     app.resolve = function(request, path, themeName, themeObj, themeResolver, session) {
         var resPath = path;
-        path = '/' + path; 
+        path = '/' + path;
         var uriMatcher = new URIMatcher(request.getRequestURI());
         var extensionMatcher = new URIMatcher(path);
         var extensionPattern = '/{root}/extensions/app/{name}/{+suffix}';
@@ -362,11 +397,6 @@ var app = {};
         var themeContextPath = themeResolver.call(themeObj, extensionPath);
         return themeContextPath;
     };
-
-    app.pageHandlers=function(handler,req,res,session,pageName){
-
-    };
-    app.renderer=function(assets,page){
-
-    };
+    app.pageHandlers = function(handler, req, res, session, pageName) {};
+    app.renderer = function(assets, page) {};
 }(app, core));
