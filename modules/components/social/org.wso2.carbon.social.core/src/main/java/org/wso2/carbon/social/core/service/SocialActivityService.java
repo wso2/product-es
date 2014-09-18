@@ -29,6 +29,9 @@ public abstract class SocialActivityService {
         return getActivityBrowser().getRating(targetId, tenant);
     }
 
+    public boolean vote(String commentId, String actorId, int vote) {
+        return getActivityPublisher().vote(commentId, actorId, vote);
+    }
     public String getSocialObjectJson(String targetId, String tenant, String sortOrder) {
         SortOrder order;
         try {

@@ -25,4 +25,8 @@ public class SQLActivityService extends SocialActivityService {
     @Override
     public void configPublisher(NativeObject configObject) {
     }
+    @Override
+	public boolean vote(String commentId, String actorId, int vote) {
+    	return getActivityPublisher().vote(commentId, actorId, vote);
+    }
 }

@@ -20,14 +20,11 @@ import java.util.List;
 
 public class SQLActivityBrowser implements ActivityBrowser {
     private static final Log log = LogFactory.getLog(SQLActivityBrowser.class);
-    public static final String SELECT_SQL = "SELECT * FROM " + Constants.ES_SOCIAL +" WHERE " + Constants.CONTEXT_ID_COLUMN + "=?";
+    public static final String SELECT_SQL = "SELECT * FROM " + Constants.ES_SOCIAL_COMMENT_TBL +" WHERE " + Constants.CONTEXT_ID_COLUMN + "=?";
+    public static final String AVG_SQL = "SELECT * FROM " + Constants.ES_SOCIAL_COMMENT_TBL +" WHERE " + Constants.CONTEXT_ID_COLUMN + "=?";
 
     private JsonParser parser = new JsonParser();
     
-    @Override
-    public double getRating(String targetId, String tenant) {
-        return 0;
-    }
 
 	@Override
     public JsonObject getSocialObject(String targetId, String tenant, SortOrder order) {
@@ -84,6 +81,29 @@ public class SQLActivityBrowser implements ActivityBrowser {
     public List<Activity> listActivitiesChronologically(String contextId, String tenantDomain) {
         List<Activity> activities = listActivities(contextId, tenantDomain);
         return activities;
+    }
+    
+    @Override
+    public double getRating(String contextId, String tenant) {
+    	DSConnection con = new DSConnection();
+    	Connection connection = con.getConnection();
+    	double averageRating = 0.0;
+    	if(connection != null){
+    		PreparedStatement statement = null;
+    		ResultSet resultSet = null;
+    		try{
+    			statement = connection.prepareStatement(AVG_SQL);
+    			statement.setString(1, contextId);
+    			resultSet = statement.executeQuery();
+    			resultSet.next();
+    			averageRating = Double.parseDouble(resultSet.getString("avg"));
+    		}catch(Exception e){
+    			log.error("Can't retrieve average rating from SQL.", e);
+    		}finally{
+    			con.closeConnection(connection);
+    		}
+    	}
+    	return averageRating;
     }
     
     private String getTenant(JsonObject body) {

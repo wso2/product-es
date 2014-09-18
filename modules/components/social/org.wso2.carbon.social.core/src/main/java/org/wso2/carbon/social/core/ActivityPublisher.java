@@ -11,4 +11,5 @@ public abstract class ActivityPublisher {
     }
 
     protected abstract String publish(String id, NativeObject activity);
+    public abstract boolean vote(String commentId, String actorId, int vote);
 }

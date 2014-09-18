@@ -1,4 +1,3 @@
-
 package org.wso2.carbon.social.sql;
 
 import org.apache.commons.logging.Log;
@@ -17,7 +16,7 @@ import java.util.StringTokenizer;
 public class SocialDBInitilizer {
 
 	private static Log log = LogFactory.getLog(SocialDBInitilizer.class);
-	private static final String DB_CHECK_SQL = "select * from "+ Constants.ES_SOCIAL;
+	private static final String DB_CHECK_SQL = "select * from "+ Constants.ES_SOCIAL_COMMENT_TBL;
 	private DataSource dataSource;
 	private String delimiter = ";";
 	Statement statement;
