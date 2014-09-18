@@ -21,13 +21,16 @@ app.renderer = function(ctx) {
     return {
         pageDecorators: {
             navigationBar: function(page) {
-                return decoratorApi.navigationBar(ctx,page,this);
+                return decoratorApi.navigationBar(ctx, page, this);
             },
             searchBar: function(page) {
-                return decoratorApi.searchBar(ctx,page,this);
+                return decoratorApi.searchBar(ctx, page, this);
             },
             authenticationDetails: function(page) {
                 return decoratorApi.authenticationDetails(ctx, page, this);
+            },
+            recentAssetsOfActivatedTypes: function(page) {
+                return decoratorApi.recentAssetsOfActivatedTypes(ctx, page, this);
             }
         }
     }
