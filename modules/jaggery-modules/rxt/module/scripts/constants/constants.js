@@ -1,4 +1,3 @@
-<%
 /*
  *  Copyright (c) 2005-2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,22 +16,14 @@
  *  under the License.
  *
  */
-var caramel;
-require('/modules/store.js').exec(function(ctx) {
-    caramel = require('caramel');
-     var app=require('rxt').app;
-     var constants=require('rxt').constants;
-     var server=require('store').server;
-     var user=server.current(ctx.session);
-     var ui=require('rxt').ui;
-     var page=ui.buildPage(ctx.session,ctx.request);
-     var appManager;
-     if(user){
-     	appManager=app.createUserAppManager(ctx.session);
-     }
-     else{
-     	appManager=app.createAnonAppManager(ctx.session,constants.DEFAULT_TENANT);
-     }
-   //var output=appManager.render([],page);
-    //caramel.render({}); 
-}, request, response, session); %>
+var constants = {};
+(function(constants) {
+	constants.DEFAULT_TITLE='ES';
+    constants.MSG_PAGE_INFO_NOT_FOUND = 'Title not found';
+    constants.DEFAULT_TENANT = -1234;
+    /**
+     * URL Patterns
+     */
+    constants.ASSET_PAGE_URL_PATTERN = '/{context}/asts/{type}/{+suffix}';
+    constants.APP_PAGE_URL_PATTERN = '/{context}/pages/{+suffix}';
+}(constants));
