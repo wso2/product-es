@@ -339,7 +339,7 @@ var app = {};
     app.createAnonAppManager = function(session, tenantId) {
         var server = require('store').server;
         var user = server.current(session);
-        var renderer = this.getRenderer(session, tenantId);
+        var renderer = getRenderer(session, tenantId);
         return new AppManager(renderer);
     };
     app.getActivatedAssets=function(tenantId){

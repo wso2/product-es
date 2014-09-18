@@ -33,6 +33,7 @@ require('/modules/store.js').exec(function(ctx) {
      else{
      	appManager=app.createAnonAppManager(ctx.session,constants.DEFAULT_TENANT);
      }
-   //var output=appManager.render([],page);
-    //caramel.render({}); 
+    //var output=appManager.render([],page);
+    caramel.render(page); 
+    //print(page);
 }, request, response, session); %>

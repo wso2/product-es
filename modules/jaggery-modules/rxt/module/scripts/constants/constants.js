@@ -18,12 +18,22 @@
  */
 var constants = {};
 (function(constants) {
-	constants.DEFAULT_TITLE='ES';
+    constants.DEFAULT_TITLE = 'ES';
     constants.MSG_PAGE_INFO_NOT_FOUND = 'Title not found';
     constants.DEFAULT_TENANT = -1234;
+    constants.RECENT_ASSET_COUNT=5;	//The default number of recent assets to be retrieved
     /**
      * URL Patterns
      */
     constants.ASSET_PAGE_URL_PATTERN = '/{context}/asts/{type}/{+suffix}';
     constants.APP_PAGE_URL_PATTERN = '/{context}/pages/{+suffix}';
+    /**
+     * Pagin objects
+     */
+    constants.DEFAULT_RECENT_ASSET_PAGIN = {
+        start: 0,
+        count: 5,
+        sortBy: '',
+        sortOrder: 'older'
+    };
 }(constants));

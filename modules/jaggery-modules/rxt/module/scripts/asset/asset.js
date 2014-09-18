@@ -238,6 +238,24 @@ var asset = {};
         }
         return this.am.search(query, paging);
     };
+    AssetManager.prototype.popularAssets = function(opts) {
+        return [];
+    };
+    AssetManager.prototype.recentAssets = function(opts) {
+        var count = opts.count || constants.DEFAULT_RECENT_ASSET_COUNT;
+        var q = opts.q || {};
+        var items = [];
+        var timeStampField = core.getTimeStampAttribute();
+        if (!timeStampField) {
+            log.warn('There is no time stamp field defined for type: ' + this.type + '.Unable to retrieve recent assets, try adding the timestampField to the configuration.');
+            return items;
+        }
+        var paging = constants.DEFAULT_RECENT_ASSET_PAGIN;
+        paging.count = count || paging.count;
+        paging.sortBy = timeStampField;
+        var items = this.search(q, paging);
+        return items;
+    };
     /**
      * The function will attach a lifecycle to the provided asset.The type of
      * lifecycle will be read from the configuration if a lifecycle is not provided.If a lifecycle cannot be found

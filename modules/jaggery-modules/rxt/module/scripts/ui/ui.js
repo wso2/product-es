@@ -86,7 +86,7 @@ var ui = {};
         return constants.DEFAULT_TITLE;
     };
     var getAppPageTitle = function(tenantId, pageName) {
-        var pages = app.getPageEndpoint(tenantId, pageName);
+        var page = app.getPageEndpoint(tenantId, pageName);
         if (!page) {
             log.warn('Unable to locate meta information for  page: '+pageName);
             return constants.DEFAULT_TITLE;
