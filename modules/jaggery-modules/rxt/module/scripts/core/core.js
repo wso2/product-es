@@ -257,8 +257,8 @@ var core = {};
         log.warn('Unable to locate banner attribute for type: ' + type + '.Check if a banner property is defined in the rxt configuration.');
         return '';
     };
-    RxtManager.prototype.getTimeStampAttribute=function(type){
-       var rxtDefinition=this.rxtMap[type];
+    RxtManager.prototype.getTimeStampAttribute = function(type) {
+        var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
             log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return timestamp attribute');
             throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return timestamp attribute';
@@ -593,12 +593,12 @@ var core = {};
         }
         return assetResource;
     };
-    core.appResources=function(tenantId){
-        var configs=core.configs(tenantId);
-        var appResources=configs.appResources;
-        if(!appResources){
-            log.error('Unable to locate appResources from tenant '+tenantId);
-            throw 'Unable to locate appResources for tenant: '+tenantId;
+    core.appResources = function(tenantId) {
+        var configs = core.configs(tenantId);
+        var appResources = configs.appResources;
+        if (!appResources) {
+            log.error('Unable to locate appResources from tenant ' + tenantId);
+            throw 'Unable to locate appResources for tenant: ' + tenantId;
         }
         return appResources;
     };
@@ -647,7 +647,7 @@ var core = {};
             tenantConfigs: tenatConfigs,
             serverConfigs: serverConfigs,
             isAnonContext: true,
-            session:session
+            session: session
         };
     };
     core.createUserAssetContext = function(session, type) {
@@ -672,7 +672,65 @@ var core = {};
             tenantConfigs: tenatConfigs,
             serverConfigs: serverConfigs,
             isAnonContext: false,
-            session:session
+            session: session
+        };
+    };
+    core.createAppContext = function(session) {
+        var server = require('store').server;
+        var user = require('store').user;
+        var userDetails = server.current(session);
+        if (!userDetails) {
+            log.debug('Obtaining anon app context ');
+            return this.createAnonAppContext(session);
+        } else {
+            return this.createUserAppContext(session);
+        }
+    };
+    core.createAnonAppContext = function(session) {
+        var server = require('store').server;
+        var user = require('store').user;
+        var tenantId = DEFAULT_TENANT;
+        var sysRegistry = server.anonRegistry(tenantId);
+        var userManager = server.userManager(tenantId);
+        var tenatConfigs = user.configs(tenantId);
+        var serverConfigs = server.configs(tenantId);
+        var rxtManager = core.rxtManager(tenantId);
+        var username = "wso2.anonymous";
+        return {
+            username: username,
+            userManager: userManager,
+            username: username,
+            tenantId: tenantId,
+            systemRegistry: sysRegistry,
+            rxtManager: rxtManager,
+            tenantConfigs: tenatConfigs,
+            serverConfigs: serverConfigs,
+            isAnonContext: true,
+            session: session
+        };
+    };
+    core.createUserAppContext = function(session) {
+        var user = require('store').user;
+        var server = require('store').server;
+        var userDetails = server.current(session);
+        var tenantId = userDetails.tenantId;
+        var sysRegistry = server.systemRegistry(tenantId);
+        var userManager = server.userManager(tenantId);
+        var tenatConfigs = user.configs(tenantId);
+        var serverConfigs = server.configs(tenantId);
+        var username = server.current(session).username;
+        var rxtManager = core.rxtManager(tenantId);
+        return {
+            username: username,
+            userManager: userManager,
+            username: username,
+            tenantId: tenantId,
+            systemRegistry: sysRegistry,
+            rxtManager: rxtManager,
+            tenantConfigs: tenatConfigs,
+            serverConfigs: serverConfigs,
+            isAnonContext: false,
+            session: session
         };
     };
 }(core));

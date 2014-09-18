@@ -1,7 +1,20 @@
 <%
-	//print('Top Assets Page');
-	var caramel;
-	caramel=require('caramel');
-
-	caramel.render({}); 
-%>
+//print('Top Assets Page');
+var caramel;
+require('/modules/store.js').exec(function(ctx) {
+    caramel = require('caramel');
+    // var app=require('rxt').app;
+    // var server=require('store').server;
+    // var user=server.current(ctx.session);
+    // var ui=require('rxt').ui;
+    // var page=ui.buildPage(ctx.session,ctx.request);
+    // var appManager;
+    // if(user){
+    // 	appManager=app.createUserAppManager(ctx.session);
+    // }
+    // else{
+    // 	appManager=app.createAnonAppManager(ctx.session,-1234);
+    // }
+   //var output=appManager.render([],page);
+    //caramel.render({}); 
+}, request, response, session); %>

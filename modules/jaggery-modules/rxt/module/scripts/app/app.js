@@ -62,6 +62,27 @@ var app = {};
     App.prototype.addApiEndpoints = function(endpoints) {
         this.apis.addMultiple(endpoints);
     };
+
+    function AppManager(renderer) {
+        this.renderer = renderer;
+    }
+    AppManager.prototype.render = function(assets, page) {
+        page.assets = assets;
+        if (!this.renderer) {
+            log.warn('There is no renderer instance');
+            return page;
+        }
+        //Check if the renderer has any page decorators
+        var decorators = this.renderer.pageDecorators;
+        if (!decorators) {
+            log.warn('There are no page decorators for page: ' + page.name);
+            return page;
+        }
+        for (var key in decorators) {
+            page = decorators[key](page) || page;
+        }
+        return page;
+    };
     var getAppExtensionBasePath = function() {
         return '/extensions/app';
     };
@@ -261,11 +282,61 @@ var app = {};
         var comps = uri.split('/');
         return comps.length > 0 ? comps[0] : null;
     };
+    var getRenderer = function(session, tenantId) {
+        var configs = core.configs(tenantId);
+        if (!configs) {
+            log.warn('Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint');
+            throw 'Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint';
+        }
+        var appResources = configs.appResources;
+        if (!appResources) {
+            log.warn('The app configuration details could not be loaded for tenant: ' + tenantId);
+            throw 'The app configuration details could not be loaded for tenant: ' + tenantId;
+        }
+        var renderer = appResources.renderer;
+        if (!renderer) {
+            log.warn('A renderer has not been defined');
+            return null;
+        }
+        var ctx = core.createAppContext(session);
+        renderer = renderer(ctx);
+        return renderer;
+    };
     app.init = function() {
         var event = require('event');
         event.on('tenantLoad', function(tenantId) {
             init(tenantId);
         });
+    };
+    app.createUserAppManager = function(session) {
+        var server = require('store').server;
+        var user = server.current(session);
+        var tenantId = -1234;
+        if (user) {
+            tenantId = user.tenantId;
+        }
+        var renderer = this.getRenderer(session, tenantId);
+        return new AppManager(renderer);
+    };
+    app.createAnonAppManager = function(session, tenantId) {
+        var server = require('store').server;
+        var user = server.current(session);
+        var renderer = this.getRenderer(session, tenantId);
+        return new AppManager(renderer);
+    };
+    app.getActivatedAssets=function(tenantId){
+        var user=require('store').user;
+        var configs=user.configs(tenantId);
+        if(!configs){
+            log.warn('Unable to locate tenant configurations in order to retrieve activated assets');
+            throw 'Unable to locate tenant configurations in order to retrieve activated assets';
+        }
+        var assets=configs.assets;
+        if(!assets){
+            log.warn('No activated assets');
+            return [];
+        }
+        return assets;
     };
     app.force = function() {
         init(-1234);
@@ -398,5 +469,4 @@ var app = {};
         return themeContextPath;
     };
     app.pageHandlers = function(handler, req, res, session, pageName) {};
-    app.renderer = function(assets, page) {};
 }(app, core));
