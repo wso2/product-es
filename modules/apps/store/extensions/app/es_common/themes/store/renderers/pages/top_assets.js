@@ -22,6 +22,12 @@ var render = function(theme, data, meta, require) {
         body: [{
             partial: 'top_assets',
             context: {}
-        }]
+        }],
+        right: [
+            {
+                partial: 'recent-assets',
+                context: data
+            }
+        ]
     });
 };

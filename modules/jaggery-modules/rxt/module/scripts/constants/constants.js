@@ -22,6 +22,7 @@ var constants = {};
     constants.MSG_PAGE_INFO_NOT_FOUND = 'Title not found';
     constants.DEFAULT_TENANT = -1234;
     constants.RECENT_ASSET_COUNT = 5; //The default number of recent assets to be retrieved
+    constants.DEFAULT_TIME_STAMP_FIELD='overview_createdtime';
     /**
      * URL Patterns
      */

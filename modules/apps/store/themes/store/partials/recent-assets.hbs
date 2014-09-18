@@ -7,7 +7,7 @@
                 <div class="row-fluid recently-added">
                     {{#attributes}}
                         <div class="span3">
-                            <a href="{{url "/asts"}}/{{../type}}/details/{{../id}}"><img src="{{#if ../thumbnail}}{{url ""}}/storage/{{../../../../rxt.shortName}}/{{../../id}}/{{../../thumbnail}}{{/if}}"></a>
+                            <a href="{{url "/asts"}}/{{../type}}/details/{{../id}}"><img src="{{#if ../thumbnail}}{{url ""}}/storage/{{../../type}}/{{../../id}}/{{../../thumbnail}}{{/if}}"></a>
                         </div>
                         <div class="span9">
                             <strong><a href="{{url "/asts"}}/{{../type}}/details/{{../id}}">{{overview_name}}</a></strong>

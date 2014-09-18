@@ -87,6 +87,7 @@ var pageDecorators = {};
         var app=require('rxt').app;
         var asset=require('rxt').asset;
         var assets={};
+        var items=[];
         var assetsOfType;
         var am;
         var type;
@@ -99,9 +100,11 @@ var pageDecorators = {};
             else{
                 am=asset.createUserAssetManager(ctx.session,type);
             }
-            assets[type]=am.recentAssets();
+            assetsOfType=am.recentAssets();
+            items=items.concat(assetsOfType);
+
         }
-        page.recentAssetsOfAllTypes=assets;
+        page.recentAssets=items;
     };
     var getAssetManager = function(ctx) {
         var asset = require('rxt').asset;

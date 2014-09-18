@@ -242,18 +242,20 @@ var asset = {};
         return [];
     };
     AssetManager.prototype.recentAssets = function(opts) {
+        var opts = opts || {};
         var count = opts.count || constants.DEFAULT_RECENT_ASSET_COUNT;
         var q = opts.q || {};
         var items = [];
-        var timeStampField = core.getTimeStampAttribute();
+        var timeStampField = this.rxtManager.getTimeStampAttribute(this.type);
         if (!timeStampField) {
-            log.warn('There is no time stamp field defined for type: ' + this.type + '.Unable to retrieve recent assets, try adding the timestampField to the configuration.');
-            return items;
+            log.warn('There is no time stamp field defined for type: ' + this.type + '.A default time stamp field : ' + constants.DEFAULT_TIME_STAMP_FIELD + ' will be used.Add a timestampField property to the configuration to change this.');
+            timeStampField = constants.DEFAULT_TIME_STAMP_FIELD;
         }
         var paging = constants.DEFAULT_RECENT_ASSET_PAGIN;
         paging.count = count || paging.count;
         paging.sortBy = timeStampField;
         var items = this.search(q, paging);
+        addAssetsMetaData(items, this);
         return items;
     };
     /**
@@ -371,7 +373,7 @@ var asset = {};
      * @param  {[type]} query An optional query object
      * @return {[type]}       [description]
      */
-    AssetManager.prototype.recentAssets = function() {
+    /* AssetManager.prototype.recentAssets = function() {
         var timeStampField = this.rxtManager.getTimeStampAttribute(this.type);
         var ref = require('utils').reflection;
         var results = [];
@@ -398,7 +400,7 @@ var asset = {};
         results = this.am.search(query, options);
         addAssetsMetaData(results, this);
         return results;
-    };
+    };*/
     /**
      * The function returns all of the check items for the current state in which the provided
      * asset is in
