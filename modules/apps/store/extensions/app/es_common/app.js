@@ -9,7 +9,7 @@ app.server = function(ctx) {
         }
     }
 };
-app.pageHandlers = function(req,res,session,page) {
+app.pageHandlers = function(req, res, session, page) {
     return {
         onLoad: function() {
             return true;
@@ -17,11 +17,18 @@ app.pageHandlers = function(req,res,session,page) {
     };
 };
 app.renderer = function(ctx) {
+    var decoratorApi = require('/modules/page_decorators.js').pageDecorators;
     return {
         pageDecorators: {
-            navigationBar: function(page) {},
-            searchBar: function(page) {},
-            authenticationDetails:function(page){}
+            navigationBar: function(page) {
+                return decoratorApi.navigationBar(ctx,page,this);
+            },
+            searchBar: function(page) {
+                return decoratorApi.searchBar(ctx,page,this);
+            },
+            authenticationDetails: function(page) {
+                return decoratorApi.authenticationDetails(ctx, page, this);
+            }
         }
     }
 };

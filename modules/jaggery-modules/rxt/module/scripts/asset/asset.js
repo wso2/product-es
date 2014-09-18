@@ -761,6 +761,18 @@ var asset = {};
     AssetRenderer.prototype.buildBaseUrl = function(type) {
         return this.assetsPagesRoot + type;
     };
+    AssetRenderer.prototype.buildAssetPageUrl = function(type, endpoint) {
+        return core.getAssetPageUrl(type, endpoint);
+    };
+    AssetRenderer.prototype.buildAssetApiUrl = function(type, endpoint) {
+        return core.getAssetApiUrl(type, endpoint);
+    };
+    AssetRenderer.prototype.buildAppPageUrl = function(endpoint) {
+        return core.getAppPageUrl(endpoint);
+    };
+    AssetRenderer.prototype.buildAppApiUrl = function(endpoint) {
+        return core.getAppApiUrl(endpoint);
+    };
     AssetRenderer.prototype.thumbnail = function(page) {
         return '';
     };

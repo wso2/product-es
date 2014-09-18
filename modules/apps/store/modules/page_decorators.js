@@ -11,7 +11,7 @@ var pageDecorators = {};
         for (var index in availableTypes) {
             currentType = availableTypes[index];
             currentType.selected = false;
-            currentType.listingUrl = utils.buildBaseUrl(availableTypes[index].shortName) + '/list';
+            currentType.listingUrl = utils.buildAssetPageUrl(availableTypes[index].shortName, '/list');
             if (currentType.shortName == ctx.assetType) {
                 currentType.selected = true;
             }

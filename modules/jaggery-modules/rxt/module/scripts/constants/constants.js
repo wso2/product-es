@@ -21,12 +21,19 @@ var constants = {};
     constants.DEFAULT_TITLE = 'ES';
     constants.MSG_PAGE_INFO_NOT_FOUND = 'Title not found';
     constants.DEFAULT_TENANT = -1234;
-    constants.RECENT_ASSET_COUNT=5;	//The default number of recent assets to be retrieved
+    constants.RECENT_ASSET_COUNT = 5; //The default number of recent assets to be retrieved
     /**
      * URL Patterns
      */
     constants.ASSET_PAGE_URL_PATTERN = '/{context}/asts/{type}/{+suffix}';
     constants.APP_PAGE_URL_PATTERN = '/{context}/pages/{+suffix}';
+    /**
+     * URLs
+     */
+    constants.ASSET_BASE_URL = '/asts/';
+    constants.ASSET_API_URL = '/apis/';
+    constants.APP_PAGE_URL = '/pages/';
+    constants.APP_API_URL = '/apis/';
     /**
      * Pagin objects
      */

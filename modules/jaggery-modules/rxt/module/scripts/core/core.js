@@ -17,7 +17,7 @@
  *
  */
 var core = {};
-(function(core) {
+(function(core, constants) {
     var DEFAULT_MEDIA_TYPE = 'application/vnd.wso2.registry-ext-type+xml';
     var ASSET_PATH = '/_system/governance/repository/components/org.wso2.carbon.governance/types/';
     var RXT_MAP = 'rxt.manager.map';
@@ -620,6 +620,30 @@ var core = {};
         }
         return appResources;
     };
+    core.getAssetPageUrl = function(type, endpoint) {
+        return this.getAssetPageBaseUrl() + type + endpoint;
+    };
+    core.getAssetPageBaseUrl = function() {
+        return constants.ASSET_BASE_URL;
+    };
+    core.getAssetApiUrl = function(type, endpoint) {
+        return this.getAssetApiBaseUrl() + endpoint + '?type=' + type;
+    };
+    core.getAssetApiBaseUrl = function() {
+        return constants.ASSET_API_URL;
+    };
+    core.getAppPageUrl=function(endpoint){
+        return this.getAppPageBaseUrl()+endpoint;
+    };
+    core.getAppPageBaseUrl=function(){
+        return constants.APP_PAGE_URL;
+    }
+    core.getAppApiUrl=function(endpoint){
+        return this.getAppApiBaseUrl()+endpoint;
+    };
+    core.getAppApiBaseUrl=function(){
+        return constants.APP_API_URL;
+    };
     core.init = function() {
         var event = require('event');
         var server = require('store').server;
@@ -751,4 +775,4 @@ var core = {};
             session: session
         };
     };
-}(core));
+}(core, constants));
