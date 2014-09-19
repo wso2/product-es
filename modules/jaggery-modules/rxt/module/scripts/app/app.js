@@ -26,6 +26,8 @@ var app = {};
     Endpoints.prototype.getEndpointByUrl = function(url) {
         for (var index in this.endpoints) {
             if (this.endpoints[index].url == url) {
+                //If the secured property is not provided then the page is not
+                this.endpoints[index].secured=this.endpoints[index].secured?this.endpoints[index].secured:false;
                 return this.endpoints[index];
             }
         }
@@ -41,6 +43,7 @@ var app = {};
             existingEndpoint.path = endpoint.path;
             existingEndpoint.title = endpoint.title;
             existingEndpoint.owner = endpoint.owner;
+            existingEndpoint.secured=this.endpoints[index].secured?this.endpoints[index].secured:false;
             return;
         }
         this.endpoints.push(endpoint);
@@ -125,7 +128,7 @@ var app = {};
         }
         for (var key in decorators) {
             try {
-                page = decorators[key].call(this,page) || page;
+                page = decorators[key].call(this, page) || page;
             } catch (e) {
                 log.error('Failed to execute decorator: ' + key + ' for the page: ' + page + '.Exception ' + e);
             }
@@ -324,7 +327,8 @@ var app = {};
         extensionMap[appExtensionName] = app;
         log.info('Successfully loaded app extension: ' + appExtensionName);
     };
-    var init = function(tenantId) {
+    var init = function(tenantId,context) {
+        application.put(constants.APP_CONTEXT,context)
         load(tenantId);
     };
     var getPage = function(uri) {
@@ -355,11 +359,16 @@ var app = {};
         //renderer = renderer(ctx);
         return renderer;
     };
-    app.init = function() {
+    app.init = function(context) {
         var event = require('event');
+
         event.on('tenantLoad', function(tenantId) {
-            init(tenantId);
+            init(tenantId,context);
         });
+    };
+    app.getContext=function(){
+        var context=application.get(constants.APP_CONTEXT);
+        return context;
     };
     app.getAppResources = function(tenantId) {
         var configs = core.configs(tenantId);
@@ -405,6 +414,37 @@ var app = {};
             return [];
         }
         return assets;
+    };
+    app.execPageHandlers = function(handler, req, res, session, pageName) {
+        var ctx = core.createAppContext(session);
+        var appResources = app.getAppResources(ctx.tenantId);
+        //Determine the extension from the pageName
+        var endpoint = app.getPageEndpoint(ctx.tenantId, pageName);
+        if (!endpoint) {
+            log.warn('Unable to obtain endpoint information for page: ' + pageName);
+            return true;
+        }
+        var extensionResource = appResources[endpoint.owner];
+        if (!extensionResource) {
+            log.warn('Unable to retrieve extension resources for ' + endpoint.owner);
+            return true;
+        }
+        var pageHandlers = extensionResource.pageHandlers;
+        if (!pageHandlers) {
+            log.warn('There are no pageHandlers defined for tenant ' + tenanId);
+            return true;
+        }
+        ctx.req=request;
+        ctx.res=response;
+        ctx.endpoint=endpoint;
+        ctx.appContext=app.getContext();
+        pageHandlers=pageHandlers(ctx);
+
+        if(!pageHandlers[handler]){
+            log.warn('Unable to locate page handler: '+handler);
+            return true;
+        }
+        return pageHandlers[handler]();
     };
     app.force = function() {
         init(-1234);
@@ -536,5 +576,4 @@ var app = {};
         var themeContextPath = themeResolver.call(themeObj, extensionPath);
         return themeContextPath;
     };
-    app.pageHandlers = function(handler, req, res, session, pageName) {};
 }(app, core));

@@ -25,6 +25,7 @@ var constants = {};
     constants.POPULAR_ASSET_COUNT=1;
     constants.DEFAULT_TIME_STAMP_FIELD='overview_createdtime';
     constants.SUBSCRIPTIONS_PATH = '/subscriptions';
+    constants.APP_CONTEXT='rxt.app.context';
     /**
      * URL Patterns
      */

@@ -48,7 +48,10 @@ if (uriMatcher.match(PAGE_URL)) {
         if (file.isExists()) {
             log.debug('Loading endpoint at path: ' + path);
             request.getMappedPath = mapper(path);
-            include(path);
+            var proceed = app.execPageHandlers('onPageLoad', request, response, session, page);
+            if (proceed) {
+                include(path);
+            }
         } else {
             log.error('Unable to locate mapped endpoint at path: ' + path);
             response.sendError(404, 'Unable to locate a suitable endpoint for ' + page);

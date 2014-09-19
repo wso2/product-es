@@ -8,14 +8,19 @@ app.server = function(ctx) {
             },{
                 title:'Store | My Items',
                 url:'my-items',
-                path:'my_items.jag'
+                path:'my_items.jag',
+                secured:true
             }]
         }
     }
 };
-app.pageHandlers = function(req, res, session, page) {
+app.pageHandlers = function(ctx) {
     return {
-        onLoad: function() {
+        onPageLoad: function() {
+            if((ctx.isAnonContext)&&(ctx.endpoint.secured)){
+                ctx.res.sendRedirect(ctx.appContext+'/login');
+                return false;
+            }
             return true;
         }
     };

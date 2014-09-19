@@ -59,7 +59,8 @@ var rxt=require('rxt');
 var lifecycle=require('lifecycle');
 rxt.core.init();
 rxt.resources.init();
-rxt.app.init();
+var context=caramel.configs().context;
+rxt.app.init(context);
 lifecycle.core.init();
 
 var store = require('/modules/store.js');

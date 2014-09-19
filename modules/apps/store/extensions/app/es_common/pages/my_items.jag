@@ -44,7 +44,7 @@ require('/modules/store.js').exec(function(ctx) {
         //Get all of the subscriptions for the current asset type
         assets=assets.concat(am.subscriptions(ctx.session));
     }
-    //var output = appManager.render([], page);
+    var output = appManager.render(assets, page);
     //caramel.render(output);
     print(assets);
 }, request, response, session); 
