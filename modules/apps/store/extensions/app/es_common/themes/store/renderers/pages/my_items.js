@@ -36,10 +36,13 @@ var render = function(theme, data, meta, require) {
             partial: navigation,
             context: navigationContext
         }],
-        right: [
-            {
+        body: [{
+            partial: 'subscriptions',
+            context: data
+        }],
+        right: [{
                 partial: 'recent-assets',
-                 context: data
+                context: data
             }
             // {
             //     partial: 'tags',

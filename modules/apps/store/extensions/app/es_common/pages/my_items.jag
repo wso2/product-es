@@ -45,7 +45,7 @@ require('/modules/store.js').exec(function(ctx) {
         assets=assets.concat(am.subscriptions(ctx.session));
     }
     var output = appManager.render(assets, page);
-    //caramel.render(output);
-    print(assets);
+    caramel.render(output);
+    //print(assets);
 }, request, response, session); 
 %>
