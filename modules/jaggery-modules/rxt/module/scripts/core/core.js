@@ -644,6 +644,9 @@ var core = {};
     core.getAppApiBaseUrl=function(){
         return constants.APP_API_URL;
     };
+    core.getAssetSubscriptionSpace=function(type){
+        return constants.SUBSCRIPTIONS_PATH + (type ? '/' + type : '');
+    };
     core.init = function() {
         var event = require('event');
         var server = require('store').server;

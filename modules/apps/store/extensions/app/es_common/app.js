@@ -5,6 +5,10 @@ app.server = function(ctx) {
                 title: 'Store | Top Assets',
                 url: 'top-assets',
                 path: 'top_assets.jag'
+            },{
+                title:'Store | My Items',
+                url:'my-items',
+                path:'my_items.jag'
             }]
         }
     }

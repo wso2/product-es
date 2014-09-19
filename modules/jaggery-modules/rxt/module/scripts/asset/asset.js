@@ -255,22 +255,65 @@ var asset = {};
         addAssetsMetaData(items, this);
         return items;
     };
-    AssetManager.prototype.popularAssets=function(opts){
-        var opts=opts||{};
+    AssetManager.prototype.popularAssets = function(opts) {
+        var opts = opts || {};
         var count = opts.count || constants.POPULAR_ASSET_COUNT;
         var q = opts.q || {};
-        var items=[];
-        var nameField=this.rxtManager.getNameAttribute(this.type);
-        if(!nameField){
-            log.warn('There is no name field defined for type: '+this.type+'.Unable to retrieve popular assets.');
+        var items = [];
+        var nameField = this.rxtManager.getNameAttribute(this.type);
+        if (!nameField) {
+            log.warn('There is no name field defined for type: ' + this.type + '.Unable to retrieve popular assets.');
             return items;
         }
-        var paging=constants.DEFAULT_POPULAR_ASSET_PAGIN;
-        paging.count=count||paging.count;
-        paging.sortBy=nameField;
-        var items=this.search(q,paging);
-        addAssetsMetaData(items,this);
+        var paging = constants.DEFAULT_POPULAR_ASSET_PAGIN;
+        paging.count = count || paging.count;
+        paging.sortBy = nameField;
+        var items = this.search(q, paging);
+        addAssetsMetaData(items, this);
         return items;
+    };
+    AssetManager.prototype.subscriptions = function(session) {
+        var userSpace = this.getSubscriptionSpace(session);
+        var subscriptions = [];
+        if (!userSpace) {
+            log.error('Unable to retrieve subscriptions to type: ' + this.type + ' as the  subscription path could not be obtained');
+            return subscriptions;
+        }
+        subscriptions=obtainSubscriptions(userSpace,this, this.registry,this.type);
+        return subscriptions;
+    };
+    AssetManager.prototype.getSubscriptionSpace = function(session) {
+        var server = require('store').server;
+        var modUser=require('store').user;
+        var user = server.current(session);
+        if (!user) {
+            log.error('Unable to obtain user space as there is no logged in user.Cannot retrieve the subscription space');
+            return null;
+        }
+        var space = modUser.userSpace(user);
+        return space + core.getAssetSubscriptionSpace(this.type);
+    };
+    var obtainSubscriptions = function(path,am,registry,type) {
+        var   items = [];
+        var obj = registry.content(path);
+        if (!obj) {
+            log.debug('There is no content in the subscription path '+path);
+            return;
+        }
+        obj.forEach(function(path) {
+            try {
+                var iteamOut = am.get(path.substr(path.lastIndexOf('/') + 1));
+                if (iteamOut.lifecycleState == 'Published') {
+                    iteamOut.isPublished = true;
+                } else {
+                    iteamOut.isPublished = false;
+                }
+                items.push(iteamOut);
+            } catch (e) {
+                log.warn('asset for path="' + path + '" could not be retrieved, try reverting it form registry.');
+            }
+        });
+        return items; 
     };
     /**
      * The function will attach a lifecycle to the provided asset.The type of

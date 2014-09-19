@@ -19,7 +19,6 @@
 var render = function(theme, data, meta, require) {
     var navigation = 'navigation';
     var navigationContext = data;
-    // log.info('Data '+stringify(data));
     switch (data.assetTypeCount) {
         case 1:
             navigation = 'navigation-single';
@@ -28,7 +27,7 @@ var render = function(theme, data, meta, require) {
             break;
     }
     theme('2-column-right', {
-        title: data.meta.title,
+        title: data.title,
         header: [{
             partial: 'header',
             context: data
@@ -37,15 +36,15 @@ var render = function(theme, data, meta, require) {
             partial: navigation,
             context: navigationContext
         }],
-        body: [{
-            partial: 'top_assets',
-            context: data
-        }],
         right: [
             {
                 partial: 'recent-assets',
-                context: data
+                 context: data
             }
+            // {
+            //     partial: 'tags',
+            //     context: data.tags
+            // }
         ]
     });
 };
