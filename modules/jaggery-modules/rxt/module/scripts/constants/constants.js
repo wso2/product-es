@@ -22,6 +22,7 @@ var constants = {};
     constants.MSG_PAGE_INFO_NOT_FOUND = 'Title not found';
     constants.DEFAULT_TENANT = -1234;
     constants.RECENT_ASSET_COUNT = 5; //The default number of recent assets to be retrieved
+    constants.POPULAR_ASSET_COUNT=1;
     constants.DEFAULT_TIME_STAMP_FIELD='overview_createdtime';
     /**
      * URL Patterns
@@ -43,5 +44,11 @@ var constants = {};
         count: 5,
         sortBy: '',
         sortOrder: 'older'
+    };
+    constants.DEFAULT_POPULAR_ASSET_PAGIN={
+        start:0,
+        count:1,
+        sortBy:'',
+        sortOrder:'asc'
     };
 }(constants));

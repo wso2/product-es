@@ -31,6 +31,9 @@ app.renderer = function(ctx) {
             },
             recentAssetsOfActivatedTypes: function(page) {
                 return decoratorApi.recentAssetsOfActivatedTypes(ctx, page, this);
+            },
+            popularAssets:function(page){
+                return decoratorApi.popularAssets(ctx,page,this);
             }
         }
     }

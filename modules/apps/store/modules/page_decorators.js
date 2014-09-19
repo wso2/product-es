@@ -77,40 +77,66 @@ var pageDecorators = {};
         return page;
     };
     pageDecorators.recentAssets = function(ctx, page) {
-         var am = getAssetManager(ctx);
-         var assets = am.recentAssets();
-         page.recentAssets=assets;
-         return page;
+        var am = getAssetManager(ctx);
+        var assets = am.recentAssets();
+        page.recentAssets = assets;
+        return page;
     };
-
-    pageDecorators.recentAssetsOfActivatedTypes=function(ctx,page){
-        var app=require('rxt').app;
-        var asset=require('rxt').asset;
-        var assets={};
-        var items=[];
+    pageDecorators.recentAssetsOfActivatedTypes = function(ctx, page) {
+        var app = require('rxt').app;
+        var asset = require('rxt').asset;
+        var assets = {};
+        var items = [];
+        var assetsByType = [];
+        var am;
+        var type;
+        var rxtDetails;
+        var types = ctx.rxtManager.listRxtTypeDetails();
+        for (var index in types) {
+            type = types[index].shortName;
+            if (ctx.isAnonContext) {
+                am = asset.createAnonAssetManager(ctx.session, type, ctx.tenantId);
+            } else {
+                am = asset.createUserAssetManager(ctx.session, type);
+            }
+            assets = am.recentAssets();
+            if (assets.length != 0) {
+                items = items.concat(assets);
+                assetsByType.push({
+                    assets: assets,
+                    rxt: ctx.rxtManager.listRxtTypeDetails(type)
+                });
+            }
+        }
+        page.recentAssets = items;
+        page.recentAssetsByType = assetsByType;
+    };
+    pageDecorators.popularAssets = function(ctx, page) {
+        var app = require('rxt').app;
+        var asset = require('rxt').asset;
+        var assets = {};
+        var items = [];
         var assetsOfType;
         var am;
         var type;
-        var types=ctx.rxtManager.listRxtTypeDetails();
-        for(var index in types){
-            type=types[index].shortName;
-            if(ctx.isAnonContext){
-                am=asset.createAnonAssetManager(ctx.session,type,ctx.tenantId);
+        var types = ctx.rxtManager.listRxtTypeDetails();
+        for (var index in types) {
+            type = types[index].shortName;
+            if (ctx.isAnonContext) {
+                am = asset.createAnonAssetManager(ctx.session, type, ctx.tenantId);
+            } else {
+                am = asset.createUserAssetManager(ctx.session, type);
             }
-            else{
-                am=asset.createUserAssetManager(ctx.session,type);
-            }
-            assetsOfType=am.recentAssets();
-            items=items.concat(assetsOfType);
-
+            assetsOfType = am.popularAssets();
+            items = items.concat(assetsOfType);
         }
-        page.recentAssets=items;
+        //log.info(items);
+        page.popularAssets = items;
     };
     var getAssetManager = function(ctx) {
         var asset = require('rxt').asset;
         var am;
         var tenantId = -1234;
-
         if (ctx.isAnonContext) {
             am = asset.createAnonAssetManager(ctx.session, ctx.assetType, tenantId);
         } else {

@@ -21,7 +21,7 @@ var render = function(theme, data, meta, require) {
         }],
         body: [{
             partial: 'top_assets',
-            context: {}
+            context: data
         }],
         right: [
             {

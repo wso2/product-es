@@ -238,12 +238,9 @@ var asset = {};
         }
         return this.am.search(query, paging);
     };
-    AssetManager.prototype.popularAssets = function(opts) {
-        return [];
-    };
     AssetManager.prototype.recentAssets = function(opts) {
         var opts = opts || {};
-        var count = opts.count || constants.DEFAULT_RECENT_ASSET_COUNT;
+        var count = opts.count || constants.RECENT_ASSET_COUNT;
         var q = opts.q || {};
         var items = [];
         var timeStampField = this.rxtManager.getTimeStampAttribute(this.type);
@@ -256,6 +253,23 @@ var asset = {};
         paging.sortBy = timeStampField;
         var items = this.search(q, paging);
         addAssetsMetaData(items, this);
+        return items;
+    };
+    AssetManager.prototype.popularAssets=function(opts){
+        var opts=opts||{};
+        var count = opts.count || constants.POPULAR_ASSET_COUNT;
+        var q = opts.q || {};
+        var items=[];
+        var nameField=this.rxtManager.getNameAttribute(this.type);
+        if(!nameField){
+            log.warn('There is no name field defined for type: '+this.type+'.Unable to retrieve popular assets.');
+            return items;
+        }
+        var paging=constants.DEFAULT_POPULAR_ASSET_PAGIN;
+        paging.count=count||paging.count;
+        paging.sortBy=nameField;
+        var items=this.search(q,paging);
+        addAssetsMetaData(items,this);
         return items;
     };
     /**
@@ -579,8 +593,8 @@ var asset = {};
         asset.thumbnail = am.getThumbnail(asset);
         asset.banner = am.getBanner(asset);
         //log.info(asset);
-        log.info('Name: ' + am.getName(asset));
-        log.info('Thumbnail: ' + am.getThumbnail(asset));
+        //log.info('Name: ' + am.getName(asset));
+        //log.info('Thumbnail: ' + am.getThumbnail(asset));
     };
     /**
      * The function will a render page with the asset details combined with the rxt template.If an array of assets
