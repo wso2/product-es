@@ -272,6 +272,78 @@ var asset = {};
         addAssetsMetaData(items, this);
         return items;
     };
+    /**
+     * The method returns the list of tags for a given asset instance or asset type
+     * If an id is provided then the tags of that particular asset is returned,else
+     * all of the tags applied to the current asset type are returned
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+    AssetManager.prototype.tags = function() {
+        var tag, tags, assetType, i, length, count;
+        var tagz = [];
+        var tz = {};
+        tags = this.registry.query(constants.TAGS_QUERY_PATH);
+        length = tags.length;
+        for (i = 0; i < length; i++) {
+            assetType = tags[i].split(';')[0].split('/')[3];
+            if (assetType != undefined) {
+                if (assetType.contains(this.type)) {
+                    tag = tags[i].split(';')[1].split(':')[1];
+                    count = tz[tag];
+                    count = count ? count + 1 : 1;
+                    tz[tag] = count;
+                }
+            }
+        }
+        //api setter
+        for (tag in tz) {
+            if (tz.hasOwnProperty(tag)) {
+                tagz.push({
+                    name: String(tag),
+                    count: tz[tag]
+                });
+            }
+        }
+        return tagz;
+    };
+    /**
+     * The methos adds a tag to a given asset
+     * @param {[type]} id  [description]
+     * @param {[type]} tag [description]
+     */
+    AssetManager.prototype.addTag = function(id, tag) {};
+    /**
+     * The method removes the provided tag from the asset
+     * @param  {[type]} id  [description]
+     * @param  {[type]} tag [description]
+     * @return {[type]}     [description]
+     */
+    AssetManager.prototype.untag = function(id, tag) {};
+    /**
+     * The method returns the rating value of a given asset
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+    AssetManager.prototype.rating = function(id) {};
+    /**
+     * The method adds a rating to an asset
+     * @param {[type]} id     [description]
+     * @param {[type]} rating [description]
+     */
+    AssetManager.prototype.addRating = function(id, rating) {};
+    /**
+     * The method subscribes a user to a given asset
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+    AssetManager.prototype.subscribe = function(id, user) {};
+    /**
+     * The method unsubscribes a given user to an asset
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+    AssetManager.prototype.unsubscribe = function(id, user) {};
     AssetManager.prototype.subscriptions = function(session) {
         var userSpace = this.getSubscriptionSpace(session);
         var subscriptions = [];
@@ -279,12 +351,12 @@ var asset = {};
             log.error('Unable to retrieve subscriptions to type: ' + this.type + ' as the  subscription path could not be obtained');
             return subscriptions;
         }
-        subscriptions=obtainSubscriptions(userSpace,this, this.registry,this.type);
+        subscriptions = obtainSubscriptions(userSpace, this, this.registry, this.type);
         return subscriptions;
     };
     AssetManager.prototype.getSubscriptionSpace = function(session) {
         var server = require('store').server;
-        var modUser=require('store').user;
+        var modUser = require('store').user;
         var user = server.current(session);
         if (!user) {
             log.error('Unable to obtain user space as there is no logged in user.Cannot retrieve the subscription space');
@@ -293,11 +365,11 @@ var asset = {};
         var space = modUser.userSpace(user);
         return space + core.getAssetSubscriptionSpace(this.type);
     };
-    var obtainSubscriptions = function(path,am,registry,type) {
-        var   items = [];
+    var obtainSubscriptions = function(path, am, registry, type) {
+        var items = [];
         var obj = registry.content(path);
         if (!obj) {
-            log.debug('There is no content in the subscription path '+path);
+            log.debug('There is no content in the subscription path ' + path);
             return;
         }
         obj.forEach(function(path) {
@@ -313,7 +385,7 @@ var asset = {};
                 log.warn('asset for path="' + path + '" could not be retrieved, try reverting it form registry.');
             }
         });
-        return items; 
+        return items;
     };
     /**
      * The function will attach a lifecycle to the provided asset.The type of

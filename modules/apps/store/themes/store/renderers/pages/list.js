@@ -40,11 +40,11 @@ var render = function(theme, data, meta, require) {
             {
                 partial: 'recent-assets',
                 context: data
+            },
+            {
+                partial: 'tags',
+                context: data
             }
-            // {
-            //     partial: 'tags',
-            //     context: data.tags
-            // }
         ]
     });
 };

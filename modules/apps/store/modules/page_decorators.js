@@ -133,6 +133,11 @@ var pageDecorators = {};
         //log.info(items);
         page.popularAssets = items;
     };
+    pageDecorators.tags=function(ctx,page){
+        var am=getAssetManager(ctx);
+        page.tags=am.tags();
+        return page;
+    };
     var getAssetManager = function(ctx) {
         var asset = require('rxt').asset;
         var am;
