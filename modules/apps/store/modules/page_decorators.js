@@ -138,6 +138,15 @@ var pageDecorators = {};
         page.tags=am.tags();
         return page;
     };
+    pageDecorators.myAssets=function(ctx,page){
+        if((!ctx.assetType)&&(!ctx.isAnonContext)){
+            log.warn('Ignoring my assets decorator as the asset type was not present');
+            return page;
+        }
+        var am=getAssetManager(ctx);
+        page.myAssets=am.subscriptions(ctx.session)||[];
+        return page;
+    };
     var getAssetManager = function(ctx) {
         var asset = require('rxt').asset;
         var am;

@@ -33,10 +33,10 @@ var render = function(theme, data, meta, require) {
             // } 
         ],
         right: [
-            // {
-            //        partial: 'my-assets-link',
-            //        context: data.myAssets
-            //    },
+            {
+                partial: 'my-assets-link',
+                context: data
+            },
             {
                 partial: 'recent-assets',
                 context: data

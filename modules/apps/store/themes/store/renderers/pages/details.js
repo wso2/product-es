@@ -25,10 +25,10 @@ var render = function(theme, data, meta, require) {
             context: data
         }],
         right: [
-            // {
-            //     partial: 'my-assets-link',
-            //     context: data.myAssets
-            // },
+            {
+                partial: 'my-assets-link',
+                context: data
+            },
             {
                 partial: 'recent-assets',
                 context: data
@@ -36,7 +36,7 @@ var render = function(theme, data, meta, require) {
             {
                 partial: 'tags',
                 context: data
-            },
+            }
             // {
             //     partial: 'more-assets-from-provider',
             //     context: require('/helpers/asset.js').formatAssetFromProviderRatings(data.moreAssetsFromProvider)
