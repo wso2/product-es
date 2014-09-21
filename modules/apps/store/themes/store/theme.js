@@ -49,16 +49,16 @@ var engine = caramel.engine('handlebars', (function() {
                 //log.info('options: '+stringify(options));
                 switch (options.type) {
                     case 'text':
-                        output = '<input type="text" class="span12" name="'+options.name.fullName+'" />';
+                        output = '<input type="text" class="span12" name="' + options.name.fullName + '" />';
                         break;
                     case 'options':
-                        output = '<select id="'+options.name.fullName+'" class="span12 selectpicker " name="'+options.name.fullName+'">';
-                        var valueObj=options.values?options.values[0]:{};
-                        var values=valueObj.value?valueObj.value:[];
-                        for(var index in values){
-                            output+='<option>'+values[index].value+'</option>';
+                        output = '<select id="' + options.name.fullName + '" class="span12 selectpicker " name="' + options.name.fullName + '">';
+                        var valueObj = options.values ? options.values[0] : {};
+                        var values = valueObj.value ? valueObj.value : [];
+                        for (var index in values) {
+                            output += '<option>' + values[index].value + '</option>';
                         }
-                        output+='</select>';
+                        output += '</select>';
                         break;
                     default:
                         log.warn('Unable to render search field: ' + options.name.name + ' as the type is not supported');
@@ -66,32 +66,62 @@ var engine = caramel.engine('handlebars', (function() {
                 }
                 return new Handlebars.SafeString(output);
             });
-            Handlebars.registerHelper('authentication',function(options){
-                var log=new Log();
+            Handlebars.registerHelper('authentication', function(options) {
+                var log = new Log();
                 //Determine if security details are present
-                var security=options.security;
-                var output="";
+                var security = options.security;
+                var output = "";
                 var ptr;
-                if(!security){
+                if (!security) {
                     log.warn('Unable to locate security details in order to render authentication ui elements');
                     return;
                 }
-                log.info('Active authentication method: '+security.method);
+                log.info('Active authentication method: ' + security.method);
                 //Determine the authentication method
-                switch(security.method){
+                switch (security.method) {
                     case 'sso':
                         log.info('Placing sso related partials');
-                        output="{{> sso_auth .}}";
+                        output = "{{> sso_auth .}}";
                         break;
                     case 'basic':
                         log.info('Placing basic authentication partials');
-                        output="{{> basic_auth .}}";
+                        output = "{{> basic_auth .}}";
                         break;
                     default:
                         break;
                 }
-                ptr=Handlebars.compile(output);
+                ptr = Handlebars.compile(output);
                 return new Handlebars.SafeString(ptr(security));
+            });
+            Handlebars.registerHelper('assetUtilization', function(options) {
+                var output = '';
+                var ptr;
+                var security = options.security;
+                var cuser = options.cuser;
+                //log.info(options);
+                if (!cuser) {
+                    log.warn('Unable to locate user details');
+                    return output;
+                }
+                if (!cuser.isAnon) {
+                    output = '<a href="#" class="btn btn-primary asset-add-btn">{{>process-asset-text}}</a>';
+                    ptr = Handlebars.compile(output);
+                    return new Handlebars.SafeString(ptr());
+                }
+                if (!security) {
+                    log.warn('Unable to locate security block');
+                    return output;
+                }
+                switch (security.method) {
+                    case 'basic':
+                        output = '<a href="#" class="btn btn-primary asset-add-btn">{{>process-asset-text}}</a>';
+                        break;
+                    default:
+                        output = '<a href="{{url "/login"}}" class="btn btn-primary asset-add-btn">{{>process-asset-text}}</a>';
+                        break;
+                }
+                ptr = Handlebars.compile(output);
+                return new Handlebars.SafeString(ptr());
             });
         },
         render: function(data, meta) {
@@ -114,16 +144,13 @@ var engine = caramel.engine('handlebars', (function() {
 var resolve = function(path) {
     var themeResolver = this.__proto__.resolve;
     var asset = require('rxt').asset;
-    var app=require('rxt').app;
-
-    var appPath=app.resolve(request,path,this.name,this,themeResolver,session);
-    if(!appPath){
-    	path = asset.resolve(request, path, this.name, this, themeResolver);
+    var app = require('rxt').app;
+    var appPath = app.resolve(request, path, this.name, this, themeResolver, session);
+    if (!appPath) {
+        path = asset.resolve(request, path, this.name, this, themeResolver);
+    } else {
+        path = appPath;
     }
-    else{
-    	path=appPath;
-    }
-
     //log.info('Final path: '+path);
     //path=app.resolve(request,path,this.name,this,themeResolver,session);
     // var p,

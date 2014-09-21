@@ -1,3 +1,24 @@
-<%
-	print('This is the subscriptions page!');
-%>
+<% require('/modules/store.js').exec(function(ctx) {
+    var log = ctx.log;
+    var app = require('rxt').app;
+    var id = request.getParameter('asset');
+    var destination = request.getParameter('destination');
+    var asset = require('rxt').asset;
+    var type = request.getParameter('type');
+    var redirect = app.getContext() + '/pages/top-assets'; //Assume a detination has not been provided
+    //Determine where the request should be routed
+    if (destination) {
+        redirect = destination;
+    }
+    if (!type) {
+        log.warn('Unable to subscribe to the asset as the type of the asset cannot be determined.');
+    } else {
+        var am = asset.createUserAssetManager(ctx.session, type);
+        try {
+            am.subscribe(id, ctx.session);
+        } catch (e) {
+            log.warn('Unable to process the asset as the id: ' + id + ' could not be obained.Exception: ' + e);
+        }
+    }
+    response.sendRedirect(redirect);
+}, request, response, session); %>
