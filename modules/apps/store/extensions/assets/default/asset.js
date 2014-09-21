@@ -48,13 +48,6 @@ asset.configure = function() {
                     provider: {
                         readonly: true
                     },
-                    name: {
-                        name: {
-                            name: 'name',
-                            label: 'Name'
-                        },
-                        validation: function() {}
-                    },
                     version: {
                         name: {
                             label: 'Version'

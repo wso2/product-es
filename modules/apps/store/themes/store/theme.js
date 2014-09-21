@@ -46,9 +46,10 @@ var engine = caramel.engine('handlebars', (function() {
             });
             Handlebars.registerHelper('renderSearchField', function(options) {
                 var output = '';
+                //log.info('options: '+stringify(options));
                 switch (options.type) {
                     case 'text':
-                        output = '<input type="text" class="span12" />';
+                        output = '<input type="text" class="span12" name="'+options.name.fullName+'" />';
                         break;
                     case 'options':
                         output = '<select id="'+options.name.fullName+'" class="span12 selectpicker " name="'+options.name.fullName+'">';

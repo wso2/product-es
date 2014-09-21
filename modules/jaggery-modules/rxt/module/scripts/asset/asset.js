@@ -337,13 +337,46 @@ var asset = {};
      * @param  {[type]} id [description]
      * @return {[type]}    [description]
      */
-    AssetManager.prototype.subscribe = function(id, user) {};
+    AssetManager.prototype.subscribe = function(id, session) {
+        var path = this.getSubscriptionSpace(session);
+        var success = false;
+        if (!path) {
+            log.warn('Unable to subscribe to ' + id + ' as the user space path was not located.');
+            return success;
+        }
+        path += '/' + id;
+        if (!this.registry.exists(path)) {
+            this.registry.put(path, {
+                name: id,
+                content: ''
+            });
+            success = true;
+        } else {
+            log.debug('The user has already subscribed to asset : ' + id);
+        }
+        return success;
+    };
     /**
      * The method unsubscribes a given user to an asset
      * @param  {[type]} id [description]
      * @return {[type]}    [description]
      */
-    AssetManager.prototype.unsubscribe = function(id, user) {};
+    AssetManager.prototype.unsubscribe = function(id, session) {
+        var path = this.getSubscriptionSpace(session);
+        var success = false;
+        if (!path) {
+            log.warn('Unable to unsubscribe from ' + id + ' as the user space path was not located.');
+            return success;
+        }
+        path += '/' + id;
+        try {
+            this.registry.remove(path);
+            success = true;
+        } catch (e) {
+            log.error('Unable to unsubscribe from ' + id);
+        }
+        return success;
+    };
     AssetManager.prototype.subscriptions = function(session) {
         var userSpace = this.getSubscriptionSpace(session);
         var subscriptions = [];

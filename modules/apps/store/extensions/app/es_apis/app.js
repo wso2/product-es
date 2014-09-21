@@ -18,6 +18,9 @@ app.server = function(ctx) {
             },{
                 url:'asset',
                 path:'asset.jag'
+            },{
+                url:'subscriptions',
+                path:'subscriptions.jag'
             }]
         }
     };

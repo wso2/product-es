@@ -20,10 +20,10 @@ require('/modules/store.js').exec(function(ctx) {
     var options = uriMatcher.match('/{context}/asts/{type}/{pageName}');
     var type = options.type;
     var assets = [];
-    var q = ctx.request.getParameter('query');
+    var q = ctx.request.getParameter('q');
     var sortBy = ctx.request.getParameter('sortBy');
     var sortOrder = ctx.request.getParameter('sortOrder');
-    var page = ui.buildPage(ctx.session,ctx.request);
+    var page = ui.buildPage(ctx.session, ctx.request);
     var output = {};
     DEFAULT_PAGIN.sortBy = (sortBy || DEFAULT_PAGIN.sortBy);
     DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
@@ -33,10 +33,14 @@ require('/modules/store.js').exec(function(ctx) {
         am = asset.createUserAssetManager(ctx.session, type);
     }
     if (q) {
-        assets = am.search(q, DEFAULT_PAGIN);
+        var qString = '{' + q + '}';
+        //log.info('q: '+qString);
+        var query = parse(qString);
+        //log.info('query: '+stringify(query));
+        assets = am.search(query, DEFAULT_PAGIN);
     } else {
         assets = am.search(null, DEFAULT_PAGIN);
     }
-    var output=am.render(assets,page).list();
+    var output = am.render(assets, page).list();
     caramel.render(output);
 }, request, response, session); %>

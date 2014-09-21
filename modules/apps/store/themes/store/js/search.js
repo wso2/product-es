@@ -96,15 +96,32 @@ $(function () {
      */
 
     var buildParams = function (query) {
-        return 'query=' + query;
+        return 'q=' + query;
+    };
+    /**
+     * The function builds a json object with fields containing values
+     * @param  {[type]} containerId [description]
+     * @return {[type]}             [description]
+     */
+    var getSearchFields=function(containerId){
+        var q={};
+        var output='';
+        $inputs=$(containerId+' :input');
+        $inputs.each(function(){
+            if((this.name!=undefined)&&(this.name!='')&&(this.value)&&(this.value!='')){
+                output+='"'+this.name+'": '+'"'+$(this).val()+'",';
+            }
+            //q[this.name]=$(this).val();
+        });
+        return output;//JSON.stringify(q);
     };
 
     var search = function () {
-        var url, searchVal = $('#search').val();
+        var url, searchVal = getSearchFields('#search-dropdown-cont');//$('#search').val();
         //var url, searchVal = test($('#search').val());
         currentPage = 1;
         if (store.asset) {
-            url = caramel.url('/assets/' + store.asset.type + '/?' + buildParams(searchVal));
+            url = caramel.url('/asts/' + store.asset.type + '/list?' + buildParams(searchVal));
             caramel.data({
                 title: null,
                 header: ['header'],
