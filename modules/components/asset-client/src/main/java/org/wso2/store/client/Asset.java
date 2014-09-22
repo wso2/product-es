@@ -9,8 +9,10 @@ public class Asset {
 	private String name;
 	private String type;
 	private HashMap<String, String> attributes;
+	private String id;
 
 	
+
 	public String getName() {
 		return name;
 	}
@@ -29,6 +31,15 @@ public class Asset {
 	public void setAttributes(HashMap<String, String> attributes) {
 		this.attributes = attributes;
 	}
+	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	@Override
 	public String toString() {
 		return "Asset [name=" + name + ", type=" + type + ", attributes="

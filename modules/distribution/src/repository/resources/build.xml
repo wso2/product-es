@@ -28,12 +28,6 @@
 
     <property name="jar.dir" value="../../lib"/>
 
- 	<property name="host"  value="" />
- 	<property name="port"   value="" />
- 	<property name="userName"   value="" />
- 	<property name="pwd"   value="" />
- 	<property name="assetsPath"   value="" />
- 	<property name="imagePath"   value="" />
 
 
     <target name="publish">
@@ -41,12 +35,12 @@
             <classpath>
              <path location="${jar.dir}/asset-client-1.0-SNAPSHOT-jar-with-dependencies.jar"/>
             </classpath>
-      <arg value="${host}"/>
-      <arg value="${port}"/>
-      <arg value="${userName}"/>
-      <arg value="${pwd}"/>
-       <arg value="${assetsPath}"/>
-       <arg value="${imagePath}"/>
+            <arg value="${host}"/>
+            <arg value="${port}"/>
+        	<arg value="${user}"/>
+        	<arg value="${pwd}"/>
+        	<arg value="${context}"/>
+        	<arg value="${user.dir}"/>
         </java>
     </target>
   

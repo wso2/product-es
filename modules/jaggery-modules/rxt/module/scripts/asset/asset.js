@@ -702,7 +702,7 @@ var asset = {};
      * @return {[type]}         [description]
      */
     asset.getAssetEndpoints = function(session, type) {
-        var context = core.createAssetContext(session, type);
+//        var context = core.createAssetContext(session, type);
         //var assetResources = core.assetResources(context.tenantId, type);
         var serverCb = createServer(session, type);
         return serverCb ? serverCb.endpoints : {};
