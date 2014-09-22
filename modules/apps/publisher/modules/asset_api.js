@@ -98,7 +98,15 @@ var responseProcessor = require('utils').response;
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
-        var asset = am.importAssetFromHttpRequest(assetReq);
+        
+        
+        var asset = null;
+        if (request.getParameter("asset") != null){
+            asset = parse(request.getParameter("asset"));
+        }else{
+            asset = am.importAssetFromHttpRequest(assetReq);
+        }
+        
         putInStorage(options, asset, am, req, session);
         try {
             am.create(asset);
@@ -123,7 +131,15 @@ var responseProcessor = require('utils').response;
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
-        var asset = am.importAssetFromHttpRequest(assetReq);
+        
+        
+        var asset = null;
+        if (request.getParameter("asset") != null){
+            asset = parse(request.getParameter("asset"));
+        }else{
+            asset = am.importAssetFromHttpRequest(assetReq);
+        }
+
         asset.id = options.id;
         putInStorage(options, asset, am, req, session);
         var original = am.get(options.id);
