@@ -16,26 +16,28 @@
  ~ under the License.
  -->
 <assembly>
-    <id>dist</id>
+    <id>assetclient</id>
     <formats>
         <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
-    <fileSets>
-        <!-- Copying p2 profile and osgi bundles-->
-        <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/components
-            </directory>
-            <outputDirectory>${project.artifactId}-${project.version}/repository/components</outputDirectory>
-            <excludes>
-                <exclude>**/eclipse.ini</exclude>
-                <exclude>**/*.lock</exclude>
-                <exclude>**/.data</exclude>
-                <exclude>**/.settings</exclude>
-            </excludes>
-        </fileSet>
-        
+ 
+    
+      <moduleSets>
+    <moduleSet>
+    
+      <!-- Enable access to all projects in the current multimodule build! -->
+      <useAllReactorProjects>true</useAllReactorProjects>
+      
+      <!-- Now, select which projects to include in this module-set. -->
+      <includes>
+        <include>org.wso2.store:asset-client</include>
+      </includes>
+      <binaries>
+        <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
 
-        
-    </fileSets>
+    </moduleSet>
+  </moduleSets>
 </assembly>

@@ -21,6 +21,7 @@
         <module>modules/components/social</module>
         <module>modules/components/sso-common</module>
         <module>modules/jaggery-modules</module>
+        <module>modules/components/asset-client</module>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
@@ -151,11 +152,14 @@
                         </execution>
                     </executions>
                 </plugin>
+                <!-- 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>${maven.assemblyplugin.version}</version>
+ 
                 </plugin>
+                 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -184,6 +188,9 @@
                         </execution>
                     </executions>
                 </plugin>
+                
+
+         
             </plugins>
         </pluginManagement>
     </build>
