@@ -33,7 +33,10 @@ if (uriMatcher.match(API_URL)) {
         if (file.isExists()) {
             log.info('Loading endpoint at path: ' + path);
             request.getMappedPath = mapper(path);
-            include(path);
+            var proceed = app.execApiHandlers('onApiLoad', request, response, session, page);
+            if (proceed) {
+                include(path);
+            }
         } else {
             log.error('Unable to locate mapped endpoint at path: ' + path);
             response.sendError(404, 'Unable to locate a suitable endpoint for ' + page);

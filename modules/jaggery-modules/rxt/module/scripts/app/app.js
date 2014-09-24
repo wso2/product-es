@@ -303,6 +303,7 @@ var app = {};
         app.ignoreExtension = false;
         app.renderer = null;
         app.pageHandlers = null;
+        app.apiHandlers = null;
         var content = getScriptContent(appExtensionFile, appExtensionFilePath);
         if (!content) {
             log.warn('The app extension file: ' + appExtensionFilePath + ' does not contain any content.The extension will not be loaded.');
@@ -433,8 +434,8 @@ var app = {};
             log.warn('There are no pageHandlers defined for tenant ' + tenanId);
             return true;
         }
-        ctx.req = request;
-        ctx.res = response;
+        ctx.req = req;
+        ctx.res = res;
         ctx.endpoint = endpoint;
         ctx.appContext = app.getContext();
         pageHandlers = pageHandlers(ctx);
@@ -443,6 +444,37 @@ var app = {};
             return true;
         }
         return pageHandlers[handler]();
+    };
+    app.execApiHandlers = function(handler, req, res, session, pageName) {
+        var ctx = core.createAppContext(session);
+        var appResources = app.getAppResources(ctx.tenantId);
+        //Determine the extension from the pageName
+        var endpoint = app.getApiEndpoint(ctx.tenantId, pageName);
+        if (!endpoint) {
+            log.warn('Unable to obtain endpoint information for api: ' + pageName);
+            return true;
+        }
+        var extensionResource = appResources[endpoint.owner];
+        if (!extensionResource) {
+            log.warn('Unable to retrieve extension resources for ' + endpoint.owner);
+            return true;
+        }
+        var apiHandlers = extensionResource.apiHandlers;
+        if (!apiHandlers) {
+            log.warn('There are no apiHandlers defined for tenant ' + tenanId);
+            return true;
+        }
+        ctx.req = req;
+        ctx.res = res;
+        ctx.endpoint = endpoint;
+        ctx.appContext = app.getContext();
+        ctx.session=session;
+        apiHandlers = apiHandlers(ctx);
+        if (!apiHandlers[handler]) {
+            log.warn('Unable to locate page handler: ' + handler);
+            return true;
+        }
+        return apiHandlers[handler]();
     };
     app.force = function() {
         init(-1234);
@@ -535,32 +567,31 @@ var app = {};
             return null;
         }
         if (!configs.features[featureName]) {
-            log.error('Cannot retrieve feature  details of ' + featureName+' as it does not exist in the feature block.');
+            log.error('Cannot retrieve feature  details of ' + featureName + ' as it does not exist in the feature block.');
             return null;
         }
-        var urlUtils=require('utils').url;
+        var urlUtils = require('utils').url;
         //Populate any urls which are present with the correct server details
-        var keys=urlUtils.popServerDetails(configs.features[featureName].keys||{});
-        configs.features[featureName].keys=keys;
+        var keys = urlUtils.popServerDetails(configs.features[featureName].keys || {});
+        configs.features[featureName].keys = keys;
         return configs.features[featureName];
     };
-    app.isFeatureEnabled=function(tenantId,featureName){
-        var details=this.getFeatureDetails(tenantId,featureName);
-        if(!details){
-            log.warn('Could not locate feature details of : '+featureName+'.The feature will be assumed to be disabled.');
+    app.isFeatureEnabled = function(tenantId, featureName) {
+        var details = this.getFeatureDetails(tenantId, featureName);
+        if (!details) {
+            log.warn('Could not locate feature details of : ' + featureName + '.The feature will be assumed to be disabled.');
             return false;
         }
-        return details.enabled?details.enabled:false;
+        return details.enabled ? details.enabled : false;
     };
-    app.getSocialFeatureDetails=function(tenantId){
-        var details=this.getFeatureDetails(tenantId,constants.SOCIAL_FEATURE);
-        if(!details){
+    app.getSocialFeatureDetails = function(tenantId) {
+        var details = this.getFeatureDetails(tenantId, constants.SOCIAL_FEATURE);
+        if (!details) {
             log.error('Unable to locate social feature details as it was not located in the features configuration block.');
             return null;
         }
         return details;
     };
-
     /**
      * The function is responsible for routing requests for resources to appropriate path
      * @param  {[type]} request       [description]
