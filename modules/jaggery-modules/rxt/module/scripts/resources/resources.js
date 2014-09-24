@@ -60,16 +60,17 @@ var resources = {};
     var loadDefaultAssetScript = function(options, type, assetResource) {
         var content = loadAssetScriptContent(getDefaultAssetScriptPath(options));
         if (content) {
-            assetResource = evalAssetScript(content, assetResource)
+            assetResource = evalAssetScript(content, assetResource,'default','default')
         }
         return assetResource;
     };
     var loadAssetScript = function(options, type, assetResource) {
-        var content = loadAssetScriptContent(getDefaultAssetTypeScriptPath(options, type));
+        var path=getDefaultAssetTypeScriptPath(options, type);
+        var content = loadAssetScriptContent(path);
         var defConfiguration = assetResource.configure();
         var ref = require('utils').reflection;
         if (content) {
-            assetResource = evalAssetScript(content, assetResource);
+            assetResource = evalAssetScript(content, assetResource,path,type);
             var ptr = assetResource.configure;
             //The configuration object of the default asset.js needs to be combined with 
             //what is defined by the user in per type asset script
@@ -86,10 +87,24 @@ var resources = {};
         }
         return assetResource;
     }
-    var evalAssetScript = function(scriptContent, assetResource) {
+    var evalAssetScript = function(scriptContent, assetResource,path,type) {
         var module = 'function(asset,log){' + scriptContent + '};';
-        var modulePtr = eval(module);
-        modulePtr.call(this, assetResource, log);
+        var modulePtr=null;
+        try{
+            modulePtr = eval(module);
+        }catch(e){
+            log.error('Unable to evaluate asset script content at  path: '+path+'.Exception: '+e);
+        }
+        if(!modulePtr){
+            return modulePtr;
+        }
+        try{
+            var assetLog=new Log('asset-'+type+'-script');
+            modulePtr.call(this, assetResource, assetLog);
+        }catch(e){
+            log.error('Unable execute asset script content of '+path+'.Exception: '+e);
+        }
+
         return assetResource;
     };
     var buildDefaultResources = function(options, type, assetResource) {
