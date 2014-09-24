@@ -113,6 +113,9 @@ asset.renderer = function(ctx) {
             },
             myAssets:function(page){
                 return decoratorApi.myAssets(ctx,page);
+            },
+            socialFeature:function(page){
+                return decoratorApi.socialFeature(ctx,page);
             }
         }
     };

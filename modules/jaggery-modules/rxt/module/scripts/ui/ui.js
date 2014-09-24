@@ -32,6 +32,7 @@ var ui = {};
             ribbon: {},
             assetMeta: {},
             security: {},
+            features:{},
             meta: {
                 pageName: options.pageName,
                 currentPage: options.currentPage,

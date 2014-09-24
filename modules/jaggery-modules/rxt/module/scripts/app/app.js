@@ -27,7 +27,7 @@ var app = {};
         for (var index in this.endpoints) {
             if (this.endpoints[index].url == url) {
                 //If the secured property is not provided then the page is not
-                this.endpoints[index].secured=this.endpoints[index].secured?this.endpoints[index].secured:false;
+                this.endpoints[index].secured = this.endpoints[index].secured ? this.endpoints[index].secured : false;
                 return this.endpoints[index];
             }
         }
@@ -43,7 +43,7 @@ var app = {};
             existingEndpoint.path = endpoint.path;
             existingEndpoint.title = endpoint.title;
             existingEndpoint.owner = endpoint.owner;
-            existingEndpoint.secured=this.endpoints[index].secured?this.endpoints[index].secured:false;
+            existingEndpoint.secured = this.endpoints[index].secured ? this.endpoints[index].secured : false;
             return;
         }
         this.endpoints.push(endpoint);
@@ -327,8 +327,8 @@ var app = {};
         extensionMap[appExtensionName] = app;
         log.info('Successfully loaded app extension: ' + appExtensionName);
     };
-    var init = function(tenantId,context) {
-        application.put(constants.APP_CONTEXT,context)
+    var init = function(tenantId, context) {
+        application.put(constants.APP_CONTEXT, context)
         load(tenantId);
     };
     var getPage = function(uri) {
@@ -361,13 +361,12 @@ var app = {};
     };
     app.init = function(context) {
         var event = require('event');
-
         event.on('tenantLoad', function(tenantId) {
-            init(tenantId,context);
+            init(tenantId, context);
         });
     };
-    app.getContext=function(){
-        var context=application.get(constants.APP_CONTEXT);
+    app.getContext = function() {
+        var context = application.get(constants.APP_CONTEXT);
         return context;
     };
     app.getAppResources = function(tenantId) {
@@ -434,14 +433,13 @@ var app = {};
             log.warn('There are no pageHandlers defined for tenant ' + tenanId);
             return true;
         }
-        ctx.req=request;
-        ctx.res=response;
-        ctx.endpoint=endpoint;
-        ctx.appContext=app.getContext();
-        pageHandlers=pageHandlers(ctx);
-
-        if(!pageHandlers[handler]){
-            log.warn('Unable to locate page handler: '+handler);
+        ctx.req = request;
+        ctx.res = response;
+        ctx.endpoint = endpoint;
+        ctx.appContext = app.getContext();
+        pageHandlers = pageHandlers(ctx);
+        if (!pageHandlers[handler]) {
+            log.warn('Unable to locate page handler: ' + handler);
             return true;
         }
         return pageHandlers[handler]();
@@ -519,6 +517,50 @@ var app = {};
         }
         return getAppExtensionBasePath() + '/' + endpoint.owner + '/apis/' + endpoint.path;
     };
+    /**
+     * The function returns details about a given feature
+     * @param  {[type]} tenantId [description]
+     * @param  {[type]} url      [description]
+     * @return {[type]}          [description]
+     */
+    app.getFeatureDetails = function(tenantId, featureName) {
+        var user = require('store').user;
+        var configs = user.configs(tenantId);
+        if (!configs) {
+            log.error('Unable to locate configurations for the tenant: ' + tenantId + '.Cannot retrieve feature details of : ' + featureName);
+            return null;
+        }
+        if (!configs.features) {
+            log.error('Unable to locate features block in configuration.Cannot retrieve feature details of : ' + featureName);
+            return null;
+        }
+        if (!configs.features[featureName]) {
+            log.error('Cannot retrieve feature  details of ' + featureName+' as it does not exist in the feature block.');
+            return null;
+        }
+        var urlUtils=require('utils').url;
+        //Populate any urls which are present with the correct server details
+        var keys=urlUtils.popServerDetails(configs.features[featureName].keys||{});
+        configs.features[featureName].keys=keys;
+        return configs.features[featureName];
+    };
+    app.isFeatureEnabled=function(tenantId,featureName){
+        var details=this.getFeatureDetails(tenantId,featureName);
+        if(!details){
+            log.warn('Could not locate feature details of : '+featureName+'.The feature will be assumed to be disabled.');
+            return false;
+        }
+        return details.enabled?details.enabled:false;
+    };
+    app.getSocialFeatureDetails=function(tenantId){
+        var details=this.getFeatureDetails(tenantId,constants.SOCIAL_FEATURE);
+        if(!details){
+            log.error('Unable to locate social feature details as it was not located in the features configuration block.');
+            return null;
+        }
+        return details;
+    };
+
     /**
      * The function is responsible for routing requests for resources to appropriate path
      * @param  {[type]} request       [description]

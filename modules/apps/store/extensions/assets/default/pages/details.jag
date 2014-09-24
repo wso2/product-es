@@ -38,6 +38,7 @@ require('/modules/store.js').exec(function(ctx) {
             var output = am.renderBasic(assets, page).details();
             //log.info(output);
             caramel.render(output);
+            //print('Details');
         }
     }
 }, request, response, session); %>

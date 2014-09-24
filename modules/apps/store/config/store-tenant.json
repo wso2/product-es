@@ -2,6 +2,16 @@
     "application": {
         "landingPage": "/asts/gadget/list"
     },
+    "features": {
+        "social": {
+            "enabled": true,
+            "keys": {
+                "socialScriptSource": "%https.host%/social/social/export-js/social.js",
+                "socialScriptType": "text/javascript",
+                "socialAppUrl": "%https.host%/social"
+            }
+        }
+    },
     "authentication": {
         "activeMethod": "sso",
         "methods": {
@@ -16,8 +26,8 @@
                     "keyStoreName": "/repository/resources/security/wso2carbon.jks"
                 }
             },
-            "basic":{
-                "attributes":{}
+            "basic": {
+                "attributes": {}
             }
         }
     },

@@ -133,18 +133,29 @@ var pageDecorators = {};
         //log.info(items);
         page.popularAssets = items;
     };
-    pageDecorators.tags=function(ctx,page){
-        var am=getAssetManager(ctx);
-        page.tags=am.tags();
+    pageDecorators.tags = function(ctx, page) {
+        var am = getAssetManager(ctx);
+        page.tags = am.tags();
         return page;
     };
-    pageDecorators.myAssets=function(ctx,page){
-        if((!ctx.assetType)&&(!ctx.isAnonContext)){
+    pageDecorators.myAssets = function(ctx, page) {
+        if ((!ctx.assetType) && (!ctx.isAnonContext)) {
             log.warn('Ignoring my assets decorator as the asset type was not present');
             return page;
         }
-        var am=getAssetManager(ctx);
-        page.myAssets=am.subscriptions(ctx.session)||[];
+        var am = getAssetManager(ctx);
+        page.myAssets = am.subscriptions(ctx.session) || [];
+        return page;
+    };
+    pageDecorators.socialFeature = function(ctx, page) {
+        var app = require('rxt').app;
+        var constants = require('rxt').constants;
+        if (!app.isFeatureEnabled(ctx.tenantId, constants.SOCIAL_FEATURE)) {
+            log.warn('social feature has been disabled.');
+            return page;
+        }
+        var socialFeatureDetails = app.getSocialFeatureDetails(ctx.tenantId);
+        page.features[constants.SOCIAL_FEATURE] = socialFeatureDetails;
         return page;
     };
     var getAssetManager = function(ctx) {

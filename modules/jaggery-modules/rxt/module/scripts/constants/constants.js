@@ -27,6 +27,14 @@ var constants = {};
     constants.SUBSCRIPTIONS_PATH = '/subscriptions';
     constants.APP_CONTEXT='rxt.app.context';
     constants.TAGS_QUERY_PATH='/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+
+    /**
+     * ES Feature Constants
+     */
+    constants.SOCIAL_FEATURE='social';
+    constants.SOCIAL_FEATURE_SCRIPT_KEY='socialScriptSource';
+    constants.SOCIAL_FEATURE_SCRIPT_TYPE_KEY='socialScriptType';
+    constants.SOCIAL_FEATURE_APP_URL_KEY='socialAppUrl';
     /**
      * URL Patterns
      */

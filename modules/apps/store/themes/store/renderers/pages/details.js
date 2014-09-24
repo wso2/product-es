@@ -2,7 +2,6 @@ var render = function(theme, data, meta, require) {
     var log = new Log();
     var navigation = 'navigation';
     var navigationContext = data;
-    // log.info('Data '+stringify(data));
     switch (data.assetTypeCount) {
         case 1:
             navigation = 'navigation-single';
