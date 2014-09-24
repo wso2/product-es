@@ -11,7 +11,6 @@ var url = {};
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
                 value = obj[key];
-                log.info('Value before transformation : '+value);
                 if ((typeof value === 'string') && value.indexOf('%https.host%') > -1) {
                     value=value.replace('%https.host%', 'https://' + localIP + ':' + httpsPort);
                 } else if ((typeof value === 'string') && value.indexOf('%http.host%') > -1) {
@@ -22,7 +21,6 @@ var url = {};
                     value=value.replace('%http.carbon.local.ip%', 'http://' + carbonLocalIP + ':' + httpPort);
                 }
                 obj[key] = value;
-                log.info('Value after transformation : '+value);
             }
         }
         return obj;
