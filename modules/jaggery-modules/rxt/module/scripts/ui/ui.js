@@ -18,7 +18,7 @@
  */
 var ui = {};
 (function(ui, core, asset, app, constants) {
-    var log = new Log();
+    var log = new Log('rxt.ui');
     var DEFAULT_TITLE = "Empty";
     var genericPage = function(options) {
         return {
@@ -139,11 +139,14 @@ var ui = {};
         return page;
     };
     var getLandingPage = function(configs) {
+        var landingPage='/';
         if (configs) {
             if ((configs.application) && (configs.application.landingPage)) {
                 landingPage = configs.application.landingPage;
             }
         }
+
+        return landingPage;
     };
     var getTenantIdFromUrl = function(request) {
         return constants.DEFAULT_TENANT;

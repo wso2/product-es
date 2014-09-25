@@ -1,6 +1,6 @@
 {
     "application": {
-        "landingPage": "/asts/gadget/list"
+        "landingPage": "/pages/top-assets"
     },
     "features": {
         "social": {
