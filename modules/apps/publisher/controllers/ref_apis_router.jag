@@ -1,0 +1,49 @@
+<%
+var API_URL = '/{context}/apis/{+suffix}';
+var DEFAULT_TENANT = -1234;
+var uriMatcher = new URIMatcher(request.getRequestURI());
+var server = require('store').server;
+var user = server.current(session);
+var log = new Log();
+var getPage = function(uri) {
+    var comps = uri.split('/');
+    return comps.length > 0 ? comps[0] : null;
+};
+var mapper = function(path) {
+    return function() {
+        return path;
+    };
+};
+log.info('Hit the apis router');
+if (uriMatcher.match(API_URL)) {
+    log.info('Matched the api url ');
+    var args = uriMatcher.elements();
+    var tenantId = DEFAULT_TENANT; //Assume that the tenant will be the super tenant
+    //Determine the tenant by the user 
+    if (user) {
+        tenantId = user.tenantId;
+    }
+    //Obtain the set of available pages
+    var app = require('rxt').app;
+    var page = getPage(args.suffix);
+    var path = app.getApiEndpointPath(tenantId, page);
+    log.info('Getting endpoint at path: '+path);
+    if (path) {
+        var file = new File(path);
+        if (file.isExists()) {
+            log.info('Loading endpoint at path: ' + path);
+            request.getMappedPath = mapper(path);
+            var proceed = app.execApiHandlers('onApiLoad', request, response, session, page);
+            if (proceed) {
+                include(path);
+            }
+        } else {
+            log.error('Unable to locate mapped endpoint at path: ' + path);
+            response.sendError(404, 'Unable to locate a suitable endpoint for ' + page);
+        }
+    } else {
+        response.sendError(404, 'Unable to locate a suitable endpoint for ' + page);
+    }
+} else {
+    response.sendError(404, 'Unable to locate a suitable endpoint');
+} %>
