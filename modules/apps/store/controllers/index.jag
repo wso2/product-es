@@ -1,22 +1,14 @@
 <%
-//auto rediecting the user to SSO
-var user = request.getParameter('user'),
-    loged = require('store').server.current(session);
-var caramel = require('caramel');
-var log=new Log();
-if (user && !loged) {
-    // include('/controllers/login.jag');
-    response.sendRedirect(caramel.configs().context + '/login');
-} else {
-    var user = server.current(session);
-    var usermod = require('store').user;
-    var tenantId = user.tenantId;
-    var configs = usermod.configs(tenantId);
-    if ((configs.application) || (configs.application.landingPage)) {
-        log.info('Redirecting to: '+caramel.configs().context + configs.application.landingPage);
-        response.sendRedirect(caramel.configs().context + configs.application.landingPage);
-    } else {
-        response.sendError(404, 'Unable to locate the landing page of the tenant: ' + tenantId + '.Make sure application property is set in the tenant configuration');
-    }
-    //response.sendRedirect('.' + require('/config/store.js').config().assetsUrlPrefix + '/all');
-} %>
+var server = require('store').server;
+var user = server.current(session);
+var constants = require('rxt').constants;
+var app = require('rxt').app;
+var tenantId = constants.DEFAULT_TENANT; //Assume the user is not logged in
+//Determine if the user has logged in
+if (user) {
+    tenantId = user.tenantId;
+}
+var redirectUrl = app.getContext() + app.getLandingPage(tenantId);
+log.debug('Redirecting to the landing page: ' + redirectUrl);
+response.sendRedirect(redirectUrl); 
+%>

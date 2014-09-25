@@ -51,7 +51,7 @@ var app = {};
     Endpoints.prototype.addMultiple = function(endpoints) {
         for (var index in endpoints) {
             this.add(endpoints[index]);
-            log.info('Registered endpoint: ' + endpoints[index].url+ ' (secured: '+(endpoints[index].secured||false)+')');
+            log.info('Registered endpoint: ' + endpoints[index].url + ' (secured: ' + (endpoints[index].secured || false) + ')');
         }
     };
 
@@ -155,9 +155,9 @@ var app = {};
             log.warn('The app extension path ' + getAppExtensionBasePath() + ' does not point to a directory');
             throw 'The app extension path ' + getAppExtensionBasePath() + ' does not point to a directory';
         }
-        loadAppExtensions(dir,tenantId);
+        loadAppExtensions(dir, tenantId);
     };
-    var loadAppExtensions = function(rootDir,tenantId) {
+    var loadAppExtensions = function(rootDir, tenantId) {
         //Get all of the sub directories and find the app.js file
         var files = rootDir.listFiles();
         var appExtensionName;
@@ -414,6 +414,20 @@ var app = {};
         }
         return assets;
     };
+    app.getLandingPage = function(tenantId) {
+        var landingPage = '/';
+        //Obtain the configurations for the tenant
+        var userMod = require('store').user;
+        var configs = userMod.configs(tenantId);
+        if (!configs) {
+            log.warn('Unable to locate landing page of tenant: '+tenantId);
+            return landingPage;
+        }
+        if ((configs.application) && (configs.application.landingPage)) {
+            landingPage = configs.application.landingPage;
+        }
+        return landingPage;
+    };
     app.execPageHandlers = function(handler, req, res, session, pageName) {
         var ctx = core.createAppContext(session);
         var appResources = app.getAppResources(ctx.tenantId);
@@ -467,7 +481,7 @@ var app = {};
         ctx.res = res;
         ctx.endpoint = endpoint;
         ctx.appContext = app.getContext();
-        ctx.session=session;
+        ctx.session = session;
         apiHandlers = apiHandlers(ctx);
         if (!apiHandlers[handler]) {
             log.warn('Unable to locate page handler: ' + handler);

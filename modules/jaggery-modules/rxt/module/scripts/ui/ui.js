@@ -111,7 +111,7 @@ var ui = {};
         var tenantId = user.tenantId;
         var configs = userMod.configs(tenantId);
         var pageDetails = getPageName(request, session);
-        var landingPage = getLandingPage(configs);
+        var landingPage = app.getLandingPage(tenantId);
         var page = genericPage({
             username: user.username,
             pageName: pageDetails.pageName,
@@ -127,7 +127,7 @@ var ui = {};
         var tenantId = getTenantIdFromUrl(request);
         var configs = userMod.configs(tenantId);
         var pageDetails = getPageName(request, session);
-        var landingPage = getLandingPage(configs);
+        var landingPage = app.getLandingPage(tenantId);
         var page = genericPage({
             username: null,
             pageName: pageDetails.pageName,
@@ -138,16 +138,17 @@ var ui = {};
         });
         return page;
     };
-    var getLandingPage = function(configs) {
-        var landingPage='/';
-        if (configs) {
-            if ((configs.application) && (configs.application.landingPage)) {
-                landingPage = configs.application.landingPage;
-            }
-        }
+    // var getLandingPage = function(configs) {
+    //     // var landingPage='/';
+    //     // if (configs) {
+    //     //     if ((configs.application) && (configs.application.landingPage)) {
+    //     //         landingPage = configs.application.landingPage;
+    //     //     }
+    //     // }
 
-        return landingPage;
-    };
+    //     // return landingPage;
+    //     // return app.getLandingPage(tenantId);
+    // };
     var getTenantIdFromUrl = function(request) {
         return constants.DEFAULT_TENANT;
     };
