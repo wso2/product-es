@@ -155,9 +155,9 @@ var app = {};
             log.warn('The app extension path ' + getAppExtensionBasePath() + ' does not point to a directory');
             throw 'The app extension path ' + getAppExtensionBasePath() + ' does not point to a directory';
         }
-        loadAppExtensions(dir);
+        loadAppExtensions(dir,tenantId);
     };
-    var loadAppExtensions = function(rootDir) {
+    var loadAppExtensions = function(rootDir,tenantId) {
         //Get all of the sub directories and find the app.js file
         var files = rootDir.listFiles();
         var appExtensionName;
@@ -431,7 +431,7 @@ var app = {};
         }
         var pageHandlers = extensionResource.pageHandlers;
         if (!pageHandlers) {
-            log.warn('There are no pageHandlers defined for tenant ' + tenanId);
+            log.warn('There are no pageHandlers defined for tenant ' + ctx.tenanId);
             return true;
         }
         ctx.req = req;
