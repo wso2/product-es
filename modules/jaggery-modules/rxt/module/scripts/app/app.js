@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2005-2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -50,8 +50,8 @@ var app = {};
     };
     Endpoints.prototype.addMultiple = function(endpoints) {
         for (var index in endpoints) {
-            log.info('Adding endpoint: ' + stringify(endpoints[index]));
             this.add(endpoints[index]);
+            log.info('Registered endpoint: ' + endpoints[index].url+ ' (secured: '+(endpoints[index].secured||false)+')');
         }
     };
 
@@ -168,7 +168,7 @@ var app = {};
         var appResources = {};
         for (var index in files) {
             appExtensionName = files[index].getName();
-            log.info('Located app extension ' + appExtensionName);
+            //log.info('Located app extension ' + appExtensionName);
             var appExtensionFilePath = getCurrentAppExtensionFileName(files[index]);
             evalAppScript(appExtensionName, appExtensionFilePath, appResources);
         }
@@ -218,7 +218,7 @@ var app = {};
         var stack;
         var endpoints;
         var app = new App();
-        log.info('### Starting to process the app extensions ###');
+        log.info('Starting to process the app extensions');
         for (var key in appExtensions) {
             log.info('Processing app extension: ' + key);
             //Look for the dependencies
@@ -236,8 +236,7 @@ var app = {};
                 }
             }
         }
-        log.info('### Finished processing the app extensions ###');
-        log.info(app);
+        log.info('Finished processing the app extensions');
         return app;
     };
     var recursiveProcess = function(extName, map, stack) {
@@ -322,7 +321,7 @@ var app = {};
             return;
         }
         if (app.ignoreExtension) {
-            log.info('Successfully loaded app extension: ' + appExtensionName + ' but ignoring extension due to ignoreExtension property been true.');
+            log.warn('Successfully loaded app extension: ' + appExtensionName + ' but ignoring extension due to ignoreExtension property been true.');
             return;
         }
         extensionMap[appExtensionName] = app;
