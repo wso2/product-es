@@ -38,8 +38,9 @@ var constants = {};
     /**
      * URL Patterns
      */
-    constants.ASSET_PAGE_URL_PATTERN = '/{context}/asts/{type}/{+suffix}';
     constants.APP_PAGE_URL_PATTERN = '/{context}/pages/{+suffix}';
+    constants.ASSET_PAGE_URL_PATTERN = '/{context}/asts/{type}/{+suffix}';
+    constants.ASSET_API_URL_PATTERN='/{context}/asts/{type}/apis/{+suffix}';
     /**
      * URLs
      */
@@ -47,6 +48,7 @@ var constants = {};
     constants.ASSET_API_URL = '/apis/';
     constants.APP_PAGE_URL = '/pages/';
     constants.APP_API_URL = '/apis/';
+
     /**
      * Pagin objects
      */

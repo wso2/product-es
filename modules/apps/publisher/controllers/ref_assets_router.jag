@@ -2,9 +2,11 @@
 
 	var log=new Log('assets');
 	var matcher=new URIMatcher(request.getRequestURI());
-	var apiEndpoint='/{context}/asts/{type}/api/{+suffix}';
-	var pageEndpoint='/{context}/asts/{type}/{+suffix}';
 	var asset=require('rxt').asset;
+	var constants=require('rxt').constants;
+	var apiEndpoint=constants.ASSET_API_URL_PATTERN;//'/{context}/asts/{type}/api/{+suffix}';
+	var pageEndpoint=constants.ASSET_PAGE_URL_PATTERN;//'/{context}/asts/{type}/{+suffix}';
+
 
 	var getPage=function(uri){
 		var comps=uri.split('/');
