@@ -101,6 +101,10 @@ var pageDecorators = {};
             }
             assets = am.recentAssets();
             if (assets.length != 0) {
+                //Add subscription details if this is not an anon context
+                if(!ctx.isAnonContext){
+                    addSubscriptionDetails(assets, am,ctx.session);
+                }
                 items = items.concat(assets);
                 assetsByType.push({
                     assets: assets,
@@ -110,6 +114,11 @@ var pageDecorators = {};
         }
         page.recentAssets = items;
         page.recentAssetsByType = assetsByType;
+    };
+    var addSubscriptionDetails=function(assets,am,session){
+        for(var index=0;index<assets.length;index++){
+            assets[index].isSubscribed=am.isSubscribed(assets[index].id,session);
+        }
     };
     pageDecorators.popularAssets = function(ctx, page) {
         var app = require('rxt').app;

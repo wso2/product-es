@@ -411,6 +411,8 @@ var asset = {};
             return subscriptions;
         }
         subscriptions = obtainSubscriptions(userSpace, this, this.registry, this.type);
+        //Add the meta information of each asset
+        addAssetsMetaData(subscriptions,this);
         return subscriptions;
     };
     AssetManager.prototype.getSubscriptionSpace = function(session) {
@@ -429,7 +431,7 @@ var asset = {};
         var obj = registry.content(path);
         if (!obj) {
             log.debug('There is no content in the subscription path ' + path);
-            return;
+            return items;
         }
         obj.forEach(function(path) {
             try {
@@ -752,6 +754,10 @@ var asset = {};
      * @param {[type]} am    [description]
      */
     var addAssetsMetaData = function(asset, am) {
+        if(!asset){
+            log.error('Unable to add meta data to an empty asset');
+            return;
+        }
         var ref = require('utils').reflection;
         if (ref.isArray(asset)) {
             var assets = asset;
@@ -763,12 +769,13 @@ var asset = {};
         }
     };
     var addAssetMetaData = function(asset, am) {
+        if((!asset)||(!asset.attributes)){
+            log.warn('Could not populate asset details of  type: '+am.type);
+            return;
+        }
         asset.name = am.getName(asset);
         asset.thumbnail = am.getThumbnail(asset);
         asset.banner = am.getBanner(asset);
-        //log.info(asset);
-        //log.info('Name: ' + am.getName(asset));
-        //log.info('Thumbnail: ' + am.getThumbnail(asset));
     };
     /**
      * The function will a render page with the asset details combined with the rxt template.If an array of assets

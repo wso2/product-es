@@ -1,9 +1,8 @@
 {{#if cuser.username}}
-My Assets Link goes here
 {{#if myAssets}}
 <div class="row">
 	<div class="span3">
-		<h4><a href="#" class="my-assets-link"><i class="icon-bookmark"></i>My {{title}} <i class="icon-angle-down pull-right"></i></a></h4>
+		<h4><a href="#" class="my-assets-link"><i class="icon-bookmark"></i>{{> my-assets-title}}<i class="icon-angle-down pull-right"></i></a></h4>
 		<div id="my-assets">
 			{{#slice myAssets count="20" size="20"}}
 			{{#each .}}
@@ -11,10 +10,11 @@ My Assets Link goes here
 				{{#attributes}}
 				{{#if ../isPublished}}
 				<div class="span3">
-					<a href="{{url "/assets"}}/{{../../type}}/{{../../id}}"><img src="{{#if images_thumbnail}}{{images_thumbnail}}{{/if}}"></a>
+					<a href="{{url "/asts"}}/{{../../type}}/details/{{../../id}}">
+					<img src="{{#if ../../thumbnail}}{{url ""}}/storage/{{../../../type}}/{{../../../id}}/{{../../../thumbnail}}{{/if}}"></a>
 				</div>
 				<div class="span9">
-					<strong><a href="{{url "/assets"}}/{{../../type}}/{{../../id}}">{{overview_name}}</a></strong>
+					<strong><a href="{{url "/asts"}}/{{../../type}}/details/{{../../id}}">{{overview_name}}</a></strong>
 					<small>by <a href="#">{{overview_provider}}</a></small>
 					<span class="star-rating">
 						<div class="asset-rating">
@@ -25,7 +25,7 @@ My Assets Link goes here
 				</div>
 				{{else}}
 				<div class="span3">
-					<img src="{{#if images_thumbnail}}{{images_thumbnail}}{{/if}}">
+					<img src="{{#if ../../thumbnail}}{{url ""}}/storage/{{../../../type}}/{{../../../id}}/{{../../../thumbnail}}{{/if}}">
 				</div>
 				<div class="span9">
 					<strong><a>{{overview_name}}</a></strong>
@@ -38,7 +38,7 @@ My Assets Link goes here
 
 			</div>
 			{{/each}}
-			<a class="link-view-all" href="{{url "/subscriptions"}}/{{../type}}">View all</a>
+			<a class="link-view-all" href="{{url "/pages/my-items"}}">View all</a>
 			<hr/>
 			{{/slice}}
 		</div>
