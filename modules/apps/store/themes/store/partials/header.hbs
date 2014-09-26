@@ -19,7 +19,7 @@
 								class="icon-user"></i> {{cuser.username}} <b class="caret"></b></a>
 								<ul class="dropdown-menu dropdown-account" role="menu" aria-labelledby="dLabel">
 									<li>
-										{{#if sso}}<a href="{{url "/logout"}}"><i class="icon-signout"></i> {{t "Sign out"}} </a>{{else}}<a id="btn-signout" href="#"><i class="icon-signout"></i> {{t "Sign out"}} </a>{{/if}}
+									{{signout .}}
 									</li>
 								</ul>
 
