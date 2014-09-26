@@ -1,42 +1,39 @@
-{{#with assets}}
-    {{#with attributes}}
-        {{#if ../../inDashboard}}
-            <a id="btn-add-gadget" class="btn disabled" href="#modal-add-gadget"
+<!--
+  Asset utilization icons if the user has subscribed to this asset
+-->
+
+{{#if assets.isSubscribed}}
+  <a id="btn-add-gadget" class="btn disabled" href="#modal-add-gadget"
                data-toggle="modal"
-               data-aid="{{../../id}}" data-type="{{../../type}}"> {{t "Bookmarked"}} </a>
-        {{else}}
+               data-aid="{{assets.id}}" data-type="{{assets.type}}"> {{>processed-asset-text}}</a>
+  {{else}}
 
-            {{#if ../../../sso}}
-                {{#if ../../../../user.username}}
-                    <a id="btn-add-gadget" class="btn btn-primary" href="#modal-add-gadget"
+    {{#if cuser.username}}
+
+    <a id="btn-add-gadget" class="btn btn-primary" href="#modal-add-gadget"
                        data-toggle="modal"
-                       data-aid="{{../../../../id}}"
-                       data-type="{{../../../../type}}"> {{t "Bookmark "}}</a>
-                {{else}}
-                    <a id="btn-add-gadget" class="btn btn-primary" href="{{url "/login"}}"
-                       data-toggle="modal"
-                       data-aid="{{../../../../id}}"
-                       data-type="{{../../../../type}}"> {{t "Bookmark "}}</a>
-                {{/if}}
-            {{else}}
-                <a id="btn-add-gadget" class="btn btn-primary" href="#modal-add-gadget"
+                       data-aid="{{assets.id}}"
+                       data-type="{{assets.type}}"> {{>process-asset-text }}</a>
+    {{else}}
+
+    <a id="btn-add-gadget" class="btn btn-primary" href='{{url ""}}{{getLoginUrl .}}'
                    data-toggle="modal"
-                   data-aid="{{../../../id}}" data-type="{{../../../type}}"> {{t "Bookmark"}}</a>
-            {{/if}}
+                   data-aid="{{assets.id}}" data-type="{{assets.type}}"> {{>process-asset-text }}</a>
+    {{/if}}
 
-        {{/if}}
-        {{#if ../../user}}
-            <a class="btn btn-popover btn-embed {{../../type}}" href="#" data-toggle="popover"
-               data-content='&lt;iframe src="{{../../../embedURL}}"&gt;&lt;/iframe&gt;'
-               data-placement="bottom" title="{{t "Embed this Gadget"}}">
-                <i class="icon-angle-left"></i><i class="icon-angle-right"></i></a>
 
-        {{/if}}
-        <a class="btn btn-href" href="{{overview_url}}" target="_blank" data-placement="bottom"
-           data-toggle="tooltip" title="{{>asset-overview-text}}">
-            <i class="icon-{{../../asset_css}}"></i></a>
-    {{/with}}
+{{/if}}
+
+
+
+
+<!--
+  Asset utilization icons that do not need to be secured
+-->
+{{#with assets}}
+  {{#attributes }}
+  <a class="btn btn-href" href="{{overview_url}}" target="_blank" data-placement="bottom"
+  data-toggle="tooltip" title="{{>asset-overview-text}}">
+  <i class="icon-{{../../asset_css}}"></i></a>
+  {{/attributes}}
 {{/with}}
-
-
-

@@ -45,6 +45,7 @@ require('/modules/store.js').exec(function(ctx) {
         //The asset retrieval may fail when attempting to obtain an asset which is not accessible
         try{
             assets = am.get(options.id);
+            assets.isSubscribed=am.isSubscribed(options.id,ctx.session);
         }
         catch(e){
             log.warn('Unable to retrieve asset with id: '+options.id+' due to '+e);

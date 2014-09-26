@@ -160,6 +160,25 @@ var engine = caramel.engine('handlebars', (function() {
                 ptr = Handlebars.compile(output);
                 return new Handlebars.SafeString(ptr());
             });
+            Handlebars.registerHelper('getLoginUrl',function(options){
+                var security=options.security;
+                var output='#';
+                if(!security){
+                    log.warn('Unable to determine login url as the security block was not pesent');
+                    return output;
+                }
+                switch(security.method){
+                    case 'sso':
+                        output='/login';
+                        break;
+                    case 'basic':
+                        output='#';
+                        break;
+                    default:
+                        break;
+                }
+                return output;
+            });
         },
         render: function(data, meta) {
             if (request.getParameter('debug') == '1') {

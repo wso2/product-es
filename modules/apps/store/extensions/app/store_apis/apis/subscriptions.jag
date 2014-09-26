@@ -18,13 +18,14 @@
  *
  */ 
 require('/modules/store.js').exec(function(ctx) {
-    var log = ctx.log;
+    var log = new Log();
     var app = require('rxt').app;
     var id = request.getParameter('asset');
     var destination = request.getParameter('destination');
     var asset = require('rxt').asset;
     var type = request.getParameter('type');
     var redirect = app.getContext() + '/pages/top-assets'; //Assume a detination has not been provided
+    log.info('### Subscriptions api ###');
     //Determine where the request should be routed
     if (destination) {
         redirect = destination;

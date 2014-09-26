@@ -393,6 +393,16 @@ var asset = {};
         }
         return success;
     };
+    AssetManager.prototype.isSubscribed=function(id,session){
+        //Obtain the list of all subscribptions of the user to this asset type
+        var subscriptions=this.subscriptions(session);
+        for(var index=0;index<subscriptions.length;index++){
+            if(subscriptions[index].id===id){
+                return true;
+            }
+        }
+        return false;
+    };
     AssetManager.prototype.subscriptions = function(session) {
         var userSpace = this.getSubscriptionSpace(session);
         var subscriptions = [];
