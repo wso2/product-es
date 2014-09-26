@@ -21,14 +21,16 @@ var caramel;
 var DEFAULT_PAGIN = {
     'start': 0,
     'count': 20,
-    'sortOrder': 'DESC',
-    'sortBy': 'overview_createdtime',
-    'paginationLimit': 100
+    'sort':'asc',
+    // 'sortOrder': 'DESC',
+    // 'sortBy': 'overview_createdtime',
+    //'paginationLimit': 100
 };
 require('/modules/store.js').exec(function(ctx) {
     caramel = require('caramel');
     var asset = require('rxt').asset;
     var ui = require('rxt').ui;
+    var constants=require('rxt').constants;
     var log = ctx.log;
     var query = ctx.params.query;
     var store = ctx.store;
@@ -39,13 +41,13 @@ require('/modules/store.js').exec(function(ctx) {
     var type = options.type;
     var assets = [];
     var q = ctx.request.getParameter('q');
-    var sortBy = ctx.request.getParameter('sortBy');
-    var sortOrder = ctx.request.getParameter('sortOrder');
+    var sort = ctx.request.getParameter('sort');
+    //var sortOrder = ctx.request.getParameter('sortOrder');
     var page = ui.buildPage(ctx.session, ctx.request);
     var output = {};
     var tag = ctx.request.getParameter('tag');
-    DEFAULT_PAGIN.sortBy = (sortBy || DEFAULT_PAGIN.sortBy);
-    DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
+    DEFAULT_PAGIN.sort= (sort || constants.DEFAULT_ASSET_PAGIN.sort);
+    //DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
     //Determine the type of asset manager to be created
     if (!user) {
         am = asset.createAnonAssetManager(ctx.session, type, -1234);

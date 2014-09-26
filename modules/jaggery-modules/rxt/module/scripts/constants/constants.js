@@ -70,4 +70,9 @@ var constants = {};
         sortBy: '',
         sortOrder: 'older'
     };
+    constants.DEFAULT_ASSET_PAGIN={
+        start:0,
+        count:10,
+        sort:'asc'
+    };
 }(constants));

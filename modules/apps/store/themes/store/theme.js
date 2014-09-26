@@ -146,7 +146,7 @@ var engine = caramel.engine('handlebars', (function() {
                     return new Handlebars.SafeString(ptr());
                 }
                 if (!security) {
-                    log.warn('Unable to locate security block');
+                    log.warn('Unable to locate security block to render assset utilization');
                     return output;
                 }
                 switch (security.method) {
