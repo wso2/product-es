@@ -43,14 +43,18 @@ require('/modules/store.js').exec(function(ctx) {
     var sortOrder = ctx.request.getParameter('sortOrder');
     var page = ui.buildPage(ctx.session, ctx.request);
     var output = {};
+    var tag = ctx.request.getParameter('tag');
     DEFAULT_PAGIN.sortBy = (sortBy || DEFAULT_PAGIN.sortBy);
     DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
+    //Determine the type of asset manager to be created
     if (!user) {
         am = asset.createAnonAssetManager(ctx.session, type, -1234);
     } else {
         am = asset.createUserAssetManager(ctx.session, type);
     }
-    if (q) {
+    if (tag) {
+        assets = am.tagged(tag);
+    } else if (q) {
         var qString = '{' + q + '}';
         //log.info('q: '+qString);
         var query = parse(qString);
@@ -59,6 +63,6 @@ require('/modules/store.js').exec(function(ctx) {
     } else {
         assets = am.search(null, DEFAULT_PAGIN);
     }
-    var output = am.render(assets, page).list();
-    caramel.render(output);
+    //var output = am.render(assets, page).list();
+    //caramel.render(output);
 }, request, response, session); %>

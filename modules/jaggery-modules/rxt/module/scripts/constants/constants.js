@@ -64,4 +64,10 @@ var constants = {};
         sortBy:'',
         sortOrder:'asc'
     };
+    constants.DEFAULT_TAG_PAGIN={
+        start: 0,
+        count: 10,
+        sortBy: '',
+        sortOrder: 'older'
+    };
 }(constants));

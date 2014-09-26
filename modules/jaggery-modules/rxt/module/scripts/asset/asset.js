@@ -308,6 +308,22 @@ var asset = {};
         return tagz;
     };
     /**
+     * The method returns the list of assets that have the provided tag
+     * attached to it.If a paging value is provided then it is used,else
+     * a default set of paging values are used
+     * @param  {[type]} tagName [description]
+     * @param  {[type]} paging  [description]
+     * @return {[type]}         [description]
+     */
+    AssetManager.prototype.tagged=function(tagName,paging){
+        var assets=[];
+        var paging=paging||constants.DEFAULT_TAG_PAGIN;
+        var q={};
+        q.tag=tagName;
+        assets=this.search(q,paging);
+        return assets;
+    };
+    /**
      * The methos adds a tag to a given asset
      * @param {[type]} id  [description]
      * @param {[type]} tag [description]
