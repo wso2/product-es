@@ -36,16 +36,24 @@ require('/modules/store.js').exec(function(ctx) {
     tenanId = user.tenantId;
     rxtManager = core.rxtManager(tenantId);
     var type;
-    var availableAssetTypes=rxtManager.listRxtTypes();
-    var assets=[];
-    for(var index in availableAssetTypes){
-        type=availableAssetTypes[index];
-        am=asset.createUserAssetManager(ctx.session, type);
+    var availableAssetTypes = rxtManager.listRxtTypes();
+    var assets = {};
+    var subs;
+    for (var index in availableAssetTypes) {
+        type = availableAssetTypes[index];
+        am = asset.createUserAssetManager(ctx.session, type);
         //Get all of the subscriptions for the current asset type
-        assets=assets.concat(am.subscriptions(ctx.session));
+        subs = am.subscriptions(ctx.session);
+        //Only create an entry if there are any subscriptions
+        if (subs.length > 0) {
+            assets[type]={};
+            assets[type].assets = subs;
+            assets[type].meta = rxtManager.getRxtTypeDetails(type);
+        }
+        //assets=assets.concat(am.subscriptions(ctx.session));
+        //assets.push(sub);
     }
     var output = appManager.render(assets, page);
     caramel.render(output);
-    //print(assets);
-}, request, response, session); 
-%>
+    //print(output);
+}, request, response, session); %>

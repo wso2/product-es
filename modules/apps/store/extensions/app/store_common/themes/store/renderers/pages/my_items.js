@@ -37,7 +37,7 @@ var render = function(theme, data, meta, require) {
             context: navigationContext
         }],
         body: [{
-            partial: 'subscriptions',
+            partial: 'my_items',
             context: data
         }],
         right: [{

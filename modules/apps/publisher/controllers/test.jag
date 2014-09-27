@@ -1,5 +1,5 @@
 <%
-var core=require('rxt').core;
+var core = require('rxt').core;
 //var resources=require('rxt').resources;
 //var ref=require('utils').reflection;
 //var time=require('utils').time;
@@ -12,7 +12,6 @@ var log = new Log();
 // var simplelc=lcCore.getJSONDef('MobileAppLifeCycle',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
 // var lc=lcApi.getLifecycle('SampleLifeCycle2',-1234);
 // print(simplelc);
-
 //log.info(lc.nextStates('initial'));
 //log.info(lc.transitionAction('Initial','Creaated'));
 //log.info(lc.transitionExecution('initial','promote'));
@@ -67,12 +66,34 @@ try {
 //core.init(-1234,registry);
 //resources.manager(-1234);
 //var manager=core.rxtManager(-1234);
-var ar=core.assetResources(-1234,'ebook');
-log.info(stringify(ar._default.server.toSource()));
+//var ar=core.assetResources(-1234,'ebook');
+//log.info(stringify(ar._default.server.toSource()));
 //print(manager.listRxtFieldsOfType('gadget','file'));
 //core.assetResources(-1234,'gadget');
 //print(manager.listRxtTypeTables('gadget'));
 //print(manager.listRxtTypes());
 //print(manager.getRxtDefinition('gadget'));
 //print(manager.getRxtStoragePath('api'));
+response.contentType = "application/json; charset=UTF-8";
+var url = "http://ripsac2.web2labs.net/mq/v1.0/api-docs";
+var log = new Log();
+url = url.trim();
+//@todo need to validate inputs
+var data = {};
+var content = get(url, data, "json");
+var swaggerJson = content.data;
+var xhr = new XMLHttpRequest();
+for (var i = 0; i < swaggerJson.apis.length; i++) {
+    var content = get(url + swaggerJson.apis[i].path, data, "json");
+    xhr.open("GET", url + swaggerJson.apis[i].path);
+    //xhr.setRequestHeader("Content-Type" , "application/json");
+    xhr.send();
+    var responseStr = xhr.responseText;
+    //swaggerJson.apis[i].file = content.data;
+    swaggerJson.apis[i].file = responseStr;
+}
+print(responseStr);
+//print("<br/><br/><br/>");
+//print(xhr.responseText);
+//print(swaggerJson);
 %>
