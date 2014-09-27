@@ -54,6 +54,10 @@ asset.server = function(ctx) {
                 title: 'Store | ' + typeSingularLabel,
                 url: 'list',
                 path: 'list.jag'
+            },{
+                title:'Store | '+typeSingularLabel,
+                url:'subscriptions',
+                path:'subscriptions.jag'
             }]
         }
     };
