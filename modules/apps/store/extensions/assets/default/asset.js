@@ -45,6 +45,10 @@ asset.server = function(ctx) {
             apis: [{
                 url: 'assets',
                 path: 'assets.jag'
+            },
+            {
+                url:'subscriptions',
+                path:'subscriptions.jag'
             }],
             pages: [ {
                 title: 'Store |  ' + typeSingularLabel,

@@ -368,7 +368,7 @@ var asset = {};
             });
             success = true;
         } else {
-            log.debug('The user has already subscribed to asset : ' + id);
+            log.debug('The user has already subscribed to asset : ' + id+' or the path is invalid.');
         }
         return success;
     };
