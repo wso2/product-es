@@ -25,6 +25,7 @@ var url = {};
         var httpPort = process.getProperty('http.port');
         var httpsPort = process.getProperty('https.port');
         var value = '';
+        var carbonLocalIP = process.getProperty('carbon.local.ip');
 
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) {

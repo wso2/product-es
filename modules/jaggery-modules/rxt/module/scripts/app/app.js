@@ -420,7 +420,7 @@ var app = {};
         var userMod = require('store').user;
         var configs = userMod.configs(tenantId);
         if (!configs) {
-            log.warn('Unable to locate landing page of tenant: '+tenantId);
+            log.warn('Unable to locate landing page of tenant: ' + tenantId);
             return landingPage;
         }
         if ((configs.application) && (configs.application.landingPage)) {
@@ -604,6 +604,82 @@ var app = {};
             return null;
         }
         return details;
+    };
+    /**
+     * The method returns authentication details for the application.If a method is not provided
+     * then the active method is picked up from the tenant configurations
+     * @param  {[type]} tenanId [description]
+     * @param  {[type]} method  [description]
+     * @return {[type]}         [description]
+     */
+    app.getAuthenticationDetails = function(tenanId, method) {
+        var server = require('store').server;
+        var configs = server.configs(tenanId);
+        var method = method || null;
+
+        if (!configs) {
+            log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
+            throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
+        }
+        configs=configs['server.user.options'];
+        if(!configs){
+            log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
+            throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
+        }
+        if (!configs.authentication) {
+            log.error('Unable to locate authentication feature details for tenant: ' + tenanId + '.Cannot retrieve authentication feature block');
+            throw 'Unable to locate authentication feature details for tenant: ' + tenanId + '.Cannot retrieve authentication feature block';
+        }
+        var authentication = configs.authentication;
+        if (!authentication.methods) {
+            log.error('Unable to locate authentication methods for tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
+            throw 'Unable to locate authentication methods for tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
+        }
+        var methods = authentication.methods;
+        if (!method) {
+            method = authentication.activeMethod || null;
+        }
+        if (!method) {
+            log.error('No authentication method was provided ');
+            throw 'No authentication method was provided';
+        }
+        if ((!methods[method]) && (!methods[method].attributes)) {
+            log.error('Unable to locate authentication details for method: ' + method);
+            throw 'Unable to locate authentication details for method: ' + method;
+        }
+        var attributes = methods[method].attributes;
+        var utils = require('utils').url;
+        return utils.popServerDetails(attributes);
+    };
+    /**
+     * The function returns the active authetnicaton method for the application
+     * for the given tenant
+     * @param  {[type]} tenantId [description]
+     * @return {[type]}          [description]
+     */
+    app.getAuthenticationMethod = function(tenantId) {
+        var server = require('store').server;
+        var configs = server.configs(tenanId);
+        var method = method || null;
+        if (!configs) {
+            log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
+            throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
+        }
+        configs=configs['server.user.options'];
+        if(!configs){
+            log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
+            throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
+        }
+        if (!configs.authentication) {
+            log.error('Unable to locate authentication feature details for tenant: ' + tenanId + '.Cannot retrieve authentication feature block');
+            throw 'Unable to locate authentication feature details for tenant: ' + tenanId + '.Cannot retrieve authentication feature block';
+        }
+        var authentication = configs.authentication;
+        if (!authentication.activeMethod) {
+            log.error('Unable to locate authentication methods for tenant: ' + tenanId + '.Cannot retrieve active authentication method.');
+            throw 'Unable to locate authentication methods for tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
+        }
+        return authentication.activeMethod;
     };
     /**
      * The function is responsible for routing requests for resources to appropriate path
