@@ -2,7 +2,7 @@
     <div class="span9">
         {{#if assets}}
         {{#itr assets}}
-        <h3 class="asset-title-separator asset-type-{{type}}"><a href="{{url "/asts"}}/{{key}}/subscriptions">{{value.meta.pluralLabel}}</a></span><div class="pagination own-asset-slideshow-pag" id="own-asset-slideshow-pag-{{key}}"></div></h3>
+        <h3 class="asset-title-separator asset-type-{{key}}"><a href="{{url "/asts"}}/{{key}}/subscriptions">{{value.meta.pluralLabel}}</a></span><div class="pagination own-asset-slideshow-pag" id="own-asset-slideshow-pag-{{key}}"></div></h3>
         <div class="top-asset-slideshow-cont">
         <div class="html_carousel">
         <div id="asset-in-{{key}}">
