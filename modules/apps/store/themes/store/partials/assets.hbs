@@ -1,4 +1,3 @@
-Templates1
 <div>
 	<div id="assets-container" data-pages="{{pages}}">
 
@@ -19,7 +18,7 @@ Templates1
 
 				<div class="asset-details">
 					<div class="asset-name">
-						<a href="{{url "/assets"}}/{{../type}}/{{../id}}"> <h4>{{overview_name}}</h4> </a>
+						<a href="{{url "/asts"}}/{{../type}}/details/{{../id}}"> <h4>{{overview_name}}</h4> </a>
 					</div>
 					<div class="asset-rating">
 						<div class="asset-rating-{{../rating/average}}star">
@@ -45,7 +44,7 @@ Templates1
 
 						</ul>
                         {{#mergeContext ssoParam=../../../sso userParam=../../../user thisAsset=../this}}
-                            {{>assets-utilization}}
+                            {{>assets-utilization .}}
                         {{/mergeContext}}
 
 					</div>

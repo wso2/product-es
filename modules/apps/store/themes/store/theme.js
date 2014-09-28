@@ -162,7 +162,7 @@ var engine = caramel.engine('handlebars', (function() {
             });
             Handlebars.registerHelper('getLoginUrl',function(options){
                 var security=options.security;
-                var output='#';
+                var output='/login';
                 if(!security){
                     log.warn('Unable to determine login url as the security block was not pesent');
                     return output;
