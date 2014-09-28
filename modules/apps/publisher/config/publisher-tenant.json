@@ -15,6 +15,25 @@
         "landingPage": "/asts/gadget/list"
     },
     "assets":["gadget"],
+    "authentication": {
+        "activeMethod": "sso",
+        "methods": {
+            "sso": {
+                "attributes": {
+                    "issuer": "publisher",
+                    "identityProviderURL": "%https.carbon.local.ip%/samlsso",
+                    "keyStorePassword": "wso2carbon",
+                    "identityAlias": "wso2carbon",
+                    "responseSigningEnabled": "true",
+                    "acs": "%https.host%/publisher/acs",
+                    "keyStoreName": "/repository/resources/security/wso2carbon.jks"
+                }
+            },
+            "basic": {
+                "attributes": {}
+            }
+        }
+    },
     "userRoles": ["Internal/publisher"],
     "permissions": {
         "login": {
