@@ -107,7 +107,10 @@ asset.configure = function() {
                 categoryField:'overview_category'
             },
             search:{
-                searchableFields:['all']
+                searchableFields:['all'],
+            },
+            paging:{
+                size:10
             },
             thumbnail: 'images_thumbnail',
             banner:'images_banner'

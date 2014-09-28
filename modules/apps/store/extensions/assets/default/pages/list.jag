@@ -46,6 +46,7 @@ require('/modules/store.js').exec(function(ctx) {
     var page = ui.buildPage(ctx.session, ctx.request);
     var output = {};
     var tag = ctx.request.getParameter('tag');
+    var assetApi=require('/modules/asset_api.js').api;
     DEFAULT_PAGIN.sort= (sort || constants.DEFAULT_ASSET_PAGIN.sort);
     //DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
     //Determine the type of asset manager to be created
@@ -66,5 +67,6 @@ require('/modules/store.js').exec(function(ctx) {
         assets = am.search(null, DEFAULT_PAGIN);
     }
     var output = am.render(assets, page).list();
+    output.paging=assetApi.assetsPaging(assets,type,ctx.request);
     caramel.render(output);
 }, request, response, session); %>

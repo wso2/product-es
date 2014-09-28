@@ -35,6 +35,9 @@ var constants = {};
     constants.SOCIAL_FEATURE_SCRIPT_KEY='socialScriptSource';
     constants.SOCIAL_FEATURE_SCRIPT_TYPE_KEY='socialScriptType';
     constants.SOCIAL_FEATURE_APP_URL_KEY='socialAppUrl';
+    constants.ASSET_DEFAULT_SORT='recent';
+    constants.Q_SORT='sort';
+    constants.Q_TAG='tag';
     /**
      * URL Patterns
      */
