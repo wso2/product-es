@@ -69,13 +69,13 @@ public class TestClient {
 		try {
 			builder = new SSLContextBuilder();
 			builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-			sslsf = new SSLConnectionSocketFactory(builder.build());
+			sslConnectionSocketFactory = new SSLConnectionSocketFactory(builder.build());
 
 			httpContext = new BasicHttpContext();
 
-			String sessionId = getSession(sslsf, httpContext, hostName, port, userName, pwd);
+			String sessionId = getSession(sslConnectionSocketFactory, httpContext, hostName, port, userName, pwd);
 			testAPI(sessionId);
-		//	uploadArtificats(sslsf, httpContext, sessionId, samplesDirectory,hostName, port, userName, pwd);
+		//	uploadArtificats(sslConnectionSocketFactory, httpContext, sessionId, samplesDirectory,hostName, port, userName, pwd);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

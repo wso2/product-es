@@ -32,13 +32,13 @@ import java.util.List;
 public class ArtifactPublisher {
 
     protected static final Logger log = Logger.getLogger(ArtifactPublisher.class);
-    static CloseableHttpClient httpclient = null;
+    static CloseableHttpClient httpClient = null;
     static HttpPost httppost = null;
     static HttpGet httpGet = null;
     static HttpEntity reqEntity = null;
     static Gson gson = null;
     static CloseableHttpResponse response = null;
-    static SSLConnectionSocketFactory sslsf = null;
+    static SSLConnectionSocketFactory sslConnectionSocketFactory = null;
     static HttpContext httpContext = null;
     static HashMap<String, List<String>> rxtFileAttributesMap = null;
 
@@ -73,11 +73,11 @@ public class ArtifactPublisher {
 
             SSLContextBuilder builder = new SSLContextBuilder();
             builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-            sslsf = new SSLConnectionSocketFactory(builder.build());
+            sslConnectionSocketFactory = new SSLConnectionSocketFactory(builder.build());
 
             httpContext = new BasicHttpContext();
 
-            sessionId = getSession(sslsf, httpContext, hostName, port, userName, pwd);
+            sessionId = getSession(sslConnectionSocketFactory, httpContext, hostName, port, userName, pwd);
 
             String[] rxtArr = getRxtTypes();
 
@@ -159,7 +159,7 @@ public class ArtifactPublisher {
         String apiUrl = "https://" + hostName + ":" + port + "/" + context + IConstants.RXT_URL;
         httpGet = new HttpGet(apiUrl);
 
-        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
         response = null;
 
 
@@ -200,7 +200,7 @@ public class ArtifactPublisher {
         String apiUrl = "https://" + hostName + ":" + port + "/" + context + IConstants.RXT_ATTRIBUTES_FOR_GIVEN_TYPE + "/" + rxtType + "/" + type;
         httpGet = new HttpGet(apiUrl);
 
-        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
 
         response = null;
         gson = new Gson();
@@ -301,7 +301,7 @@ public class ArtifactPublisher {
 
             for (String attrKey : attrMap.keySet()) {
 
-                httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+                httpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
                 httppost = new HttpPost(publisherUrlBuff.toString());
 
                 fileAttributes = rxtFileAttributesMap.get(asset.getType());
@@ -316,7 +316,7 @@ public class ArtifactPublisher {
 
 
             try {
-                response = httpclient.execute(httppost, httpContext);
+                response = httpClient.execute(httppost, httpContext);
                 responseJson = EntityUtils.toString(response.getEntity());
                 System.out.println(responseJson.toString());
                 log.info(responseJson.toString());
@@ -324,7 +324,7 @@ public class ArtifactPublisher {
                 log.error("error in asssetUpload", ex);
             } finally {
                 try {
-                    httpclient.close();
+                    httpClient.close();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
