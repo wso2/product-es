@@ -17,7 +17,7 @@
  *
  */
 app.dependencies=['store_common'];
-
+app.ignoreExtension=true;
 
 app.server=function(ctx){
 
