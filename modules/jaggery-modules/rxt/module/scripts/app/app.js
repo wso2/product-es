@@ -43,7 +43,7 @@ var app = {};
             existingEndpoint.path = endpoint.path;
             existingEndpoint.title = endpoint.title;
             existingEndpoint.owner = endpoint.owner;
-            existingEndpoint.secured = this.endpoints[index].secured ? this.endpoints[index].secured : false;
+            existingEndpoint.secured = endpoint.secured ? endpoint.secured : false;
             return;
         }
         this.endpoints.push(endpoint);

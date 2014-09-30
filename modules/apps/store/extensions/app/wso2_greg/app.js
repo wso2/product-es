@@ -16,8 +16,8 @@
  *  under the License.
  *
  */
-app.dependencies=['es_common'];
-app.ignoreExtension=true;
+app.dependencies=['store_common'];
+
 
 app.server=function(ctx){
 
