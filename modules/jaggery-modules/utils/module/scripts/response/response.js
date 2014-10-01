@@ -29,4 +29,17 @@ var response = {};
         return resp;
     };
     
+    response.buildSuccessResponseForRxt= function(resp, code, data){
+        // var obj={};
+         //obj.code = code;
+         //obj.message = message;  
+       //  var dataOut = [];
+       //  dataOut =  data;
+      //   obj.data = dataOut; 
+         resp.contentType = 'application/json';
+         resp.status = code;
+         resp.content = data;     
+         return resp;
+     };
+    
 }(response))

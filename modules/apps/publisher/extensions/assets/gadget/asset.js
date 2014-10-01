@@ -1,83 +1,36 @@
-
 asset.server = function(ctx) {
     var type = ctx.type;
     return {
         onUserLoggedIn: function() {},
         endpoints: {
             apis: [{
-                url: 'assets',
-                path: 'assets.jag'
+                url: 'configs',
+                path: 'config.jag'
             }],
             pages: [{
-                title: 'Asset: ' + type,
-                url: 'asset',
-                path: 'asset.jag'
-            }, {
-                title: 'Assets ' + type,
-                url: 'assets',
-                path: 'assets.jag'
-            }, {
-                title: 'Create ' + type,
-                url: 'create',
-                path: 'create.jag'
-            }, {
-                title: 'Update ' + type,
-                url: 'update',
-                path: 'update.jag'
-            }, {
-                title: 'Details ' + type,
-                url: 'details',
-                path: 'details.jag'
-            }, {
-                title: 'List ' + type,
-                url: 'list',
-                path: 'list.jag'
-            }, {
-                title: 'Lifecycle',
-                url: 'lifecycle',
-                path: 'lifecycle.jag'
-            },{
-                title:'Configuration',
-                url:'configuration',
-                path:'configuration.jag'
+                title: 'Configuration',
+                url: 'configuration',
+                path: 'configuration.jag'
             }]
         }
     };
 };
-
 asset.renderer = function(ctx) {
     var type = ctx.assetType;
     var buildListLeftNav = function(page, util) {
-        var log = new Log();
-        return [{
-            name: 'Add ',
-            iconClass: 'icon-plus-sign-alt',
-            url: util.buildUrl('create')
-        }, {
-            name: 'Statistics',
-            iconClass: 'icon-dashboard',
-            url: '/assets/statistics/' + type + '/'
-        },{
-            name:'Configuration',
-            iconClass:'icon-dashboard',
-            url:util.buildUrl('configuration')
-        }];
+        var navList = util.navList();
+        navList.push('Add', 'icon-plus-sign-alt', util.buildUrl('create'));
+        navList.push('Statistics', 'icon-dashboard', '/assets/statistics/' + type + '/');
+        navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
+        return navList.list();
     };
     var buildDefaultLeftNav = function(page, util) {
         var id = page.assets.id;
-        return [{
-            name: 'Overview',
-            iconClass: 'icon-list-alt',
-            url: util.buildUrl('details') + '/' + id
-        }, {
-            name: 'Edit',
-            iconClass: 'icon-edit',
-            url: util.buildUrl('update') + '/' + id
-        }, {
-            name: 'Life Cycle',
-            iconClass: 'icon-retweet',
-            url: util.buildUrl('lifecycle') + '/' + id
-        }];
+        var navList = util.navList();
+        navList.push('Overview', 'icon-list-alt', util.buildUrl('details') + '/' + id);
+        navList.push('Edit', 'icon-edit', util.buildUrl('update') + '/' + id);
+        navList.push('Life Cycle', 'icon-retweet', util.buildUrl('lifecycle') + '/' + id);
+        return navList.list();
     };
     var buildAddLeftNav = function(page, util) {
         return [];
@@ -96,59 +49,46 @@ asset.renderer = function(ctx) {
         return false;
     };
     return {
-        create: function(page) {},
-        update: function(page) {},
-        list: function(page) {
-            var assets = page.assets;
-            for (var index in assets) {
-                var asset = assets[index];
-                if (asset.attributes.overview_createdtime) {
-                    var value = asset.attributes.overview_createdtime;
-                    var date = new Date();
-                    date.setTime(value);
-                    asset.attributes.overview_createdtime = date.toUTCString();
+        pageDecorators: {
+            leftNav: function(page) {
+                switch (page.meta.pageName) {
+                    case 'list':
+                    //log.info('Rendering list');
+                        page.leftNav = buildListLeftNav(page, this);
+                        break;
+                    case 'create':
+                        page.leftNav = buildAddLeftNav(page, this);
+                        break;
+                    default:
+                        page.leftNav = buildDefaultLeftNav(page, this);
+                        break;
                 }
-            }
-        },
-        details: function(page) {},
-        lifecycle: function(page) {},
-        leftNav: function(page) {
-            switch (page.meta.pageName) {
-                case 'list':
-                    page.leftNav = buildListLeftNav(page, this);
-                    break;
-                case 'create':
-                    page.leftNav=buildAddLeftNav(page,this);
-                    break;
-                default:
-                    page.leftNav = buildDefaultLeftNav(page, this);
-                    break;
-            }
-            return page;
-        },
-        ribbon: function(page) {
-            var ribbon = page.ribbon = {};
-            var DEFAULT_ICON = 'icon-cog';
-            var assetTypes = [];
-            var assetType;
-            var assetList = ctx.rxtManager.listRxtTypeDetails();
-            for (var index in assetList) {
-                assetType = assetList[index];
-                if (isActivatedAsset(assetType.shortName)) {
-                    assetTypes.push({
-                        url: this.buildBaseUrl(assetType.shortName) + '/list',
-                        assetIcon: assetType.ui.icon || DEFAULT_ICON,
-                        assetTitle: assetType.singularLabel
-                    });
+                return page;
+            },
+            ribbon: function(page) {
+                var ribbon = page.ribbon = {};
+                var DEFAULT_ICON = 'icon-cog';
+                var assetTypes = [];
+                var assetType;
+                var assetList = ctx.rxtManager.listRxtTypeDetails();
+                for (var index in assetList) {
+                    assetType = assetList[index];
+                    if (isActivatedAsset(assetType.shortName)) {
+                        assetTypes.push({
+                            url: this.buildBaseUrl(assetType.shortName) + '/list',
+                            assetIcon: assetType.ui.icon || DEFAULT_ICON,
+                            assetTitle: assetType.singularLabel
+                        });
+                    }
                 }
+                ribbon.currentType = page.rxt.singularLabel;
+                ribbon.currentTitle = page.rxt.singularLabel;
+                ribbon.currentUrl = this.buildBaseUrl(type) + '/list'; //page.meta.currentPage;
+                ribbon.shortName = page.rxt.singularLabel;
+                ribbon.query = 'Query';
+                ribbon.breadcrumb = assetTypes;
+                return page;
             }
-            ribbon.currentType = page.rxt.singularLabel;
-            ribbon.currentTitle = page.rxt.singularLabel;
-            ribbon.currentUrl = this.buildBaseUrl(type) + '/list'; //page.meta.currentPage;
-            ribbon.shortName = page.rxt.singularLabel;
-            ribbon.query = 'Query';
-            ribbon.breadcrumb = assetTypes;
-            return page;
         }
     };
 };

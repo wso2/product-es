@@ -1,8 +1,18 @@
 /*
-    Descripiton:The apis-asset-manager is used to retriew assets for api calls
-    Filename: asset_api.js
-    Created Date: 7/24/2014
-*/
+
+ * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 var api = {};
 var responseProcessor = require('utils').response;
 (function(api) {
@@ -98,7 +108,15 @@ var responseProcessor = require('utils').response;
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
-        var asset = am.importAssetFromHttpRequest(assetReq);
+        
+        
+        var asset = null;
+        if (request.getParameter("asset") != null){
+            asset = parse(request.getParameter("asset"));
+        }else{
+            asset = am.importAssetFromHttpRequest(assetReq);
+        }
+        
         putInStorage(options, asset, am, req, session);
         try {
             am.create(asset);
@@ -123,7 +141,15 @@ var responseProcessor = require('utils').response;
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
-        var asset = am.importAssetFromHttpRequest(assetReq);
+        
+        
+        var asset = null;
+        if (request.getParameter("asset") != null){
+            asset = parse(request.getParameter("asset"));
+        }else{
+            asset = am.importAssetFromHttpRequest(assetReq);
+        }
+
         asset.id = options.id;
         putInStorage(options, asset, am, req, session);
         var original = am.get(options.id);
@@ -226,6 +252,18 @@ var responseProcessor = require('utils').response;
          //   print(responseProcessor.buildErrorResponse(400, "No matching asset found"));
             log.error(e);
             result = null;       
+        }
+        return result;
+    };
+    api.remove = function(options, req, res, session) {
+        var asset = require('rxt').asset;
+        var am = asset.createUserAssetManager(session, options.type);
+        try {
+            am.remove(options.id);
+            result=true;
+        } catch (e) {
+            log.error('Asset with id: ' + asset.id + ' was not deleted due to ' + e);
+            result = false;
         }
         return result;
     };

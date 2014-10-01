@@ -1,0 +1,8 @@
+<%
+	var log=new Log();
+
+	log.info('config endpoint called');
+	
+	print('["a","b","c"]');
+	
+%>

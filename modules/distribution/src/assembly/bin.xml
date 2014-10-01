@@ -216,6 +216,8 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
+        
+        
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${project.artifactId}-${project.version}/repository/components/patches/</outputDirectory>
@@ -232,6 +234,25 @@
                 <include>**/social.tbox</include>
             </includes>
         </fileSet-->
+        
+        <fileSet>
+            <directory>${project.basedir}/../components/asset-client/target</directory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+            <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+        </fileSet>
+        
+        <fileSet>
+           <directory>${project.basedir}/../components/asset-client/src/samples</directory>
+            <includes>
+                <include>build.xml</include>
+            </includes>
+           <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
+       </fileSet>
+        
+
+        
     </fileSets>
     <dependencySets>
         <!--        <dependencySet>
@@ -255,6 +276,8 @@
                 <include>org.apache.rampart:rampart:mar</include>
             </includes>
         </dependencySet>
+        
+		
     </dependencySets>
     <files>
         <file>
@@ -264,10 +287,10 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--        <file>
-            <source>target/shindig</source>
-            <outputDirectory>${project.artifactId}-${project.version}/repository/deployment/server/webapps/ROOT</outputDirectory>
-        </file>-->
+
+
+
+        
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${project.artifactId}-${project.version}</outputDirectory>
@@ -382,6 +405,9 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/database</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        
+        
+
         <!--        <file>
             <source>conf/wso2is-user-certs.jks</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/resources/security/</outputDirectory>
@@ -392,6 +418,28 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>-->
+        
 
-    </files>
+       </files>
+  
+  <!-- 
+      <moduleSets>
+      
+    <moduleSet>
+    
+
+      
+      <includes>
+        <include>org.wso2.store:asset-client</include>
+      </includes>
+      <binaries>
+        <attachmentClassifier>jar-with-dependencies</attachmentClassifier>
+        <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
+
+-->
+
+
+
 </assembly>

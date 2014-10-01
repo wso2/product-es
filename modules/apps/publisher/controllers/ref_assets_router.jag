@@ -10,6 +10,7 @@
 		var comps=uri.split('/');
 		return comps.length>0?comps[0]:null;
 	};
+	
 	var mapper=function(path){
 		return function(){
 			return path;
@@ -17,9 +18,10 @@
 	}
 
 	var handleApiEndpoint=function(request,session,uriParams){
+		
 		var type=uriParams.type;
 		var page=getPage(uriParams.suffix);
-
+		
 		var endPoints=asset.getAssetApiEndpoints(session,type);
 		var endpoint;
 		for(var index in endPoints){
