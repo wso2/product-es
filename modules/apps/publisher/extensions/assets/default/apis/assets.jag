@@ -59,7 +59,11 @@ require('/modules/publisher.js').exec(function(ctx) {
                 var elements = uriMatcher.elements();
                 options.id = elements.id;
                 options.nextState = elements.nextState;
-                var success = lcApi.changeState(options, req, res, session);
+                try{
+                    var success = lcApi.changeState(options, req, res, session);
+                }catch(e){
+                    success = false;
+                }
                 if (success == true) {
                     //print(responseProcessor.buildSuccessResponse(200, 'Changed the state to ' + options.nextState));
                     response = responseProcessor.buildSuccessResponse(response, 200, 'Changed the state to ' + options.nextState);
@@ -112,6 +116,7 @@ require('/modules/publisher.js').exec(function(ctx) {
             break;
 
         default:
+
             response = responseProcessor.buildErrorResponse(response, 501, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb (hint: create/update operations use POST).');
     }
 }, request, response, session); %>
