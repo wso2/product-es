@@ -6,7 +6,7 @@
         "social": {
             "enabled": true,
             "keys": {
-                "socialScriptSource": "%https.host%/social/social/export-js/social.js",
+                "socialScriptSource": "%https.host%/social/export-js/social.js",
                 "socialScriptType": "text/javascript",
                 "socialAppUrl": "%https.host%/social"
             }

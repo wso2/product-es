@@ -30,10 +30,10 @@ var redrawReviews = function (sortBy, callback) {
             var str = "";
             for (var i = 0; i < reviews.length; i++) {
             	//Remove carbon.super tenant domain from username
-                var user = reviewsJSON[i].actor.id;
+                var user = reviews[i].actor.id;
                 var pieces = user.split(/[\s@]+/);
                 if(pieces[pieces.length-1] == 'carbon.super'){
-                	reviewsJSON[i].actor.id= pieces[pieces.length-2];
+                	reviews[i].actor.id= pieces[pieces.length-2];
                 }
                 var review = reviews[i];
                 var iLike = didILike(review, user);
