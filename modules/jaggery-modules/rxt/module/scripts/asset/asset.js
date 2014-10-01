@@ -315,12 +315,12 @@ var asset = {};
      * @param  {[type]} paging  [description]
      * @return {[type]}         [description]
      */
-    AssetManager.prototype.tagged=function(tagName,paging){
-        var assets=[];
-        var paging=paging||constants.DEFAULT_TAG_PAGIN;
-        var q={};
-        q.tag=tagName;
-        assets=this.search(q,paging);
+    AssetManager.prototype.tagged = function(tagName, paging) {
+        var assets = [];
+        var paging = paging || constants.DEFAULT_TAG_PAGIN;
+        var q = {};
+        q.tag = tagName;
+        assets = this.search(q, paging);
         return assets;
     };
     /**
@@ -348,13 +348,12 @@ var asset = {};
      * @param {[type]} rating [description]
      */
     AssetManager.prototype.rate = function(id, rating) {
-        var success=false;
-        try{
-            this.registry.rate(id,rating);
-            success=true;
-        }
-        catch(e){
-            log.error('Could not rate the asset: '+id+' type: '+this.type+'.Exception: '+e);
+        var success = false;
+        try {
+            this.registry.rate(id, rating);
+            success = true;
+        } catch (e) {
+            log.error('Could not rate the asset: ' + id + ' type: ' + this.type + '.Exception: ' + e);
             throw e;
         }
         return success;
@@ -379,7 +378,7 @@ var asset = {};
             });
             success = true;
         } else {
-            log.debug('The user has already subscribed to asset : ' + id+' or the path is invalid.');
+            log.debug('The user has already subscribed to asset : ' + id + ' or the path is invalid.');
         }
         return success;
     };
@@ -404,11 +403,11 @@ var asset = {};
         }
         return success;
     };
-    AssetManager.prototype.isSubscribed=function(id,session){
+    AssetManager.prototype.isSubscribed = function(id, session) {
         //Obtain the list of all subscribptions of the user to this asset type
-        var subscriptions=this.subscriptions(session);
-        for(var index=0;index<subscriptions.length;index++){
-            if(subscriptions[index].id===id){
+        var subscriptions = this.subscriptions(session);
+        for (var index = 0; index < subscriptions.length; index++) {
+            if (subscriptions[index].id === id) {
                 return true;
             }
         }
@@ -423,7 +422,7 @@ var asset = {};
         }
         subscriptions = obtainSubscriptions(userSpace, this, this.registry, this.type);
         //Add the meta information of each asset
-        addAssetsMetaData(subscriptions,this);
+        addAssetsMetaData(subscriptions, this);
         return subscriptions;
     };
     AssetManager.prototype.getSubscriptionSpace = function(session) {
@@ -765,7 +764,7 @@ var asset = {};
      * @param {[type]} am    [description]
      */
     var addAssetsMetaData = function(asset, am) {
-        if(!asset){
+        if (!asset) {
             log.error('Unable to add meta data to an empty asset');
             return;
         }
@@ -780,8 +779,8 @@ var asset = {};
         }
     };
     var addAssetMetaData = function(asset, am) {
-        if((!asset)||(!asset.attributes)){
-            log.warn('Could not populate asset details of  type: '+am.type);
+        if ((!asset) || (!asset.attributes)) {
+            log.warn('Could not populate asset details of  type: ' + am.type);
             return;
         }
         asset.name = am.getName(asset);
@@ -1031,7 +1030,16 @@ var asset = {};
         var assetManager = new AssetManager(registry, type, rxtManager);
         var assetResourcesTemplate = core.assetResources(tenantId, type);
         var context = core.createAssetContext(session, type);
-        var assetResources = assetResourcesTemplate.manager ? assetResourcesTemplate.manager(context) : {};
+        var assetResources = {}; //Assume there will not be any asset managers to override the default implementations
+        //Check if there are any asset managers defined at the type level
+        if (!assetResourcesTemplate.manager) {
+            //Check if a default manager exists
+            if (assetResourcesTemplate._default.manager) {
+                assetResources = assetResourcesTemplate._default.manager(context);
+            }
+        } else {
+            assetResources = assetResourcesTemplate.manager(context);
+        }
         reflection.override(assetManager, assetResources);
         //Initialize the asset manager
         assetManager.init();
