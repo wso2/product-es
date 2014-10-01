@@ -19,14 +19,17 @@
  */
 /*
  Descripiton: Invoke routed api endpoints
-
+* ENDPOINTS:  /apis/lifecycles/
+              /apis/lifecycles/{lifecycleName}
+              /apis/lifecycles/{lifecycleName}/{currentState}  
  */
+
 require('/modules/publisher.js').exec(function(ctx) {
     var log = new Log();
     var ref = require('utils').request;
     var responseProcessor = require('utils').response;
-    var lcCore = require('lifecycle').core;
-    var lcApi = require('lifecycle').api;
+    var lcCore = require('lifecycle').core;    
+    var lcApi = require('/modules/lifecycle_api.js').api;
     var server = require('store').server;
     var res = ctx.response;
     var req = ctx.request;
@@ -34,48 +37,51 @@ require('/modules/publisher.js').exec(function(ctx) {
     var tenantId = server.current(session).tenantId;
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
     var assetApi = require('/modules/asset_api.js').api;
+
     var GET_LIFECYCLES_URL = '/{context}/apis/lifecycles/';
     var GET_LIFECYCLE_DEFINITION_BY_NAME_URL = '/{context}/apis/lifecycles/{lifecycleName}';
     var GET_LIFECYCLE_STATE_URL = '/{context}/apis/lifecycles/{lifecycleName}/{currentState}';
+
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
     response.contentType = 'application/json';
     var lifecycleName = '';
+
     switch (method) {
         case 'GET':
-            if (uriMatcher.match(GET_LIFECYCLES_URL)) {
+            if (uriMatcher.match(GET_LIFECYCLES_URL)) { // to return available lifecycle list
                 try {
-                    var lcList = lcApi.getLifecycleList(tenantId);
-                    response = responseProcessor.buildSuccessResponse(response, 200, lcList);
+                    var lcList = lcApi.getLifecycles(options, req, res, session);//call lifecycle module to get list
+                    response = responseProcessor.buildSuccessResponse(response, 200, lcList);// return list
                 } catch (e) {
                     log.error(e);
-                    response = responseProcessor.buildErrorResponse(response, 404, e);
+                    response = responseProcessor.buildErrorResponse(response, 404, e);//return error response
                 }
-            } else if (uriMatcher.match(GET_LIFECYCLE_DEFINITION_BY_NAME_URL)) {
+            } else if (uriMatcher.match(GET_LIFECYCLE_DEFINITION_BY_NAME_URL)) {// to return lifecycle definition by name
                 try {
-                    lifecycleName = uriMatcher.elements().lifecycleName;
-                    var lc = lcApi.getLifecycle(lifecycleName, tenantId);
-                    response = responseProcessor.buildSuccessResponse(response, 200, lc);
+                    options.name = uriMatcher.elements().lifecycleName;// required lifecycle's name
+                    var lc = lcApi.getLifecycle(options, req, res, session);//call lifecycle module to get definition
+                    response = responseProcessor.buildSuccessResponse(response, 200, lc);//send response
                 } catch (e) {
                     log.error(e);
-                    response = responseProcessor.buildErrorResponse(response, 404, e);
+                    response = responseProcessor.buildErrorResponse(response, 404, e);//send error response
                 }
-            } else if (uriMatcher.match(GET_LIFECYCLE_STATE_URL)) {
-                lifecycleName = uriMatcher.elements().lifecycleName;
-                var currentState = uriMatcher.elements().currentState;
+            } else if (uriMatcher.match(GET_LIFECYCLE_STATE_URL)) {//to return details on lifecycle state of a lifecycle definition
+                options.name = uriMatcher.elements().lifecycleName;//set lifecycle name
+                var currentState = uriMatcher.elements().currentState;//set required state name
                 try {
-                    var lc = lcApi.getLifecycle(lifecycleName, tenantId);
+                    var lc = lcApi.getLifecycle(options, req, res, session);//call lifecycle module to get state details
                     var state = lc.state(currentState);
                     response = responseProcessor.buildSuccessResponse(response, 200, state);
                 } catch (e) {
                     log.error(e);
                     response = responseProcessor.buildErrorResponse(response, 404, e);
                 }
-            } else {
+            } else {//unimplemented http GET endpoint
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
             break;
-        default:
+        default://unimplemented http request method
             response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this endpoint for ' + method)
     }
 }, request, response, session); 

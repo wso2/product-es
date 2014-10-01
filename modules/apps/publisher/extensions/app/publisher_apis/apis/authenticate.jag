@@ -32,15 +32,16 @@ var log = new Log('login-api');
 var user = require('store').user;
 var credentials = {};
 var result = {};
-var method = request.getMethod();
+var METHOD = request.getMethod();
 var responseProcessor = require('utils').response;
 response.contentType = 'application/json';
 var SESSION_MAP = 'sso_sessions'; //We need to create the session map as it is required by the session listener
+
 /**
  * The function adds the session to a session map.If a session map is not present
  * in the application context it is added
- * @param {[type]} app             Application context
- * @param {[type]} sessionInstance The session to be added
+ * @param {[type]} app             :Application context
+ * @param {[type]} sessionInstance :The session to be added
  */
 var addToSessionMap = function(app, sessionInstance) {
     var ssoSessions = app.get(SESSION_MAP);
@@ -58,34 +59,30 @@ var addToSessionMap = function(app, sessionInstance) {
     }
 };
 
-switch(method){
-    case 'POST':
+switch(METHOD){
+    case 'POST'://request method is POST
         credentials.username = request.getParameter('username');
         credentials.password = request.getParameter('password');
         //Check if a username and password is provided
         if ((!credentials.username) || (!credentials.password)) {      
-            //result = responseProcessor.buildErrorResponse(400,'Username and Password must be provided');
-            //response.status = 400;
             response = responseProcessor.buildErrorResponse(response,400,'Username and Password must be provided');
 
         } else {
-            var isAuthenticated = user.login(credentials.username, credentials.password, session);
+            var isAuthenticated = user.login(credentials.username, credentials.password, session);//authenticate the user
             if (isAuthenticated) {
                 session.put("LOGGED_IN_USER", credentials.username);
                 session.put("Loged", "true");         
-                //response.status = 200;
-                response = responseProcessor.buildSuccessResponse(response,200,{'sessionId':session.getId()});
+                
                 //Add to the session map as it is required by the session listener
                 addToSessionMap(application, session);
-            } else {       
-                //response.status = 401;     
+                response = responseProcessor.buildSuccessResponse(response,200,{'sessionId':session.getId()});
+            } else {     
                 response = responseProcessor.buildErrorResponse(response,401,'username/password is incorrect');
-
             }
         }        
         break;
 
-    default:       
+    default:// other methods       
         result = responseProcessor.buildErrorResponse(response,404,'Your request malformed!');       
        
 }
