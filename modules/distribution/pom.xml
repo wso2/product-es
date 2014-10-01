@@ -10,7 +10,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2es</artifactId>
-    <packaging>jar</packaging>
     <name>WSO2 Enterprise Store - Distribution</name>
     <description>WSO2 Enterprise Store Distribution</description>
     <dependencies>
@@ -27,6 +26,7 @@
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
         </dependency>
+        
     </dependencies>
     <build>
         <plugins>
@@ -131,6 +131,23 @@
                                             dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
                                     </fileset>
                                 </copy>
+                                
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components"
+                                      overwrite="true">
+                                    <fileset
+                                            dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
+                                    </fileset>
+                                </copy>
+                                
+                                <!--
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/samples"
+                                      overwrite="true">
+                                    <fileset
+                                            dir="${tempdir}/${project.artifactId}-${project.version}/samples">
+                                    </fileset>
+                                </copy>
+                                -->
+                                
                                 <!--testing -->
                                 <unzip src="target/shindig/WEB-INF/lib/shindig-common-${shindig.version}.jar"
                                        dest="${jardir}/shindig-common-${shindig.version}">
@@ -140,6 +157,8 @@
                                 </unzip>
                                 <copy file="src/repository/conf/shindig.properties"
                                       todir="${jardir}/shindig-common-${shindig.version}"/>
+                                      
+                                      
                                 <delete file="target/shindig/WEB-INF/lib/shindig-common-${shindig.version}.jar"/>
                                 <zip destfile="target/shindig/WEB-INF/lib/shindig-common-${shindig.version}.jar"
                                      basedir="${jardir}/shindig-common-${shindig.version}"/>
@@ -151,7 +170,7 @@
                                 <!--<zip destfile="target/ROOT.war"
                                      basedir="target/shindig"  />-->
                                 <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
-                                    og4j.logger.net.sf.ehcache=ERROR
+                                    log4j.logger.net.sf.ehcache=ERROR
                                 </concat>
                                 <delete file="target/${project.artifactId}-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
@@ -249,6 +268,9 @@
                                 <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
+                            
+
+          
                         </configuration>
                     </execution>
                     <execution>
@@ -258,9 +280,11 @@
                             <goal>attached</goal>
                         </goals>
                         <configuration>
+                          
                             <filters>
                                 <filter>${basedir}/src/assembly/filter.properties</filter>
                             </filters>
+                              
                             <descriptors>
                                 <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
                                 <!-- <descriptor>${basedir}/src/assembly/docs.xml</descriptor>-->
@@ -268,6 +292,8 @@
                             <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
+                    
+
                 </executions>
             </plugin>
             <plugin>
@@ -285,4 +311,6 @@
             </plugin>
         </plugins>
     </build>
+    
+
 </project>
