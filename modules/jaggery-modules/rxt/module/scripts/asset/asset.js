@@ -347,7 +347,18 @@ var asset = {};
      * @param {[type]} id     [description]
      * @param {[type]} rating [description]
      */
-    AssetManager.prototype.addRating = function(id, rating) {};
+    AssetManager.prototype.rate = function(id, rating) {
+        var success=false;
+        try{
+            this.registry.rate(id,rating);
+            success=true;
+        }
+        catch(e){
+            log.error('Could not rate the asset: '+id+' type: '+this.type+'.Exception: '+e);
+            throw e;
+        }
+        return success;
+    };
     /**
      * The method subscribes a user to a given asset
      * @param  {[type]} id [description]

@@ -49,6 +49,10 @@ asset.server = function(ctx) {
             {
                 url:'subscriptions',
                 path:'subscriptions.jag'
+            },
+            {
+                url:'rate',
+                path:'rate.jag'
             }],
             pages: [ {
                 title: 'Store |  ' + typeSingularLabel,
