@@ -219,8 +219,10 @@ var asset = {};
         var paging = paging || this.defaultPaging;
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
-        }
-        return this.am.list(paging);
+        }        
+        var assets = this.am.list(paging);
+        addAssetsMetaData(assets, this);
+        return assets;
     };
     AssetManager.prototype.get = function(id) {
         if (!id) {
@@ -228,15 +230,19 @@ var asset = {};
         }
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
-        }
-        return this.am.get(id);
+        }        
+        var asset = this.am.get(id);
+        addAssetsMetaData(asset, this);
+        return asset;
     };
     AssetManager.prototype.search = function(query, paging) {
         var paging = paging || this.defaultPaging;
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
         }
-        return this.am.search(query, paging);
+        var assets = this.am.search(query, paging);
+        addAssetsMetaData(assets, this);
+        return assets;
     };
     AssetManager.prototype.recentAssets = function(opts) {
         var opts = opts || {};
@@ -252,7 +258,7 @@ var asset = {};
         paging.count = count || paging.count;
         paging.sortBy = timeStampField;
         var items = this.search(q, paging);
-        addAssetsMetaData(items, this);
+        //addAssetsMetaData(items, this);
         return items;
     };
     AssetManager.prototype.popularAssets = function(opts) {
@@ -269,7 +275,7 @@ var asset = {};
         paging.count = count || paging.count;
         paging.sortBy = nameField;
         var items = this.search(q, paging);
-        addAssetsMetaData(items, this);
+        //addAssetsMetaData(items, this);
         return items;
     };
     /**
