@@ -101,6 +101,8 @@
                                 </featureArtifactDef>
                                  <featureArtifactDef>org.wso2.store.modules:utils.feature:${project.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.store.modules:lifecycle.feature:${project.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
                                 </featureArtifactDef>
@@ -368,6 +370,10 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.store.modules.lifecycle.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
@@ -446,10 +452,11 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <!-- End of SSO Fix -->
-                                <feature>
+                                <!--Commented to remove SAML SSO menu item-->
+                                <!--<feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${carbon.platform.version}</version>
-                                </feature>
+                                </feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.core.feature.group</id>
                                     <version>${carbon.platform.version}</version>

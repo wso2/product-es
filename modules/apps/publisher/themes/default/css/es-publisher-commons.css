@@ -20,6 +20,7 @@ body {
     color: #34495E;
     height: 100%;
     background: url(../img/header-bg.gif) repeat-x left -10px #ecf0f1;
+    overflow-y: scroll;
 }
 a:focus, a:active {
     outline: none;
@@ -528,6 +529,13 @@ label, input, button, select, textarea {
 }
 .dateFull i{
     margin-right: 10px;
+}
+.loading-inf-scroll{
+    background:url('../img/preloader-40x40.gif') no-repeat top center;
+    width:100%;
+    height:50px;
+    display:none;
+    
 }
 .list-asset-table img {
     max-width: 30px;
@@ -1342,4 +1350,20 @@ circle:hover {
 #permissionsTable {
     width: 100%;
     margin-top: 20px;
+}
+
+
+/**
+ * Temp fixes for the form
+ */
+.form-horizontal  .control-label{
+    text-align: left;
+}
+
+/**
+ * Temp fix for table headings
+ */
+
+.rxt-table-heading {
+    padding-left: 10px;
 }

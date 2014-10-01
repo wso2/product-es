@@ -1,12 +1,40 @@
 <%
-	var core=require('rxt').core;
-	//var resources=require('rxt').resources;
-	var ref=require('utils').reflection;
-	var time=require('utils').time;
-	var log=new Log();
+var core=require('rxt').core;
+//var resources=require('rxt').resources;
+//var ref=require('utils').reflection;
+//var time=require('utils').time;
+// var lcCore=require('lifecycle').core;
+// var lcApi=require('lifecycle').api;
+var log = new Log();
+//var carbon = require('carbon');
+//log.info('Starting to force load');
+//lcCore.force(-1234);
+// var simplelc=lcCore.getJSONDef('MobileAppLifeCycle',-1234);//lcCore.getRawDef('ServiceLifeCycle',-1234);
+// var lc=lcApi.getLifecycle('SampleLifeCycle2',-1234);
+// print(simplelc);
 
-
-	var a={
+//log.info(lc.nextStates('initial'));
+//log.info(lc.transitionAction('Initial','Creaated'));
+//log.info(lc.transitionExecution('initial','promote'));
+//log.info('Finished force load');
+/*var reg = org.wso2.carbon.context.RegistryType;
+var CarbonConstants = Packages.org.wso2.carbon.CarbonConstants;
+var GenericArtifactManager = Packages.org.wso2.carbon.governance.api.generic.GenericArtifactManager;
+var PrivilegedCarbonContext = org.wso2.carbon.context.PrivilegedCarbonContext;
+var currentContext = PrivilegedCarbonContext.getCurrentContext();
+PrivilegedCarbonContext.startTenantFlow();
+try {
+    currentContext.setTenantDomain(carbon.server.tenantDomain({
+        tenantId: -1234
+    }));
+    currentContext.setTenantId(-1234);
+    currentContext.setUsername(CarbonConstants.REGISTRY_ANONNYMOUS_USERNAME);
+    var sysGovRegistry = currentContext.getRegistry(reg.USER_GOVERNANCE);
+    var mng = new GenericArtifactManager(sysGovRegistry.getChrootedRegistry("/_system/governance"), 'gadget');
+} catch (e) {} finally {
+    PrivilegedCarbonContext.endTenantFlow();
+}*/
+/*	var a={
 		name:'John',
 		age:'123',
 		inv:{
@@ -28,26 +56,23 @@
 		}
 	};
 
-	ref.copyAllPropValues(a,a);
-
-	//log.info('a:'+stringify(a));
-	//log.info('b:'+stringify(b));
-	//log.info(time.getCurrentTime());
-
-
-	//print('Array: '+ref.isArray(['a','b']));
-	//print('Object: '+ref.isArray({}));
-	//var server=require('store').server;
-	//var registry=server.systemRegistry(-1234);
-	//core.init(-1234,registry);
-	//resources.manager(-1234);
-	 var manager=core.rxtManager(-1234);
-	 print(manager.listRxtFieldsOfType('gadget','file'));
-	//core.assetResources(-1234,'gadget');
-	//print(manager.listRxtTypeTables('gadget'));
-	//print(manager.listRxtTypes());
-	//print(manager.getRxtDefinition('gadget'));
-	//print(manager.getRxtStoragePath('api'));
-
-	
+	ref.copyAllPropValues(a,a);*/
+//log.info('a:'+stringify(a));
+//log.info('b:'+stringify(b));
+//log.info(time.getCurrentTime());
+//print('Array: '+ref.isArray(['a','b']));
+//print('Object: '+ref.isArray({}));
+//var server=require('store').server;
+//var registry=server.systemRegistry(-1234);
+//core.init(-1234,registry);
+//resources.manager(-1234);
+//var manager=core.rxtManager(-1234);
+var ar=core.assetResources(-1234,'ebook');
+log.info(stringify(ar._default.server.toSource()));
+//print(manager.listRxtFieldsOfType('gadget','file'));
+//core.assetResources(-1234,'gadget');
+//print(manager.listRxtTypeTables('gadget'));
+//print(manager.listRxtTypes());
+//print(manager.getRxtDefinition('gadget'));
+//print(manager.getRxtStoragePath('api'));
 %>

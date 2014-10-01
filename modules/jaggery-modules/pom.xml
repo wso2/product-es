@@ -40,5 +40,6 @@
         <module>claims</module>
         <module>rxt</module>
         <module>utils</module>
+        <module>lifecycle</module>
     </modules>
 </project>

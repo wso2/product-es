@@ -98,10 +98,10 @@ public class GenericExecutor implements Execution
      */
     private void obtainTenantId(){
 
-        String stringTenantId=PrivilegedCarbonContext.getCurrentContext().getTenantDomain(false);
+        String stringTenantDomain=PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
 
         try{
-            this.tenantId=RealmContext.getRealmService().getTenantManager().getTenantId(stringTenantId);
+            this.tenantId=RealmContext.getRealmService().getTenantManager().getTenantId(stringTenantDomain);
         }
         catch(Exception e){
             log.debug("Failed to obtain Tenant id");

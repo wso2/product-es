@@ -191,8 +191,8 @@ $(function() {
 	 */
   function buttonClickLogic(action, comment) {
     $.ajax({
-      url: '/publisher/api/lifecycle/' + action + '/' + asset + '/' + id,
-      type: 'PUT',
+      url: '/publisher/apis/assets/' + id+ '/' +action+'?type='+asset,
+      type: 'POST',
       data: JSON.stringify({
         'comment': comment
       }),
@@ -201,20 +201,27 @@ $(function() {
       success: function(response) {
         var actionName = action.toLowerCase();
         actionName += 'd';
-        showAlert('Asset was ' + actionName + ' successfully.', 'success');
+        showAlert('Asset was moved to state: ' + actionName + ' successfully.', 'success');
+        buildCheckList(asset, id);
+        buildLCGraph();
+        buildHistory(asset, id);
         $.ajax({
-          url: '/publisher/api/lifecycle/' + asset + '/' + id,
+          //url: '/publisher/api/lifecycle/' + asset + '/' + id,
+          url: '/publisher/apis/assets/' + id+'/state?type='+asset,
           type: 'GET',
           success: function(response) {
             //Convert the response to a JSON object
-            var statInfo = JSON.parse(response);
+            var statInfo = response;
 
-            $('#state').html(statInfo.state);
-            $('#view-lifecyclestate').html(statInfo.state);
+            $('#state').html(statInfo.data.id);
+            $('#view-lifecyclestate').html(statInfo.data.id);
             //disableActions(statInfo.actions);
-            buildCheckList(asset, id);
-            buildLCGraph();
-            buildHistory(asset, id);
+            if(statInfo.data.isDeletable){
+                $.ajax({
+                   url: '/publisher/apis/assets/'+ id+'?type='+asset,
+                   type: 'DELETE'
+                });
+            }
           },
           error: function(response) {
             $('#state').html('Error obtaining life-cycle state of asset.');
@@ -270,7 +277,20 @@ $(function() {
     window.changeState = function(className) {
       var thisState = className;
       if (isClickable(thisState)) {
-        $('#commentModal').data('state', thisState).modal('show');
+           $.ajax({
+               url: '/publisher/apis/assets/' + id+'/state?type='+asset,
+               type: 'GET',
+               success: function(response) {
+                   var deleteStates=response.data.deletableStates;
+                   if(deleteStates){
+                       if(deleteStates[0]==thisState){
+                           $('#deleteModal').data('state', thisState).modal('show');
+                       }else{
+                           $('#commentModal').data('state', thisState).modal('show');
+                       }
+                   }
+               }
+           });
       } else {
         showAlert('Invalid operation', 'error');
       }
@@ -291,7 +311,17 @@ $(function() {
     var comment = $('#commentModalText').val();
     $('#commentModalText').val('');
 
-    buttonClickLogic(action, comment);
+    buttonClickLogic(thisState, comment);
+  });
+
+  $('#deleteModalSave').click(function(e) {
+    e.preventDefault();
+    $('#deleteModal').modal('hide');
+
+    var thisState = $('#deleteModal').data('state');
+    var action = getAction(thisState);
+
+    buttonClickLogic(thisState, 'Permanantly Deleted');
   });
 
   /*

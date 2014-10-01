@@ -1,11 +1,3 @@
-var resources=function(page,meta){
-
-    return{
-        js:['view.asset.js']
-    };
-
-};
-
 var format = function(data){
 	var unixtime, newDate,
 		newDate = new Date(),

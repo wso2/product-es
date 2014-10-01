@@ -134,6 +134,9 @@
                                     org.wso2.store.modules.rxt:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
+                                    org.wso2.store.modules.lifecycle:${project.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
                                     org.wso2.store.modules.utils:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>

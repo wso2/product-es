@@ -1,10 +1,15 @@
 <%
-
+/*
+ Descripiton:to route api calls to endpoints
+ Filename: ref-api-router.jag 
+ */
 	var log=new Log('assets');
 	var matcher=new URIMatcher(request.getRequestURI());
 	var apiEndpoint='/publisher/apis/{+suffix}';	
 	var asset=require('rxt').asset;
 	var ref=require('utils').request;
+	var responseProcessor = require('utils').response; 
+	response.contentType = 'application/json';
 
 	var getPage=function(uri){
 		var comps=uri.split('/');
@@ -19,41 +24,49 @@
 	var handleApiEndpoint=function(request,session,uriParams){
 		var options=ref.getQueryOptions(request.getQueryString());
 		var type=options.type;
-		//log.info(uriParams);
 		var page=getPage(uriParams.suffix);
-		//var page ='assets';
-
-		var endPoints=asset.getAssetApiEndpoints(session,type);
-		var endpoint;
-		for(var index in endPoints){
-			if(endPoints[index].url==page){
-				endpoint=asset.getAssetApiEndpoint(type,endPoints[index].path);
+		
+		try{
+			var endPoints=asset.getAssetApiEndpoints(session,type);
+			var endpoint;
+			for(var index in endPoints){
+				if(endPoints[index].url==page){
+					endpoint=asset.getAssetApiEndpoint(type,endPoints[index].path);
+				}
 			}
-		}
-		if(endpoint){
-			request.getMappedPath=mapper(endpoint);
-			include(endpoint);
-		}
-		else{
-			response.sendError(404,'Unabled to locate an api endpoint for the type: '+type);
+			if(endpoint){
+				request.getMappedPath=mapper(endpoint);
+				include(endpoint);
+			}
+			else{				
+				//print(responseProcessor.buildErrorResponse(404,'Unabled to locate an api endpoint for the type: '+type));
+				response = responseProcessor.buildErrorResponse(response,404,'Unabled to locate an api endpoint for the type: '+type)
+			}
+		}catch(e){
+			//print(responseProcessor.buildErrorResponse(404,e));
+			response = responseProcessor.buildErrorResponse(response,404,e);
+			
 		}
 	};
+
 	var server=require('store').server;
 	var user=server.current(session);
 
-	if(!user){
-		log.info('Auth failure')
-		response.sendError(401);
-		//response.sendRedirect('/publisher/apis/authenticate');//TODO:Remove this
+	if(!user){//unless user is authenticated		
+		 log.info('Auth failure')
+		 //print(responseProcessor.buildErrorResponse(response, 400, "Authorization Error"));
+		response = responseProcessor.buildErrorResponse(response, 400, "Authorization Error");
 	}
- 	else{
+ 	else{//for authenticated users
  		//Check if options have been provided
 		if(matcher.match(apiEndpoint)){
 			handleApiEndpoint(request,session,matcher.elements());	
 		}
 		
 		else{
-			response.sendError(404,'Unable to route the request to an appropriate endpoint');
+			//response.sendError();
+			//print(responseProcessor.buildErrorResponse(404,'Unable to route the request to an appropriate endpoint'));
+			response = responseProcessor.buildErrorResponse(response,404,'Unable to route the request to an appropriate endpoint');
 		}
  	}
  	
