@@ -66,7 +66,6 @@ switch(METHOD){
         //Check if a username and password is provided
         if ((!credentials.username) || (!credentials.password)) {      
             response = responseProcessor.buildErrorResponse(response,400,'Username and Password must be provided');
-            return;
 
         } else {
             var isAuthenticated = user.login(credentials.username, credentials.password, session);//authenticate the user
