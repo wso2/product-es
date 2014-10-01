@@ -1,24 +1,39 @@
+/*
+
+	* Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+	* WSO2 Inc. licenses this file to you under the Apache License,
+	* Version 2.0 (the "License"); you may not use this file except
+	* in compliance with the License.
+	* You may obtain a copy of the License at
+	* http://www.apache.org/licenses/LICENSE-2.0
+	* Unless required by applicable law or agreed to in writing,
+	* software distributed under the License is distributed on an
+	* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	* KIND, either express or implied. See the License for the
+	* specific language governing permissions and limitations
+	* under the License.
+	*/
+
 package org.wso2.store.client;
 
-import javax.swing.Icon;
 import com.google.code.commons.cli.annotations.CliOption;
 
 public class CliOptions {
 	
 	@CliOption(opt = "host", hasArg = true)
-	private String hostName = IConstants.DEFAULT_HOST_NAME;
+	private String hostName = Constants.DEFAULT_HOST_NAME;
 
 	@CliOption(opt = "port", hasArg = true)
-	private String port = IConstants.DEFAULT_PORT;
+	private String port = Constants.DEFAULT_PORT;
 	
 	@CliOption(opt = "user", hasArg = true)
-	private String userName = IConstants.DEFAULT_USER;
+	private String userName = Constants.DEFAULT_USER;
 	
 	@CliOption(opt = "pwd", hasArg = true)
-	private String pwd = IConstants.DEFAULT_PWD;
+	private String pwd = Constants.DEFAULT_PWD;
 	
 	@CliOption(opt = "context", hasArg = true)
-	private String context = IConstants.DEFAULT_CONTEXT;
+	private String context = Constants.DEFAULT_CONTEXT;
 	
 	@CliOption(opt = "location", hasArg = true)
 	private String location ;

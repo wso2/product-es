@@ -1,3 +1,19 @@
+/*
+
+	* Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+	* WSO2 Inc. licenses this file to you under the Apache License,
+	* Version 2.0 (the "License"); you may not use this file except
+	* in compliance with the License.
+	* You may obtain a copy of the License at
+	* http://www.apache.org/licenses/LICENSE-2.0
+	* Unless required by applicable law or agreed to in writing,
+	* software distributed under the License is distributed on an
+	* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	* KIND, either express or implied. See the License for the
+	* specific language governing permissions and limitations
+	* under the License.
+	*/
+
 package org.wso2.store.client;
 
 import com.google.code.commons.cli.annotations.CliParser;
@@ -107,7 +123,7 @@ public class ArtifactPublisher {
     private static String getSession(SSLConnectionSocketFactory sslsf, HttpContext httpContext, String hostName, String port, String userName, String pwd) throws Exception {
 
         gson = new Gson();
-        String authUrl = "https://" + hostName + ":" + port + "/" + context + IConstants.PUBLISHER_AUTHORIZATION_URL + "?username=" + userName + "&password=" + pwd;
+        String authUrl = "https://" + hostName + ":" + port + "/" + context + Constants.PUBLISHER_AUTHORIZATION_URL + "?username=" + userName + "&password=" + pwd;
 
         httppost = new HttpPost(authUrl);
         httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
@@ -156,7 +172,7 @@ public class ArtifactPublisher {
 
     private static String[] getRxtTypes() throws Exception{
 
-        String apiUrl = "https://" + hostName + ":" + port + "/" + context + IConstants.RXT_URL;
+        String apiUrl = "https://" + hostName + ":" + port + "/" + context + Constants.RXT_URL;
 
         httpGet = new HttpGet(apiUrl);
         httpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
@@ -196,7 +212,7 @@ public class ArtifactPublisher {
 
     private static List<String> getAttributesForType(String rxtType, String type) throws Exception{
 
-        String apiUrl = "https://" + hostName + ":" + port + "/" + context + IConstants.RXT_ATTRIBUTES_FOR_GIVEN_TYPE + "/" + rxtType + "/" + type;
+        String apiUrl = "https://" + hostName + ":" + port + "/" + context + Constants.RXT_ATTRIBUTES_FOR_GIVEN_TYPE + "/" + rxtType + "/" + type;
         httpGet = new HttpGet(apiUrl);
 
         CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
@@ -283,9 +299,9 @@ public class ArtifactPublisher {
         for (Asset asset : assetArr) {
              publisherUrlBuff = new StringBuffer();
              if (asset.getId() != null) {
-                 publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context + IConstants.PUBLISHER_URL + "/" + asset.getId() + "?type=" + asset.getType());
+                 publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context + Constants.PUBLISHER_URL + "/" + asset.getId() + "?type=" + asset.getType());
              } else {
-                 publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context + IConstants.PUBLISHER_URL + "?type=" + asset.getType());
+                 publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context + Constants.PUBLISHER_URL + "?type=" + asset.getType());
              }
             multiPartBuilder = MultipartEntityBuilder.create();
             multiPartBuilder.addTextBody("sessionId", sessionId);
@@ -299,7 +315,7 @@ public class ArtifactPublisher {
                 fileAttributes = rxtFileAttributesMap.get(asset.getType());
 
                 if (fileAttributes != null && fileAttributes.contains(attrKey)) {
-                    imageFile = new File(dir + File.separator + IConstants.RESOURCE_DIR_NAME + File.separator + attrMap.get(attrKey));
+                    imageFile = new File(dir + File.separator + Constants.RESOURCE_DIR_NAME + File.separator + attrMap.get(attrKey));
                     multiPartBuilder.addBinaryBody(attrKey, imageFile);
                     httppost.setEntity(multiPartBuilder.build());
                 }

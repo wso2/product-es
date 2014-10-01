@@ -5,14 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -21,16 +14,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import com.google.code.commons.cli.annotations.CliOption;
-import com.google.code.commons.cli.annotations.CliParser;
 import com.google.code.commons.cli.annotations.ParserException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -164,7 +154,7 @@ public class TestClient {
 
 		gson = new Gson();
 		
-		String authUrl = "https://" + hostName + ":" + port + "/"+"publisher"+IConstants.PUBLISHER_AUTHORIZATION_URL + "?username=" + userName + "&password=" + pwd;
+		String authUrl = "https://" + hostName + ":" + port + "/"+"publisher"+ Constants.PUBLISHER_AUTHORIZATION_URL + "?username=" + userName + "&password=" + pwd;
 		
 		httppost = new HttpPost(authUrl);
 
