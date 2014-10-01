@@ -1,4 +1,3 @@
-
 <%
 /*
  *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -35,23 +34,13 @@
 				var user=require('store').user;
 				user.logout();
 				session.invalidate();						
-				response = responseProcessor.buildSuccessResponse(response,200,{'message':'User Logged out succesfully'});
-								
+				response = responseProcessor.buildSuccessResponse(response,200,{'message':'User Logged out succesfully'});							
 			}
 			catch(e){					
-				//result = responseProcessor.buildErrorResponse(500, 'Unable to logout authenticated user!');	
-				//response.status = 500;
-				//response.status = 500;
                 response = responseProcessor.buildErrorResponse(response,500,'Unable to logout user!');
-				//response.sendError(500,'Unable to logout authenticated user!');
-				//log.error(e);
-			}
+				}
 			break;	
-		default:
-			//response.status = 404;
+		default:			
 			result = responseProcessor.buildErrorResponse(response,404,'Your request is malformed');
-
-        	//print(result);
-
 	}
 %>
