@@ -20,20 +20,24 @@
 var caramel;
 require('/modules/store.js').exec(function(ctx) {
     caramel = require('caramel');
-     var app=require('rxt').app;
-     var constants=require('rxt').constants;
-     var server=require('store').server;
-     var user=server.current(ctx.session);
-     var ui=require('rxt').ui;
-     var page=ui.buildPage(ctx.session,ctx.request);
-     var appManager;
-     if(user){
-     	appManager=app.createUserAppManager(ctx.session);
-     }
-     else{
-     	appManager=app.createAnonAppManager(ctx.session,constants.DEFAULT_TENANT);
-     }
-    var output=appManager.render([],page);
-    caramel.render(output); 
+    var app = require('rxt').app;
+    var constants = require('rxt').constants;
+    var server = require('store').server;
+    var user = server.current(ctx.session);
+    var ui = require('rxt').ui;
+    var page = ui.buildPage(ctx.session, ctx.request);
+    var appManager;
+    var log = new Log();
+    var q = ctx.request.getParameter('q');
+    log.info('Query: ' + q);
+    if (user) {
+        appManager = app.createUserAppManager(ctx.session);
+    } else {
+        appManager = app.createAnonAppManager(ctx.session, constants.DEFAULT_TENANT);
+    }
+    page.assetMeta.q=q;
+    var output = appManager.render([], page);
+    caramel.render(output);
     //print(page);
-}, request, response, session); %>
+}, request, response, session); 
+%>

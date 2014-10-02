@@ -87,7 +87,7 @@
 	// 	//response.sendRedirect('/store/login');//TODO:Remove this
 	// }
  // 	else{
- 		log.info('Trying to match '+request.getRequestURI());
+
  		//Check if options have been provided
 		if(matcher.match(apiEndpoint)){
 			handleApiEndpoint(request,session,matcher.elements());		

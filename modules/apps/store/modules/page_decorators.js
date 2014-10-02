@@ -100,6 +100,8 @@ var pageDecorators = {};
         var types = app.getActivatedAssets(ctx.tenantId); //ctx.rxtManager.listRxtTypeDetails();
         var typeDetails;
         var ratingApi = require('/modules/rating_api.js').api;
+        var q = page.assetMeta.q;
+        var query = buildRecentAssetQuery(q);
         for (var index in types) {
             typeDetails = ctx.rxtManager.getRxtTypeDetails(types[index]);
             type = typeDetails.shortName;
@@ -108,7 +110,13 @@ var pageDecorators = {};
             } else {
                 am = asset.createUserAssetManager(ctx.session, type);
             }
-            assets = am.recentAssets();
+            if (query) {
+                assets = am.recentAssets({
+                    q: query
+                });
+            } else {
+                assets = am.recentAssets();
+            }
             if (assets.length != 0) {
                 //Add subscription details if this is not an anon context
                 if (!ctx.isAnonContext) {
@@ -130,10 +138,26 @@ var pageDecorators = {};
             assets[index].isSubscribed = am.isSubscribed(assets[index].id, session);
         }
     };
+    var buildRecentAssetQuery = function(q) {
+        if (!q) {
+            return null;
+        }
+        if (q === '') {
+            return null;
+        }
+        var query = "{" + q + "}";
+        var queryObj;
+        try {
+            queryObj = parse(query);
+        } catch (e) {
+            log.error('Unable to parse query string: ' + query + ' to an object.Exception: ' + e);
+        }
+        return queryObj;
+    };
     pageDecorators.popularAssets = function(ctx, page) {
         var app = require('rxt').app;
         var asset = require('rxt').asset;
-        var ratingApi=require('/modules/rating_api.js').api;
+        var ratingApi = require('/modules/rating_api.js').api;
         var assets = {};
         var items = [];
         var assetsOfType;
@@ -148,7 +172,7 @@ var pageDecorators = {};
                 am = asset.createUserAssetManager(ctx.session, type);
             }
             assetsOfType = am.popularAssets();
-            ratingApi.addRatings(assetsOfType, am, ctx.tenantId,ctx.username);
+            ratingApi.addRatings(assetsOfType, am, ctx.tenantId, ctx.username);
             items = items.concat(assetsOfType);
         }
         //log.info(items);

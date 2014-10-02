@@ -17,14 +17,33 @@
  *
  */
 asset.manager = function(ctx) {
+    var notifier = require('store').notificationManager;
     return {
         create: function(options) {
             var ref = require('utils').time;
-            //Check if the options object has a createdtime attribute and populate it 
+            var privateRole="role://Internal/private_";
+            var adminRole="role://";
+
+            var LCEvent = "StoreLifecycleStateChange";
+            var UpdateEvent = "StoreAssetUpdate";
+            //Check if the options object has a createdtime attribute and populate it
             if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
                 options.attributes.overview_createdtime = ref.getCurrentTime();
             }
             this._super.create.call(this, options);
+            var asset=this.get(options.id);
+            var assetPath = asset.path;
+            var user = ctx.username;
+            var userRoles=ctx.userManager.getRoleListOfUser(user);
+
+            var roleToSubscribe=privateRole+user;
+            for(var role in userRoles){
+                if(userRoles[role]=="admin"){
+                    roleToSubscribe=adminRole+user;
+                }
+            }
+            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, roleToSubscribe, LCEvent);
+            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, roleToSubscribe, UpdateEvent);
         },
         search: function(query, paging) {
             var assets = this._super.search.call(this, query, paging);
@@ -37,6 +56,14 @@ asset.manager = function(ctx) {
         get: function(id) {
             var asset = this._super.get.call(this, id);
             return asset;
+        },
+        invokeLcAction: function(asset, action){
+            var success = this._super.invokeLcAction.call(this, asset, action);
+            var eventName="lc.state.change";
+            var comment='User comment';
+            var htmlResult=require('/modules/template.generator.js').generateEmail(ctx.tenantId, asset.type, asset.attributes.overview_name, comment, eventName);
+            notifier.notifyEvent(eventName, htmlResult, asset.path, ctx.tenantId);
+            return success;
         }
     };
 };
