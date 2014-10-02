@@ -54,8 +54,8 @@ asset.renderer = function(ctx) {
         return [];
     };
     var isActivatedAsset = function(assetType) {
-        var activatedAssets = ctx.tenantConfigs.assets;
-        return true;
+        var app = require('rxt').app;
+        var activatedAssets = app.getActivatedAssets(ctx.tenantId); //ctx.tenantConfigs.assets;
         if (!activatedAssets) {
             throw 'Unable to load all activated assets for current tenant: ' + ctx.tenatId + '.Make sure that the assets property is present in the tenant config';
         }
@@ -71,7 +71,7 @@ asset.renderer = function(ctx) {
             leftNav: function(page) {
                 switch (page.meta.pageName) {
                     case 'list':
-                    //log.info('Rendering list');
+                        //log.info('Rendering list');
                         page.leftNav = buildListLeftNav(page, this);
                         break;
                     case 'create':

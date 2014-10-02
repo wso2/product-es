@@ -31,7 +31,7 @@
             }
         }
     },
-    "assets": ["gadget", "site", "ebook"],
+    "assets": ["gadget", "site"],
     "assetsPageSize": 12,
     "commentsPageSize": 10,
     "userSpace": "/_system/governance/users",

@@ -17,8 +17,29 @@
  *
  */
 asset.manager = function(ctx) {
+    /**
+     * The function augments the provided query to include published state information
+     * @param  {[type]} query [description]
+     * @return {[type]}       The provided query object 
+     */
+    var buildPublishedQuery = function(query) {
+        //Get all of the published assets
+        var publishedStates = ctx.rxtManager.getPublishedStates(ctx.assetType) || [];
+        //Determine if there are any published states
+        if (publishedStates.length == 0) {
+            return query;
+        }
+        //If there is no query then build a new one
+        if (!query) {
+            query = {};
+        }
+        //TODO: Even though an array is sent in only the first search value is accepted
+        query.lcState=[publishedStates[0]];
+        return query;
+    };
     return {
         search: function(query, paging) {
+            query=buildPublishedQuery(query);
             var assets = this._super.search.call(this, query, paging);
             return assets;
         },
@@ -34,10 +55,10 @@ asset.manager = function(ctx) {
 };
 asset.server = function(ctx) {
     var type = ctx.assetType;
-    var typeDetails=ctx.rxtManager.listRxtTypeDetails(type);
-    var typeSingularLabel=type;//Assume the type details are not returned
-    if(typeDetails){
-        typeSingularLabel=typeDetails.singularLabel;
+    var typeDetails = ctx.rxtManager.listRxtTypeDetails(type);
+    var typeSingularLabel = type; //Assume the type details are not returned
+    if (typeDetails) {
+        typeSingularLabel = typeDetails.singularLabel;
     }
     return {
         onUserLoggedIn: function() {},
@@ -45,16 +66,14 @@ asset.server = function(ctx) {
             apis: [{
                 url: 'assets',
                 path: 'assets.jag'
-            },
-            {
-                url:'subscriptions',
-                path:'subscriptions.jag'
-            },
-            {
-                url:'rate',
-                path:'rate.jag'
+            }, {
+                url: 'subscriptions',
+                path: 'subscriptions.jag'
+            }, {
+                url: 'rate',
+                path: 'rate.jag'
             }],
-            pages: [ {
+            pages: [{
                 title: 'Store |  ' + typeSingularLabel,
                 url: 'details',
                 path: 'details.jag'
@@ -62,10 +81,10 @@ asset.server = function(ctx) {
                 title: 'Store | ' + typeSingularLabel,
                 url: 'list',
                 path: 'list.jag'
-            },{
-                title:'Store | '+typeSingularLabel,
-                url:'subscriptions',
-                path:'subscriptions.jag'
+            }, {
+                title: 'Store | ' + typeSingularLabel,
+                url: 'subscriptions',
+                path: 'subscriptions.jag'
             }]
         }
     };
@@ -101,54 +120,53 @@ asset.configure = function() {
                 name: 'SampleLifeCycle2',
                 commentRequired: false,
                 defaultAction: 'Promote',
-                deletableStates:[],
-                publishedStates:['Published']
+                deletableStates: [],
+                publishedStates: ['Published']
             },
             ui: {
                 icon: 'icon-cog'
             },
-            categories:{
-                categoryField:'overview_category'
+            categories: {
+                categoryField: 'overview_category'
             },
-            search:{
-                searchableFields:['all'],
+            search: {
+                searchableFields: ['all'],
             },
-            paging:{
-                size:10
+            paging: {
+                size: 10
             },
             thumbnail: 'images_thumbnail',
-            banner:'images_banner'
+            banner: 'images_banner'
         }
     };
 };
 asset.renderer = function(ctx) {
-    var decoratorApi=require('/modules/page_decorators.js').pageDecorators;
-
+    var decoratorApi = require('/modules/page_decorators.js').pageDecorators;
     return {
         pageDecorators: {
-            navigationBar:function(page){
-                return decoratorApi.navigationBar(ctx,page,this);
+            navigationBar: function(page) {
+                return decoratorApi.navigationBar(ctx, page, this);
             },
-            searchBar:function(page){
-                return decoratorApi.searchBar(ctx,page,this);
+            searchBar: function(page) {
+                return decoratorApi.searchBar(ctx, page, this);
             },
-            categoryBox:function(page){
-                return decoratorApi.categoryBox(ctx,page,this);
+            categoryBox: function(page) {
+                return decoratorApi.categoryBox(ctx, page, this);
             },
-            authenticationDetails:function(page){
-                return decoratorApi.authenticationDetails(ctx,page,this);
+            authenticationDetails: function(page) {
+                return decoratorApi.authenticationDetails(ctx, page, this);
             },
-            recentAssets:function(page){
-                return decoratorApi.recentAssets(ctx,page);
+            recentAssets: function(page) {
+                return decoratorApi.recentAssets(ctx, page);
             },
-            tags:function(page){
-                return decoratorApi.tags(ctx,page);
+            tags: function(page) {
+                return decoratorApi.tags(ctx, page);
             },
-            myAssets:function(page){
-                return decoratorApi.myAssets(ctx,page);
+            myAssets: function(page) {
+                return decoratorApi.myAssets(ctx, page);
             },
-            socialFeature:function(page){
-                return decoratorApi.socialFeature(ctx,page);
+            socialFeature: function(page) {
+                return decoratorApi.socialFeature(ctx, page);
             }
         }
     };
