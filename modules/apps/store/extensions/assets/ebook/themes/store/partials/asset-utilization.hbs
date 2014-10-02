@@ -1,32 +1,25 @@
-{{#with asset}}
-    {{#attributes}}
-        {{#if ../../inDashboard}}
-            <a id="btn-add-gadget" class="btn btn-primary" href="{{overview_url}}" target="_blank"
+<!--
+  Asset utilization icons if the user has subscribed to this asset
+-->
+
+{{#if assets.isSubscribed}}
+  <a id="btn-add-gadget" class="btn disabled" href="#modal-add-gadget"
                data-toggle="modal"
-               data-aid="{{../../id}}" data-type="{{../../type}}"> {{t "Download"}} </a>
-        {{else}}
+               data-aid="{{assets.id}}" data-type="{{assets.type}}"> {{>processed-asset-text}}</a>
+  {{else}}
 
-            {{#if ../../../sso}}
-                {{#if ../../../../user.username}}
-                    <a id="btn-add-gadget" class="btn btn-primary" href="{{overview_url}}" target="_blank"
+    {{#if cuser.username}}
+
+    <a id="btn-add-gadget" class="btn btn-primary" href="#modal-add-gadget"
                        data-toggle="modal"
-                       data-aid="{{../../../../id}}"
-                       data-type="{{../../../../type}}"> {{t "Download "}}</a>
-                {{else}}
-                    <a id="btn-add-gadget" class="btn btn-primary" href="{{url "/login"}}"
-                       data-toggle="modal"
-                       data-aid="{{../../../../id}}"
-                       data-type="{{../../../../type}}"> {{t "Download "}}</a>
-                {{/if}}
-            {{else}}
-                <a id="btn-add-gadget" class="btn btn-primary" href="{{overview_url}}" target="_blank"
+                       data-aid="{{assets.id}}"
+                       data-type="{{assets.type}}"> {{>process-asset-text }}</a>
+    {{else}}
+
+    <a id="btn-add-gadget" class="btn btn-primary" href='{{url ""}}{{getLoginUrl .}}'
                    data-toggle="modal"
-                   data-aid="{{../../id}}" data-type="{{../../type}}"> {{t "Download "}}</a>
-            {{/if}}
-
-        {{/if}}
-     {{/attributes}}
-{{/with}}
+                   data-aid="{{assets.id}}" data-type="{{assets.type}}"> {{>process-asset-text }}</a>
+    {{/if}}
 
 
-
+{{/if}}

@@ -1,0 +1,57 @@
+
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+/**
+ * Description: The session of the currently authenticated user is invalidated
+ 				E.g. Invocation
+ 				POST /api/logout
+ */
+	var log=new Log('logout-api');
+	var result={};
+	var method=request.getMethod();
+	var responseProcessor = require('utils').response;
+	response.contentType='application/json';
+
+	switch(method){
+		case 'POST':
+			try{
+				var user=require('store').user;
+				user.logout();
+				session.invalidate();						
+				response = responseProcessor.buildSuccessResponse(response,200,{'message':'User Logged out succesfully'});
+								
+			}
+			catch(e){					
+				//result = responseProcessor.buildErrorResponse(500, 'Unable to logout authenticated user!');	
+				//response.status = 500;
+				//response.status = 500;
+                response = responseProcessor.buildErrorResponse(response,500,'Unable to logout user!');
+				//response.sendError(500,'Unable to logout authenticated user!');
+				//log.error(e);
+			}
+			break;	
+		default:
+			//response.status = 404;
+			result = responseProcessor.buildErrorResponse(response,404,'Your request is malformed');
+
+        	//print(result);
+
+	}
+%>

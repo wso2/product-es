@@ -5,12 +5,22 @@ $(function(){
 $('button[data-toggle=tooltip]').tooltip();
 
 $(document).on('click', '#myasset-container .asset-remove-btn', function() {
-caramel.get('/apis/remove', {
-	    aid: $(this).attr('data-aid'),
-	    type: $(this).attr('type')
-            }, function (data) {
-		location.reload();
-            });
+// caramel.get('/apis/remove', {
+// 	    aid: $(this).attr('data-aid'),
+// 	    type: $(this).attr('type')
+//             }, function (data) {
+// 		location.reload();
+//             });
+	$.ajax({
+		type:'DELETE',
+		url:caramel.context+'/apis/subscriptions?type='+$(this).attr('type')+'&asset='+$(this).attr('data-aid'),
+		success:function(){
+			window.location.reload();
+		},
+		error:function(){
+			alert('Failed to unsubscribe');
+		}
+	});
 //console.log("removing : "+$(this).attr('data-aid')+" type :"+$(this).attr('type'));
 });
 

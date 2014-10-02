@@ -7,5 +7,9 @@
        <name>[store]/user.js</name>
        <path>scripts/user.js</path>
    </script>
+    <script>
+        <name>[store]/notificationManager.js</name>
+        <path>scripts/notificationManager.js</path>
+    </script>
 </module>
 

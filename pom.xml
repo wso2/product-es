@@ -18,6 +18,7 @@
     <modules>
         <module>modules/components/store-admin</module>
         <module>modules/components/jaggery-scxml-executors</module>
+        <module>modules/components/notifications</module>
         <module>modules/components/social</module>
         <module>modules/components/sso-common</module>
         <module>modules/jaggery-modules</module>
@@ -270,6 +271,16 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.governance.registry.extensions</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.governance.registry.eventing</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.eventing</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>

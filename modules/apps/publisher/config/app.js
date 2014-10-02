@@ -38,10 +38,23 @@ var mod = require('store');
 var rxt=require('rxt');
 var lifecycle=require('lifecycle');
 
+caramel.configs({
+    context: '/publisher',
+    cache: false,
+    negotiation: true,
+    themer: function () {
+        //TODO: Hardcoded theme
+        return 'default';
+    }
+
+});
+
 mod.server.init(pubConfig);
 mod.user.init(pubConfig);
 rxt.core.init();
 rxt.resources.init();
+var context=caramel.configs().context;
+rxt.app.init(context);
 lifecycle.core.init();
 
 var publisher = require('/modules/publisher.js');
@@ -55,16 +68,7 @@ publisher.init(pubConfig);
 //event.emit('tenantLoad', SUPER_TENANT_ID);
 
 //Configure Caramel
-caramel.configs({
-    context: '/publisher',
-    cache: false,
-    negotiation: true,
-    themer: function () {
-        //TODO: Hardcoded theme
-        return 'default';
-    }
 
-});
 
 //startup log for url
 var logPublisherUrl = function () {

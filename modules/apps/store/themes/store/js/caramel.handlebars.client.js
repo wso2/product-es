@@ -6,6 +6,29 @@
             css: {},
             code: {}
         };
+    /**
+     * register getLoginUrl
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
+    Handlebars.registerHelper('getLoginUrl',function(options){
+                var security=store.security;
+                var output='/login';
+                if(!security){
+                    return output;
+                }
+                switch(security.method){
+                    case 'sso':
+                        output='/login';
+                        break;
+                    case 'basic':
+                        output='#';
+                        break;
+                    default:
+                        break;
+                }
+                return output;
+            });
 
     /**
      * {{#itr context}}key : {{key}} value : {{value}}{{/itr}}

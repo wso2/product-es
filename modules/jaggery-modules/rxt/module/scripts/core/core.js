@@ -1,10 +1,29 @@
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
 var core = {};
-(function(core) {
+(function(core, constants) {
     var DEFAULT_MEDIA_TYPE = 'application/vnd.wso2.registry-ext-type+xml';
     var ASSET_PATH = '/_system/governance/repository/components/org.wso2.carbon.governance/types/';
     var RXT_MAP = 'rxt.manager.map';
     var EMPTY = '';
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
+    var DEFAULT_TENANT = -1234;
     var utils = require('utils');
     var log = new Log('rxt.core');
     var applyDefinitionMutation = function(rxtDefinition, rxtMutation) {
@@ -82,10 +101,10 @@ var core = {};
             tableName = createCamelCaseName(table.name);
             rxtDefinition.content.table[tableName] = {};
             rxtDefinition.content.table[tableName] = table;
-            transformTable(rxtDefinition.content.table[table.name], table);
+            transformTable(rxtDefinition.content.table[table.name], table, tableName);
         }
     };
-    var transformTable = function(rxtDefinition, rxtTable) {
+    var transformTable = function(rxtDefinition, rxtTable, tableName) {
         var fields = rxtTable.field;
         var field;
         var name;
@@ -100,6 +119,7 @@ var core = {};
                 field.name.label = field.name.name;
             }
             field.name.name = name;
+            field.name.fullName = tableName + '_' + name;
         }
         delete rxtTable.field;
     };
@@ -156,7 +176,33 @@ var core = {};
         }
         return list;
     };
+    /**
+     * The function will returns details about the rxts.If no arguments are provided
+     * then details of all the rxt types are returned
+     * @return {[type]} [description]
+     */
     RxtManager.prototype.listRxtTypeDetails = function() {
+        if (arguments.length == 1) {
+            return this.getRxtTypeDetails(arguments[0]);
+        } else {
+            return this.getRxtTypesDetails();
+        }
+    };
+    RxtManager.prototype.getRxtTypeDetails = function(type) {
+        var template = this.rxtMap[type];
+        if (!template) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return rxt details');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return rxt details';
+        }
+        var details = {};
+        details.shortName = type;
+        details.singularLabel = template.singularLabel;
+        details.pluralLabel = template.pluralLabel;
+        details.ui = (template.meta) ? (template.meta.ui || {}) : {};
+        details.lifecycle = (template.meta) ? (template.meta.lifecycle || {}) : {};
+        return details;
+    };
+    RxtManager.prototype.getRxtTypesDetails = function() {
         var list = [];
         for (var type in this.rxtMap) {
             var details = {};
@@ -217,6 +263,30 @@ var core = {};
         log.warn('Unable to locate thumbnail attribute for type: ' + type + '.Check if a thumbnail property is defined in the rxt configuration.');
         return '';
     };
+    RxtManager.prototype.getBannerAttribute = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return banner attribute');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return banner attribute';
+        }
+        if ((rxtDefinition.meta) && (rxtDefinition.meta.banner)) {
+            return rxtDefinition.meta.banner;
+        }
+        log.warn('Unable to locate banner attribute for type: ' + type + '.Check if a banner property is defined in the rxt configuration.');
+        return '';
+    };
+    RxtManager.prototype.getTimeStampAttribute = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type + ' in order to return timestamp attribute');
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return timestamp attribute';
+        }
+        if ((rxtDefinition.meta) && (rxtDefinition.meta.timestamp)) {
+            return rxtDefinition.meta.timestamp;
+        }
+        log.warn('Unable to locate timestamp attribute for type: ' + type + '.Check if a timestamp property is defined in the rxt configuration.');
+        return null;
+    };
     RxtManager.prototype.getLifecycleName = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -238,7 +308,7 @@ var core = {};
         if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
             return rxtDefinition.meta.lifecycle.defaultAction || '';
         }
-        log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type+'.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
+        log.warn('Unable to locate a meta property in order retrieve default lifecycle action for ' + type + '.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
         return '';
     };
     /**
@@ -247,8 +317,8 @@ var core = {};
      * @param  {[type]}  type The type of the asset
      * @return {Boolean}      True if comments are required
      */
-    RxtManager.prototype.isLCCommentRequired=function(type){
-      var rxtDefinition = this.rxtMap[type];
+    RxtManager.prototype.isLCCommentRequired = function(type) {
+        var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
             log.error('Unable to locate the rxt definition for type: ' + type);
             throw 'Unable to locate the rxt definition for type: ' + type + ' in order to determine if lifecycle comments are required';
@@ -256,8 +326,8 @@ var core = {};
         if ((rxtDefinition.meta) && (rxtDefinition.meta.lifecycle)) {
             return rxtDefinition.meta.lifecycle.commentRequired || false;
         }
-        log.warn('Unable to locate the lifecycle meta property to determine whether comments are required ' + type+'.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
-        return false;  
+        log.warn('Unable to locate the lifecycle meta property to determine whether comments are required ' + type + '.Make sure the lifecycle meta property is present in the configuratio callback of the asset.js');
+        return false;
     };
     /**
      * The function will retrieve all fields of the provided field type
@@ -285,6 +355,24 @@ var core = {};
             }
         }
         return result;
+    };
+    RxtManager.prototype.listRxtFields = function(type) {
+        var tables = this.listRxtTypeTables(type);
+        var fields = [];
+        if (tables.length == 0) {
+            log.warn('Unable to return list of rxt fields for type: ' + type + ' as tables were defined in the rxt definition');
+            return fields;
+        }
+        var table;
+        var field;
+        for (var key in tables) {
+            table = tables[key];
+            for (var fieldName in table.fields) {
+                field = table.fields[fieldName];
+                fields.push(field);
+            }
+        }
+        return fields;
     };
     /**
      * The function returns an array of states in which an asset can be deleted
@@ -319,8 +407,8 @@ var core = {};
      * @param  {[type]} type The type of the asset
      * @return {[type]}      An array of strings indicating the set of published states
      */
-    RxtManager.prototype.getPublishedStates=function(type){
-       var rxtDefinition = this.rxtMap[type];
+    RxtManager.prototype.getPublishedStates = function(type) {
+        var rxtDefinition = this.rxtMap[type];
         var publishedStates = [];
         if (!rxtDefinition) {
             log.error('Unable to locate the rxt definition for type: ' + type);
@@ -339,7 +427,138 @@ var core = {};
             return publishedStates;
         }
         publishedStates = rxtDefinition.meta.lifecycle.publishedStates;
-        return publishedStates; 
+        return publishedStates;
+    };
+    /**
+     * The function will return the field which is designated as the category field.If a category field
+     * has not been defined by the user then null will be returned
+     * @param  {[type]} type [description]
+     * @return {[type]}      [description]
+     */
+    RxtManager.prototype.getCategoryField = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        var categoryField = null;
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the category field.';
+        }
+        if (!rxtDefinition.meta) {
+            log.warn('Unable to locate meta information in the rxt definition for type: ' + type + '.Cannot fetch category field');
+            return categoryField;
+        }
+        if (!rxtDefinition.meta.categories) {
+            log.warn('Unable to locate category information in the rxt definition for type: ' + type + '.Cannot fetch category field');
+            return categoryField;
+        }
+        if (!rxtDefinition.meta.categories.categoryField) {
+            log.warn('No category details have been defined for the rxt definition of type: ' + type + '.');
+            return categoryField;
+        }
+        categoryField = rxtDefinition.meta.categories.categoryField;
+        return categoryField;
+    };
+    /**
+     * The function returns an array of fields that can be used to search the asset
+     * @param  {[type]} type [description]
+     * @return {[type]}      [description]
+     */
+    RxtManager.prototype.getSearchableFields = function(type) {
+        var rxtDefinition = this.rxtMap[type];
+        var searchableFields = [];
+        if (!rxtDefinition) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to return the searchable fields';
+        }
+        if (!rxtDefinition.meta) {
+            log.warn('Unable to locate meta information in the rxt definition for type: ' + type + '.Cannot fetch searchable fields');
+            return searchableFields;
+        }
+        if (!rxtDefinition.meta.search) {
+            log.warn('Unable to locate search information in the rxt definition for type: ' + type + '.Cannot fetch searchable fields');
+            return searchableFields;
+        }
+        if (!rxtDefinition.meta.search.searchableFields) {
+            log.warn('No searchable fields defined in the rxt definition for type: ' + type + '.Cannot fetch searchable fields');
+            return searchableFields;
+        }
+        searchableFields = rxtDefinition.meta.search.searchableFields;
+        return searchableFields;
+    };
+    /**
+     * The function fetches the field definition for a given field.If the definition is not found then null is returned
+     * @param  {[type]} type      [description]
+     * @param  {[type]} tableName [description]
+     * @param  {[type]} fieldName [description]
+     * @return {[type]}           [description]
+     */
+    RxtManager.prototype.getRxtField = function(type, name) {
+        var template = this.rxtMap[type];
+        var tableName;
+        var fieldName;
+        var components = getFieldNameParts(name);
+        tableName = components.tableName;
+        fieldName = components.fieldName;
+        //Convert the table and field names to lowercase
+        tableName = tableName ? tableName.toLowerCase() : '';
+        fieldName = fieldName ? fieldName.toLowerCase() : '';
+        var field = null;
+        if (!template) {
+            log.error('Unable to locate the rxt definition for type: ' + type);
+            throw 'Unable to locate the rxt definition for type: ' + type + ' in order to retrieve field data for ' + tableName + '_' + fieldName;
+        }
+        if ((!template.content) && (!template.content.table)) {
+            log.warn('Content or table definition was not found in the rxt definition of type: ' + type + '.Cannot fetch field data for ' + tableName + '_' + fieldName);
+            return field;
+        }
+        var table = getRxtTable(template.content.table, tableName);
+        if (!table) {
+            log.warn('Unable to locate table definition : ' + tableName + ' in rxt definition of type: ' + type + '.Cannot fetch field data for ' + tableName + '_' + fieldName);
+            return field;
+        }
+        field = getRxtField(table, fieldName);
+        return field;
+    };
+    RxtManager.prototype.getRxtFieldValue = function(type, name) {
+        var field = this.getRxtField(type, name);
+        var values = [];
+        if (!field) {
+            log.warn('Unable to locate values for field ' + name + ' as the field was not located in the rxt definition');
+            return values;
+        }
+        var fieldValuesObject = field.values || {};
+        var fieldValueItems = fieldValuesObject[0] ? fieldValuesObject[0].value : [];
+        for (var index in fieldValueItems) {
+            values.push(fieldValueItems[index].value);
+        }
+        return values;
+    };
+    var getFieldNameParts = function(fieldName) {
+        //Break the field by the _
+        var components = fieldName.split('_');
+        return {
+            tableName: components[0],
+            fieldName: components[1]
+        };
+    };
+    var getRxtTable = function(tables, tableName) {
+        var table = null;
+        for (var key in tables) {
+            if (key == tableName) {
+                table = tables[key];
+                return table;
+            }
+        }
+        return table;
+    };
+    var getRxtField = function(table, fieldName) {
+        var field = null;
+        for (var key in table.fields) {
+            if (key == fieldName) {
+                field = table.fields[key];
+                return field;
+            }
+        }
+        return field;
     };
     /*
     Creates an xml file from the contents of an Rxt file
@@ -392,6 +611,42 @@ var core = {};
         }
         return assetResource;
     };
+    core.appResources = function(tenantId) {
+        var configs = core.configs(tenantId);
+        var appResources = configs.appResources;
+        if (!appResources) {
+            log.error('Unable to locate appResources from tenant ' + tenantId);
+            throw 'Unable to locate appResources for tenant: ' + tenantId;
+        }
+        return appResources;
+    };
+    core.getAssetPageUrl = function(type, endpoint) {
+        return this.getAssetPageBaseUrl() + type + endpoint;
+    };
+    core.getAssetPageBaseUrl = function() {
+        return constants.ASSET_BASE_URL;
+    };
+    core.getAssetApiUrl = function(type, endpoint) {
+        return this.getAssetApiBaseUrl() + endpoint + '?type=' + type;
+    };
+    core.getAssetApiBaseUrl = function() {
+        return constants.ASSET_API_URL;
+    };
+    core.getAppPageUrl=function(endpoint){
+        return this.getAppPageBaseUrl()+endpoint;
+    };
+    core.getAppPageBaseUrl=function(){
+        return constants.APP_PAGE_URL;
+    }
+    core.getAppApiUrl=function(endpoint){
+        return this.getAppApiBaseUrl()+endpoint;
+    };
+    core.getAppApiBaseUrl=function(){
+        return constants.APP_API_URL;
+    };
+    core.getAssetSubscriptionSpace=function(type){
+        return constants.SUBSCRIPTIONS_PATH + (type ? '/' + type : '');
+    };
     core.init = function() {
         var event = require('event');
         var server = require('store').server;
@@ -405,6 +660,42 @@ var core = {};
         });
     };
     core.createAssetContext = function(session, type) {
+        var user = require('store').user;
+        var server = require('store').server;
+        var userDetails = server.current(session);
+        //If there is no user then build an anonymous registry for the super tenant
+        if (!userDetails) {
+            log.debug('Obtaining anon asset context for ' + type);
+            return this.createAnonAssetContext(session, type);
+        } else {
+            return this.createUserAssetContext(session, type);
+        }
+    };
+    core.createAnonAssetContext = function(session, type) {
+        var server = require('store').server;
+        var user = require('store').user;
+        var tenantId = DEFAULT_TENANT;
+        var sysRegistry = server.anonRegistry(tenantId);
+        var userManager = server.userManager(tenantId);
+        var tenatConfigs = user.configs(tenantId);
+        var serverConfigs = server.configs(tenantId);
+        var rxtManager = core.rxtManager(tenantId);
+        var username = "wso2.anonymous";
+        return {
+            username: username,
+            userManager: userManager,
+            username: username,
+            tenantId: tenantId,
+            systemRegistry: sysRegistry,
+            assetType: type,
+            rxtManager: rxtManager,
+            tenantConfigs: tenatConfigs,
+            serverConfigs: serverConfigs,
+            isAnonContext: true,
+            session: session
+        };
+    };
+    core.createUserAssetContext = function(session, type) {
         var user = require('store').user;
         var server = require('store').server;
         var userDetails = server.current(session);
@@ -424,7 +715,67 @@ var core = {};
             assetType: type,
             rxtManager: rxtManager,
             tenantConfigs: tenatConfigs,
-            serverConfigs: serverConfigs
+            serverConfigs: serverConfigs,
+            isAnonContext: false,
+            session: session
         };
     };
-}(core));
+    core.createAppContext = function(session) {
+        var server = require('store').server;
+        var user = require('store').user;
+        var userDetails = server.current(session);
+        if (!userDetails) {
+            log.debug('Obtaining anon app context ');
+            return this.createAnonAppContext(session);
+        } else {
+            return this.createUserAppContext(session);
+        }
+    };
+    core.createAnonAppContext = function(session) {
+        var server = require('store').server;
+        var user = require('store').user;
+        var tenantId = DEFAULT_TENANT;
+        var sysRegistry = server.anonRegistry(tenantId);
+        var userManager = server.userManager(tenantId);
+        var tenatConfigs = user.configs(tenantId);
+        var serverConfigs = server.configs(tenantId);
+        var rxtManager = core.rxtManager(tenantId);
+        var username = "wso2.anonymous";
+        return {
+            username: username,
+            userManager: userManager,
+            username: username,
+            tenantId: tenantId,
+            systemRegistry: sysRegistry,
+            rxtManager: rxtManager,
+            tenantConfigs: tenatConfigs,
+            serverConfigs: serverConfigs,
+            isAnonContext: true,
+            session: session
+        };
+    };
+    core.createUserAppContext = function(session) {
+        var user = require('store').user;
+        var server = require('store').server;
+        var userDetails = server.current(session);
+        var tenantId = userDetails.tenantId;
+        var sysRegistry = server.systemRegistry(tenantId);
+        var userManager = server.userManager(tenantId);
+        var tenatConfigs = user.configs(tenantId);
+        var serverConfigs = server.configs(tenantId);
+        var username = server.current(session).username;
+        var rxtManager = core.rxtManager(tenantId);
+        return {
+            username: username,
+            userManager: userManager,
+            username: username,
+            tenantId: tenantId,
+            systemRegistry: sysRegistry,
+            rxtManager: rxtManager,
+            tenantConfigs: tenatConfigs,
+            serverConfigs: serverConfigs,
+            isAnonContext: false,
+            session: session
+        };
+    };
+}(core, constants));

@@ -8,20 +8,20 @@
 			{{#each .}}
 			<div class="span3 asset" data-id="{{id}}" data-type="{{type}}">
 				{{#attributes}}
-				<a href="{{url "/assets"}}/{{../type}}/{{../id}}">
+				<a href="{{url "/asts"}}/{{../type}}/details/{{../id}}">
 				<div class="asset-icon">
 					{{#if ../indashboard}}
 						<i class="icon-bookmark store-bookmark-icon"></i>
 					{{/if}}
-				<img src="{{#if images_thumbnail}}{{images_thumbnail}}{{/if}}">
+				<img src="{{#if images_thumbnail}}{{url ""}}/storage/{{../../../../rxt.shortName}}/{{../../id}}/{{../../thumbnail}}{{/if}}">
 				</div> </a>
 
 				<div class="asset-details">
 					<div class="asset-name">
-						<a href="{{url "/assets"}}/{{../type}}/{{../id}}"> <h4>{{overview_name}}</h4> </a>
+						<a href="{{url "/asts"}}/{{../type}}/details/{{../id}}"> <h4>{{overview_name}}</h4> </a>
 					</div>
 					<div class="asset-rating">
-						<div class="asset-rating-{{../rating/average}}star">
+						<div class="asset-rating-{{../avgRating}}star">
 
 						</div>
 					</div>
@@ -44,7 +44,7 @@
 
 						</ul>
                         {{#mergeContext ssoParam=../../../sso userParam=../../../user thisAsset=../this}}
-                            {{>assets-utilization}}
+                            {{>assets-utilization .}}
                         {{/mergeContext}}
 
 					</div>
