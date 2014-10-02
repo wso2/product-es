@@ -1,23 +1,21 @@
 <!--
   Asset utilization icons if the user has subscribed to this asset
 -->
-{{#if assets.isSubscribed}}
+{{#if thisAsset.isSubscribed}}
   <a id="btn-add-gadget" class="btn disabled" href="#modal-add-gadget"
                data-toggle="modal"
-               data-aid="{{assets.id}}" data-type="{{assets.type}}"> {{>processed-asset-text}}</a>
+               data-aid="{{thisAsset.id}}" data-type="{{thisAsset.type}}"> {{>processed-asset-text}}</a>
   {{else}}
 
     {{#if cuser.username}}
-
     <a id="btn-add-gadget" class="btn btn-primary" href="#modal-add-gadget"
                        data-toggle="modal"
-                       data-aid="{{assets.id}}"
-                       data-type="{{assets.type}}"> {{>process-asset-text }}</a>
+                       data-aid="{{thisAsset.id}}"
+                       data-type="{{thisAsset.type}}"> {{>process-asset-text }}</a>
     {{else}}
-
-    <a id="btn-add-gadget" class="btn btn-primary" href='{{url ""}}{{getLoginUrl .}}'
+    <a id="btn-add-gadget" class="btn btn-primary" href='{{url ""}}/asts/{{thisAsset.type}}/details/{{thisAsset.id}}'
                    data-toggle="modal"
-                   data-aid="{{assets.id}}" data-type="{{assets.type}}"> {{>process-asset-text }}</a>
+                   data-aid="{{thisAsset.id}}" data-type="{{thisAsset.type}}"> {{>process-asset-text }}</a>
     {{/if}}
 
 

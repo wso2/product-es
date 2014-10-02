@@ -29,7 +29,6 @@ require('/modules/store.js').exec(function(ctx) {
     var appManager;
     var log = new Log();
     var q = ctx.request.getParameter('q');
-    log.info('Query: ' + q);
     if (user) {
         appManager = app.createUserAppManager(ctx.session);
     } else {

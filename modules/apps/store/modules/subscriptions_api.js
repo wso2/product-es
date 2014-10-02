@@ -20,7 +20,7 @@ var api = {};
 (function(api) {
     api.subscribe = function(session, options) {
         var type = options.type;
-        var id=options.id;
+        var id = options.id;
         var success = false;
         if (!type) {
             log.error('Unable to locate type information to build an asset manager to subscribe.');
@@ -28,27 +28,36 @@ var api = {};
         }
         var am = getAssetManager(session, type);
         try {
-            success=am.subscribe(id, session);
+            success = am.subscribe(id, session);
         } catch (e) {
             log.warn('Unable to process the asset as the id: ' + id + ' could not be obained.Exception: ' + e);
         }
         return success;
     };
-    api.unsubscribe= function(session, options) {
+    api.unsubscribe = function(session, options) {
         var type = options.type;
         var success = false;
-        var id=options.id;
+        var id = options.id;
         if (!type) {
             log.error('Unable to locate type information to build an asset manager to subscribe.');
             return success;
         }
         var am = getAssetManager(session, type);
         try {
-            success=am.unsubscribe(id, session);
+            success = am.unsubscribe(id, session);
         } catch (e) {
             log.warn('Unable to process the asset as the id: ' + id + ' could not be obained.Exception: ' + e);
         }
         return success;
+    };
+    api.addSubscriptionDetails = function(assets, am, session) {
+        var utils = require('utils').reflection;
+        if (!utils.isArray(assets)) {
+            assets = [assets];
+        }
+        for (var index = 0; index < assets.length; index++) {
+            assets[index].isSubscribed = am.isSubscribed(assets[index].id, session);
+        }
     };
     var getAssetManager = function(session, type) {
         var asset = require('rxt').asset;

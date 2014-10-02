@@ -117,7 +117,7 @@ var pageDecorators = {};
             } else {
                 assets = am.recentAssets();
             }
-            if (assets.length != 0) {
+            if (assets.length > 0) {
                 //Add subscription details if this is not an anon context
                 if (!ctx.isAnonContext) {
                     addSubscriptionDetails(assets, am, ctx.session);
