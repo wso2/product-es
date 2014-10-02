@@ -21,9 +21,8 @@ var caramel;
 var DEFAULT_PAGIN = {
     'start': 0,
     'count': 20,
-    'sort':'asc',
-    // 'sortOrder': 'DESC',
-    // 'sortBy': 'overview_createdtime',
+    'sortOrder': 'DESC',
+    'sortBy': 'overview_createdtime',
     //'paginationLimit': 100
 };
 require('/modules/store.js').exec(function(ctx) {
@@ -42,15 +41,19 @@ require('/modules/store.js').exec(function(ctx) {
     var type = options.type;
     var assets = [];
     var q = ctx.request.getParameter('q');
-    var sort = ctx.request.getParameter('sort');
+    var sortBy = ctx.request.getParameter('sortBy');
+    var sortOrder = ctx.request.getParameter('sort');
     //var sortOrder = ctx.request.getParameter('sortOrder');
     var page = ui.buildPage(ctx.session, ctx.request);
     var output = {};
     var tag = ctx.request.getParameter('tag');
     var assetApi=require('/modules/asset_api.js').api;
+
     var ratingApi=require('/modules/rating_api.js').api;
-    DEFAULT_PAGIN.sort= (sort || constants.DEFAULT_ASSET_PAGIN.sort);
+    DEFAULT_PAGIN.sortBy = (sortBy || constants.DEFAULT_ASSET_PAGIN.sortBy);
+    DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
     var context=core.createAssetContext(ctx.session,type);
+
     //Determine the type of asset manager to be created
     if (!user) {
         am = asset.createAnonAssetManager(ctx.session, type, -1234);
