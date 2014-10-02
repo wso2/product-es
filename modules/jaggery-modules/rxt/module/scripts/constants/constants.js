@@ -35,8 +35,8 @@ var constants = {};
     constants.SOCIAL_FEATURE_SCRIPT_KEY='socialScriptSource';
     constants.SOCIAL_FEATURE_SCRIPT_TYPE_KEY='socialScriptType';
     constants.SOCIAL_FEATURE_APP_URL_KEY='socialAppUrl';
-    constants.ASSET_DEFAULT_SORT='recent';
-    constants.Q_SORT='sort';
+    constants.ASSET_DEFAULT_SORT='overview_createdtime';
+    constants.Q_SORT='sortBy';
     constants.Q_TAG='tag';
     /**
      * URL Patterns
@@ -75,7 +75,7 @@ var constants = {};
     };
     constants.DEFAULT_ASSET_PAGIN={
         start:0,
-        count:10,
+        count:12,
         sortBy: '',
         sortOrder: 'ASC'
     };

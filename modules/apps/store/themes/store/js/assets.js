@@ -5,7 +5,7 @@
  ;
  */
 
-var opened = false, currentPage = 1, infiniteScroll = null;
+var opened = false, currentPage = 0, infiniteScroll = null;
 
 $(function() {
 
@@ -100,10 +100,10 @@ $(function() {
 	});
 
 	var scroll = function() {
-
 		if(infiniteScroll || (store.asset.paging.size >= 12 && infiniteScroll == null)) {
 			if($(window).scrollTop() + $(window).height() >= $(document).height() * .8) {
-				var url = caramel.url(store.asset.paging.url + (++currentPage));
+				var assetCount = (++store.asset.count)*12;
+				var url = caramel.url(store.asset.paging.url+"&start="+assetCount+"&count="+12);
 				loadAssetsScroll(url);
 				$(window).unbind('scroll', scroll);
 				setTimeout(function() {

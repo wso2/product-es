@@ -4,7 +4,8 @@
     }
     store.asset = {
         type: "{{rxt.shortName}}",
-        paging : {{#if paging}}{{json paging}}{{else}}null{{/if}}
+        paging : {{#if paging}}{{json paging}}{{else}}null{{/if}},
+        count : 0
     };
 
     if (store.security) {

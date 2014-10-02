@@ -251,7 +251,7 @@ var responseProcessor = require('utils').response;
         var paging={};
         var constants=require('rxt').constants;
         var sort=getSort(req,constants);
-        var url=constants.ASSET_BASE_URL+type+'/list?sort='+sort;
+        var url=constants.ASSET_BASE_URL+type+'/list?sortBy='+sort;
         paging.sort=sort;
         paging.size=assets.length;
         paging.tag=getTag(req,constants);

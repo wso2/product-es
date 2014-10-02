@@ -43,6 +43,8 @@ require('/modules/store.js').exec(function(ctx) {
     var q = ctx.request.getParameter('q');
     var sortBy = ctx.request.getParameter('sortBy');
     var sortOrder = ctx.request.getParameter('sort');
+    var start = ctx.request.getParameter('start');
+    var count = ctx.request.getParameter('count');
     //var sortOrder = ctx.request.getParameter('sortOrder');
     var page = ui.buildPage(ctx.session, ctx.request);
     var output = {};
@@ -51,9 +53,11 @@ require('/modules/store.js').exec(function(ctx) {
 
     var ratingApi=require('/modules/rating_api.js').api;
     DEFAULT_PAGIN.sortBy = (sortBy || constants.DEFAULT_ASSET_PAGIN.sortBy);
-    DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
-    var context=core.createAssetContext(ctx.session,type);
+    DEFAULT_PAGIN.sortOrder = (sortOrder || constants.DEFAULT_ASSET_PAGIN.sortOrder);
+    DEFAULT_PAGIN.start = (start || constants.DEFAULT_ASSET_PAGIN.start);
+    DEFAULT_PAGIN.count = (count || constants.DEFAULT_ASSET_PAGIN.count);
 
+    var context=core.createAssetContext(ctx.session,type);
     //Determine the type of asset manager to be created
     if (!user) {
         am = asset.createAnonAssetManager(ctx.session, type, -1234);
