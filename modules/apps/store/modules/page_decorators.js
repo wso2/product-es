@@ -20,16 +20,20 @@ var pageDecorators = {};
 (function() {
     pageDecorators.navigationBar = function(ctx, page, utils) {
         var rxtManager = ctx.rxtManager;
+        var app=require('rxt').app;
         //Obtain all of the available rxt types
-        var availableTypes = rxtManager.listRxtTypeDetails();
+        var availableTypes = app.getActivatedAssets(ctx.tenantId);//rxtManager.listRxtTypeDetails();
         var types = [];
+        var type;
         var currentType = ctx.assetType;
         var log = new Log();
         page.navigationBar = {};
         for (var index in availableTypes) {
-            currentType = availableTypes[index];
+            type=availableTypes[index];
+            currentType = rxtManager.getRxtTypeDetails(type);//availableTypes[index];
             currentType.selected = false;
-            currentType.listingUrl = utils.buildAssetPageUrl(availableTypes[index].shortName, '/list');
+            //currentType.listingUrl = utils.buildAssetPageUrl(availableTypes[index].shortName, '/list');
+            currentType.listingUrl = utils.buildAssetPageUrl(currentType.shortName, '/list');
             if (currentType.shortName == ctx.assetType) {
                 currentType.selected = true;
             }
@@ -91,9 +95,11 @@ var pageDecorators = {};
         var am;
         var type;
         var rxtDetails;
-        var types = ctx.rxtManager.listRxtTypeDetails();
+        var types = app.getActivatedAssets(ctx.tenantId);//ctx.rxtManager.listRxtTypeDetails();
+        var typeDetails;
         for (var index in types) {
-            type = types[index].shortName;
+            typeDetails=ctx.rxtManager.getRxtTypeDetails(types[index]);
+            type = typeDetails.shortName;
             if (ctx.isAnonContext) {
                 am = asset.createAnonAssetManager(ctx.session, type, ctx.tenantId);
             } else {
@@ -108,7 +114,7 @@ var pageDecorators = {};
                 items = items.concat(assets);
                 assetsByType.push({
                     assets: assets,
-                    rxt: ctx.rxtManager.listRxtTypeDetails(type)
+                    rxt: typeDetails
                 });
             }
         }
@@ -128,9 +134,9 @@ var pageDecorators = {};
         var assetsOfType;
         var am;
         var type;
-        var types = ctx.rxtManager.listRxtTypeDetails();
+        var types = app.getActivatedAssets(ctx.tenantId);//ctx.rxtManager.listRxtTypeDetails();
         for (var index in types) {
-            type = types[index].shortName;
+            type = types[index];//typeDetails.shortName;
             if (ctx.isAnonContext) {
                 am = asset.createAnonAssetManager(ctx.session, type, ctx.tenantId);
             } else {
