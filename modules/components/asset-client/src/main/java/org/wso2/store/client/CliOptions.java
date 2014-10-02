@@ -54,7 +54,6 @@ public class CliOptions {
 	}
 
 	public void setHostName(String hostName) {
-		System.out.println("hostName>>>"+hostName);
 		this.hostName = hostName;
 	}
 	public String getPort() {
