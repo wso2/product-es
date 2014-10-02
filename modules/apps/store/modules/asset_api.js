@@ -244,6 +244,9 @@ var responseProcessor = require('utils').response;
     var getSort=function(req,constants){
         return req.getParameter(constants.Q_SORT)||constants.ASSET_DEFAULT_SORT;
     };
+    var getSortOrder=function(req,constants){
+        return req.getParameter(constants.Q_SORT_ORDER)||constants.ASSET_DEFAULT_SORT_ORDER;
+    };
     var getTag=function(req,constants){
         return req.getParameter(constants.Q_TAG)||null;
     };
@@ -251,7 +254,8 @@ var responseProcessor = require('utils').response;
         var paging={};
         var constants=require('rxt').constants;
         var sort=getSort(req,constants);
-        var url=constants.ASSET_BASE_URL+type+'/list?sortBy='+sort;
+        var sortOrder = getSortOrder(req,constants);
+        var url=constants.ASSET_BASE_URL+type+'/list?sortBy='+sort+"&sort="+sortOrder;
         paging.sort=sort;
         paging.size=assets.length;
         paging.tag=getTag(req,constants);
