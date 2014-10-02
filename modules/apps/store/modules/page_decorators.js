@@ -20,17 +20,17 @@ var pageDecorators = {};
 (function() {
     pageDecorators.navigationBar = function(ctx, page, utils) {
         var rxtManager = ctx.rxtManager;
-        var app=require('rxt').app;
+        var app = require('rxt').app;
         //Obtain all of the available rxt types
-        var availableTypes = app.getActivatedAssets(ctx.tenantId);//rxtManager.listRxtTypeDetails();
+        var availableTypes = app.getActivatedAssets(ctx.tenantId); //rxtManager.listRxtTypeDetails();
         var types = [];
         var type;
         var currentType = ctx.assetType;
         var log = new Log();
         page.navigationBar = {};
         for (var index in availableTypes) {
-            type=availableTypes[index];
-            currentType = rxtManager.getRxtTypeDetails(type);//availableTypes[index];
+            type = availableTypes[index];
+            currentType = rxtManager.getRxtTypeDetails(type); //availableTypes[index];
             currentType.selected = false;
             //currentType.listingUrl = utils.buildAssetPageUrl(availableTypes[index].shortName, '/list');
             currentType.listingUrl = utils.buildAssetPageUrl(currentType.shortName, '/list');
@@ -82,7 +82,9 @@ var pageDecorators = {};
     };
     pageDecorators.recentAssets = function(ctx, page) {
         var am = getAssetManager(ctx);
+        var ratingApi = require('/modules/rating_api.js').api;
         var assets = am.recentAssets();
+        ratingApi.addRatings(assets, am, ctx.tenantId, ctx.username);
         page.recentAssets = assets;
         return page;
     };
@@ -95,10 +97,11 @@ var pageDecorators = {};
         var am;
         var type;
         var rxtDetails;
-        var types = app.getActivatedAssets(ctx.tenantId);//ctx.rxtManager.listRxtTypeDetails();
+        var types = app.getActivatedAssets(ctx.tenantId); //ctx.rxtManager.listRxtTypeDetails();
         var typeDetails;
+        var ratingApi = require('/modules/rating_api.js').api;
         for (var index in types) {
-            typeDetails=ctx.rxtManager.getRxtTypeDetails(types[index]);
+            typeDetails = ctx.rxtManager.getRxtTypeDetails(types[index]);
             type = typeDetails.shortName;
             if (ctx.isAnonContext) {
                 am = asset.createAnonAssetManager(ctx.session, type, ctx.tenantId);
@@ -108,9 +111,10 @@ var pageDecorators = {};
             assets = am.recentAssets();
             if (assets.length != 0) {
                 //Add subscription details if this is not an anon context
-                if(!ctx.isAnonContext){
-                    addSubscriptionDetails(assets, am,ctx.session);
+                if (!ctx.isAnonContext) {
+                    addSubscriptionDetails(assets, am, ctx.session);
                 }
+                ratingApi.addRatings(assets, am, ctx.tenantId, ctx.username);
                 items = items.concat(assets);
                 assetsByType.push({
                     assets: assets,
@@ -121,28 +125,30 @@ var pageDecorators = {};
         page.recentAssets = items;
         page.recentAssetsByType = assetsByType;
     };
-    var addSubscriptionDetails=function(assets,am,session){
-        for(var index=0;index<assets.length;index++){
-            assets[index].isSubscribed=am.isSubscribed(assets[index].id,session);
+    var addSubscriptionDetails = function(assets, am, session) {
+        for (var index = 0; index < assets.length; index++) {
+            assets[index].isSubscribed = am.isSubscribed(assets[index].id, session);
         }
     };
     pageDecorators.popularAssets = function(ctx, page) {
         var app = require('rxt').app;
         var asset = require('rxt').asset;
+        var ratingApi=require('/modules/rating_api.js').api;
         var assets = {};
         var items = [];
         var assetsOfType;
         var am;
         var type;
-        var types = app.getActivatedAssets(ctx.tenantId);//ctx.rxtManager.listRxtTypeDetails();
+        var types = app.getActivatedAssets(ctx.tenantId); //ctx.rxtManager.listRxtTypeDetails();
         for (var index in types) {
-            type = types[index];//typeDetails.shortName;
+            type = types[index]; //typeDetails.shortName;
             if (ctx.isAnonContext) {
                 am = asset.createAnonAssetManager(ctx.session, type, ctx.tenantId);
             } else {
                 am = asset.createUserAssetManager(ctx.session, type);
             }
             assetsOfType = am.popularAssets();
+            ratingApi.addRatings(assetsOfType, am, ctx.tenantId,ctx.username);
             items = items.concat(assetsOfType);
         }
         //log.info(items);

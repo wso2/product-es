@@ -35,11 +35,42 @@ var api = {};
         }
         var am = getAssetManager(session, options.type);
         try {
-            success = am.rate(options.id,options.value);
+            success = am.rate(options.id, options.value);
         } catch (e) {
-            log.error('Could not rate the asset type: ' + options.type + ' id: ' + options.id + ' with rating: ' + options.value+'.Exception: ' + e);
+            log.error('Could not rate the asset type: ' + options.type + ' id: ' + options.id + ' with rating: ' + options.value + '.Exception: ' + e);
         }
         return success;
+    };
+    /**
+     * The function adds rating details to the provided assets
+     * @param {[type]} assets   [description]
+     * @param {[type]} tenantId [description]
+     * @param {[type]} username [description]
+     */
+    api.addRatings = function(assets,am,tenantId, username) {
+        var utils=require('utils').reflection;
+        var tenantId = tenantId;
+        var id;
+        var rating;
+        var average;
+        //Determine if a single asset has been provided
+        if(!utils.isArray(assets)){
+            assets=[assets];
+        }
+        for (var index in assets) {
+            id = assets[index].id;
+            rating = am.rating(id, username);
+            average = rating ? rating.average : 0;
+            assets[index].rating = rating ? rating.user : 0;
+            assets[index].avgRating = average;
+            assets[index].ratingPx = calculateRatingPixel(average);
+        }
+    };
+    var calculateRatingPixel = function(avgRating) {
+        var STAR_WIDTH = 84;
+        var MAX_RATING = 5;
+        var ratingPx = (avgRating / MAX_RATING) * STAR_WIDTH;
+        return ratingPx;
     };
     var getAssetManager = function(session, type) {
         var asset = require('rxt').asset;
