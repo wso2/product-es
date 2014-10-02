@@ -39,7 +39,7 @@ var constants = {};
     constants.Q_SORT='sortBy';
     constants.Q_TAG='tag';
     constants.Q_SORT_ORDER='sort';
-    constants.ASSET_DEFAULT_SORT_ORDER='ASC';
+    constants.ASSET_DEFAULT_SORT_ORDER='DESC';
     /**
      * URL Patterns
      */
