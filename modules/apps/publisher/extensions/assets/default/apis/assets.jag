@@ -126,7 +126,6 @@ require('/modules/publisher.js').exec(function(ctx) {
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
             break;
-
         default://other un-implemented endpoints
             response = responseProcessor.buildErrorResponse(response, 501, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb (hint: create/update operations use POST).');
     }
