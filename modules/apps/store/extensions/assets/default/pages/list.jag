@@ -28,6 +28,7 @@ var DEFAULT_PAGIN = {
 require('/modules/store.js').exec(function(ctx) {
     caramel = require('caramel');
     var asset = require('rxt').asset;
+    var core=require('rxt').core;
     var ui = require('rxt').ui;
     var constants=require('rxt').constants;
     var log = ctx.log;
@@ -47,8 +48,12 @@ require('/modules/store.js').exec(function(ctx) {
     var output = {};
     var tag = ctx.request.getParameter('tag');
     var assetApi=require('/modules/asset_api.js').api;
+
+    var ratingApi=require('/modules/rating_api.js').api;
     DEFAULT_PAGIN.sortBy = (sortBy || constants.DEFAULT_ASSET_PAGIN.sortBy);
     DEFAULT_PAGIN.sortOrder = (sortOrder || DEFAULT_PAGIN.sortOrder);
+    var context=core.createAssetContext(ctx.session,type);
+
     //Determine the type of asset manager to be created
     if (!user) {
         am = asset.createAnonAssetManager(ctx.session, type, -1234);
@@ -66,6 +71,7 @@ require('/modules/store.js').exec(function(ctx) {
     } else {
         assets = am.search(null, DEFAULT_PAGIN);
     }
+    ratingApi.addRatings(assets,am,context.tenantId,context.username);
     var output = am.render(assets, page).list();
     output.paging=assetApi.assetsPaging(assets,type,ctx.request);
     caramel.render(output);

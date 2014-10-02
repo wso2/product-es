@@ -219,7 +219,7 @@ var asset = {};
         var paging = paging || this.defaultPaging;
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
-        }        
+        }
         var assets = this.am.list(paging);
         addAssetsMetaData(assets, this);
         return assets;
@@ -230,7 +230,7 @@ var asset = {};
         }
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
-        }        
+        }
         var asset = this.am.get(id);
         addAssetsMetaData(asset, this);
         return asset;
@@ -347,7 +347,25 @@ var asset = {};
      * @param  {[type]} id [description]
      * @return {[type]}    [description]
      */
-    AssetManager.prototype.rating = function(id) {};
+    AssetManager.prototype.rating = function(id, username) {
+        var rating={};
+        rating.average=0;
+        rating.user=0;
+        if (!id) {
+            log.error('Unable to locate rating of asset: ' + id);
+            return rating;
+        }
+        if (!username) {
+            log.error('Unable to locate rating of asset: ' + id + ' since a username was not provided.');
+            return rating;
+        }
+        try {
+            rating = this.registry.rating(id, username);
+        } catch (e) {
+            log.error('Unable to obtain the rating value of asset: ' + id + ' for user: ' + username+'.Exception: '+e);
+        }
+        return rating;
+    };
     /**
      * The method adds a rating to an asset
      * @param {[type]} id     [description]
@@ -792,6 +810,7 @@ var asset = {};
         asset.name = am.getName(asset);
         asset.thumbnail = am.getThumbnail(asset);
         asset.banner = am.getBanner(asset);
+        asset.rating = 0;
     };
     /**
      * The function will a render page with the asset details combined with the rxt template.If an array of assets
