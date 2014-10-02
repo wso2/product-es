@@ -27,6 +27,11 @@ if (user) {
     tenantId = user.tenantId;
 }
 var redirectUrl = app.getContext() + app.getLandingPage(tenantId);
-log.debug('Redirecting to the landing page: ' + redirectUrl);
-response.sendRedirect(redirectUrl); 
-%>
+var queryString = request.getQueryString();
+//Check if the query string exists
+if (queryString !== '') {
+    redirectUrl = redirectUrl + '?' + queryString;
+}
+//log.info('Query string' + queryString);
+log.info('Redirecting to the landing page: ' + redirectUrl);
+response.sendRedirect(redirectUrl); %>

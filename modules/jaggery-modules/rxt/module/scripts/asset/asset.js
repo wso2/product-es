@@ -454,7 +454,7 @@ var asset = {};
         var modUser = require('store').user;
         var user = server.current(session);
         if (!user) {
-            log.error('Unable to obtain user space as there is no logged in user.Cannot retrieve the subscription space');
+            log.warn('Unable to obtain user space as there is no logged in user.Cannot retrieve the subscription space');
             return null;
         }
         var space = modUser.userSpace(user);
@@ -954,7 +954,7 @@ var asset = {};
         //Deteremine if the user has specified keyword all.if so then all
         //fields can be searched
         if ((definedFields.length == 1) && (definedFields[0] == 'all')) {
-            log.warn('All of the ' + this.type + ' fields can be searched.');
+            log.debug('All of the ' + this.type + ' fields can be searched.');
             searchFields = this.rxtManager.listRxtFields(this.type);
             return searchFields;
         }

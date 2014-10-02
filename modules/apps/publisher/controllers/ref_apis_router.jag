@@ -32,9 +32,7 @@ var mapper = function(path) {
         return path;
     };
 };
-log.info('Hit the apis router');
 if (uriMatcher.match(API_URL)) {
-    log.info('Matched the api url ');
     var args = uriMatcher.elements();
     var tenantId = DEFAULT_TENANT; //Assume that the tenant will be the super tenant
     //Determine the tenant by the user 
@@ -45,11 +43,9 @@ if (uriMatcher.match(API_URL)) {
     var app = require('rxt').app;
     var page = getPage(args.suffix);
     var path = app.getApiEndpointPath(tenantId, page);
-    log.info('Getting endpoint at path: '+path);
     if (path) {
         var file = new File(path);
         if (file.isExists()) {
-            log.info('Loading endpoint at path: ' + path);
             request.getMappedPath = mapper(path);
             var proceed = app.execApiHandlers('onApiLoad', request, response, session, page);
             if (proceed) {

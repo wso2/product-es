@@ -113,6 +113,13 @@ $(function () {
             }
             //q[this.name]=$(this).val();
         });
+        //Check if the the user has only entered text
+        if(output===''){
+            var searchQuery=$('#search').val();
+            if(searchQuery!==''){
+                output='"overview_name":"'+searchQuery+'"';
+            }
+        }
         return output;//JSON.stringify(q);
     };
 
@@ -146,7 +153,9 @@ $(function () {
             theme.loading($('#assets-container').parent());
         } else if (searchVal.length > 0 && searchVal != undefined) {
             url = caramel.url('/?' + buildParams(searchVal));
-            caramel.data({
+            window.location=url;
+            //TODO: The top assets page should render results without causing a page reload
+            /*caramel.data({
                 title: null,
                 header: ['header'],
                 body: ['top-assets', 'navigation', 'sort-assets']
@@ -167,7 +176,7 @@ $(function () {
                     theme.loaded($('#assets-container').parent(), '<p>Error while retrieving data.</p>');
                 }
             });
-            theme.loading($('#assets-container').parent());
+            theme.loading($('#assets-container').parent());*/
         }
 
         $('.search-bar h2').find('.page').text(' / Search: "' + searchVal + '"');
