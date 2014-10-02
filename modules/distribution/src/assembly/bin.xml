@@ -252,6 +252,7 @@
            <directory>${project.basedir}/../components/asset-client/src/samples</directory>
             <includes>
                 <include>build.xml</include>
+                <include>*.txt</include>
             </includes>
            <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
        </fileSet>
