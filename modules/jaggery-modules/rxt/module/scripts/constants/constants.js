@@ -38,6 +38,8 @@ var constants = {};
     constants.ASSET_DEFAULT_SORT='overview_createdtime';
     constants.Q_SORT='sortBy';
     constants.Q_TAG='tag';
+    constants.Q_SORT_ORDER='sort';
+    constants.ASSET_DEFAULT_SORT_ORDER='ASC';
     /**
      * URL Patterns
      */
