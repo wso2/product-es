@@ -39,7 +39,7 @@ asset.renderer = function(ctx) {
         var navList = util.navList();
         navList.push('Add', 'icon-plus-sign-alt', util.buildUrl('create'));
         navList.push('Statistics', 'icon-dashboard', '/assets/statistics/' + type + '/');
-        navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
+        //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
         return navList.list();
     };
     var buildDefaultLeftNav = function(page, util) {
