@@ -79,6 +79,6 @@ var constants = {};
         start:0,
         count:12,
         sortBy: '',
-        sortOrder: 'ASC'
+        sortOrder: 'DESC'
     };
 }(constants));
