@@ -59,7 +59,7 @@ var constants = {};
         start: 0,
         count: 5,
         sortBy: '',
-        sortOrder: 'older'
+        sortOrder: 'DESC'
     };
     constants.DEFAULT_POPULAR_ASSET_PAGIN={
         start:0,
@@ -76,6 +76,7 @@ var constants = {};
     constants.DEFAULT_ASSET_PAGIN={
         start:0,
         count:10,
-        sort:'asc'
+        sortBy: '',
+        sortOrder: 'ASC'
     };
 }(constants));
