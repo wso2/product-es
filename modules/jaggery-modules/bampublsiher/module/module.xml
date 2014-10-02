@@ -1,6 +1,0 @@
-<module name="sso" xmlns="http://wso2.org/projects/jaggery/module.xml">
-    <script>
-        <name>bampublisher</name>
-        <path>scripts/bampublisher.js</path>
-    </script>
-</module>
