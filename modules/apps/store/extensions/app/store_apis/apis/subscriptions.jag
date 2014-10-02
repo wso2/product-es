@@ -70,15 +70,13 @@ var handleApiEndpoint = function(request, session, uriParams) {
         var endPoints = asset.getAssetApiEndpoints(session, type);
         var endpoint;
         for (var index in endPoints) {
-            log.info('Endpoint : '+endPoints[index].url);
-            log.info('Page: '+page);
             if (endPoints[index].url == page) {
                 log.info('Match '+endPoints[index].path);
                 endpoint = asset.getAssetApiEndpoint(type, endPoints[index].path);
                 log.info(endpoint);
             }
         }
-        log.info('Endpoint located: '+stringify(endpoint));
+
         if (endpoint) {
             request.getMappedPath = mapper(endpoint);
             include(endpoint);
@@ -92,7 +90,6 @@ var handleApiEndpoint = function(request, session, uriParams) {
 var server = require('store').server;
 var user = server.current(session);
 if (!user) { //unless user is authenticated        
-    log.info('Auth failure')
     //print(responseProcessor.buildErrorResponse(response, 400, "Authorization Error"));
     response = responseProcessor.buildErrorResponse(response, 400, "Authorization Error");
 } else { //for authenticated users

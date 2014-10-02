@@ -71,7 +71,6 @@
 	var user=server.current(session);
 
 	if(!user){//unless user is authenticated		
-		 log.info('Auth failure')
 		 //print(responseProcessor.buildErrorResponse(response, 400, "Authorization Error"));
 		response = responseProcessor.buildErrorResponse(response, 400, "Authorization Error");
 	}

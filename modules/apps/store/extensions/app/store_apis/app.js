@@ -54,9 +54,7 @@ app.server = function(ctx) {
 app.apiHandlers = function(ctx) {
     return {
         onApiLoad: function() {
-            log.info('Permission check on '+ctx.endpoint.url);
             if ((ctx.isAnonContext) && (ctx.endpoint.secured)) {
-                log.info('Permission denied to access '+ctx.endpoint.url);
                 //ctx.res.status='401';//sendRedirect(ctx.appContext+'/login');
                 print('{ error:"Authentication error" }'); //TODO: Fix this to return a proper status code
                 return false;
