@@ -16,6 +16,10 @@
  *  under the License.
  *
  */
+/**
+ * Description: The lifecycle api provides a set of utility methods for working with
+ * registry lifecycles defined in scxml.
+ */
 var api = {};
 (function(api, core) {
     var log = new Log('lifecycle');
@@ -61,9 +65,9 @@ var api = {};
         return nextStates;
     };
     /**
-     * The function returns checklistItems binded with current state
-     * @param  {[type]} name The name of the state
-     * @return A json object representing the checklist items
+     * The function returns checklistItems for the provided state
+     * @param  {[type]} name The name of the state for which the checklist items need to be returned
+     * @return An array of checklist items
      */
     Lifecycle.prototype.checklistItems = function(currentStateName) {
         var currentStateName = currentStateName ? currentStateName.toLowerCase() : currentStateName;
@@ -73,7 +77,6 @@ var api = {};
             var datamodel = states[currentStateName].datamodel.data;
             for (var index = 0; index < datamodel.length; index++) {
                 if (datamodel[index].name == 'checkItems') {
-                    //var items = {};
                     checklistItems = datamodel[index].item;
                     return checklistItems;
                 }
@@ -208,11 +211,12 @@ var api = {};
         }
         return parameters;
     };
-    // var getTenantId = function(session) {
-    //     var server = require('store').server;
-    //     var user = server.current(session);
-    //     return user.tenantId;
-    // };
+    /**
+     * The function returns the definition of the given lifecycle as a JSON object
+     * @param  {[type]} lifecycleName A string representing the lifecycle name
+     * @param  {[type]} tenantId      The 
+     * @return {[type]}               A JSON object defining 
+     */
     api.getLifecycle = function(lifecycleName, tenantId) {
         if (!tenantId) {
             throw 'Unable to locate lifecycle ' + lifecycleName + ' without a tenantId';
@@ -227,7 +231,7 @@ var api = {};
     /**
      * The function will return a list of available lifecycles for the tenant
      * @param  tenantId:
-     * @return {[type]}       An array of lifecycles
+     * @return {[type]}       An array of lifecycle names 
      */
     api.getLifecycleList = function(tenantId) {
         if (!tenantId) {
