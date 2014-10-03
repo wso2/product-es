@@ -1,0 +1,104 @@
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
+	var log=new Log('assets');
+	var matcher=new URIMatcher(request.getRequestURI());
+	var constants=require('rxt').constants;
+	var apiEndpoint=constants.ASSET_API_URL_PATTERN;//'/{context}/asts/{type}/api/{+suffix}';
+	var pageEndpoint=constants.ASSET_PAGE_URL_PATTERN;//'/{context}/asts/{type}/{+suffix}';
+	//var apiEndpoint='/{context}/asts/{type}/api/{+suffix}';
+	//var pageEndpoint='/{context}/asts/{type}/{+suffix}';
+	var asset=require('rxt').asset;
+	var getPage=function(uri){
+		var comps=uri.split('/');
+		return comps.length>0?comps[0]:null;
+	};
+	var mapper=function(path){
+		return function(){
+			return path;
+		};
+	}
+
+	var handleApiEndpoint=function(request,session,uriParams){
+		var type=uriParams.type;
+		var page=getPage(uriParams.suffix);
+
+		var endPoints=asset.getAssetApiEndpoints(session,type);
+		var endpoint;
+		for(var index in endPoints){
+			if(endPoints[index].url==page){
+				endpoint=asset.getAssetApiEndpoint(type,endPoints[index].path);
+			}
+		}
+		if(endpoint){
+			request.getMappedPath=mapper(endpoint);
+			include(endpoint);
+		}
+		else{
+			response.sendError(404,'Unabled to locate an api endpoint for the type: '+type);
+		}
+	};
+
+	var handlePageEndpoint=function(request,session,uriParams){
+		var type=uriParams.type;
+		var page=uriParams.suffix;
+		var type=uriParams.type;
+		var page=getPage(uriParams.suffix);
+		var server=require('store').server;
+		var user=server.current(session);
+		var endPoints=asset.getAssetPageEndpoints(session,type);
+		var endpoint;
+		for(var index in endPoints){
+			if(endPoints[index].url==page){
+				endpoint=asset.getAssetPageEndpoint(type,endPoints[index].path);
+			}
+		}
+		if(endpoint){
+			request.getMappedPath=mapper(endpoint);
+			include(endpoint);
+		}
+		else{
+			response.sendError(404,'Unabled to locate a page endpoint for the type: '+type);
+		}
+	};
+
+	//Check if the user is logged
+	var server=require('store').server;
+	var user=server.current(session);
+
+	// if(!user){
+	// 	//response.sendRedirect('/store/login');//TODO:Remove this
+	// }
+ // 	else{
+
+ 		//Check if options have been provided
+		if(matcher.match(apiEndpoint)){
+			handleApiEndpoint(request,session,matcher.elements());		
+		}
+		else if(matcher.match(pageEndpoint)){
+			handlePageEndpoint(request,session,matcher.elements());
+		}
+		else{
+			response.sendError(404,'Unable to route the request to an appropriate endpoint');
+		}
+ 	// }
+
+
+%>

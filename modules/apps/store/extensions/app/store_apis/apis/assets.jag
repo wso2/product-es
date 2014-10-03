@@ -1,0 +1,89 @@
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+/*
+ Descripiton:to route api calls to endpoints
+ Filename: ref-api-router.jag 
+ */
+	var log=new Log('assets');
+	var matcher=new URIMatcher(request.getRequestURI());
+	var apiEndpoint='/{context}/apis/{+suffix}';	
+	var asset=require('rxt').asset;
+	var ref=require('utils').request;
+	var responseProcessor = require('utils').response; 
+	response.contentType = 'application/json';
+
+	var getPage=function(uri){
+		var comps=uri.split('/');
+		return comps.length>0?comps[0]:null;
+	};
+	var mapper=function(path){
+		return function(){
+			return path;
+		};
+	}
+
+	var handleApiEndpoint=function(request,session,uriParams){
+		var options=ref.getQueryOptions(request.getQueryString());
+		var type=options.type;
+		var page=getPage(uriParams.suffix);
+		
+		try{
+			var endPoints=asset.getAssetApiEndpoints(session,type);
+			var endpoint;
+			for(var index in endPoints){
+				if(endPoints[index].url==page){
+					endpoint=asset.getAssetApiEndpoint(type,endPoints[index].path);
+				}
+			}
+			if(endpoint){
+				request.getMappedPath=mapper(endpoint);
+				include(endpoint);
+			}
+			else{				
+				//print(responseProcessor.buildErrorResponse(404,'Unabled to locate an api endpoint for the type: '+type));
+				response = responseProcessor.buildErrorResponse(response,404,'Unabled to locate an api endpoint for the type: '+type)
+			}
+		}catch(e){
+			//print(responseProcessor.buildErrorResponse(404,e));
+			response = responseProcessor.buildErrorResponse(response,404,e);
+			
+		}
+	};
+
+	var server=require('store').server;
+	var user=server.current(session);
+
+	if(!user){//unless user is authenticated		
+		 //print(responseProcessor.buildErrorResponse(response, 400, "Authorization Error"));
+		response = responseProcessor.buildErrorResponse(response, 400, "Authorization Error");
+	}
+ 	else{//for authenticated users
+ 		//Check if options have been provided
+		if(matcher.match(apiEndpoint)){
+			handleApiEndpoint(request,session,matcher.elements());	
+		}
+		
+		else{
+			//response.sendError();
+			//print(responseProcessor.buildErrorResponse(404,'Unable to route the request to an appropriate endpoint'));
+			response = responseProcessor.buildErrorResponse(response,404,'Unable to route the request to an appropriate endpoint');
+		}
+ 	}
+ %>

@@ -1,12 +1,49 @@
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
 asset.manager = function(ctx) {
+    var notifier = require('store').notificationManager;
     return {
         create: function(options) {
             var ref = require('utils').time;
-            //Check if the options object has a createdtime attribute and populate it 
+            var privateRole="role://Internal/private_";
+            var adminRole="role://";
+
+            var LCEvent = "StoreLifecycleStateChange";
+            var UpdateEvent = "StoreAssetUpdate";
+            //Check if the options object has a createdtime attribute and populate it
             if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
                 options.attributes.overview_createdtime = ref.getCurrentTime();
             }
             this._super.create.call(this, options);
+            var asset=this.get(options.id);
+            var assetPath = asset.path;
+            var user = ctx.username;
+            var userRoles=ctx.userManager.getRoleListOfUser(user);
+
+            var roleToSubscribe=privateRole+user;
+            for(var role in userRoles){
+                if(userRoles[role]=="admin"){
+                    roleToSubscribe=adminRole+user;
+                }
+            }
+            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, roleToSubscribe, LCEvent);
+            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, roleToSubscribe, UpdateEvent);
         },
         search: function(query, paging) {
             var assets = this._super.search.call(this, query, paging);
@@ -19,6 +56,14 @@ asset.manager = function(ctx) {
         get: function(id) {
             var asset = this._super.get.call(this, id);
             return asset;
+        },
+        invokeLcAction: function(asset, action){
+            var success = this._super.invokeLcAction.call(this, asset, action);
+            var eventName="lc.state.change";
+            var comment='User comment';
+            var htmlResult=require('/modules/template.generator.js').generateEmail(ctx.tenantId, asset.type, asset.attributes.overview_name, comment, eventName);
+            notifier.notifyEvent(eventName, htmlResult, asset.path, ctx.tenantId);
+            return success;
         }
     };
 };
@@ -107,7 +152,8 @@ asset.configure = function() {
             ui: {
                 icon: 'icon-cog'
             },
-            thumbnail: 'images_thumbnail'
+            thumbnail: 'images_thumbnail',
+            banner:'images_banner'
         }
     };
 };
@@ -131,8 +177,10 @@ asset.renderer = function(ctx) {
         return [];
     };
     var isActivatedAsset = function(assetType) {
-        var activatedAssets = ctx.tenantConfigs.assets;
-        return true;
+        var app=require('rxt').app;
+
+        var activatedAssets = app.getActivatedAssets(ctx.tenantId);//ctx.tenantConfigs.assets;
+        //return true;
         if (!activatedAssets) {
             throw 'Unable to load all activated assets for current tenant: ' + ctx.tenatId + '.Make sure that the assets property is present in the tenant config';
         }

@@ -111,20 +111,20 @@ $(function () {
                 thiz.tab('show');
                 return;
             }
-            loadReviews(comments.commentsUrl + paging.current, paging.current);
+           // loadReviews(comments.commentsUrl + paging.current, paging.current);
             thiz.tab('show');
         }).on('click', 'a[href="#tab-properties"]', function (e) {
 
             });
 
         $('#tab-review-box').find('.btn-primary').live('click', function (e) {
-            if (!$("#form-review").valid()) return;
-            caramel.post('/apis/comment', {
-                asset: $('#assetp-tabs').data('aid'),
-                content: $('#tab-review-box').find('.content').val()
-            }, function (data) {
-                loadReviews(comments.commentsUrl + paging.current, paging.current);
-            }, 'json');
+            // if (!$("#form-review").valid()) return;
+            // caramel.post('/apis/comment', {
+            //     asset: $('#assetp-tabs').data('aid'),
+            //     content: $('#tab-review-box').find('.content').val()
+            // }, function (data) {
+            //     loadReviews(comments.commentsUrl + paging.current, paging.current);
+            // }, 'json');
         });
 
         $('.text-review-box').live('keyup focus', function (e) {

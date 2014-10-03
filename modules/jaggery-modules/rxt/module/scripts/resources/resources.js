@@ -1,3 +1,21 @@
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
 var resources = {};
 (function(core, resources) {
     var log = new Log();
@@ -42,16 +60,17 @@ var resources = {};
     var loadDefaultAssetScript = function(options, type, assetResource) {
         var content = loadAssetScriptContent(getDefaultAssetScriptPath(options));
         if (content) {
-            assetResource = evalAssetScript(content, assetResource)
+            assetResource = evalAssetScript(content, assetResource,'default','default')
         }
         return assetResource;
     };
     var loadAssetScript = function(options, type, assetResource) {
-        var content = loadAssetScriptContent(getDefaultAssetTypeScriptPath(options, type));
+        var path=getDefaultAssetTypeScriptPath(options, type);
+        var content = loadAssetScriptContent(path);
         var defConfiguration = assetResource.configure();
         var ref = require('utils').reflection;
         if (content) {
-            assetResource = evalAssetScript(content, assetResource);
+            assetResource = evalAssetScript(content, assetResource,path,type);
             var ptr = assetResource.configure;
             //The configuration object of the default asset.js needs to be combined with 
             //what is defined by the user in per type asset script
@@ -68,10 +87,24 @@ var resources = {};
         }
         return assetResource;
     }
-    var evalAssetScript = function(scriptContent, assetResource) {
+    var evalAssetScript = function(scriptContent, assetResource,path,type) {
         var module = 'function(asset,log){' + scriptContent + '};';
-        var modulePtr = eval(module);
-        modulePtr.call(this, assetResource, log);
+        var modulePtr=null;
+        try{
+            modulePtr = eval(module);
+        }catch(e){
+            log.error('Unable to evaluate asset script content at  path: '+path+'.Exception: '+e);
+        }
+        if(!modulePtr){
+            return modulePtr;
+        }
+        try{
+            var assetLog=new Log('asset-'+type+'-script');
+            modulePtr.call(this, assetResource, assetLog);
+        }catch(e){
+            log.error('Unable execute asset script content of '+path+'.Exception: '+e);
+        }
+
         return assetResource;
     };
     var buildDefaultResources = function(options, type, assetResource) {

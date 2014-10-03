@@ -191,10 +191,10 @@ $(function() {
 	 */
   function buttonClickLogic(action, comment) {
     $.ajax({
-      url: '/publisher/apis/assets/' + id+ '/' +action+'?type='+asset,
+      url: '/publisher/apis/assets/' + id+ '/state?type='+asset+'&nextState='+action+'&comment='+comment,
       type: 'POST',
       data: JSON.stringify({
-        'comment': comment
+        'comment': comment, 'nextState':action
       }),
       contentType: 'application/json',
 

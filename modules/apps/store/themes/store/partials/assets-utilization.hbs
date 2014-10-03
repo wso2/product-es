@@ -1,12 +1,22 @@
-{{#if thisAsset.indashboard}}
-    <a href="#" class="btn disabled btn-added">{{t "Bookmarked"}}</a>
-{{else}}
-    {{# if ssoParam}}
-        <a href="{{url "/login"}}" class="btn btn-primary asset-add-btn">{{>process-asset-text}}</a>
+<!--
+  Asset utilization icons if the user has subscribed to this asset
+-->
+{{#if thisAsset.isSubscribed}}
+  <a id="btn-add-gadget" class="btn disabled" href="#modal-add-gadget"
+               data-toggle="modal"
+               data-aid="{{thisAsset.id}}" data-type="{{thisAsset.type}}"> {{>processed-asset-text}}</a>
+  {{else}}
+
+    {{#if cuser.username}}
+    <a id="btn-add-gadget" class="btn btn-primary" href="#modal-add-gadget"
+                       data-toggle="modal"
+                       data-aid="{{thisAsset.id}}"
+                       data-type="{{thisAsset.type}}"> {{>process-asset-text }}</a>
     {{else}}
-        <a href="#" class="btn btn-primary asset-add-btn">{{>process-asset-text}}</a>
+    <a id="btn-add-gadget" class="btn btn-primary" href='{{url ""}}/asts/{{thisAsset.type}}/details/{{thisAsset.id}}'
+                   data-toggle="modal"
+                   data-aid="{{thisAsset.id}}" data-type="{{thisAsset.type}}"> {{>process-asset-text }}</a>
     {{/if}}
-    {{# if userParam.username}}
-        <a href="#" class="btn btn-primary asset-add-btn">{{>process-asset-text}}</a>
-    {{/if}}
+
+
 {{/if}}
