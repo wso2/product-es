@@ -38,5 +38,6 @@
         <module>rxt</module>
         <module>utils</module>
         <module>lifecycle</module>
+        <module>bampublsiher</module>
     </modules>
 </project>

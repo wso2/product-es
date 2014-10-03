@@ -91,6 +91,10 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.store.modules:sso.feature:${project.version}
                                 </featureArtifactDef>
+
+                                <featureArtifactDef>org.wso2.store.modules:bampublisher.feature:${project.version}
+                                </featureArtifactDef>
+
                                 <featureArtifactDef>org.wso2.store.modules:store.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.store.modules:ues.feature:${project.version}
@@ -262,6 +266,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.deployment.feature:${carbon.platform.version}
                                 </featureArtifactDef>
+
                                 <!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.user.profile.server.feature:${carbon.platform.version}
                                 </featureArtifactDef>-->
@@ -413,6 +418,12 @@
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.store.modules.bampublisher.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+
                                 <!-- sso -->
                                 <feature>
                                     <id>
