@@ -22,7 +22,7 @@
  * @requires event
  * @requires utils
  * @requires store
- * @requires Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
+ * @requires Packages.org.wso2.carbon.governance.api.util.GovernanceUtils
  */
 var asset = {};
 (function(asset, core) {

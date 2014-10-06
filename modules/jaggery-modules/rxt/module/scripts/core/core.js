@@ -16,6 +16,15 @@
  *  under the License.
  *
  */
+/**
+ * The core namespace contains methods and classes that are used to work with the raw RXT definitions as well
+ * building context objects
+ * @namespace
+ * @requires event
+ * @requires utils
+ * @requires store
+ * @requires Packages.org.wso2.carbon.governance.api.util.GovernanceUtils
+ */
 var core = {};
 (function(core, constants) {
     var DEFAULT_MEDIA_TYPE = 'application/vnd.wso2.registry-ext-type+xml';
@@ -128,7 +137,10 @@ var core = {};
         rxtField.name = {};
         rxtField.name = nameBlock[0];
     };
-
+    /**
+     * [RxtManager description]
+     * @param {[type]} registry [description]
+     */
     function RxtManager(registry) {
         this.registry = registry;
         this.rxtMap = {};
@@ -632,19 +644,19 @@ var core = {};
     core.getAssetApiBaseUrl = function() {
         return constants.ASSET_API_URL;
     };
-    core.getAppPageUrl=function(endpoint){
-        return this.getAppPageBaseUrl()+endpoint;
+    core.getAppPageUrl = function(endpoint) {
+        return this.getAppPageBaseUrl() + endpoint;
     };
-    core.getAppPageBaseUrl=function(){
+    core.getAppPageBaseUrl = function() {
         return constants.APP_PAGE_URL;
     }
-    core.getAppApiUrl=function(endpoint){
-        return this.getAppApiBaseUrl()+endpoint;
+    core.getAppApiUrl = function(endpoint) {
+        return this.getAppApiBaseUrl() + endpoint;
     };
-    core.getAppApiBaseUrl=function(){
+    core.getAppApiBaseUrl = function() {
         return constants.APP_API_URL;
     };
-    core.getAssetSubscriptionSpace=function(type){
+    core.getAssetSubscriptionSpace = function(type) {
         return constants.SUBSCRIPTIONS_PATH + (type ? '/' + type : '');
     };
     core.init = function() {
