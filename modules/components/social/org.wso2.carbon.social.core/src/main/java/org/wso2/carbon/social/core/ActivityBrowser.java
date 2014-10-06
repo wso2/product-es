@@ -7,7 +7,7 @@ import java.util.List;
 public interface ActivityBrowser {
     double getRating(String targetId, String tenant);
 
-    JsonObject getSocialObject(String targetId, String tenant, SortOrder order);
+    JsonObject getSocialObject(String contextId, String tenant, SortOrder order);
 
     List<Activity> listActivities(String contextId, String tenantDomain);
 
