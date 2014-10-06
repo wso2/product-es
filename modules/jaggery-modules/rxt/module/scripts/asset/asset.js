@@ -30,14 +30,6 @@ var asset = {};
     var DEFAULT_TIME_STAMP_FIELD = 'overview_createdtime'; //TODO:Move to constants
     var DEFAULT_RECENT_ASSET_COUNT = 5; //TODO: Move to constants
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
-    /**
-     * Returns the provided field and table name within an attributes
-     * object
-     * @param  {Object} attributes
-     * @param  {String} fieldName
-     * @param  {String} tableName
-     * @return {Object}
-     */
     var getField = function(attributes, tableName, fieldName) {
         var expression = tableName + '_' + fieldName;
         var result = attributes[expression];
@@ -462,7 +454,7 @@ var asset = {};
     /**
      * Adds a rating value to an asset
      * @param {String} id     A UUID representing an asset instance
-     * @param {[type]} rating A numerical value indicating the rating for the asset
+     * @param {Number} rating A value indicating the rating for the asset
      * @return {Boolean}    True if the rating is applied to the asset,else false
      */
     AssetManager.prototype.rate = function(id, rating) {
@@ -702,7 +694,7 @@ var asset = {};
     /**
      * Returns all of the check list items for the asset
      * @param  {Object} asset An asset instance
-     * @return {[type]}       An array of check items along with the checked state
+     * @return {Array}       An array of check items along with the checked state
      */
     AssetManager.prototype.getLifecycleCheckItems = function(asset) {
         var checkItems = [];
@@ -856,8 +848,8 @@ var asset = {};
     /**
      * The function is used to add meta data of assets such as the name , thumbnail and banner attributes
      * to an asset
-     * @param {[type]} asset [description]
-     * @param {[type]} am    [description]
+     * @param {Object} asset The asset to be  enriched
+     * @param {Object} am    An asset manager instance
      */
     var addAssetsMetaData = function(asset, am) {
         if (!asset) {
@@ -1159,8 +1151,6 @@ var asset = {};
     /**
      * The function will combine two arrays of endpoints together.If a common endpoint is found then
      * the information in the otherEndpoints array will be used to update the endpoints array.
-     * @param  {[type]} endpoints      [description]
-     * @param  {[type]} otherEndpoints [description]
      */
     var combineEndpoints = function(endpoints, otherEndpoints) {
         for (var index in otherEndpoints) {
@@ -1187,9 +1177,9 @@ var asset = {};
      * asset type.It will first check if the asset type has defined a server callback in an asset.js.If one is present
      * then it will used to override the default server call back defined in the default asset.js.In the case of the
      * endpoint property it will combine the endpoints defined in the default asset.js.
-     * @param  {[type]} session [description]
-     * @param  {[type]} type    The type of asset
-     * @return {[type]}
+     * @param  {Object} session [Jaggery session object
+     * @param  {String} type    The type of asset
+     * @return {Object} A server callback
      */
     var createServer = function(session, type) {
         var context = core.createAssetContext(session, type);
