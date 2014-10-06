@@ -16,41 +16,39 @@
  *  under the License.
  *
  */
+/**
+ * The constants namespace defines a set of values which are used throughout the app and asset extensions
+ * @namespace
+ */
 var constants = {};
 (function(constants) {
     constants.DEFAULT_TITLE = 'ES';
     constants.MSG_PAGE_INFO_NOT_FOUND = 'Title not found';
     constants.DEFAULT_TENANT = -1234;
     constants.RECENT_ASSET_COUNT = 5; //The default number of recent assets to be retrieved
-    constants.POPULAR_ASSET_COUNT=1;
-    constants.DEFAULT_TIME_STAMP_FIELD='overview_createdtime';
+    constants.POPULAR_ASSET_COUNT = 1;
+    constants.DEFAULT_TIME_STAMP_FIELD = 'overview_createdtime';
     constants.SUBSCRIPTIONS_PATH = '/subscriptions';
-    constants.APP_CONTEXT='rxt.app.context';
-    constants.TAGS_QUERY_PATH='/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
-
-    /**
+    constants.APP_CONTEXT = 'rxt.app.context';
+    constants.TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+    /***
      * ES Feature Constants
      */
-    
-    /**
-     * @constant The social feature name
-     * @type {String}
-     */
-    constants.SOCIAL_FEATURE='social';
-    constants.SOCIAL_FEATURE_SCRIPT_KEY='socialScriptSource';
-    constants.SOCIAL_FEATURE_SCRIPT_TYPE_KEY='socialScriptType';
-    constants.SOCIAL_FEATURE_APP_URL_KEY='socialAppUrl';
-    constants.ASSET_DEFAULT_SORT='overview_createdtime';
-    constants.Q_SORT='sortBy';
-    constants.Q_TAG='tag';
-    constants.Q_SORT_ORDER='sort';
-    constants.ASSET_DEFAULT_SORT_ORDER='DESC';
-    /**
+    constants.SOCIAL_FEATURE = 'social';
+    constants.SOCIAL_FEATURE_SCRIPT_KEY = 'socialScriptSource';
+    constants.SOCIAL_FEATURE_SCRIPT_TYPE_KEY = 'socialScriptType';
+    constants.SOCIAL_FEATURE_APP_URL_KEY = 'socialAppUrl';
+    constants.ASSET_DEFAULT_SORT = 'overview_createdtime';
+    constants.Q_SORT = 'sortBy';
+    constants.Q_TAG = 'tag';
+    constants.Q_SORT_ORDER = 'sort';
+    constants.ASSET_DEFAULT_SORT_ORDER = 'DESC';
+    /***
      * URL Patterns
      */
     constants.APP_PAGE_URL_PATTERN = '/{context}/pages/{+suffix}';
     constants.ASSET_PAGE_URL_PATTERN = '/{context}/asts/{type}/{+suffix}';
-    constants.ASSET_API_URL_PATTERN='/{context}/asts/{type}/apis/{+suffix}';
+    constants.ASSET_API_URL_PATTERN = '/{context}/asts/{type}/apis/{+suffix}';
     /**
      * URLs
      */
@@ -58,7 +56,6 @@ var constants = {};
     constants.ASSET_API_URL = '/apis/';
     constants.APP_PAGE_URL = '/pages/';
     constants.APP_API_URL = '/apis/';
-
     /**
      * Pagin objects
      */
@@ -68,21 +65,21 @@ var constants = {};
         sortBy: '',
         sortOrder: 'DESC'
     };
-    constants.DEFAULT_POPULAR_ASSET_PAGIN={
-        start:0,
-        count:1,
-        sortBy:'',
-        sortOrder:'asc'
+    constants.DEFAULT_POPULAR_ASSET_PAGIN = {
+        start: 0,
+        count: 1,
+        sortBy: '',
+        sortOrder: 'asc'
     };
-    constants.DEFAULT_TAG_PAGIN={
+    constants.DEFAULT_TAG_PAGIN = {
         start: 0,
         count: 10,
         sortBy: '',
         sortOrder: 'older'
     };
-    constants.DEFAULT_ASSET_PAGIN={
-        start:0,
-        count:12,
+    constants.DEFAULT_ASSET_PAGIN = {
+        start: 0,
+        count: 12,
         sortBy: '',
         sortOrder: 'ASC'
     };
