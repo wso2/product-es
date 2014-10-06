@@ -1,9 +1,7 @@
 package org.wso2.carbon.social.sql;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.social.core.Activity;
@@ -15,34 +13,37 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.wso2.carbon.social.sql.Constants.*;
 
 public class SQLActivityBrowser implements ActivityBrowser {
     private static final Log log = LogFactory.getLog(SQLActivityBrowser.class);
+    private static final JsonParser parser = new JsonParser();
 
-    public static final String AVG_SQL = "SELECT * FROM " + SOCIAL_OBJECT_TBL + " WHERE " + Constants.CONTEXT_ID_COLUMN + "=?";
-
-    private JsonParser parser = new JsonParser();
-
-
-	@Override
-    public JsonObject getSocialObject(String targetId, String tenant, SortOrder order) {
-        List<Activity> activities = listActivitiesChronologically(targetId, tenant);
-
-        JsonArray attachments = new JsonArray();
-        JsonObject jsonObj = new JsonObject();
-
-        jsonObj.add("attachments", attachments);
-
-        for (Activity activity : activities) {
-        	JsonObject body = activity.getBody();
-        	attachments.add(body);
+    @Override
+    public JsonObject getSocialObject(String contextId, String tenantDomain, SortOrder order) {
+        DSConnection con = new DSConnection(); //TODO: shouldn't new this,use singleton
+        Connection connection = con.getConnection();
+        String objectJson = "{}";
+        if (connection != null) {
+            PreparedStatement statement;
+            ResultSet resultSet;
+            try {
+                statement = connection.prepareStatement(SELECT_OBJECT_QUERY);
+                statement.setString(1, contextId);
+                statement.setString(2, tenantDomain);
+                resultSet = statement.executeQuery();
+                resultSet.next();
+                objectJson = resultSet.getString(1);
+            } catch (SQLException e) {
+                // TODO: throw it as a custom Exception type.
+                log.error("Can't retrieve average rating from SQL.", e);
+            } finally {
+                con.closeConnection(connection);
+            }
         }
-
-        return jsonObj;
+        return (JsonObject) parser.parse(objectJson);
     }
 
     @Override
@@ -56,26 +57,28 @@ public class SQLActivityBrowser implements ActivityBrowser {
     }
 
     @Override
-    public double getRating(String contextId, String tenant) {
-    	DSConnection con = new DSConnection();
-    	Connection connection = con.getConnection();
-    	double averageRating = 0.0;
-    	if(connection != null){
-    		PreparedStatement statement = null;
-    		ResultSet resultSet = null;
-    		try{
-    			statement = connection.prepareStatement(AVG_SQL);
-    			statement.setString(1, contextId);
-    			resultSet = statement.executeQuery();
-    			resultSet.next();
-    			averageRating = Double.parseDouble(resultSet.getString("avg"));
-    		}catch(Exception e){
-    			log.error("Can't retrieve average rating from SQL.", e);
-    		}finally{
-    			con.closeConnection(connection);
-    		}
-    	}
-    	return averageRating;
+    public double getRating(String contextId, String tenantDomain) {
+        DSConnection con = new DSConnection();//TODO: shouldn't new this,use singleton
+        Connection connection = con.getConnection();
+        double averageRating = 0.0;
+        if (connection != null) {
+            PreparedStatement statement;
+            ResultSet resultSet;
+            try {
+                statement = connection.prepareStatement(SELECT_RATING_QUERY);
+                statement.setString(1, contextId);
+                statement.setString(2, tenantDomain);
+                resultSet = statement.executeQuery();
+                resultSet.next();
+                averageRating = Double.parseDouble(resultSet.getString(1));
+            } catch (SQLException e) {
+                // TODO: throw it as a custom Exception type.
+                log.error("Can't retrieve average rating from SQL.", e);
+            } finally {
+                con.closeConnection(connection);
+            }
+        }
+        return averageRating;
     }
 
     private List<Activity> loadActivitiesFromDB(String contextId, String tenantDomain, String query) {
@@ -83,8 +86,8 @@ public class SQLActivityBrowser implements ActivityBrowser {
         DSConnection con = new DSConnection(); //TODO: shouldn't new this,use singleton
         Connection connection = con.getConnection();
         if (connection != null) {
-            PreparedStatement statement = null;
-            ResultSet resultSet = null;
+            PreparedStatement statement;
+            ResultSet resultSet;
             try {
                 statement = connection.prepareStatement(query);
                 statement.setString(1, contextId);
