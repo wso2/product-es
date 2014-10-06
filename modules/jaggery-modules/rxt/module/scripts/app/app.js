@@ -16,6 +16,10 @@
  *  under the License.
  *
  */
+/**
+ * @description: The app namespace provides a set of utility methods to obtain application meta data related to the 
+ * extension model.These utility methods including obtaining all activated asets 
+ */
 var app = {};
 (function(app, core) {
     var log = new Log('app-core');
@@ -26,7 +30,7 @@ var app = {};
     Endpoints.prototype.getEndpointByUrl = function(url) {
         for (var index in this.endpoints) {
             if (this.endpoints[index].url == url) {
-                //If the secured property is not provided then the page is not
+                //If the secured property is not provided then the page is not considered to be secured
                 this.endpoints[index].secured = this.endpoints[index].secured ? this.endpoints[index].secured : false;
                 return this.endpoints[index];
             }
@@ -51,7 +55,7 @@ var app = {};
     Endpoints.prototype.addMultiple = function(endpoints) {
         for (var index in endpoints) {
             this.add(endpoints[index]);
-            log.info('Registered endpoint: ' + endpoints[index].url + ' (secured: ' + (endpoints[index].secured || false) + ')');
+            log.info('Registered endpoint: /' + endpoints[index].url + ' (secured: ' + (endpoints[index].secured || false) + ')');
         }
     };
 
@@ -336,16 +340,6 @@ var app = {};
         return comps.length > 0 ? comps[0] : null;
     };
     var getRenderer = function(appResources, extensionName) {
-        // var configs = core.configs(tenantId);
-        // if (!configs) {
-        //     log.warn('Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint');
-        //     throw 'Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint';
-        // }
-        // var appResources = configs.appResources;
-        // if (!appResources) {
-        //     log.warn('The app configuration details could not be loaded for tenant: ' + tenantId);
-        //     throw 'The app configuration details could not be loaded for tenant: ' + tenantId;
-        // }
         if (!appResources[extensionName]) {
             log.warn('Unable to load extension details for ' + extensionName + '.A renderer could not be created');
             return null;
