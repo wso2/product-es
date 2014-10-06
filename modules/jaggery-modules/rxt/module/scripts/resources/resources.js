@@ -19,6 +19,9 @@
 /**
  * The resource namespace contains methods that are used to load the asset extensions by reading the asset.js
  * @namespace
+ * @example 
+ *          var resources=require('resources').resources;
+ *          resources.init();
  * @requires event
  * @requires utils
  * @requires store
@@ -172,7 +175,6 @@ var resources = {};
      * Initializes the resource module and loads up all asset extensions.This method will internally invoke
      * logic that will first read, then evaluate the asset.js files defined in the asset extension directories.If one is not found
      * for a given asset type it will load the default asset.js located in the default asset extension
-     * @return {[type]} [description]
      */
     resources.init = function() {
         var event = require('event');
