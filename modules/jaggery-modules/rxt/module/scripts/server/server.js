@@ -16,8 +16,18 @@
  *  under the License.
  *
  */
+/**
+ * The server namespace contains logic which is executed whenever a set of predefined events occur
+ * @namespace
+ * @requires event
+ */
 var server = {};
 (function(server, core) {
+    /**
+     * Registers a login event listener which calls each of the login callbacks
+     * registered in the asset.js of asset extensions
+     * @param  {Object} options system configuration object
+     */
     server.init = function(options) {
         var event = require('event');
         event.on('login', function(tenantId, user, session) {

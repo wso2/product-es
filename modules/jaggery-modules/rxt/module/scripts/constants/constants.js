@@ -31,6 +31,11 @@ var constants = {};
     /**
      * ES Feature Constants
      */
+    
+    /**
+     * @constant The social feature name
+     * @type {String}
+     */
     constants.SOCIAL_FEATURE='social';
     constants.SOCIAL_FEATURE_SCRIPT_KEY='socialScriptSource';
     constants.SOCIAL_FEATURE_SCRIPT_TYPE_KEY='socialScriptType';

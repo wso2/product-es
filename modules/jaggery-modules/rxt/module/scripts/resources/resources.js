@@ -16,6 +16,13 @@
  *  under the License.
  *
  */
+/**
+ * The resource namespace contains methods that are used to load the asset extensions by reading the asset.js
+ * @namespace
+ * @requires event
+ * @requires utils
+ * @requires store
+ */
 var resources = {};
 (function(core, resources) {
     var log = new Log();
@@ -44,14 +51,12 @@ var resources = {};
         if (!file.isExists()) {
             log.warn('Unable to locate default asset script at path ' + path);
             return content;
-            //throw 'Unable to load the default asset script.';
         }
         try {
             file.open('r');
             content = file.readAll();
         } catch (e) {
             log.error('Unable to read the default asset script.A custom asset script will not be loaded from ' + path);
-            //throw 'Unable to read the default asset script';
         } finally {
             file.close();
         }
@@ -60,17 +65,17 @@ var resources = {};
     var loadDefaultAssetScript = function(options, type, assetResource) {
         var content = loadAssetScriptContent(getDefaultAssetScriptPath(options));
         if (content) {
-            assetResource = evalAssetScript(content, assetResource,'default','default')
+            assetResource = evalAssetScript(content, assetResource, 'default', 'default')
         }
         return assetResource;
     };
     var loadAssetScript = function(options, type, assetResource) {
-        var path=getDefaultAssetTypeScriptPath(options, type);
+        var path = getDefaultAssetTypeScriptPath(options, type);
         var content = loadAssetScriptContent(path);
         var defConfiguration = assetResource.configure();
         var ref = require('utils').reflection;
         if (content) {
-            assetResource = evalAssetScript(content, assetResource,path,type);
+            assetResource = evalAssetScript(content, assetResource, path, type);
             var ptr = assetResource.configure;
             //The configuration object of the default asset.js needs to be combined with 
             //what is defined by the user in per type asset script
@@ -87,24 +92,23 @@ var resources = {};
         }
         return assetResource;
     }
-    var evalAssetScript = function(scriptContent, assetResource,path,type) {
+    var evalAssetScript = function(scriptContent, assetResource, path, type) {
         var module = 'function(asset,log){' + scriptContent + '};';
-        var modulePtr=null;
-        try{
+        var modulePtr = null;
+        try {
             modulePtr = eval(module);
-        }catch(e){
-            log.error('Unable to evaluate asset script content at  path: '+path+'.Exception: '+e);
+        } catch (e) {
+            log.error('Unable to evaluate asset script content at  path: ' + path + '.Exception: ' + e);
         }
-        if(!modulePtr){
+        if (!modulePtr) {
             return modulePtr;
         }
-        try{
-            var assetLog=new Log('asset-'+type+'-script');
+        try {
+            var assetLog = new Log('asset-' + type + '-script');
             modulePtr.call(this, assetResource, assetLog);
-        }catch(e){
-            log.error('Unable execute asset script content of '+path+'.Exception: '+e);
+        } catch (e) {
+            log.error('Unable execute asset script content of ' + path + '.Exception: ' + e);
         }
-
         return assetResource;
     };
     var buildDefaultResources = function(options, type, assetResource) {
@@ -132,27 +136,21 @@ var resources = {};
     var loadResources = function(options, tenantId, sysRegistry) {
         var manager = core.rxtManager(tenantId);
         var rxts = manager.listRxtTypes();
-        // var resourcePath;
         var type;
         var map = {};
         for (var index in rxts) {
             type = rxts[index];
-            // resourcePath = getAssetScriptPath(type, options);
-            // var content = sysRegistry.content(resourcePath);
             var asset = {};
             asset.manager = null;
             asset.renderer = null;
             asset.server = null;
             asset.configure = null;
-            //asset = loadDefaultAssetScript(options, type, asset);
-            //asset = loadAssetScript(options, type, asset);
             buildDefaultResources(options, type, asset);
-            buildAssetResources(options,type,asset);
+            buildAssetResources(options, type, asset);
             //Perform any rxt mutations
             if (asset.configure) {
                 manager.applyMutator(type, asset.configure());
             }
-            // log.info('Configuration: '+asset.toSource());
             addToConfigs(tenantId, type, asset);
         }
     };
@@ -170,6 +168,12 @@ var resources = {};
     resources.manager = function(tenantId) {
         init(tenantId);
     };
+    /**
+     * Initializes the resource module and loads up all asset extensions.This method will internally invoke
+     * logic that will first read, then evaluate the asset.js files defined in the asset extension directories.If one is not found
+     * for a given asset type it will load the default asset.js located in the default asset extension
+     * @return {[type]} [description]
+     */
     resources.init = function() {
         var event = require('event');
         event.on('tenantLoad', function(tenantId) {
