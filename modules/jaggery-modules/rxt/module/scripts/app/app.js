@@ -17,17 +17,19 @@
  *
  */
 /**
- * @description: The app namespace provides a set of utility methods to obtain application meta data related to the
+ * The app namespace provides a set of utility methods to obtain application meta data related to the
  * extension model.These utility methods including obtaining all activated asets
- * @requires module store
- * @requires module event
- * @requires module utils
+ * @namespace
+ * @requires store
+ * @requires event
+ * @requires utils
  */
 var app = {};
 (function(app, core) {
     var log = new Log('app-core');
     /**
      * Represents a set of endpoints
+     * @class
      * @constructor
      */
     function Endpoints() {
@@ -51,7 +53,7 @@ var app = {};
     };
     /**
      * Returns the list of all endpoints managed by this object
-     * @return {array} An array of endpoint objects containing the path,title,owner and secured properties
+     * @return {Array} An array of endpoint objects containing the path,title,owner and secured properties
      */
     Endpoints.prototype.list = function() {
         return this.endpoints;
@@ -86,6 +88,7 @@ var app = {};
     };
     /**
      * Represents the an extensible application
+     * @class
      *@constructor
      */
     function App() {
@@ -126,6 +129,7 @@ var app = {};
     };
     /**
      * Represents the functionality of  an extensible application
+     * @class
      * @constructor
      * @param {Object} appResources  The extensible application resources
      * @param {Object} ctx           The context in which the application manager is evaluated
@@ -156,7 +160,7 @@ var app = {};
      * Returns a UI page object after calling the page decorators for a given application extension.The
      * method will determine form which the application extension it is exposed.AFter which the page decorators
      * for that extension will be applied to the page object
-     * @param  {Object||Array} assets [description]
+     * @param  {Array} assets [description]
      * @param  {Object} page   A page object 
      * @return Object A page object
      */
@@ -502,7 +506,7 @@ var app = {};
     /**
      * Returns the landing page for the application for a given tenant.The method will check the application.landingPage property in the
      * tenant-x.json file.If no landing page is defined the root will be the landing page
-     * @param  {[type]} tenantId  The tenant ID for which the landing page must be returned
+     * @param  {Number} tenantId  The tenant ID for which the landing page must be returned
      * @return {String}          The landing page url
      */
     app.getLandingPage = function(tenantId) {
@@ -747,7 +751,7 @@ var app = {};
     /**
      * Returns whether a particular extensible application feature is enabled.If the feature is not located then the method will
      * always return false.This method will first internally call the getFeatureDetails method to locate the feature
-     * @param  {[type]}  tenantId     The tenant ID for which the feature details must be returned
+     * @param  {Number}  tenantId     The tenant ID for which the feature details must be returned
      * @param  {String}  featureName  The name of the feature
      * @return {Boolean}             True if the feature is located and is enabled,False if the feature is not located or has been disabled
      */
@@ -762,8 +766,8 @@ var app = {};
     /**
      * Returns  the social feature is enabled.This method will internally call the getFeatureDetails method
      * to locate the details about the social component.If the social feature is not found then NULL is returned
-     * @param  {[type]} tenantId [description]
-     * @return {[type]}          [description]
+     * @param  {Number} tenantId [description]
+     * @return {Object}          [description]
      */
     app.getSocialFeatureDetails = function(tenantId) {
         var details = this.getFeatureDetails(tenantId, constants.SOCIAL_FEATURE);
