@@ -138,14 +138,19 @@ var core = {};
         rxtField.name = nameBlock[0];
     };
     /**
-     * [RxtManager description]
-     * @param {[type]} registry [description]
+     * Represents an interface for managing interactions with the different
+     * RXT types deployed in the Governance Registry
+     * @param {Object} registry Carbon Registry instance
      */
     function RxtManager(registry) {
         this.registry = registry;
         this.rxtMap = {};
         this.mutatorMap = {};
     }
+    /**
+     * Loads the RXT definition files from the Governance Registry and converts the definitions to JSON.RXT definitions
+     * are read as XML files which are then converted to a JSON representation.
+     */
     RxtManager.prototype.load = function() {
         var rxtPaths = GovernanceUtils.findGovernanceArtifacts(DEFAULT_MEDIA_TYPE, this.registry.registry);
         var content;
@@ -162,12 +167,33 @@ var core = {};
             }
         }
     };
+    /**
+     * Returns the JSON representation for a given RXT type.The RXT type is the shortName property defined in the
+     * RXT definition file.
+     * @example
+     *     var rxtDef=rxtManager.getRxtDefinition('gadget');
+     * @param  {String} rxtType The RXT type
+     * @return {Object}         The RXT definition as a JSON
+     * @throws Unable to locate rxt type
+     */
     RxtManager.prototype.getRxtDefinition = function(rxtType) {
         if (this.rxtMap[rxtType]) {
             return this.rxtMap[rxtType];
         }
         throw "Unable to locate rxt type: " + rxtType;
     };
+    /**
+     * Returns the storage path of assets of a given RXT type.The value returned is the storagePath property
+     * defined in the RXT definition file.The path returned may either contain one or more dynamic values refererncing
+     * attributes defined in the RXT.
+     * If the RXT definition is not located then an empty string is returned
+     * @todo Change the value which is returned when there is no definition
+     * @example
+     *     /_system/governance/gadgets/{overview_provider}
+     * @param  {String} rxtType The RXT type
+     * @return {String}         The Registry storage path
+     * @throws Unable to locate storage path
+     */
     RxtManager.prototype.getRxtStoragePath = function(rxtType) {
         var def = this.rxtMap[rxtType];
         if (!def) {
@@ -181,6 +207,13 @@ var core = {};
         }
         return pathItem.storagePath;
     };
+    /**
+     * Returns a list of all RXT types in the Governance registry
+     * @example
+     *     var list=rxtManager.listRxtTypes();
+     *     print(list); // ['gadget','site','ebook']
+     * @return {Array} An array of strings that represent the RXT type names
+     */
     RxtManager.prototype.listRxtTypes = function() {
         var list = [];
         for (var type in this.rxtMap) {
@@ -189,9 +222,19 @@ var core = {};
         return list;
     };
     /**
-     * The function will returns details about the rxts.If no arguments are provided
-     * then details of all the rxt types are returned
-     * @return {[type]} [description]
+     * Returns meta information about either the provided RXT type or all of the RXTs in the governance registry.The object
+     * returned is similar to the result returned by the @see getRxtTypeDetails
+     * @example
+     *     //Retrieving details about a single RXT type
+     *     var rxt = rxtManager.listRxtTypeDetails('gadget');
+     *
+     *     //Retrieving details about all RXTs
+     *     var rxts = rxtManager.listRxtTypeDetails();
+     *
+     * @param  {String} rxtType The RXT type name (Optional)
+     * @see listRxtTypeDetails
+     * @return {Object} Method returns either an object or an array.If a type is given when invoking then a single object is returned,
+     *                         else an array
      */
     RxtManager.prototype.listRxtTypeDetails = function() {
         if (arguments.length == 1) {
@@ -200,6 +243,19 @@ var core = {};
             return this.getRxtTypesDetails();
         }
     };
+    /**
+     * Returns the meta information of a single RXT type.
+     * @example
+     *     var rxt=getRxtTypeDetails('gadget');
+     *     print(rxt.shortName);    //gadget
+     *     print(rxt.singularLabel);//Gadget
+     *     print(rxt.pluralLabel);  //Gadgets
+     *     print(rxt.ui);
+     *     print(rxt.lifecycle)
+     * @param  {String} type The type of the RXT
+     * @return {Object}      A json object with a set of specific RXT meta data
+     * @throws Unable to locate the rxt definition for type in order to return rxt details
+     */
     RxtManager.prototype.getRxtTypeDetails = function(type) {
         var template = this.rxtMap[type];
         if (!template) {
@@ -214,6 +270,10 @@ var core = {};
         details.lifecycle = (template.meta) ? (template.meta.lifecycle || {}) : {};
         return details;
     };
+    /**
+     * @todo This method should use the getRxtTypeDetails method
+     * @return {Array} A list of RXT meta data
+     */
     RxtManager.prototype.getRxtTypesDetails = function() {
         var list = [];
         for (var type in this.rxtMap) {
@@ -234,6 +294,18 @@ var core = {};
         var rxtDefinition = this.rxtMap[type];
         this.rxtMap[type] = applyDefinitionMutation(rxtDefinition, mutator);
     };
+    /**
+     * Returns a list of table elements defined for a RXT type definition
+     * @example
+     *     var tables = rxtManager.listRxtTypeTables('gadget');
+     *     for(var i = 0; i<tables.length; i++){
+     *         print(tables[0].name);
+     *         print(tables[0].label);
+     *     }
+     * @param  {String} type The RXT name
+     * @return {Array}      A array containing the name and label pairs of all the tables
+     * @throws Unable to locate the rxt definition for type in order to return tables
+     */
     RxtManager.prototype.listRxtTypeTables = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -251,6 +323,17 @@ var core = {};
         }
         return tables;
     };
+    /**
+     * Returns the name of the attribute that is used as the name property of assets of a given RXT type
+     * @example
+     *     //Refer to the gadget.rxt
+     *     var field =  rxtManager.getNameAttribute('gadget');
+     *     print(field);    // overview_name
+     * @todo: The name field is mandatory so this method should throw an exception if one is not found
+     * @param  {String} type The RXT type
+     * @return {String}      The name of a field defined in the RXT definition
+     * @throws Unable to locate the rxt definition for type in order to return tables
+     */
     RxtManager.prototype.getNameAttribute = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -263,6 +346,14 @@ var core = {};
         log.warn('Unable to locate the name attribute for type: ' + type + '.Check if a nameAttribute is specified in the rxt definition.');
         return '';
     };
+    /**
+     * Returns the name of the attribute that is used as the thumbnail property of assets of a given RXT type
+     * Some RXTs might not have a thumbnail property in which case an empty string is returned
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type The RXT type
+     * @return {String}      The field name defined as the thumbnail property
+     * @throws Unable to locate the rxt definition for type in order to return the thumbnail attribute
+     */
     RxtManager.prototype.getThumbnailAttribute = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -275,6 +366,13 @@ var core = {};
         log.warn('Unable to locate thumbnail attribute for type: ' + type + '.Check if a thumbnail property is defined in the rxt configuration.');
         return '';
     };
+    /**
+     * Returns the attribute that is used as the banner property of assets of a given RXT type
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type The RXT type
+     * @return {String}      The field name defined as the banner property
+     * @throws Unable to locate the rxt definition for type in order to return the banner attribute
+     */
     RxtManager.prototype.getBannerAttribute = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -287,6 +385,13 @@ var core = {};
         log.warn('Unable to locate banner attribute for type: ' + type + '.Check if a banner property is defined in the rxt configuration.');
         return '';
     };
+    /**
+     * Returns the attribute that is used to track the temporal behaviour of assets of a given RXT type
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type The RXT type
+     * @return {String}      The field name deifned as the temporal property
+     * @throws Unable to locate the rxt definition for type in order to return the timestamp attribute
+     */
     RxtManager.prototype.getTimeStampAttribute = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -299,6 +404,14 @@ var core = {};
         log.warn('Unable to locate timestamp attribute for type: ' + type + '.Check if a timestamp property is defined in the rxt configuration.');
         return null;
     };
+    /**
+     * Returns the name of the lifecycle that is attached to assets of a given RXT type
+     * If no lifecycle is specified then an empty string is returned.
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type  The RXT type
+     * @return {String}      The name of a lifecycle which is attached to all asset instances of an RXT type
+     * @throws Unable to locate the rxt definition for type in order to return lifecycle
+     */
     RxtManager.prototype.getLifecycleName = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -311,6 +424,12 @@ var core = {};
         log.warn('Unable to locate a meta property in order retrieve default lifecycle name for ' + type);
         return '';
     };
+    /**
+     * Returns the action that is invoked when a lifecycle is first attached to an asset of a given RXT type.
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type The RXT type
+     * @return {String}      The lifecycle action to be invoked after attaching a lifecycle to an asset
+     */
     RxtManager.prototype.getDefaultLcAction = function(type) {
         var rxtDefinition = this.rxtMap[type];
         if (!rxtDefinition) {
@@ -324,10 +443,11 @@ var core = {};
         return '';
     };
     /**
-     * The function checks whether an asset type requires comments when changing state.If the user has not configured
+     * Checks whether an asset type requires comments when changing state.If the user has not configured
      * this property then it will return false, meaning comments will not be required when changing the lifecycle state
-     * @param  {[type]}  type The type of the asset
+     * @param  {String}  type The type of the asset
      * @return {Boolean}      True if comments are required
+     * @throws Unable to locate the rxt definiton for type in order to determine if lifecycle comments are required
      */
     RxtManager.prototype.isLCCommentRequired = function(type) {
         var rxtDefinition = this.rxtMap[type];
@@ -342,10 +462,13 @@ var core = {};
         return false;
     };
     /**
-     * The function will retrieve all fields of the provided field type
-     * @param  {[type]} type      The Rxt type
-     * @param  {[type]} fieldType [description]
-     * @return {[type]}           An array of fields qualified by the table name
+     * Returns all fields that match field type provided in the RXT definition
+     * @example
+     *     var fields = rxtManager.listRxtFieldsOfType('gadget','file');
+     *     print( fields ); // ['images_thumbnail', 'images_banner'];
+     * @param  {String} type      The RXT type
+     * @param  {String} fieldType The field type
+     * @return {Array}           An array of fields qualified by the table name
      */
     RxtManager.prototype.listRxtFieldsOfType = function(type, fieldType) {
         var tables = this.listRxtTypeTables(type);
@@ -387,9 +510,14 @@ var core = {};
         return fields;
     };
     /**
-     * The function returns an array of states in which an asset can be deleted
-     * @param  {[type]} type The rxt type
-     * @return {[type]}      An array of states in which an rxt instance can be deleted
+     * Returns an array of states in which an asset can be deleted
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @example
+     *     var states =  rxtManager.getDeletableStates('gadget');
+     *     print(states); // ['Deleted']
+     * @param  {String} type The RXT type
+     * @return {Array}      An array of states in which an rxt instance can be deleted
+     * @throws Unable to locate the rxt definition for type in order to return the deletable states
      */
     RxtManager.prototype.getDeletableStates = function(type) {
         var rxtDefinition = this.rxtMap[type];
@@ -414,10 +542,12 @@ var core = {};
         return deletableStates;
     };
     /**
-     * The function indicates a set of states in which an asset is deemed to be
+     * Returns a set of states in which an asset is deemed to be
      * in the published state.An asset in the published state is visible in the Store
-     * @param  {[type]} type The type of the asset
-     * @return {[type]}      An array of strings indicating the set of published states
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type The RXT type
+     * @return {Array}       An array of strings indicating the set of published states
+     * @throws Unable to locate the rxt definition for type in order to return the published states
      */
     RxtManager.prototype.getPublishedStates = function(type) {
         var rxtDefinition = this.rxtMap[type];
@@ -442,10 +572,12 @@ var core = {};
         return publishedStates;
     };
     /**
-     * The function will return the field which is designated as the category field.If a category field
+     * Return the field which is designated as the category field.If a category field
      * has not been defined by the user then null will be returned
-     * @param  {[type]} type [description]
-     * @return {[type]}      [description]
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type The RXT type
+     * @return {String}      The field name which acts as the category field for the RXT type
+     * @throws Unable to locate the rxt definition for type in order to return the category field
      */
     RxtManager.prototype.getCategoryField = function(type) {
         var rxtDefinition = this.rxtMap[type];
@@ -470,9 +602,12 @@ var core = {};
         return categoryField;
     };
     /**
-     * The function returns an array of fields that can be used to search the asset
-     * @param  {[type]} type [description]
-     * @return {[type]}      [description]
+     * Returns an array of fields that can be used to search for asset instances of an RXT type
+     * If the 'all' value is returned then it can be assumed that fields of the RXT should be searchable
+     * Note: This property is specific to the ES and is defined in the configuration callback
+     * @param  {String} type  The RXT type
+     * @return {Array}        The list of field names that can be used to search the asset
+     * @throws Unable to locate the rxt definition for type in order to return the searchable fields
      */
     RxtManager.prototype.getSearchableFields = function(type) {
         var rxtDefinition = this.rxtMap[type];
@@ -497,11 +632,13 @@ var core = {};
         return searchableFields;
     };
     /**
-     * The function fetches the field definition for a given field.If the definition is not found then null is returned
-     * @param  {[type]} type      [description]
-     * @param  {[type]} tableName [description]
-     * @param  {[type]} fieldName [description]
-     * @return {[type]}           [description]
+     * Returns the field definition for a given field.If the definition is not found then null is returned
+     * @example
+     *     var field =  rxtManager.getRxtField('gadget','overview_name');
+     * @param  {String} type      The RXT type
+     * @param {String} [name]     The name of the field to be obtained as a {tableName}_{fieldName}
+     * @return {Object}            A JSON object defining the field
+     * @throws Unable to locate the rxt definition for type in order to retrieve field data 
      */
     RxtManager.prototype.getRxtField = function(type, name) {
         var template = this.rxtMap[type];
@@ -530,6 +667,15 @@ var core = {};
         field = getRxtField(table, fieldName);
         return field;
     };
+    /**
+     * Returns the RXT field value for a given field.This method internally invokes the @getRxtField method
+     * to retrieve the field definition.If the field is not found then an ampty array is returned
+     * @example 
+     *     var value = rxtManager.getRxtFieldValue('gadget','overview_name');
+     * @param  {String} type The RXT type
+     * @param  {String} name The name of the field to be obtained as a {tableName}_{fieldName}
+     * @return {Array}       The list of default field values
+     */
     RxtManager.prototype.getRxtFieldValue = function(type, name) {
         var field = this.getRxtField(type, name);
         var values = [];
@@ -593,14 +739,26 @@ var core = {};
         map[tenantId] = {};
         return map[tenantId];
     };
+    /**
+     * Returns the object that is used to maintain the RxtManager map in the application context
+     * @param  {Number} tenantId  The tenant ID
+     * @return {Object}          A map of RxtManager instances 
+     */
     core.configs = function(tenantId) {
         var rxtMap = application.get(RXT_MAP);
         var configs = rxtMap[tenantId];
         if (!configs) {
-            configs = createTenantRxtMap(tenantId, rxtMap); //TODO:Check if this is map or rxtMap
+            configs = createTenantRxtMap(tenantId, rxtMap); 
         }
         return configs;
     };
+    /**
+     * Returns an instance of an RxtManager based on the tenant ID.If an RxtManager instance is
+     * not present for a given tenant it is created when accessing for the first time
+     * @param  {Number} tenantId The tenant ID
+     * @return {Object}          An RxtManager instance
+     * @throws rxt map was not found in the application object
+     */
     core.rxtManager = function(tenantId) {
         var map = application.get(RXT_MAP);
         if (!map) {
@@ -614,6 +772,16 @@ var core = {};
         }
         return manager;
     };
+    /**
+     * Returns the map of asset specific resources based on the tenant and asset type.
+     * These resources include th
+     * @example
+     *     var resources =  core.assetResources(-1234,'gadget');
+     * @param  {Number} tenantId The tenant ID
+     * @param  {String} type     The asset type 
+     * @return {Object}          The asset specific resources
+     * @throws Unable to locate assetResources for tenant and type
+     */
     core.assetResources = function(tenantId, type) {
         var configs = core.configs(tenantId);
         var assetResource = configs.assetResources[type];
@@ -623,6 +791,11 @@ var core = {};
         }
         return assetResource;
     };
+    /**
+     * Returns the map of app specific resources based on the tenant 
+     * @param  {Number} tenantId The tenant ID
+     * @return {Object}          The app specific resources
+     */
     core.appResources = function(tenantId) {
         var configs = core.configs(tenantId);
         var appResources = configs.appResources;
@@ -671,6 +844,30 @@ var core = {};
             createRxtManager(tenantId, map);
         });
     };
+    /**
+     * Returns a context object that provides access to asset and server information
+     * This method will determine if there is a logged in user and delegate the creation of
+     * the context object to either @see createUserAssetContext or the @see createAnonAssetContext.
+     * The context object that is created will indicate if it is anonymous context.
+     * The context can be used in pages which are type specific such as a listing page for gadgets.
+     * @example
+     *     var ctx = core.createAssetContext(session,'gadget');
+     *
+     *     ctx.username         //The currently logged in user if one is present
+     *     ctx.userManager      //A carbon module User Manager instance
+     *     ctx.tenantId         //The tenant ID of the currently logged in user
+     *     ctx.systemRegistry   //A carbon module registry instance
+     *     ctx.assetType        //The asset type for which the context was created
+     *     ctx.rxtManager       //An RxtManager instance
+     *     ctx.tenantConfigs    //The tenant configurations
+     *     ctx.serverConfigs    //The servcer configurations
+     *     ctx.isAnonContext    //True if the current context is annoymous
+     *     ctx.session          //The session used to create the context
+     *
+     * @param  {Object} session  Jaggery session object
+     * @param  {String} type     The type of asset
+     * @return {Object}          An object which acts as bag for properties and classes
+     */
     core.createAssetContext = function(session, type) {
         var user = require('store').user;
         var server = require('store').server;
@@ -683,6 +880,16 @@ var core = {};
             return this.createUserAssetContext(session, type);
         }
     };
+    /**
+     * Returns an annoymous context object that conforms to contract outlines in the @see createAssetContext.
+     * This method should be used to create a context for pages that can be accessed without logging in.
+     * The username will be set to wso2.anonymouse
+     * The tenantId will be set to the super tenant
+     * The context can be used in pages which are type specific such as a listing page for gadgets.
+     * @param  {Object} session  Jaggery session object
+     * @param  {String} type     The type of asset
+     * @return {Object}         An object which acts as bag for properties and classes @see createAssetContext
+     */
     core.createAnonAssetContext = function(session, type) {
         var server = require('store').server;
         var user = require('store').user;
@@ -707,6 +914,13 @@ var core = {};
             session: session
         };
     };
+    /**
+     * Returns a context built for a logged in user that conforms to the contract outlined in @see createAssetContext
+     * The context can be used in pages which are type specific such as a listing page for gadgets.
+     * @param  {Object} session Jaggery session object
+     * @param  {String} type    The type of asset
+     * @return {Object}         An object which acts as bag for properties and classes @see createAssetContext
+     */
     core.createUserAssetContext = function(session, type) {
         var user = require('store').user;
         var server = require('store').server;
@@ -732,6 +946,28 @@ var core = {};
             session: session
         };
     };
+    /**
+     * Returns a context that contains application classes and properties.This method will determine if there
+     * is a logged in user and delegates the creation of the context to either the @see createUserAppContext or
+     * the @see createAnonAppContext.
+     * The context object that is created will indicate if it is anonymous context.
+     * The context can be used in pages which are type specific such as a listing page for gadgets.
+     * @example
+     *     var ctx = core.createAssetContext(session,'gadget');
+     *
+     *     ctx.username         //The currently logged in user if one is present
+     *     ctx.userManager      //A carbon module User Manager instance
+     *     ctx.tenantId         //The tenant ID of the currently logged in user
+     *     ctx.systemRegistry   //A carbon module registry instance
+     *     ctx.assetType        //The asset type for which the context was created
+     *     ctx.rxtManager       //An RxtManager instance
+     *     ctx.tenantConfigs    //The tenant configurations
+     *     ctx.serverConfigs    //The servcer configurations
+     *     ctx.isAnonContext    //True if the current context is annoymous
+     *     ctx.session          //The session used to create the context
+     * @param  {Object} session Jaggery session object
+     * @return {Object}         An object which acts as bag for properties and classes @see createAssetContext
+     */
     core.createAppContext = function(session) {
         var server = require('store').server;
         var user = require('store').user;
@@ -743,6 +979,16 @@ var core = {};
             return this.createUserAppContext(session);
         }
     };
+    /**
+     * Returns an annoymous context object that conforms to contract outlined in the @see createAppContext.
+     * This method should be used to create a context for pages that can be accessed without logging in.
+     * The username will be set to wso2.anonymouse
+     * The tenantId will be set to the super tenant
+     * The context can be used in pages which are type specific such as a listing page for gadgets.
+     * @param  {Object} session  Jaggery session object
+     * @param  {String} type     The type of asset
+     * @return {Object}         An object which acts as bag for properties and classes @see createAssetContext
+     */
     core.createAnonAppContext = function(session) {
         var server = require('store').server;
         var user = require('store').user;
@@ -766,6 +1012,13 @@ var core = {};
             session: session
         };
     };
+    /**
+     * Returns a context built for a logged in user that conforms to the contract outlined in @see createAppContext
+     * The context can be used in pages which are type neutral such as a login page
+     * @param  {Object} session Jaggery session object
+     * @param  {String} type    The type of asset
+     * @return {Object}         An object which acts as bag for properties and classes @see createAssetContext
+     */
     core.createUserAppContext = function(session) {
         var user = require('store').user;
         var server = require('store').server;

@@ -138,6 +138,7 @@ var asset = {};
      * @param {String} type       The asset type  for which the CRUD interface will be created
      * @param {Object} rxtManager An instance of RxtManager class
      * @param {Object} renderer   An instance of the AssetRenderer class
+     * @memberOf asset
      */
     function AssetManager(registry, type, rxtManager, renderer) {
         this.registry = registry;
@@ -172,6 +173,10 @@ var asset = {};
      *     attributes.overview_version='1.0.0';
      *     am.create(asset);
      * @param  {Object} options A JSON object representing the asset to be created
+     * @memberOf AssetManager
+     * @instance
+     * @function create
+     * @lends AssetManager.prototype
      */
     AssetManager.prototype.create = function(options) {
         var id = this.am.add(options);
