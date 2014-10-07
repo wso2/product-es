@@ -805,24 +805,58 @@ var core = {};
         }
         return appResources;
     };
+    /**
+     * Returns an endpoint qualified by the asset type and base extension url
+     * @param  {String} type     The asset type
+     * @param  {String} endpoint The endpoint pattern
+     * @return {String}          The endpoint url
+     */
     core.getAssetPageUrl = function(type, endpoint) {
         return this.getAssetPageBaseUrl() + type + endpoint;
     };
+    /**
+     * Returns the base url of all asset pages
+     * @return {String} The base url
+     */
     core.getAssetPageBaseUrl = function() {
         return constants.ASSET_BASE_URL;
     };
+    /**
+     * Returns the api url given the api endpoint and asset type
+     * @param  {String} type     The asset type
+     * @param  {String} endpoint The api endpoint to be resolved
+     * @return {String}          The api endpoint qualified by asset extension api base url
+     */
     core.getAssetApiUrl = function(type, endpoint) {
         return this.getAssetApiBaseUrl() + endpoint + '?type=' + type;
     };
+    /**
+     * Returns the base url for asset extension apis
+     * @return {String}  The base url of asset apis
+     */
     core.getAssetApiBaseUrl = function() {
         return constants.ASSET_API_URL;
     };
+    /**
+     * Returns an application page url qualified by the base url of app pages
+     * @param  {String} endpoint A page endpoint
+     * @return {String}     The app page url qualified by the vase url of the app pages         
+     */
     core.getAppPageUrl = function(endpoint) {
         return this.getAppPageBaseUrl() + endpoint;
     };
+    /**
+     * Returns the base url of app pages
+     * @return {String} Base url of the app pages
+     */
     core.getAppPageBaseUrl = function() {
         return constants.APP_PAGE_URL;
     }
+    /**
+     * Returns an application api url qualified by the base url of the app apis
+     * @param  {String} endpoint The api endpoint
+     * @return {String}          The app api url qualified by the base url of the app api
+     */
     core.getAppApiUrl = function(endpoint) {
         return this.getAppApiBaseUrl() + endpoint;
     };
@@ -832,6 +866,10 @@ var core = {};
     core.getAssetSubscriptionSpace = function(type) {
         return constants.SUBSCRIPTIONS_PATH + (type ? '/' + type : '');
     };
+    /**
+     * Initializes the logic which loads the RXT definitions and creates the RxtManagers
+     * @return {[type]} [description]
+     */
     core.init = function() {
         var event = require('event');
         var server = require('store').server;
