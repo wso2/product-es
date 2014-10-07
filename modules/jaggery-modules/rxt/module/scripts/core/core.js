@@ -140,7 +140,9 @@ var core = {};
     /**
      * Represents an interface for managing interactions with the different
      * RXT types deployed in the Governance Registry
+     * @constructor
      * @param {Object} registry Carbon Registry instance
+     * @memberOf core
      */
     function RxtManager(registry) {
         this.registry = registry;
@@ -868,7 +870,6 @@ var core = {};
     };
     /**
      * Initializes the logic which loads the RXT definitions and creates the RxtManagers
-     * @return {[type]} [description]
      */
     core.init = function() {
         var event = require('event');
