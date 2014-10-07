@@ -18,8 +18,11 @@
  */
 /**
  * The app namespace provides a set of utility methods to obtain application meta data related to the
- * extension model.These utility methods including obtaining all activated asets
+ * extension model.
  * @namespace
+ * @example
+ *     var app =  require('rxt').app;
+ *     app.init('/publisher');
  * @requires store
  * @requires event
  * @requires utils

@@ -19,6 +19,9 @@
 /**
  * The server namespace contains logic which is executed whenever a set of predefined events occur
  * @namespace
+ * @example
+ *     var server = require('rxt').server;
+ *     server.init();
  * @requires event
  */
 var server = {};

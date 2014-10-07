@@ -20,6 +20,9 @@
  * The core namespace contains methods and classes that are used to work with the raw RXT definitions as well
  * building context objects
  * @namespace
+ * @example
+ *     var core = require('rxt').core;
+ *     core.init();
  * @requires event
  * @requires utils
  * @requires store

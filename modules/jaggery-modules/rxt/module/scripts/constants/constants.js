@@ -19,6 +19,9 @@
 /**
  * The constants namespace defines a set of values which are used throughout the app and asset extensions
  * @namespace
+ * @example 
+ *     var constants = require('rxt').constants;
+ *     print(constatnts.DEFAULT_TITLE);
  */
 var constants = {};
 (function(constants) {

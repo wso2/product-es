@@ -19,6 +19,9 @@
 /**
  * The ui namespace cobtains methods which allow a generic page object to be created.
  * @namespace
+ * @example 
+ *     var ui = require('rxt').ui;
+ *     var page = ui.buildPage(session,request);
  * @requires store
  */
 var ui = {};

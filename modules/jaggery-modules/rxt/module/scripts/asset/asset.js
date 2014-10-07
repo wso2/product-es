@@ -19,6 +19,9 @@
 /**
  * The asset namespace contains methods and classes that are used to work with the asset extension model
  * @namespace
+ * @example
+ *     var asset = require('rxt').asset;
+ *     asset.init();
  * @requires event
  * @requires utils
  * @requires store
