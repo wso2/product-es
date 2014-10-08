@@ -17,34 +17,70 @@
  *
  */
 /**
- * Description: The response of the currently invoked api enpoint is organized
-                 */
+ * Description: The response of the currently invoked api endpoint is organized
+ */
 
 var response = {};
+var log = new Log("response");
+
 (function(response) {
-    
-    //on error - response
+
+    /**
+     * Build Error response
+     * @param  {response}   resp   jaggery-response object to retrieve to client
+     * @param  {int}        code        status code
+     * @param  {string}     message  message to the client side
+     * @return {response}   return response
+     */
     response.buildErrorResponse = function(resp,code,message) {
-        var obj={};
-        //obj.code = code;
-        obj.error = message;   
-        resp.status = code;
-        resp.content = obj;  
-        resp.contentType = 'application/json';
+        var content={};
+        content.error = message;
+        resp = processResponse(resp,code,content);
         return resp;
     };
-    
-    //on sucess - response
+
+    /**
+     * Build success response
+     * @param  {response}   resp jaggery response object
+     * @param  {int}        code    status code
+     * @param               data    the result to client
+     * @return {response}   return response
+     */
     response.buildSuccessResponse= function(resp, code, data){
-        var obj={};
-        //obj.code = code;
-        //obj.message = message;  
-        var dataOut = [];
-        dataOut =  data;
-        obj.data = dataOut; 
-        resp.status = code;
-        resp.content = obj;     
+        var content={};
+        //var dataOut = data;
+        content.data = data;
+        resp = processResponse(resp,code,content);
         return resp;
     };
-    
+
+    /**
+     * process General response
+     * @param  {response}  resp  jaggery response
+     * @param  {int}       code  status code
+     * @param  {JSON}      data  success result
+     * @return {response}  resp  jaggery response
+     */
+    response.buildSuccessResponseForRxt= function(resp, code, data){
+        resp.contentType = 'application/json';
+        resp.status = code;
+        resp.content = data;
+        return resp;
+    };
+
+    /**
+     * General response builder
+     * @param  {response}   resp jaggery response
+     * @param  {int}        code status code
+     * @param  {JSON}       content what ever the content to be sent as response
+     * @return {response}   resp jaggery response
+     */
+    function processResponse(resp, code, content){
+        log.info("Building Response");
+        resp.status = code;
+        resp.contentType = 'application/json';
+        resp.content = content;
+        return resp;
+
+    };
 }(response))

@@ -19,28 +19,28 @@
  */
 /**
  * Description: The session of the currently authenticated user is invalidated
- 				E.g. Invocation
- 				POST /api/logout
+ E.g. Invocation
+ POST /api/logout
  */
-	var log=new Log('logout-api');
-	var result={};
-	var method=request.getMethod();
-	var responseProcessor = require('utils').response;
-	response.contentType='application/json';
+var log = new Log('logout-api');
+var result = {};
+var method = request.getMethod();
+var responseProcessor = require('utils').response;
+response.contentType = 'application/json';
 
-	switch(method){
-		case 'POST':
-			try{
-				var user=require('store').user;
-				user.logout();
-				session.invalidate();						
-				response = responseProcessor.buildSuccessResponse(response,200,{'message':'User Logged out succesfully'});							
-			}
-			catch(e){					
-                response = responseProcessor.buildErrorResponse(response,500,'Unable to logout user!');
-				}
-			break;	
-		default:			
-			result = responseProcessor.buildErrorResponse(response,404,'Your request is malformed');
-	}
+switch (method) {
+    case 'POST':
+        try {
+            var user = require('store').user;//get current user
+            user.logout();
+            session.invalidate();
+            response = responseProcessor.buildSuccessResponse(response, 200, {'message': 'User Logged out successfully'});
+        }
+        catch (e) {
+            response = responseProcessor.buildErrorResponse(response, 500, 'Unable to logout user!');
+        }
+        break;
+    default:
+        result = responseProcessor.buildErrorResponse(response, 404, 'Your request is malformed');
+}
 %>

@@ -1,4 +1,3 @@
-<%
 /*
  *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,16 +16,19 @@
  *  under the License.
  *
  */
+/**
+ * Description: The response of the currently invoked api enpoint is organized
+ */
 
-print('Default asset api');
-var matcher = new URIMatcher(request.getRequestURI());
-var endpoint = '/{context}/api/asset/{+id}';
-log.info('Looking for sub routes');
-if (matcher.match(endpoint)) {
-    var id = uriMatcher.elements().id;
-    print('Id ' + id);
-}
-else {
-    print('No id !!');
-}
-%>
+var exception = {};
+
+(function(exception) {
+
+    exception.buildExceptionObject = function(message, code) {
+        var error = {};
+        error.message = message;
+        error.code = code;
+        return error;
+    };
+}(exception))
+

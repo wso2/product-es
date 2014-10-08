@@ -16,9 +16,9 @@
  *  under the License.
  *
  */
-var resources=function(page,meta){
+var resources = function (page, meta) {
     return{
-        js:['caramel.handlebars.client.js','list_assets.js'],
+        js: ['caramel.handlebars.client.js', 'list_assets.js'],
         code: ['publisher.assets.hbs']
     }
-}
+};

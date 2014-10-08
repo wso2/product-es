@@ -40,6 +40,8 @@ var constants = {};
     constants.Q_TAG='tag';
     constants.Q_SORT_ORDER='sort';
     constants.ASSET_DEFAULT_SORT_ORDER='ASC';
+    constants.Q_SORT_ORDER_ASCENDING = 'ASC';
+    constants.Q_SORT_ORDER_DESCENDING = 'DESC'
     /**
      * URL Patterns
      */
@@ -55,6 +57,35 @@ var constants = {};
     constants.APP_API_URL = '/apis/';
 
     /**
+     * API URLs
+     */
+    constants.CREATE_URL = '/{context}/apis/assets/';
+    constants.UPDATE_URL = '/{context}/apis/assets/{id}';
+    constants.LIST_ASSETS_URL = '/{context}/apis/assets/';
+    constants.GET_ASSET_URL = '/{context}/apis/assets/{id}';
+    constants.DELETE_ASSET_URL = '/{context}/apis/assets/{id}';
+    constants.ASSET_STATE_URL = '/{context}/apis/assets/{id}/state';
+
+    constants.GET_LIFECYCLES_URL = '/{context}/apis/lifecycles/';
+    constants.GET_LIFECYCLE_DEFINITION_BY_NAME_URL = '/{context}/apis/lifecycles/{lifecycleName}';
+    constants.GET_LIFECYCLE_STATE_URL = '/{context}/apis/lifecycles/{lifecycleName}/{currentState}';
+
+    constants.ERROR_STATUS_CODES = {
+        OK: 200,
+        CREATED:201,
+        ACCEPTED: 202,
+        BAD_REQUEST:400,
+        UNAUTHORIZED:401,
+        NOT_FOUND:404,
+        INTERNAL_SERVER_ERROR:500,
+        NOT_IMPLEMENTED:501
+    };
+
+    constants.THROW_EXCEPTION_TO_CLIENT = 'THROW_EXCEPTION_TO_CLIENT';
+    constants.THROW_EXCEPTION_TO_CLIENT = 'THROW_EXCEPTION_TO_CLIENT';
+    constants.LOG_EXCEPTION_AND_TERMINATE = 'LOG_EXCEPTION_AND_TERMINATE';
+    constants.LOG_EXCEPTION_AND_CONTINUE = 'LOG_AND_CONTINUE_EXCEPTION';
+    /**
      * Pagin objects
      */
     constants.DEFAULT_RECENT_ASSET_PAGIN = {
@@ -67,7 +98,7 @@ var constants = {};
         start:0,
         count:1,
         sortBy:'',
-        sortOrder:'asc'
+        sortOrder:'ASC'
     };
     constants.DEFAULT_TAG_PAGIN={
         start: 0,
@@ -78,7 +109,8 @@ var constants = {};
     constants.DEFAULT_ASSET_PAGIN={
         start:0,
         count:12,
-        sortBy: '',
-        sortOrder: 'DESC'
+        sortBy: 'overview_createdtime',
+        sortOrder: 'DESC',
+        paginationLimit: 100
     };
 }(constants));
