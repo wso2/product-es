@@ -36,12 +36,23 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.*;
 
+/**
+ * Manages subscriptions within the Store
+ */
 public class StoreSubscriptionManager {
 
     private static final Log log = LogFactory.getLog(StoreSubscriptionManager.class);
     private EventingService eventingService;
 
-    public void subscribe(String userName, String resourcePath,String endpoint, String eventName) {
+    /**
+     * Subscribe a user for a particular event on a resource, in a given method
+     *
+     * @param userName     user that's subscribing to an event
+     * @param resourcePath the resource subscribing to
+     * @param endpoint     method of notification (user, role or email)
+     * @param eventName    the event subscribing for
+     */
+    public void subscribe(String userName, String resourcePath, String endpoint, String eventName) {
 
         eventingService = Utils.getRegistryEventingService();
         RegistryService registryService = Utils.getRegistryService();
@@ -51,89 +62,116 @@ public class StoreSubscriptionManager {
             try {
                 userRegistry = registryService.getRegistry(userName);
             } catch (RegistryException e) {
-                log.error("User Registry not available. " +e);
+                log.error("User Registry not available. ", e);
             }
             createSubscription(userRegistry, resourcePath, endpoint, eventName);
         }
     }
 
+    /**
+     * Remove a subscription by Id
+     *
+     * @param id Subscription id
+     */
     public void unsubscribe(String id) {
         eventingService = Utils.getRegistryEventingService();
-            if (eventingService != null) {
-                eventingService.unsubscribe(id);
-            }
+        if (eventingService != null) {
+            eventingService.unsubscribe(id);
+        } else {
+            throw new IllegalStateException("Registry Eventing Service Not Found");
+        }
     }
 
+    /**
+     * Get existing event types
+     *
+     * @return map EventType map
+     */
     public Map getEventTypes() {
-            Map map=null;
-            if (eventingService != null) {
-                map = eventingService.getEventTypes();
-            }
-            return map;
+        Map map;
+        eventingService = Utils.getRegistryEventingService();
+        if (eventingService != null) {
+            map = eventingService.getEventTypes();
+        } else {
+            throw new IllegalStateException("Registry Eventing Service Not Found");
+        }
+        return map;
     }
 
-    public List<Subscription> getAllSubscriptions(){
-        List<Subscription> subscriptionList=null;
+    /**
+     * Get all the subscriptions created
+     *
+     * @return subscriptionList list of Subscriptions
+     */
+    public List<Subscription> getAllSubscriptions() {
+        List<Subscription> subscriptionList = null;
+        eventingService = Utils.getRegistryEventingService();
         if (eventingService != null) {
             try {
                 subscriptionList = eventingService.getAllSubscriptions();
             } catch (EventBrokerException e) {
-                log.error("Retrieving all subscriptions failed. "+e);
+                log.error("Retrieving all subscriptions failed. ", e);
             }
+        } else {
+            throw new IllegalStateException("Registry Eventing Service Not Found");
         }
         return subscriptionList;
     }
 
-    private Subscription createSubscription(UserRegistry userRegistry, String path, String endpoint, String eventName){
+    /**
+     * Create a subscription object including subscription information
+     *
+     * @param userRegistry logged in users registry
+     * @param path         path of the resource subscribing to
+     * @param endpoint     method of notification (user, role or email)
+     * @param eventName    the event subscribing for
+     * @return subscription Subscription containing the information
+     */
+    private Subscription createSubscription(UserRegistry userRegistry, String path, String endpoint, String eventName) {
 
         Subscription subscription = null;
-
         ResourcePath resourcePath = new ResourcePath(path);
         try {
-            if (Utils.getRegistryEventingService() == null) {
-                throw new IllegalStateException("Registry Eventing Service Not Found");
-            } else {
-                String topic = RegistryEventingConstants.TOPIC_PREFIX + RegistryEvent.TOPIC_SEPARATOR + eventName + path;
+            String topic = RegistryEventingConstants.TOPIC_PREFIX + RegistryEvent.TOPIC_SEPARATOR + eventName + path;
+            subscription = BuilderUtils.createSubscription(endpoint, Constants.TOPIC_FILTER, topic);
+            subscription.setEventDispatcherName(RegistryEventingConstants.TOPIC_PREFIX);
 
-                subscription = BuilderUtils.createSubscription(endpoint, Constants.TOPIC_FILTER, topic);
+            int callerTenantId = userRegistry.getCallerTenantId();
+            subscription.setTenantId(callerTenantId);
 
-                subscription.setEventDispatcherName(RegistryEventingConstants.TOPIC_PREFIX);
-                int callerTenantId = userRegistry.getCallerTenantId();
-                subscription.setTenantId(callerTenantId);
-                String name = userRegistry.getUserName();
-                if (callerTenantId != MultitenantConstants.SUPER_TENANT_ID &&
-                        callerTenantId > -1) {
-                    try {
-                        PrivilegedCarbonContext.startTenantFlow();
-                        PrivilegedCarbonContext currentContext =
-                                PrivilegedCarbonContext.getThreadLocalCarbonContext();
-                        currentContext.setTenantId(callerTenantId, true);
-                        String tenantDomain = currentContext.getTenantDomain();
-                        if (tenantDomain != null &&
-                                !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-                            name = name + "@" + tenantDomain;
-                        }
-                    } finally {
-                        PrivilegedCarbonContext.endTenantFlow();
+            String name = userRegistry.getUserName();
+            //Append the domain name if the user is not in Super Tenant Domain
+            if (callerTenantId != MultitenantConstants.SUPER_TENANT_ID &&
+                    callerTenantId > -1) {
+                try {
+                    PrivilegedCarbonContext.startTenantFlow();
+                    PrivilegedCarbonContext currentContext =
+                            PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                    currentContext.setTenantId(callerTenantId, true);
+                    String tenantDomain = currentContext.getTenantDomain();
+                    if (tenantDomain != null &&
+                            !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+                        name = name + "@" + tenantDomain;
                     }
+                } finally {
+                    PrivilegedCarbonContext.endTenantFlow();
                 }
-                subscription.setOwner(name);
-                String subscriptionId;
-                    subscriptionId =
-                            Utils.getRegistryEventingService().subscribe(subscription);
-
-                if (subscriptionId == null) {
-                    throw new IllegalStateException("Subscription Id invalid");
-                }
-                subscription.setId(subscriptionId);
             }
+            subscription.setOwner(name);
+            String subscriptionId = eventingService.subscribe(subscription);
+
+            if (subscriptionId == null) {
+                throw new IllegalStateException("Subscription Id invalid");
+            }
+            subscription.setId(subscriptionId);
+
 
         } catch (RuntimeException e) {
             log.error("Failed to subscribe to information of the resource " +
-                    resourcePath + ".", e);
+                    resourcePath, e);
         } catch (InvalidMessageException e) {
             log.error("Failed to subscribe to information of the resource " +
-                    resourcePath + ".", e);
+                    resourcePath, e);
         }
         return subscription;
     }

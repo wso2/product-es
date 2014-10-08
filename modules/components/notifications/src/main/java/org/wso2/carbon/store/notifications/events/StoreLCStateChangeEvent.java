@@ -18,32 +18,23 @@
  */
 package org.wso2.carbon.store.notifications.events;
 
-import org.wso2.carbon.registry.common.eventing.RegistryEvent;
-
-public class StoreLCStateChangeEvent<T> extends RegistryEvent<T> {
-    private String resourcePath = null;
+/**
+ * Custom event type for Store - LCStateChangeEvent
+ * Triggered when the state of an asset changes
+ *
+ * @param <T>
+ */
+public class StoreLCStateChangeEvent<T> extends AbstractStoreEvent<T> {
 
     public static final String EVENT_NAME = "StoreLifecycleStateChange";
 
-    public StoreLCStateChangeEvent() {
-        super();
-    }
-
     /**
      * Construct the Registry Event by using the message
-     * @param message any Object
+     *
+     * @param message message used in the notification when event is triggered
      */
     public StoreLCStateChangeEvent(T message) {
         super(message);
-    }
-
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
-        setTopic(TOPIC_SEPARATOR + EVENT_NAME + resourcePath);
-        setOperationDetails(resourcePath, EVENT_NAME, RegistryEvent.ResourceType.UNKNOWN);
-    }
-
-    public String getResourcePath() {
-        return resourcePath;
+        this.eventName = EVENT_NAME;
     }
 }

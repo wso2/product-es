@@ -21,91 +21,30 @@ package org.wso2.carbon.store.notifications.management;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.common.eventing.NotificationService;
-import org.wso2.carbon.store.notifications.events.StoreMessageSentEvent;
-import org.wso2.carbon.store.notifications.events.StoreVersionCreateEvent;
-import org.wso2.carbon.store.notifications.events.StoreAssetUpdateEvent;
-import org.wso2.carbon.store.notifications.events.StoreLCStateChangeEvent;
+import org.wso2.carbon.store.notifications.events.*;
 
+/**
+ * Manages Notification of the Store
+ */
 public class StoreNotificationManager {
 
-    private String resourcePath;
-    private int tenantId;
-    private NotificationService registryNotificationService;
+    private NotificationService registryNotificationService = Utils.getRegistryEventingService();
     private static Log log = LogFactory.getLog(StoreNotificationManager.class);
 
-    public void notifyEvent(String eventName, String message, String path, int user){
-
-        tenantId=user;
-        resourcePath=path;
-        try {
-            if(eventName.equalsIgnoreCase(Constants.LC_STATE_CHANGE_VAR)){
-                notifyLCStateChange(message);
-            }else if(eventName.equalsIgnoreCase(Constants.ASSET_UPDATE_VAR)){
-                notifyAssetUpdate(message);
-            }else if(eventName.equalsIgnoreCase(Constants.VERSION_CREATED_VAR)){
-                notifyVersionCreation(message);
-            }else if(eventName.equalsIgnoreCase(Constants.MESSAGE_SENT_VAR)){
-                notifyMessage(message);
-            }else{
-                log.error("Requested event does not exist");
+    /**
+     * Notify triggered event
+     * @param storeEvent Store Event
+     */
+    public void notifyEvent(AbstractStoreEvent storeEvent) {
+        if (registryNotificationService != null) {
+            try {
+                registryNotificationService.notify(storeEvent);
+            } catch (Exception e) {
+                log.error("Registry notification failed", e);
             }
-        }catch (Exception e){
-            e.printStackTrace(); //TODO
+        } else {
+            throw new IllegalStateException("Registry Notification Service Not Found");
         }
     }
-
-    private void notifyLCStateChange(String message) throws Exception {
-
-        StoreLCStateChangeEvent<String> lcStateChangeEvent=new StoreLCStateChangeEvent<String>(message);
-        lcStateChangeEvent.setResourcePath(resourcePath);
-        lcStateChangeEvent.setTenantId(tenantId);
-
-        registryNotificationService=Utils.getRegistryEventingService();
-        if(registryNotificationService!=null){
-            registryNotificationService.notify(lcStateChangeEvent);
-        }
-
-    }
-
-    private void notifyAssetUpdate(String message) throws Exception {
-
-        StoreAssetUpdateEvent<String> assetUpdateEvent=new StoreAssetUpdateEvent<String>(message);
-        assetUpdateEvent.setResourcePath(resourcePath);
-        assetUpdateEvent.setTenantId(tenantId);
-
-        registryNotificationService=Utils.getRegistryEventingService();
-        if(registryNotificationService!=null){
-            registryNotificationService.notify(assetUpdateEvent);
-        }
-
-    }
-
-    private void notifyVersionCreation(String message) throws Exception {
-
-        StoreVersionCreateEvent<String> versionCreationEvent=new StoreVersionCreateEvent<String>(message);
-        versionCreationEvent.setResourcePath(resourcePath);
-        versionCreationEvent.setTenantId(tenantId);
-
-        registryNotificationService=Utils.getRegistryEventingService();
-        if(registryNotificationService!=null){
-            registryNotificationService.notify(versionCreationEvent);
-        }
-
-    }
-
-    private void notifyMessage(String message) throws Exception {
-
-        StoreMessageSentEvent<String> messageSentEvent=new StoreMessageSentEvent<String>(message);
-        messageSentEvent.setResourcePath(resourcePath);
-        messageSentEvent.setTenantId(tenantId);
-
-        registryNotificationService=Utils.getRegistryEventingService();
-        if(registryNotificationService!=null){
-            registryNotificationService.notify(messageSentEvent);
-        }
-
-    }
-
-
 }
 

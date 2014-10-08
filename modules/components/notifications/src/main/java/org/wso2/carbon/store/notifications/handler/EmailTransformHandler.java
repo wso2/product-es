@@ -23,26 +23,44 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.engine.Handler;
 import org.apache.axis2.handlers.AbstractHandler;
 import org.apache.axis2.transport.mail.MailConstants;
+import org.wso2.carbon.store.notifications.management.Constants;
 
 import java.util.Collections;
 
+/**
+ * Handler to transform e-mails to html content
+ */
 public class EmailTransformHandler extends AbstractHandler implements Handler {
     private String name;
 
+    /**
+     * Get name of the handler
+     *
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set content type to text/html
+     *
+     * @param msgContext message context
+     * @return Invocation response
+     * @throws AxisFault
+     */
     public InvocationResponse invoke(MessageContext msgContext) throws AxisFault {
-        if (msgContext.getTo() != null && msgContext.getTo().getAddress().startsWith("mailto:")) {
-            msgContext.getOptions().setProperty(MailConstants.TRANSPORT_MAIL_CUSTOM_HEADERS, Collections.singletonMap("Content-Type", "text/html"));
+        if (msgContext.getTo() != null && msgContext.getTo().getAddress().startsWith(Constants.MAILTO_TAG)) {
+            msgContext.getOptions().setProperty(MailConstants.TRANSPORT_MAIL_CUSTOM_HEADERS, Collections.singletonMap(Constants.CONTENT_TYPE, Constants.TEXT_HTML));
         }
         return InvocationResponse.CONTINUE;
     }
 
-    public void revoke(MessageContext msgContext) {
-    }
-
+    /**
+     * Set name of the handler
+     *
+     * @param name name of the handler
+     */
     public void setName(String name) {
         this.name = name;
     }

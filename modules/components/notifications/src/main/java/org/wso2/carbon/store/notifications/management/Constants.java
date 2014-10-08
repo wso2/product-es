@@ -18,6 +18,9 @@
  */
 package org.wso2.carbon.store.notifications.management;
 
+/**
+ * Constants holder
+ */
 public class Constants {
 
     public static final String LC_STATE_CHANGE = "custom:Store LC State Change";
@@ -25,10 +28,13 @@ public class Constants {
     public static final String VERSION_CREATED = "custom:Store Version Create";
     public static final String MESSAGE_SENT = "custom:Store Message Sent";
 
-    public static final String LC_STATE_CHANGE_VAR = "lc.state.change";
-    public static final String ASSET_UPDATE_VAR = "asset.update";
-    public static final String VERSION_CREATED_VAR = "version.creation";
-    public static final String MESSAGE_SENT_VAR = "message.sent";
+    public static final String LC_STATE_CHANGE_EVENT = "lc.state.change";
+    public static final String ASSET_UPDATE_EVENT = "asset.update";
+    public static final String VERSION_CREATED_EVENT = "version.creation";
+    public static final String MESSAGE_SENT_EVENT = "message.sent";
 
-    public static final String TOPIC_FILTER="http://wso2.org/registry/eventing/dialect/topicFilter";
+    public static final String TOPIC_FILTER = "http://wso2.org/registry/eventing/dialect/topicFilter";
+    public static final String MAILTO_TAG = "mailto:";
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String TEXT_HTML = "text/html";
 }

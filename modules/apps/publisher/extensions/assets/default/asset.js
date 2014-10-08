@@ -16,99 +16,114 @@
  *  under the License.
  *
  */
-asset.manager = function(ctx) {
-    var notifier = require('store').notificationManager;
-    return {
-        create: function(options) {
-            var ref = require('utils').time;
-            var privateRole="role://Internal/private_";
-            var adminRole="role://";
+asset.manager = function (ctx) {
 
-            var LCEvent = "StoreLifecycleStateChange";
-            var UpdateEvent = "StoreAssetUpdate";
+    var notifier = require('store').notificationManager;
+    var storeConstants = require('store').storeConstants;
+    return {
+        create: function (options) {
+            var ref = require('utils').time;
+
             //Check if the options object has a createdtime attribute and populate it
             if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
                 options.attributes.overview_createdtime = ref.getCurrentTime();
             }
             this._super.create.call(this, options);
-            var asset=this.get(options.id);
+
+            var asset = this.get(options.id); //TODO avoid get: expensive operation
             var assetPath = asset.path;
             var user = ctx.username;
-            var userRoles=ctx.userManager.getRoleListOfUser(user);
+            var userRoles = ctx.userManager.getRoleListOfUser(user);
 
-            var roleToSubscribe=privateRole+user;
-            for(var role in userRoles){
-                if(userRoles[role]=="admin"){
-                    roleToSubscribe=adminRole+user;
+            //Check whether the user has admin role
+            var endpoint = storeConstants.PRIVATE_ROLE_ENDPOINT + user;
+            for (var role in userRoles) {
+                if (userRoles.hasOwnProperty(role) && userRoles[role] == storeConstants.ADMIN_ROLE) {
+                    endpoint = storeConstants.ADMIN_ROLE_ENDPOINT;
                 }
             }
-            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, roleToSubscribe, LCEvent);
-            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, roleToSubscribe, UpdateEvent);
+            //Subscribe the asset author for LC update event and asset update event
+            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, endpoint, storeConstants.LC_STATE_CHANGE);
+            notifier.subscribeToEvent(options.attributes.overview_provider, assetPath, endpoint, storeConstants.ASSET_UPDATE);
         },
-        search: function(query, paging) {
-            var assets = this._super.search.call(this, query, paging);
-            return assets;
+        update: function (options) {
+            this._super.update.call(this, options);
+            var asset = this.get(options.id); //TODO avoid get: expensive operation
+            //trigger notification on asset update
+            notifier.notifyEvent(storeConstants.ASSET_UPDATE_EVENT, asset.type, asset.attributes.overview_name, null, asset.path, ctx.tenantId);
         },
-        list: function(paging) {
-            var assets = this._super.list.call(this, paging);
-            return assets;
+        search: function (query, paging) {
+            return this._super.search.call(this, query, paging);
         },
-        get: function(id) {
-            var asset = this._super.get.call(this, id);
-            return asset;
+        list: function (paging) {
+            return this._super.list.call(this, paging);
         },
-        invokeLcAction: function(asset, action){
+        get: function (id) {
+            return this._super.get.call(this, id);
+        },
+        invokeLcAction: function (asset, action) {
             var success = this._super.invokeLcAction.call(this, asset, action);
-            var eventName="lc.state.change";
-            var comment='User comment';
-            var htmlResult=require('/modules/template.generator.js').generateEmail(ctx.tenantId, asset.type, asset.attributes.overview_name, comment, eventName);
-            notifier.notifyEvent(eventName, htmlResult, asset.path, ctx.tenantId);
+            var COMMENT = 'User comment';
+            //trigger notification on LC state change
+            notifier.notifyEvent(storeConstants.LC_STATE_CHANGE_EVENT, asset.type, asset.attributes.overview_name, COMMENT, asset.path, ctx.tenantId);
             return success;
         }
     };
 };
-asset.server = function(ctx) {
+asset.server = function (ctx) {
     var type = ctx.type;
     return {
-        onUserLoggedIn: function() {},
+        onUserLoggedIn: function () {
+        },
         endpoints: {
-            apis: [{
-                url: 'assets',
-                path: 'assets.jag'
-            }],
-            pages: [{
-                title: 'Asset: ' + type,
-                url: 'asset',
-                path: 'asset.jag'
-            }, {
-                title: 'Assets ' + type,
-                url: 'assets',
-                path: 'assets.jag'
-            }, {
-                title: 'Create ' + type,
-                url: 'create',
-                path: 'create.jag'
-            }, {
-                title: 'Update ' + type,
-                url: 'update',
-                path: 'update.jag'
-            }, {
-                title: 'Details ' + type,
-                url: 'details',
-                path: 'details.jag'
-            }, {
-                title: 'List ' + type,
-                url: 'list',
-                path: 'list.jag'
-            }, {
-                title: 'Lifecycle',
-                url: 'lifecycle',
-                path: 'lifecycle.jag'
-            }]
+            apis: [
+                {
+                    url: 'assets',
+                    path: 'assets.jag'
+                }
+            ],
+            pages: [
+                {
+                    title: 'Asset: ' + type,
+                    url: 'asset',
+                    path: 'asset.jag'
+
+                },
+                {
+                    title: 'Assets ' + type,
+                    url: 'assets',
+                    path: 'assets.jag'
+                },
+                {
+                    title: 'Create ' + type,
+                    url: 'create',
+                    path: 'create.jag'
+                },
+                {
+                    title: 'Update ' + type,
+                    url: 'update',
+                    path: 'update.jag'
+                },
+                {
+                    title: 'Details ' + type,
+                    url: 'details',
+                    path: 'details.jag'
+                },
+                {
+                    title: 'List ' + type,
+                    url: 'list',
+                    path: 'list.jag'
+                },
+                {
+                    title: 'Lifecycle',
+                    url: 'lifecycle',
+                    path: 'lifecycle.jag'
+                }
+            ]
         }
     };
 };
-asset.configure = function() {
+asset.configure = function () {
     return {
         table: {
             overview: {
@@ -121,7 +136,8 @@ asset.configure = function() {
                             name: 'name',
                             label: 'Name'
                         },
-                        validation: function() {}
+                        validation: function () {
+                        }
                     },
                     version: {
                         name: {
@@ -146,26 +162,26 @@ asset.configure = function() {
                 name: 'SampleLifeCycle2',
                 commentRequired: false,
                 defaultAction: 'Promote',
-                deletableStates:[],
-                publishedStates:['Published']
+                deletableStates: [],
+                publishedStates: ['Published']
             },
             ui: {
                 icon: 'icon-cog'
             },
             thumbnail: 'images_thumbnail',
-            banner:'images_banner'
+            banner: 'images_banner'
         }
     };
 };
-asset.renderer = function(ctx) {
+asset.renderer = function (ctx) {
     var type = ctx.assetType;
-    var buildListLeftNav = function(page, util) {
+    var buildListLeftNav = function (page, util) {
         var navList = util.navList();
         navList.push('Add', 'icon-plus-sign-alt', util.buildUrl('create'));
         navList.push('Statistics', 'icon-dashboard', '/assets/statistics/' + type + '/');
         return navList.list();
     };
-    var buildDefaultLeftNav = function(page, util) {
+    var buildDefaultLeftNav = function (page, util) {
         var id = page.assets.id;
         var navList = util.navList();
         navList.push('Overview', 'icon-list-alt', util.buildUrl('details') + '/' + id);
@@ -173,11 +189,11 @@ asset.renderer = function(ctx) {
         navList.push('Life Cycle', 'icon-retweet', util.buildUrl('lifecycle') + '/' + id);
         return navList.list();
     };
-    var buildAddLeftNav = function(page, util) {
+    var buildAddLeftNav = function (page, util) {
         return [];
     };
-    var isActivatedAsset = function(assetType) {
-        var app=require('rxt').app;
+    var isActivatedAsset = function (assetType) {
+        var app = require('rxt').app;
 
         var activatedAssets = app.getActivatedAssets(ctx.tenantId);//ctx.tenantConfigs.assets;
         //return true;
@@ -192,7 +208,7 @@ asset.renderer = function(ctx) {
         return false;
     };
     return {
-        list: function(page) {
+        list: function (page) {
             var assets = page.assets;
             for (var index in assets) {
                 var asset = assets[index];
@@ -205,7 +221,7 @@ asset.renderer = function(ctx) {
             }
         },
         pageDecorators: {
-            leftNav: function(page) {
+            leftNav: function (page) {
                 log.info('Using default leftNav');
                 switch (page.meta.pageName) {
                     case 'list':
@@ -220,7 +236,7 @@ asset.renderer = function(ctx) {
                 }
                 return page;
             },
-            ribbon: function(page) {
+            ribbon: function (page) {
                 var ribbon = page.ribbon = {};
                 var DEFAULT_ICON = 'icon-cog';
                 var assetTypes = [];

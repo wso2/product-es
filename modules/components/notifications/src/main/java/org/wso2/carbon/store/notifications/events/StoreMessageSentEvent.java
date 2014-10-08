@@ -18,32 +18,23 @@
  */
 package org.wso2.carbon.store.notifications.events;
 
-import org.wso2.carbon.registry.common.eventing.RegistryEvent;
-
-public class StoreMessageSentEvent<T> extends RegistryEvent<T> {
-    private String resourcePath = null;
+/**
+ * Custom event type for Store - MessageSentEvent
+ * Triggered when a message is sent
+ *
+ * @param <T>
+ */
+public class StoreMessageSentEvent<T> extends AbstractStoreEvent<T> {
 
     public static final String EVENT_NAME = "StoreMessageSent";
 
-    public StoreMessageSentEvent() {
-        super();
-    }
-
     /**
      * Construct the Registry Event by using the message
-     * @param message any Object
+     *
+     * @param message message used in the notification when event is triggered
      */
     public StoreMessageSentEvent(T message) {
         super(message);
-    }
-
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
-        setTopic(TOPIC_SEPARATOR + EVENT_NAME + resourcePath);
-        setOperationDetails(resourcePath, EVENT_NAME, RegistryEvent.ResourceType.UNKNOWN);
-    }
-
-    public String getResourcePath() {
-        return resourcePath;
+        this.eventName = EVENT_NAME;
     }
 }

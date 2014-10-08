@@ -16,32 +16,101 @@
  *  under the License.
  *
  */
+
+/**
+ * Handles notifications and subscriptions for store
+ * @nameSpace NotificationManager
+ */
 var notificationManager = {};
 (function () {
 
-        var StoreNotificationService = Packages.org.wso2.carbon.store.notifications.service.StoreNotificationService;
-        var storeNotifier = new StoreNotificationService();
+    //noinspection JSUnresolvedVariable
+    var StoreNotificationService = Packages.org.wso2.carbon.store.notifications.service.StoreNotificationService;
+    var storeNotifier = new StoreNotificationService();
 
-        notificationManager.notifyEvent = function(eventName, message, path, user) {
-              storeNotifier.notifyEvent(eventName, message, path, user);
-        };
+    /**
+     * Notify triggered event
+     * @param eventName event that is triggered
+     * @param assetType type of the asset event triggered on
+     * @param assetName name of the asset event triggered on
+     * @param message message to be sent in the notification
+     * @param path path of the resource the event occured
+     * @param user logged in user
+     */
+    notificationManager.notifyEvent = function (eventName, assetType, assetName, message, path, user) {
+        var emailContent = generateEmail(assetType, assetName, message, eventName);
+        storeNotifier.notifyEvent(eventName, emailContent, path, user);
+    };
 
-        notificationManager.subscribeToEvent = function(tenantId, resourcePath, endpoint, eventName) {
-              var log = new Log('notificationManager');
-              storeNotifier.subscribeToEvent(tenantId, resourcePath, endpoint, eventName);
-        };
+    /**
+     * Subscribe for an event
+     * @param tenantId logged in user
+     * @param resourcePath path of the resource subscribing to
+     * @param endpoint method of notification (user, role or email)
+     * @param eventName event subscribing for
+     */
+    notificationManager.subscribeToEvent = function (tenantId, resourcePath, endpoint, eventName) {
+        storeNotifier.subscribeToEvent(tenantId, resourcePath, endpoint, eventName);
+    };
 
-	    notificationManager.unsubscribe = function(resourcePath, eventName, endpoint) {
-              storeNotifier.unsubscribe(resourcePath, eventName, endpoint);
-        };
+    /**
+     * Remove subscription
+     * @param resourcePath path of the resource subscribed to
+     * @param eventName event subscribed for
+     * @param endpoint method of notification
+     */
+    notificationManager.unsubscribe = function (resourcePath, eventName, endpoint) {
+        storeNotifier.unsubscribe(resourcePath, eventName, endpoint);
+    };
 
-	    notificationManager.getEventTypes = function(resourcePath, eventName, endpoint) {
-              return storeNotifier.getEventTypes(resourcePath, eventName, endpoint);
-        };
+    /**
+     * Get all the event types
+     * @returns event types
+     */
+    notificationManager.getEventTypes = function () {
+        return storeNotifier.getEventTypes();
+    };
 
-	    notificationManager.getAllSubscriptions = function(resourcePath, eventName, endpoint) {
-              return storeNotifier.getAllSubscriptions(resourcePath, eventName, endpoint);
-        };
-	
+    /**
+     * Get all subscriptions
+     * @returns list of subscriptions
+     */
+    notificationManager.getAllSubscriptions = function () {
+        return storeNotifier.getAllSubscriptions();
+    };
+
+    /**
+     * Generates an email message containing details of an event
+     * @param assetType type of the asset event triggered on
+     * @param assetName name of the asset event triggered on
+     * @param msg message to send in the email
+     * @param eventName name of the triggered event
+     * @return content of the email
+     */
+    var generateEmail = function (assetType, assetName, msg, eventName) {
+
+        var stringAssetName = stringify(assetName);
+        var stringAssetType = stringify(assetType);
+        var stringMsg = stringify(msg);
+
+        var email_temp = storeConstants.EMAIL_TEMPLATE_DEFAULT;
+        if (eventName == storeConstants.LC_STATE_CHANGE_EVENT) {
+            email_temp = storeConstants.EMAIL_TEMPLATE_LC;
+        } else if (eventName == storeConstants.ASSET_UPDATE_EVENT) {
+            email_temp = storeConstants.EMAIL_TEMPLATE_UPDATE;
+        } else if (eventName == storeConstants.VERSION_CREATED_EVENT) {
+            email_temp = storeConstants.EMAIL_TEMPLATE_VERSION;
+        }
+
+        message = new JaggeryParser().parse(email_temp).toString();
+
+        //evaluating the template in Jaggery //TODO improve template evaluation to support custom templates
+        var templateScript = '(function() { var result = ""; var assetName=' + stringAssetName + '; var msg =' + stringMsg + '; var assetType =' + stringAssetType +
+            '; print = function(text) { if(typeof text === "object") {result += stringify(text);} else {result += text;} };' + message + ' return result;}())';
+
+        var mailContent = eval(templateScript);
+
+        return mailContent;
+    }
 
 }());
