@@ -20,7 +20,7 @@
 var caramel;
 var DEFAULT_PAGIN = {
     'start': 0,
-    'count': 20,
+    'count': 12,
     'sortOrder': 'DESC',
     'sortBy': 'overview_createdtime',
     'paginationLimit': 100

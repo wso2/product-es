@@ -68,7 +68,7 @@ switch(method){
         break;
 
     default:       
-        result = responseProcessor.buildErrorResponse(response,404,'Your request malformed!');       
+        result = responseProcessor.buildErrorResponse(response,404,'Your request malformed!');
        
 }
 

@@ -22,7 +22,9 @@ var DEFAULT_TENANT = -1234;
 var uriMatcher = new URIMatcher(request.getRequestURI());
 var server = require('store').server;
 var user = server.current(session);
-var log = new Log();
+var log = new Log("apis_router");
+var responseProcessor = require('utils').response;
+
 var getPage = function(uri) {
     var comps = uri.split('/');
     return comps.length > 0 ? comps[0] : null;
@@ -35,7 +37,7 @@ var mapper = function(path) {
 if (uriMatcher.match(API_URL)) {
     var args = uriMatcher.elements();
     var tenantId = DEFAULT_TENANT; //Assume that the tenant will be the super tenant
-    //Determine the tenant by the user 
+    //Determine the tenant by the user
     if (user) {
         tenantId = user.tenantId;
     }
@@ -52,12 +54,13 @@ if (uriMatcher.match(API_URL)) {
                 include(path);
             }
         } else {
-            log.error('Unable to locate mapped endpoint at path: ' + path);
-            response.sendError(404, 'Unable to locate a suitable endpoint for ' + page);
+            var msg = 'Unable to locate mapped endpoint at path: ' + path;
+            log.error(msg);
+            response = responseProcessor.buildErrorResponse(response, 404, msg);
         }
     } else {
-        response.sendError(404, 'Unable to locate a suitable endpoint for ' + page);
+        response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate a suitable endpoint for ' + page);
     }
 } else {
-    response.sendError(404, 'Unable to locate a suitable endpoint');
+    response = responseProcessor.buildErrorResponse(response, 404,'Unable to locate a suitable endpoint');
 } %>

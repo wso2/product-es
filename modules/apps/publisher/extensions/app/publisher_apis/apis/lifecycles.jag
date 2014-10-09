@@ -17,30 +17,33 @@
  *  under the License.
  *
  */
+
 /*
- Descripiton: Invoke routed api endpoints
-* ENDPOINTS:  /apis/lifecycles/
-              /apis/lifecycles/{lifecycleName}
-              /apis/lifecycles/{lifecycleName}/{currentState}  
+ Description: Invoke routed api endpoints
+ * ENDPOINTS:   /apis/lifecycles/
+ /apis/lifecycles/{lifecycleName}
+ /apis/lifecycles/{lifecycleName}/{currentState}
  */
 
-require('/modules/publisher.js').exec(function(ctx) {
-    var log = new Log();
-    var ref = require('utils').request;
-    var responseProcessor = require('utils').response;
-    var lcCore = require('lifecycle').core;    
+require('/modules/publisher.js').exec(function (ctx) {
+    var log = new Log('lifecycle-api');
+
+    var utils = require('utils');
+    var rxt = require('rxt');
+    var lcCore = require('lifecycle').core;
     var lcApi = require('/modules/lifecycle_api.js').api;
     var server = require('store').server;
-    var res = ctx.response;
+    var assetApi = require('/modules/asset_api.js').api;
+
+    var ref = utils.request;
+    var responseProcessor = utils.response;
+    var constants = rxt.constants;
+
+    var response = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
     var tenantId = server.current(session).tenantId;
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
-    var assetApi = require('/modules/asset_api.js').api;
-
-    var GET_LIFECYCLES_URL = '/{context}/apis/lifecycles/';
-    var GET_LIFECYCLE_DEFINITION_BY_NAME_URL = '/{context}/apis/lifecycles/{lifecycleName}';
-    var GET_LIFECYCLE_STATE_URL = '/{context}/apis/lifecycles/{lifecycleName}/{currentState}';
 
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
@@ -49,40 +52,51 @@ require('/modules/publisher.js').exec(function(ctx) {
 
     switch (method) {
         case 'GET':
-            if (uriMatcher.match(GET_LIFECYCLES_URL)) { // to return available lifecycle list
+            if (uriMatcher.match(constants.GET_LIFECYCLES_URL)) {
+                // to return available lifecycle list
+
                 try {
-                    var lcList = lcApi.getLifecycles(options, req, res, session);//call lifecycle module to get list
+                    var lcList = lcApi.getLifecycles(options, req, response, session);
+                    //call lifecycle module to get list
                     response = responseProcessor.buildSuccessResponse(response, 200, lcList);// return list
                 } catch (e) {
                     log.error(e);
-                    response = responseProcessor.buildErrorResponse(response, 404, e);//return error response
+                    response = responseProcessor.buildErrorResponse(response, e.code, e.message);//return error response
                 }
-            } else if (uriMatcher.match(GET_LIFECYCLE_DEFINITION_BY_NAME_URL)) {// to return lifecycle definition by name
+
+            } else if (uriMatcher.match(constants.GET_LIFECYCLE_DEFINITION_BY_NAME_URL)) {
+                // to return lifecycle definition by name
                 try {
                     options.name = uriMatcher.elements().lifecycleName;// required lifecycle's name
-                    var lc = lcApi.getLifecycle(options, req, res, session);//call lifecycle module to get definition
-                    response = responseProcessor.buildSuccessResponse(response, 200, lc);//send response
+                    var lcDefinition = lcApi.getLifecycle(options, req, response, session);
+                    //call lifecycle module to get definition
+                    response = responseProcessor.buildSuccessResponse(response, 200, lcDefinition);//send response
                 } catch (e) {
                     log.error(e);
-                    response = responseProcessor.buildErrorResponse(response, 404, e);//send error response
+                    response = responseProcessor.buildErrorResponse(response, e.code, e.messagee);//send error response
                 }
-            } else if (uriMatcher.match(GET_LIFECYCLE_STATE_URL)) {//to return details on lifecycle state of a lifecycle definition
+
+            } else if (uriMatcher.match(constants.GET_LIFECYCLE_STATE_URL)) {
+                //to return details on lifecycle state of a lifecycle definition
                 options.name = uriMatcher.elements().lifecycleName;//set lifecycle name
                 var currentState = uriMatcher.elements().currentState;//set required state name
                 try {
-                    var lc = lcApi.getLifecycle(options, req, res, session);//call lifecycle module to get state details
+                    var lc = lcApi.getLifecycle(options, req, response, session);
+                    //call lifecycle module to get state details
                     var state = lc.state(currentState);
                     response = responseProcessor.buildSuccessResponse(response, 200, state);
                 } catch (e) {
                     log.error(e);
-                    response = responseProcessor.buildErrorResponse(response, 404, e);
+                    response = responseProcessor.buildErrorResponse(response, e.code, e.message);
                 }
+
             } else {//unimplemented http GET endpoint
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
             break;
+
         default://unimplemented http request method
             response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this endpoint for ' + method)
     }
-}, request, response, session); 
+}, request, response, session);
 %>

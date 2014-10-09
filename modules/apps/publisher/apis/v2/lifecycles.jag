@@ -60,5 +60,5 @@ require('/modules/publisher.js').exec(function(ctx) {
         default:
             response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this endpoint for ' + method)
     }
-}, request, response, session); 
+}, request, response, session);
 %>
