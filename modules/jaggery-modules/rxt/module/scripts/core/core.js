@@ -941,7 +941,7 @@ var core = {};
         var tenatConfigs = user.configs(tenantId);
         var serverConfigs = server.configs(tenantId);
         var rxtManager = core.rxtManager(tenantId);
-        var username = "wso2.anonymous";
+        var username = "wso2.anonymous";//TODO: Move this to constants
         return {
             username: username,
             userManager: userManager,

@@ -163,7 +163,7 @@ var app = {};
      * Returns a UI page object after calling the page decorators for a given application extension.The
      * method will determine form which the application extension it is exposed.AFter which the page decorators
      * for that extension will be applied to the page object
-     * @param  {Array} assets [description]
+     * @param  {Array} assets [description] //TODO: Fill description !
      * @param  {Object} page   A page object 
      * @return Object A page object
      */
