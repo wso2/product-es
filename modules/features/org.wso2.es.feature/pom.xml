@@ -84,6 +84,7 @@
                                 <!--bundleDef>org.wso2.store:org.wso2.carbon.social:${project.version}</bundleDef-->
                                 <!--bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra</bundleDef-->
                                 <bundleDef>org.wso2.store:jaggery-scxml-executors:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.store:org.wso2.carbon.store.notifications:${project.version}</bundleDef>
                             </bundles>
                             <importBundles>
                                 <!-- TODO: remove these when org.wso2.carbon.identity.sso.saml.server feature included proper bundleDefs for following jars -->
