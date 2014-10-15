@@ -20,9 +20,12 @@
  Filename : assets.jag
  * can be extended by asset type
 
- ENDPOINTS:     GET  /apis/assets/
+ ENDPOINTS:
+ GET
+ /apis/assets/
  /apis/assets/{id}
  /apis/assets/{id}/state
+
  POST
  /apis/assets/
  /apis/assets/{id}
@@ -84,7 +87,13 @@ require('/modules/publisher.js').exec(function (ctx) {
                         response = responseProcessor.buildErrorResponse(response, 500, 'Unable to update the asset');
                     }
                 } catch (e) {
-                    response = responseProcessor.buildErrorResponse(res, 500, 'Failed to update asset of type: ' + options.type);
+                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
+                        log.error(e.message);
+                        response = responseProcessor.buildErrorResponse(response, e.code, e.message);
+                    }
+                    else {
+                        response = responseProcessor.buildErrorResponse(res, 500, 'Failed to update asset of type: ' + options.type);
+                    }
                 }
 
             } else if (uriMatcher.match(ASSET_STATE_URL)) {//change asset's LC state
@@ -95,7 +104,7 @@ require('/modules/publisher.js').exec(function (ctx) {
                     response = responseProcessor.buildSuccessResponse(response, 200, out);
                 } catch (e) {
                     log.error(e);
-                    response = responseProcessor.buildErrorResponse(response,e.code, e.message);
+                    response = responseProcessor.buildErrorResponse(response, e.code, e.message);
                 }
 
             } else {
@@ -114,7 +123,7 @@ require('/modules/publisher.js').exec(function (ctx) {
                 if (asset) {
                     response = responseProcessor.buildSuccessResponse(response, 200, asset);
                 } else {
-                    response = responseProcessor.buildErrorResponse(response, 404, "No matching asset found by id : " +options.id);
+                    response = responseProcessor.buildErrorResponse(response, 404, "No matching asset found by id : " + options.id);
                 }
             } else if (uriMatcher.match(ASSET_STATE_URL)) {//return asset state by id
                 try {
@@ -140,7 +149,7 @@ require('/modules/publisher.js').exec(function (ctx) {
                     if (done) {
                         response = responseProcessor.buildSuccessResponse(response, 200, "Asset Deleted Successfully");
                     } else {
-                        response = responseProcessor.buildErrorResponse(response, 400, "Unable to Delete Asset of id:"+options.id);
+                        response = responseProcessor.buildErrorResponse(response, 400, "Unable to Delete Asset of id:" + options.id);
                     }
                 } catch (e) {
                     log.error(e);

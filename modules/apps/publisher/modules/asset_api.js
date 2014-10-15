@@ -20,23 +20,14 @@
  Created Date: 7/24/2014
  */
 var api = {};
-var utils = require('utils');
-var rxtModule = require('rxt');
-var responseProcessor = utils.response;
-var log = new Log('asset_api');
-
-
-//{
-//    'start': 0,
-//    'count': 20,
-//    'sortOrder': 'DESC',
-//    'sortBy': '',
-//    'paginationLimit': 1000
-//};
 var result;
 
 (function (api) {
-
+    var utils = require('utils');
+    var rxtModule = require('rxt');
+    var log = new Log('asset_api');
+    var exceptionModule = utils.exception;
+    var constants = rxtModule.constants;
     /**
      *
      * @param  fieldParam   The raw string comes as field parameter of the request
@@ -83,6 +74,35 @@ var result;
             modifiedAssets.push(asset);// add asset to the list
         }
         return modifiedAssets;// return the asset list
+    };
+
+    /**
+     *
+     * @param exception The exception body
+     * @param type      The type of exception that how it should be handled
+     * @param code      Exception status code
+     */
+    var handleError = function (exception, type, code) {
+        var e;
+        if (type == constants.THROW_EXCEPTION_TO_CLIENT) {
+            log.debug(exception);
+            e = exceptionModule.buildExceptionObject(exception, code);
+            throw e;
+        } else if (type == constants.LOG_AND_THROW_EXCEPTION) {
+            log.error(exception);
+            throw exception;
+        } else if (type == constants.LOG_EXCEPTION_AND_TERMINATE) {
+            log.error(exception);
+            var msg = 'An error occurred while serving the request!';
+            e = exceptionModule.buildExceptionObject(msg, constants.ERROR_STATUS_CODES.INTERNAL_SERVER_ERROR);
+            throw e;
+        } else if (type == constants.LOG_EXCEPTION_AND_CONTINUE) {
+            log.debug(exception);
+        }
+        else {
+            log.error(exception);
+            throw exception;
+        }
     };
 
     /**
@@ -137,7 +157,8 @@ var result;
         for (var index in resourceFields) {
             resourceField = resourceFields[index];
             //If the asset attribute value is null then use the old resource
-            if ((!asset.attributes[resourceField]) || (asset.attributes[resourceField] == '')) {
+//            if ((!asset.attributes[resourceField]) || (asset.attributes[resourceField] == '')) {
+            if (!asset.attributes[resourceField] && asset.attributes.hasOwnProperty(resourceField)) {
                 log.debug('Copying old resource attribute value for ' + resourceField);
                 asset.attributes[resourceField] = original.attributes[resourceField];
             }
@@ -234,8 +255,8 @@ var result;
         } catch (e) {
             log.error(e);
             asset = null;
-            //TODO throw message
-            //msg = Can not locate an asset of id:
+            var msg = 'Unable to locate the asset with id: ' + options.id;
+            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.ERROR_STATUS_CODES.NOT_FOUND);
         }
         if (original) {
             putInStorage(asset, am);
@@ -248,13 +269,14 @@ var result;
             try {
                 am.update(asset);
             } catch (e) {
-                log.error('Failed to update the asset of id:' + options.id);
+                asset = null;
+                var errMassage = 'Failed to update the asset of id:' + options.id;
                 log.error(e);
                 if (log.isDebugEnabeld()) {
                     log.debug('Failed to update the asset ' + stringify(asset));
                 }
-                //TODO log.debug(e) concat both logs
-                asset = null;
+                handleError(errMassage, constants.LOG_EXCEPTION_AND_TERMINATE, constants.ERROR_STATUS_CODES.INTERNAL_SERVER_ERROR);
+
             }
         }
         return asset;
