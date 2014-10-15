@@ -16,8 +16,6 @@
 
 package org.wso2.carbon.store.notifications.management;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.event.core.exception.EventBrokerException;
 import org.wso2.carbon.event.core.subscription.Subscription;
@@ -39,8 +37,7 @@ import java.util.*;
  */
 public class StoreSubscriptionManager {
 
-    private static final Log log = LogFactory.getLog(StoreSubscriptionManager.class);
-    private EventingService eventingService;
+    private EventingService eventingService = ComponentManager.getRegistryEventingService();
 
     /**
      * Subscribe a user for a particular event on a resource, in a given method
@@ -49,21 +46,27 @@ public class StoreSubscriptionManager {
      * @param resourcePath the resource subscribing to
      * @param endpoint     method of notification (user, role or email)
      * @param eventName    the event subscribing for
+     * @throws InvalidMessageException if eventing service or registry service is not available
+     * @throws RegistryException       if Registry Service is not available
      */
-    public void subscribe(String userName, String resourcePath, String endpoint, String eventName) {
+    public void subscribe(String userName, String resourcePath, String endpoint,
+                          String eventName) throws InvalidMessageException, RegistryException {
 
-        eventingService = Utils.getRegistryEventingService();
-        RegistryService registryService = Utils.getRegistryService();
-        UserRegistry userRegistry = null;
+        RegistryService registryService = ComponentManager.getRegistryService();
+        UserRegistry userRegistry;
 
-        if (eventingService != null && registryService != null) {
-            try {
-                userRegistry = registryService.getRegistry(userName);
-            } catch (RegistryException e) {
-                log.error("User Registry not available. ", e);
-            }
-            createSubscription(userRegistry, resourcePath, endpoint, eventName);
+        if (eventingService == null) {
+            throw new IllegalStateException("Eventing Service not available");
+        } else if (registryService == null) {
+            throw new IllegalStateException("Registry Service not available");
         }
+
+        try {
+            userRegistry = registryService.getRegistry(userName);
+        } catch (RegistryException e) {
+            throw new RegistryException("Getting user registry for " + userName + " failed");
+        }
+        createSubscription(userRegistry, resourcePath, endpoint, eventName);
     }
 
     /**
@@ -72,12 +75,10 @@ public class StoreSubscriptionManager {
      * @param id Subscription id
      */
     public void unsubscribe(String id) {
-        eventingService = Utils.getRegistryEventingService();
-        if (eventingService != null) {
-            eventingService.unsubscribe(id);
-        } else {
+        if (eventingService == null) {
             throw new IllegalStateException("Registry Eventing Service Not Found");
         }
+        eventingService.unsubscribe(id);
     }
 
     /**
@@ -87,12 +88,10 @@ public class StoreSubscriptionManager {
      */
     public Map getEventTypes() {
         Map map;
-        eventingService = Utils.getRegistryEventingService();
-        if (eventingService != null) {
-            map = eventingService.getEventTypes();
-        } else {
+        if (eventingService == null) {
             throw new IllegalStateException("Registry Eventing Service Not Found");
         }
+        map = eventingService.getEventTypes();
         return map;
     }
 
@@ -100,19 +99,14 @@ public class StoreSubscriptionManager {
      * Get all the subscriptions created
      *
      * @return subscriptionList list of Subscriptions
+     * @throws EventBrokerException if retrieving subscriptions fail
      */
-    public List<Subscription> getAllSubscriptions() {
-        List<Subscription> subscriptionList = null;
-        eventingService = Utils.getRegistryEventingService();
-        if (eventingService != null) {
-            try {
-                subscriptionList = eventingService.getAllSubscriptions();
-            } catch (EventBrokerException e) {
-                log.error("Retrieving all subscriptions failed. ", e);
-            }
-        } else {
+    public List<Subscription> getAllSubscriptions() throws EventBrokerException {
+        List<Subscription> subscriptionList;
+        if (eventingService == null) {
             throw new IllegalStateException("Registry Eventing Service Not Found");
         }
+        subscriptionList = eventingService.getAllSubscriptions();
         return subscriptionList;
     }
 
@@ -124,10 +118,12 @@ public class StoreSubscriptionManager {
      * @param endpoint     method of notification (user, role or email)
      * @param eventName    the event subscribing for
      * @return subscription Subscription containing the information
+     * @throws InvalidMessageException if subscription creation failed
      */
-    private Subscription createSubscription(UserRegistry userRegistry, String path, String endpoint, String eventName) {
+    private Subscription createSubscription(UserRegistry userRegistry, String path,
+                                            String endpoint, String eventName) throws InvalidMessageException {
 
-        Subscription subscription = null;
+        Subscription subscription;
         ResourcePath resourcePath = new ResourcePath(path);
         try {
             String topic = RegistryEventingConstants.TOPIC_PREFIX + RegistryEvent.TOPIC_SEPARATOR + eventName + path;
@@ -162,16 +158,11 @@ public class StoreSubscriptionManager {
                 throw new IllegalStateException("Subscription Id invalid");
             }
             subscription.setId(subscriptionId);
-
-
-        } catch (RuntimeException e) {
-            log.error("Failed to subscribe to information of the resource " +
-                    resourcePath, e);
+            return subscription;
         } catch (InvalidMessageException e) {
-            log.error("Failed to subscribe to information of the resource " +
+            throw new InvalidMessageException("Failed to subscribe to information of the resource " +
                     resourcePath, e);
         }
-        return subscription;
     }
 
 }

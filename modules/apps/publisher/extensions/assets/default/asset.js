@@ -18,6 +18,8 @@ asset.manager = function (ctx) {
 
     var notifier = require('store').notificationManager;
     var storeConstants = require('store').storeConstants;
+    var COMMENT = 'User comment';
+
     return {
         create: function (options) {
             var ref = require('utils').time;
@@ -61,7 +63,6 @@ asset.manager = function (ctx) {
         },
         invokeLcAction: function (asset, action) {
             var success = this._super.invokeLcAction.call(this, asset, action);
-            var COMMENT = 'User comment';
             //trigger notification on LC state change
             notifier.notifyEvent(storeConstants.LC_STATE_CHANGE_EVENT, asset.type, asset.attributes.overview_name, COMMENT, asset.path, ctx.tenantId);
             return success;

@@ -16,7 +16,10 @@
 
 package org.wso2.carbon.store.notifications.service;
 
+import org.wso2.carbon.event.core.exception.EventBrokerException;
 import org.wso2.carbon.event.core.subscription.Subscription;
+import org.wso2.carbon.event.ws.internal.builders.exceptions.InvalidMessageException;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.store.notifications.events.*;
 import org.wso2.carbon.store.notifications.management.Constants;
 import org.wso2.carbon.store.notifications.management.StoreNotificationManager;
@@ -39,18 +42,19 @@ public class StoreNotificationService {
      * @param eventName event to be notified of
      * @param message   message to sent with notification
      * @param path      path of the resource where the event occurred
-     * @param tenantId      logged in tenantId
+     * @param tenantId  logged in tenantId
+     * @throws Exception if notifying fails
      */
     @SuppressWarnings("unused")
-    public void notifyEvent(String eventName, String message, String path, int tenantId) {
+    public void notifyEvent(String eventName, String message, String path, int tenantId) throws Exception {
         AbstractStoreEvent<String> event;
-        if(eventName.equals(Constants.LC_STATE_CHANGE_EVENT)){
+        if (eventName.equals(Constants.LC_STATE_CHANGE_EVENT)) {
             event = new StoreLCStateChangeEvent<String>(message);
-        } else if (eventName.equals(Constants.ASSET_UPDATE_EVENT)){
+        } else if (eventName.equals(Constants.ASSET_UPDATE_EVENT)) {
             event = new StoreAssetUpdateEvent<String>(message);
-        } else if (eventName.equals(Constants.VERSION_CREATED_EVENT)){
+        } else if (eventName.equals(Constants.VERSION_CREATED_EVENT)) {
             event = new StoreVersionCreateEvent<String>(message);
-        } else if (eventName.equals(Constants.MESSAGE_SENT_EVENT)){
+        } else if (eventName.equals(Constants.MESSAGE_SENT_EVENT)) {
             event = new StoreMessageSentEvent<String>(message);
         } else {
             throw new IllegalStateException("Unknown event type: " + eventName);
@@ -67,10 +71,21 @@ public class StoreNotificationService {
      * @param resourcePath path of the resource subscribing to
      * @param endpoint     notification method (user, role or email)
      * @param eventName    event to be subscribed for
+     * @throws InvalidMessageException is subscribing fails
+     * @throws RegistryException       if subscribing fails
      */
     @SuppressWarnings("unused")
-    public void subscribeToEvent(String userName, String resourcePath, String endpoint, String eventName) {
-        storeSubscriptionManager.subscribe(userName, resourcePath, endpoint, eventName);
+    public void subscribeToEvent(String userName, String resourcePath, String endpoint,
+                                 String eventName) throws InvalidMessageException, RegistryException {
+        try {
+            storeSubscriptionManager.subscribe(userName, resourcePath, endpoint, eventName);
+        } catch (InvalidMessageException e) {
+            throw new InvalidMessageException("Subscribing to event:" + eventName + " failed for " +
+                    "" + resourcePath, e);
+        } catch (RegistryException e) {
+            throw new RegistryException("Subscribing to event:" + eventName + " failed for " +
+                    resourcePath, e);
+        }
     }
 
     /**
@@ -97,9 +112,10 @@ public class StoreNotificationService {
      * List all the subscriptions made
      *
      * @return subscription list
+     * @throws EventBrokerException if retrieving all subscriptions fails
      */
     @SuppressWarnings("unused")
-    public List<Subscription> getAllSubscriptions() {
+    public List<Subscription> getAllSubscriptions() throws EventBrokerException {
         return storeSubscriptionManager.getAllSubscriptions();
     }
 

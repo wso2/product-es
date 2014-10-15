@@ -1,12 +1,12 @@
 var render = function (theme, data, meta, require) {
 
-    var navigation='navigation';
-    var navigationContext=require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search);
+    var navigation = 'navigation';
+    var navigationContext = require('/helpers/navigation.js').currentPage(data.navigation, data.type, data.search);
 
-    switch(data.assetTypeCount) {
+    switch (data.assetTypeCount) {
         case 1:
-            navigation='navigation-single';
-            navigationContext=require('/helpers/navigation-single.js').currentPage(data.navigation, data.type, data.search);
+            navigation = 'navigation-single';
+            navigationContext = require('/helpers/navigation-single.js').currentPage(data.navigation, data.type, data.search);
             break;
         default:
             break;

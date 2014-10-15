@@ -29,15 +29,11 @@ var resources = function(page, meta) {
 	};
 };
 
-var currentPage = function(navigation, type, search) {
-	var asset;
-
-	for (asset in navigation.assets) {
-		if (asset == type) {
-			navigation.assets[asset].selected = true;
-			break;
-		}
-	}
-	navigation.search = search;
-	return navigation;
+var currentPage = function (navigation, type, search) {
+    var asset = navigation.assets[type];
+    if (asset) {
+        asset.selected = true;
+    }
+    navigation.search = search;
+    return navigation;
 }

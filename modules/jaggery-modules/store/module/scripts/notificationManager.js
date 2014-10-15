@@ -21,6 +21,7 @@
 var notificationManager = {};
 (function () {
 
+    var log = new Log('notificationManager');
     //noinspection JSUnresolvedVariable
     var StoreNotificationService = Packages.org.wso2.carbon.store.notifications.service.StoreNotificationService;
     var storeNotifier = new StoreNotificationService();
@@ -35,8 +36,16 @@ var notificationManager = {};
      * @param user logged in user
      */
     notificationManager.notifyEvent = function (eventName, assetType, assetName, message, path, user) {
+        var isSuccessful;
         var emailContent = generateEmail(assetType, assetName, message, eventName);
-        storeNotifier.notifyEvent(eventName, emailContent, path, user);
+        try {
+            storeNotifier.notifyEvent(eventName, emailContent, path, user);
+            isSuccessful=true;
+        } catch (e) {
+            log.error('Notifying the event '+eventName+'failed for '+eventName);
+            isSuccessful=false;
+        }
+        return isSuccessful;
     };
 
     /**
@@ -47,7 +56,15 @@ var notificationManager = {};
      * @param eventName event subscribing for
      */
     notificationManager.subscribeToEvent = function (tenantId, resourcePath, endpoint, eventName) {
-        storeNotifier.subscribeToEvent(tenantId, resourcePath, endpoint, eventName);
+        var isSuccessful;
+        try {
+            storeNotifier.subscribeToEvent(tenantId, resourcePath, endpoint, eventName);
+            isSuccessful=true;
+        } catch (e) {
+            log.error('Subscribing to asset on '+resourcePath+' failed for '+eventName);
+            isSuccessful=false;
+        }
+        return isSuccessful;
     };
 
     /**
@@ -73,7 +90,12 @@ var notificationManager = {};
      * @returns list of subscriptions
      */
     notificationManager.getAllSubscriptions = function () {
-        return storeNotifier.getAllSubscriptions();
+        try{
+           return storeNotifier.getAllSubscriptions();
+        }catch (e){
+            log.error("Retrieving subscription list failed");
+            return null;
+        }
     };
 
     /**
@@ -90,13 +112,15 @@ var notificationManager = {};
         var stringAssetType = stringify(assetType);
         var stringMsg = stringify(msg);
 
-        var email_temp = storeConstants.EMAIL_TEMPLATE_DEFAULT;
+        var email_temp;
         if (eventName == storeConstants.LC_STATE_CHANGE_EVENT) {
             email_temp = storeConstants.EMAIL_TEMPLATE_LC;
         } else if (eventName == storeConstants.ASSET_UPDATE_EVENT) {
             email_temp = storeConstants.EMAIL_TEMPLATE_UPDATE;
         } else if (eventName == storeConstants.VERSION_CREATED_EVENT) {
             email_temp = storeConstants.EMAIL_TEMPLATE_VERSION;
+        }else{
+            email_temp = storeConstants.EMAIL_TEMPLATE_DEFAULT;
         }
 
         message = new JaggeryParser().parse(email_temp).toString();

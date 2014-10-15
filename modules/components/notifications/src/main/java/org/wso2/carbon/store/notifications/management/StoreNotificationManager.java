@@ -26,22 +26,27 @@ import org.wso2.carbon.store.notifications.events.*;
  */
 public class StoreNotificationManager {
 
-    private NotificationService registryNotificationService = Utils.getRegistryEventingService();
-    private static Log log = LogFactory.getLog(StoreNotificationManager.class);
+    private NotificationService registryNotificationService = ComponentManager.getRegistryEventingService();
+    private static final Log log = LogFactory.getLog(StoreNotificationManager.class);
 
     /**
      * Notify triggered event
+     *
      * @param storeEvent Store Event
+     * @throws Exception if Notifying fails
      */
-    public void notifyEvent(AbstractStoreEvent storeEvent) {
-        if (registryNotificationService != null) {
-            try {
-                registryNotificationService.notify(storeEvent);
-            } catch (Exception e) {
-                log.error("Registry notification failed", e);
-            }
-        } else {
+    public void notifyEvent(AbstractStoreEvent storeEvent) throws Exception {
+        if (registryNotificationService == null) {
             throw new IllegalStateException("Registry Notification Service Not Found");
+        }
+        try {
+            registryNotificationService.notify(storeEvent);
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Notifying the event:" + storeEvent.getEventName() + " for " +
+                        storeEvent.getResourcePath() + " failed", e);
+            }
+            throw new Exception("Notifying the event " + storeEvent.getEventName() + " failed");
         }
     }
 }

@@ -65,4 +65,13 @@ public abstract class AbstractStoreEvent<T> extends RegistryEvent<T> {
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
     }
+
+    /**
+     * Returns the name of the event
+     *
+     * @return eventName
+     */
+    public String getEventName() {
+        return eventName;
+    }
 }

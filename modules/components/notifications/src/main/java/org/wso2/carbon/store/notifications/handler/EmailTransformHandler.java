@@ -48,8 +48,10 @@ public class EmailTransformHandler extends AbstractHandler implements Handler {
      * @throws AxisFault
      */
     public InvocationResponse invoke(MessageContext msgContext) throws AxisFault {
-        if (msgContext.getTo() != null && msgContext.getTo().getAddress().startsWith(Constants.MAILTO_TAG)) {
-            msgContext.getOptions().setProperty(MailConstants.TRANSPORT_MAIL_CUSTOM_HEADERS, Collections.singletonMap(Constants.CONTENT_TYPE, Constants.TEXT_HTML));
+        if (msgContext.getTo() != null && msgContext.getTo().getAddress() != null && msgContext
+                .getTo().getAddress().startsWith(Constants.MAILTO_TAG)) {
+            msgContext.getOptions().setProperty(MailConstants.TRANSPORT_MAIL_CUSTOM_HEADERS,
+                    Collections.singletonMap(Constants.CONTENT_TYPE, Constants.TEXT_HTML));
         }
         return InvocationResponse.CONTINUE;
     }

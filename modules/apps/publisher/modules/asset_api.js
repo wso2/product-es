@@ -282,16 +282,20 @@ var responseProcessor = require('utils').response;
      * @param {[obj]}  [req]      [Request object]
      * @param {[obj]}  [res]      [Request object]
      */
-    api.remove = function(options, req, res, session) {
+    api.remove = function (options, req, res, session) {
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
+        var retrievedAsset = api.get(options, req, res, session);
+        if (!retrievedAsset) {
+            log.error('Id not valid');
+            return false;
+        }
         try {
             am.remove(options.id); //call asset manager to remove asset
-            result = true;
+            return true;
         } catch (e) {
             log.error('Asset with id: ' + asset.id + ' was not deleted due to ' + e);
-            result = false;
+            throw 'Asset deletion with id ' + options.id + ' failed.' + e;
         }
-        return result;
     };
 }(api))

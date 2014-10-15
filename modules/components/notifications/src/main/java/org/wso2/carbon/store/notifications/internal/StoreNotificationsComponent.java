@@ -22,7 +22,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.eventing.services.EventingService;
-import org.wso2.carbon.store.notifications.management.Utils;
+import org.wso2.carbon.store.notifications.management.ComponentManager;
 import org.wso2.carbon.store.notifications.service.StoreNotificationService;
 
 /**
@@ -37,7 +37,7 @@ import org.wso2.carbon.store.notifications.service.StoreNotificationService;
 
 public class StoreNotificationsComponent {
 
-    private static Log log = LogFactory.getLog(StoreNotificationsComponent.class);
+    private static final Log log = LogFactory.getLog(StoreNotificationsComponent.class);
 
     /**
      * Activate the bundle
@@ -48,6 +48,7 @@ public class StoreNotificationsComponent {
         BundleContext bundleContext = context.getBundleContext();
         bundleContext.registerService(StoreNotificationService.class,
                 new StoreNotificationService(), null);
+        ComponentManager.registerEvents();
         log.info("Store Notification service is activated");
     }
 
@@ -57,7 +58,7 @@ public class StoreNotificationsComponent {
      * @param eventingService Eventing Service
      */
     protected void setRegistryEventingService(EventingService eventingService) {
-        Utils.setRegistryEventingService(eventingService);
+        ComponentManager.setRegistryEventingService(eventingService);
         if (log.isDebugEnabled()) {
             log.debug("Successfully set registry eventing service");
         }
@@ -69,7 +70,7 @@ public class StoreNotificationsComponent {
      * @param eventingService Eventing Service
      */
     protected void unsetRegistryEventingService(EventingService eventingService) {
-        Utils.setRegistryEventingService(null);
+        ComponentManager.setRegistryEventingService(null);
     }
 
     /**
@@ -78,7 +79,7 @@ public class StoreNotificationsComponent {
      * @param registryService Registry Service
      */
     protected void setRegistryService(RegistryService registryService) {
-        Utils.setRegistryService(registryService);
+        ComponentManager.setRegistryService(registryService);
         if (log.isDebugEnabled()) {
             log.debug("Successfully set registry service");
         }
@@ -90,7 +91,7 @@ public class StoreNotificationsComponent {
      * @param registryService
      */
     protected void unsetRegistryService(RegistryService registryService) {
-        Utils.setRegistryService(null);
+        ComponentManager.setRegistryService(null);
     }
 
 }

@@ -288,8 +288,13 @@ var buildManagers = function (tenantId, registry) {
 
     var validationManager = new validationManagement.ValidationManager();
 
-    var modelManager = new ext_mng.ModelManager({parser: parser, adapterManager: adapterManager,
-        actionManager: actionManager, rxtManager: rxtManager, validationManager: validationManager});
+    var modelManager = new ext_mng.ModelManager({
+        parser:parser,
+        adapterManager:adapterManager,
+        actionManager:actionManager,
+        rxtManager:rxtManager,
+        validationManager:validationManager
+    });
 
     return {
         modelManager: modelManager,

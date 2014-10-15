@@ -28,24 +28,24 @@ import org.wso2.carbon.store.notifications.events.StoreVersionCreateEvent;
 /**
  * Utility Class to register event types and services
  */
-public class Utils {
+public class ComponentManager {
 
     private static EventingService registryEventingService;
     private static RegistryService registryService;
-    private static boolean intialized = false;
-    private static Log log = LogFactory.getLog(Utils.class);
+    private static Log log = LogFactory.getLog(ComponentManager.class);
 
     /**
      * Set Registry Service
+     *
      * @param service Registry service
      */
     public static synchronized void setRegistryService(RegistryService service) {
         registryService = service;
-        intialize();
     }
 
     /**
      * Get Registry Service
+     *
      * @return Registry Service
      */
     public static synchronized RegistryService getRegistryService() {
@@ -54,6 +54,7 @@ public class Utils {
 
     /**
      * Get Registry Eventing Service
+     *
      * @return Registry Eventing Service
      */
     public static EventingService getRegistryEventingService() {
@@ -62,24 +63,25 @@ public class Utils {
 
     /**
      * Set Registry Eventing Service
+     *
      * @param registryEventingService Registry Eventing Service
      */
     public static void setRegistryEventingService(EventingService registryEventingService) {
-        Utils.registryEventingService = registryEventingService;
-        intialize();
+        ComponentManager.registryEventingService = registryEventingService;
     }
 
     /**
      * Register custom Event Types for ES
      */
-    private static void intialize(){
-        if(!intialized && registryEventingService!=null && registryService!=null){
+    public static void registerEvents() {
+        if (registryEventingService != null && registryService != null) {
             registryEventingService.registerEventType(Constants.LC_STATE_CHANGE, StoreLCStateChangeEvent.EVENT_NAME, null);
             registryEventingService.registerEventType(Constants.ASSET_UPDATE, StoreAssetUpdateEvent.EVENT_NAME, null);
             registryEventingService.registerEventType(Constants.VERSION_CREATED, StoreVersionCreateEvent.EVENT_NAME, null);
             registryEventingService.registerEventType(Constants.MESSAGE_SENT, StoreMessageSentEvent.EVENT_NAME, null);
-            intialized=true;
             log.info("Store event types successfully registered");
+        }else {
+            log.error("Store event type registration failed");
         }
     }
 
