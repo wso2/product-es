@@ -28,4 +28,7 @@ public abstract class ESIntegrationUITest extends ESIntegrationTest{
         return UrlGenerationUtil.getLoginURL(esContext.getInstance());
     }
 
+    protected String getWebAppURL() throws XPathExpressionException {
+        return  UrlGenerationUtil.getWebAppURL(esContext.getContextTenant(), esContext.getInstance());
+    }
 }
