@@ -16,91 +16,77 @@
 
 var conf = require("conf.json");
 var authenticate, sessionId;
-var assetId='dd799388-82b4-449d-b69b-467ad1d37c95';
-
 var username = conf.authConfiguration.username;
 var password = conf.authConfiguration.password;
 var server_url = conf.StoreConfigurations.url;
 
-describe('Lifecycle POST - Publisher API ', function () {
-       
-
-        
-        
-});
-
+/**
+ * Groups Test cases for Lifecycle GET endpoints
+ */
 describe('Lifecycle GET - Publisher API', function () {
-       
-        /*
-         * Endpoint: /publisher/apis/lifecycles
-         * Method: GET
-         * Response: success message
-         * test: message return
-         */
-        it('Test get lifecycle list', function () {
-            var url = server_url+'/lifecycles';
 
-            authenticate = post(server_url+'/authenticate', {"password" : password,"username" :username }, {},'json');
-            var header = {'Cookie':"JSESSIONID="+authenticate.data.data.sessionId+";"};
-            try {
-                var response = get(url, {}, header,'json');
-            } catch (e) {
-                log.debug(e);
-            } finally {
-                post(server_url+'/logout',{}, header,'json');   
-                expect(response.data.data).not.toBe(undefined);              
+    /*
+     * Endpoint: /publisher/apis/lifecycles
+     * Method: GET
+     * Response: success message
+     * test: message return
+     */
+    it('Test get lifecycle list', function () {
+        var url = server_url + '/lifecycles';
+        authenticate = post(server_url + '/authenticate', {"password": password, "username": username }, {}, 'json');
+        var header = {'Cookie': "JSESSIONID=" + authenticate.data.data.sessionId + ";"};
+        try {
+            var response = get(url, {}, header, 'json');
+        } catch (e) {
+            log.debug(e);
+        } finally {
+            post(server_url + '/logout', {}, header, 'json');
+            expect(response.data.data).not.toBe(undefined);
+        }
+    });
 
-            }
-           
-        });
+    /*
+     * Endpoint: /publisher/apis/lifecycles
+     * Method: GET
+     * Response: success message
+     * test: message return
+     */
+    it('Test get lifecycle definition by name', function () {
+        var url = server_url + '/lifecycles/SampleLifeCycle2';
+        authenticate = post(server_url + '/authenticate', {"password": password, "username": username }, {}, 'json');
+        var header = {'Cookie': "JSESSIONID=" + authenticate.data.data.sessionId + ";"};
+        try {
+            var response = get(url, {}, header, 'json');
+        } catch (e) {
+            log.debug(e);
+        } finally {
+            post(server_url + '/logout', {}, header, 'json');
+            expect(response.data.data).not.toBe(undefined);
 
-        /*
-         * Endpoint: /publisher/apis/lifecycles
-         * Method: GET
-         * Response: success message
-         * test: message return
-         */
-        it('Test get lifecycle definition by name', function () {            
-            var url = server_url+'/lifecycles/SampleLifeCycle2';
+        }
+    });
 
-            authenticate = post(server_url+'/authenticate', {"password" : password,"username" :username }, {},'json');
-            var header = {'Cookie':"JSESSIONID="+authenticate.data.data.sessionId+";"};
-            try {
-                var response = get(url, {}, header,'json');
-            } catch (e) {
-                log.debug(e);
-            } finally {
-                post(server_url+'/logout',{}, header,'json');   
-                expect(response.data.data).not.toBe(undefined); 
+    /*
+     * Endpoint: /publisher/apis/lifecycles
+     * Method: GET
+     * Response: success message
+     * test: message return
+     */
+    it('Test get lifecycle state details by lifecyclestate name', function () {
+        var url = server_url + '/lifecycles/SampleLifeCycle2/Created';
+        authenticate = post(server_url + '/authenticate', {"password": password, "username": username }, {}, 'json');
+        var header = {'Cookie': "JSESSIONID=" + authenticate.data.data.sessionId + ";"};
+        try {
+            var response = get(url, {}, header, 'json');
+        } catch (e) {
+            log.error(e);
+        }
+        finally {
+            post(server_url + '/logout', {}, header, 'json');
+            expect(response.data.data.nextStates[0].state).toEqual('In-Review');
+        }
+    });
 
-            }
-           
-        });
-
-        /*
-         * Endpoint: /publisher/apis/lifecycles
-         * Method: GET
-         * Response: success message
-         * test: message return
-         */
-        it('Test get lifecycle state details by lifecyclestate name', function () {            
-            var url = server_url+'/lifecycles/SampleLifeCycle2/Created';
-
-            authenticate = post(server_url+'/authenticate', {"password" : password,"username" :username }, {},'json');
-            var header = {'Cookie':"JSESSIONID="+authenticate.data.data.sessionId+";"};                
-            try {
-                var response = get(url, {}, header,'json');
-            } catch (e) {
-                log.error(e);
-            }
-            finally {
-                post(server_url+'/logout',{}, header,'json');
-                expect(response.data.data.nextStates[0].state).toEqual('In-Review');
-
-            }
-           
-        });               
-        
 });
     
 

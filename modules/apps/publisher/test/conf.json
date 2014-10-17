@@ -1,37 +1,10 @@
 {
-    "StoreConfigurations":{
-    	"url":"https://localhost:9443/publisher/apis",
-        
-    },
+    "StoreConfigurations": {
+        "url": "https://localhost:9443/publisher/apis"
 
-    "authConfiguration":{
-          "username":"admin",
-	        "password":"admin", 
     },
-    "assetConfiguration":{            
-          "id": "93bb67f2-2d6c-4faf-b963-806e4b29a718",
-          "type": "gadget",
-          "path": "/_system/governance/gadgets/admin/WSO2 Jira/1.0.0",
-          "lifecycle": "SampleLifeCycle2",
-          "lifecycleState": "Published",
-          "mediaType": "application/vnd.wso2-gadget+xml",
-          "attributes": {
-                "overview_location": "/config/defaults/gadgets/wso2-jira",
-                "overview_description": "This is a sample gadget that is shipped with the store. This gadget visualizes the frequency of issues created and popular engineers working on issues in WSO2 Carbon Platform",
-                "overview_dataformat": "/config/defaults/gadgets/wso2-jira/datasource/data-format.json",
-                "overview_name": "WSO2 Jira",
-                "overview_version": "1.0.0",
-                "overview_url": "http://localhost:9763/publisher/config/defaults/gadgets//wso2-jira/wso2-jira.xml",
-                "overview_provider": "admin",
-                "images_banner": "/store/storage/gadget/93bb67f2-2d6c-4faf-b963-806e4b29a718/adfc0b9b-6748-4b1c-9d58-a7f4e693cd6a/banner.jpg",
-                "overview_chartoptions": "/config/defaults/gadgets/wso2-jira/config/chart-options.json",
-                "overview_createdtime": "00000001405341883791",
-                "overview_category": "WSO2",
-                "images_thumbnail": "/store/storage/gadget/93bb67f2-2d6c-4faf-b963-806e4b29a718/d5a3b88c-81db-42b3-869c-00077a7a603f/thumbnail.jpg"
-          },
-          "content": {
-            
-          }
-
+    "authConfiguration": {
+        "username": "admin",
+        "password": "admin"
     }
 }

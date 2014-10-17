@@ -17,80 +17,79 @@
 var conf = require("conf.json");
 
 describe('Logout END Point - Publisher API', function () {
-       
-        /*
-         * Endpoint: /publisher/apis/logout
-         * Method: POST
-         * Response: success message
-         * test: message return correctly
-         */
-        it('Test logout with valid SessionId', function () {
-            var username = conf.authConfiguration.username;
-            var password = conf.authConfiguration.password;
-            var server_url = conf.StoreConfigurations.url;
-            var url = server_url+'/logout';
 
-            var login = post(server_url+'/authenticate', {"password" : password,"username" : username}, {},'json');
-            var header = {'cookie':"JSESSIONID="+login.data.data.sessionId+';'};
-            try {
-                var response = post(url, {"password" : password,"username" : username}, header,'json');
-            } catch (e) {
-                log.debug(e);
-            } finally {
-                expect(response.data.data.message).not.toBe(undefined);                
-            }
-           
-        });
+    /*
+     * Endpoint: /publisher/apis/logout
+     * Method: POST
+     * Response: success message
+     * test: message return correctly
+     */
+    it('Test logout with valid SessionId', function () {
+        var username = conf.authConfiguration.username;
+        var password = conf.authConfiguration.password;
+        var server_url = conf.StoreConfigurations.url;
+        var url = server_url + '/logout';
+        var login = post(server_url + '/authenticate', {"password": password, "username": username}, {}, 'json');
+        var header = {'cookie': "JSESSIONID=" + login.data.data.sessionId + ';'};
+        try {
+            var response = post(url, {"password": password, "username": username}, header, 'json');
+        } catch (e) {
+            log.debug(e);
+        } finally {
+            expect(response.data.data.message).not.toBe(undefined);
+        }
 
-        /*
-         * Endpoint: /publisher/apis/logout
-         * Method: POST
-         * Response: success message
-         * test: message "User Logged out succesfully"
-         */
-        it('Test logout valid SessionId: response data', function () {
-            var username = conf.authConfiguration.username;
-            var password = conf.authConfiguration.password;
-            var server_url = conf.StoreConfigurations.url;
-            var url = server_url+'/logout';
+    });
 
-            var login = post(server_url+'/authenticate', {"password" : password,"username" : username}, {},'json');
-            var header = {'cookie':"JSESSIONID="+login.data.data.sessionId+';'};
-            try {
-                var response = post(url, {}, header,'json');
-            } catch (e) {
-                log.debug(e);
-            } finally {
-                expect(response.data.data.message).not.toBe(undefined);
-                expect(response.data.data.message).toEqual('User Logged out successfully');
-            }
-           
-        });
+    /*
+     * Endpoint: /publisher/apis/logout
+     * Method: POST
+     * Response: success message
+     * test: message "User Logged out succesfully"
+     */
+    it('Test logout valid SessionId: response data', function () {
+        var username = conf.authConfiguration.username;
+        var password = conf.authConfiguration.password;
+        var server_url = conf.StoreConfigurations.url;
+        var url = server_url + '/logout';
 
-        /*
-         * Endpoint: /publisher/apis/logout
-         * Method: POST
-         * Response: success message
-         * test: message 'Unable to logout user!'
-         */
-        it('Test logout invalid SessionId', function () {
-            var username = conf.authConfiguration.username;
-            var password = conf.authConfiguration.password;
-            var server_url = conf.StoreConfigurations.url;
-            var url = server_url+'/logout';
+        var login = post(server_url + '/authenticate', {"password": password, "username": username}, {}, 'json');
+        var header = {'cookie': "JSESSIONID=" + login.data.data.sessionId + ';'};
+        try {
+            var response = post(url, {}, header, 'json');
+        } catch (e) {
+            log.debug(e);
+        } finally {
+            expect(response.data.data.message).not.toBe(undefined);
+            expect(response.data.data.message).toEqual('User Logged out successfully');
+        }
 
-            var login = post(server_url+'/authenticate', {"password" : password,"username" :username }, {},'json');
-            var header = {'cookie':"JSESSIONID="+login.data.data.sessionId+'AHJSKASHJK;'};
-            try {
-                var response = post(url, {}, header,'json');
-            } catch (e) {
-                log.debug(e);
-            } finally {
-                expect(response.data.data).toBe(undefined);
-                expect(response.data.error).toEqual('Unable to logout user!');
-                post(url, {}, {'cookie':"JSESSIONID="+login.data.data.sessionId+';'},'json');
-            }
-            
-        });
+    });
+
+    /*
+     * Endpoint: /publisher/apis/logout
+     * Method: POST
+     * Response: success message
+     * test: message 'Unable to logout user!'
+     */
+    it('Test logout invalid SessionId', function () {
+        var username = conf.authConfiguration.username;
+        var password = conf.authConfiguration.password;
+        var server_url = conf.StoreConfigurations.url;
+        var url = server_url + '/logout';
+
+        var login = post(server_url + '/authenticate', {"password": password, "username": username }, {}, 'json');
+        var header = {'cookie': "JSESSIONID=" + login.data.data.sessionId + 'AHJSKASHJK;'};
+        try {
+            var response = post(url, {}, header, 'json');
+        } catch (e) {
+            log.debug(e);
+        } finally {
+            expect(response.data.data).toBe(undefined);
+            expect(response.data.error).toEqual('Unable to logout user!');
+            post(url, {}, {'cookie': "JSESSIONID=" + login.data.data.sessionId + ';'}, 'json');
+        }
+
+    });
 
 });
