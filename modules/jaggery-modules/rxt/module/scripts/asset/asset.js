@@ -16,26 +16,29 @@
  *  under the License.
  *
  */
+/**
+ * The asset namespace contains methods and classes that are used to work with the asset extension model
+ * @namespace
+ * @example
+ *     var asset = require('rxt').asset;
+ *     asset.init();
+ * @requires event
+ * @requires utils
+ * @requires store
+ * @requires Packages.org.wso2.carbon.governance.api.util.GovernanceUtils
+ */
 var asset = {};
-(function(asset, core) {
+(function (asset, core) {
     var log = new Log('rxt.asset');
-    var DEFAULT_TIME_STAMP_FIELD = 'overview_createdtime';
-    var DEFAULT_RECENT_ASSET_COUNT = 5;
+    var DEFAULT_TIME_STAMP_FIELD = 'overview_createdtime'; //TODO:Move to constants
+    var DEFAULT_RECENT_ASSET_COUNT = 5; //TODO: Move to constants
     var GovernanceUtils = Packages.org.wso2.carbon.governance.api.util.GovernanceUtils;
-    /**
-     * The function locates the provided field and table name within an attributes
-     * object
-     * @param  {[type]} attributes [description]
-     * @param  {[type]} fieldName  [description]
-     * @param  {[type]} tableName  [description]
-     * @return {[type]}            [description]
-     */
-    var getField = function(attributes, tableName, fieldName) {
+    var getField = function (attributes, tableName, fieldName) {
         var expression = tableName + '_' + fieldName;
         var result = attributes[expression];
         return result;
     };
-    var getOptionTextField = function(attributes, tableName, fieldName, field, table) {
+    var getOptionTextField = function (attributes, tableName, fieldName, field, table) {
         //Determine the number of headings 
         var subHeading = table.subheading ? table.subheading[0].heading : null;
         if (!subHeading) {
@@ -49,7 +52,7 @@ var asset = {};
         var value = attributes[expression];
         return value;
     };
-    var resolveField = function(attributes, tableName, fieldName, field, table) {
+    var resolveField = function (attributes, tableName, fieldName, field, table) {
         var value;
         switch (field.type) {
             case 'option-text':
@@ -61,7 +64,7 @@ var asset = {};
         }
         return parse(stringify(value));
     };
-    var processOptionTextList = function(list) {
+    var processOptionTextList = function (list) {
         //If there is a list then  it can be either an array or a string(If it is an array it sends it back as a Java array which is not detected)
         list = parse(stringify(list));
         var ref = require('utils').reflection;
@@ -76,7 +79,7 @@ var asset = {};
         }
         return result;
     };
-    var setField = function(field, attrName, data, attributes, table) {
+    var setField = function (field, attrName, data, attributes, table) {
         if (field.type == 'option-text') {
             var optionsSet = [];
             var textSet = [];
@@ -84,26 +87,23 @@ var asset = {};
             var length;
             var splitName;
             for (var dataField in data) {
-                if (dataField.indexOf(attrName + '_option') == 0) {
+                if (dataField.hasOwnProperty(attrName + '_option') && dataField.indexOf(attrName + '_option') == 0) {
                     splitName = dataField.split("_");
                     length = splitName.length;
                     indexc = splitName[length - 1];
                     optionsSet[indexc] = data[dataField];
                 }
-                if (dataField.indexOf(attrName + '_text') == 0) {
+                if (dataField.hasOwnProperty(attrName + '_text') && dataField.indexOf(attrName + '_text') == 0) {
                     splitName = dataField.split("_");
                     length = splitName.length;
                     indexc = splitName[length - 1];
                     textSet[indexc] = data[dataField];
                 }
             }
-            var fullIndex = 0;
             var list = [];
             for (var singleIndex = 0; singleIndex < optionsSet.length; singleIndex++) {
-                list[fullIndex] = optionsSet[singleIndex];
-                fullIndex++;
-                list[fullIndex] = textSet[singleIndex];
-                fullIndex++;
+                list.push(optionsSet[singleIndex]);
+                list.push(textSet[singleIndex]);
             }
             //The options text fields need to be sent in with the name of table and entry postfix
             attrName = table.name + '_entry';
@@ -118,7 +118,7 @@ var asset = {};
         }
         return attributes;
     };
-    var dropEmptyFields = function(asset) {
+    var dropEmptyFields = function (asset) {
         for (var key in asset.attributes) {
             if (asset.attributes[key] == '') {
                 delete asset.attributes[key];
@@ -126,6 +126,21 @@ var asset = {};
         }
     };
 
+    /**
+     * Represents an interface for performing CRUD operations
+     * on assets.Theis class uses the GovernanceArtifactManager
+     * to perform asset operations.This class should not be instantiated directly
+     * @example
+     *     var am=core.createUserAssetManager()
+     *     var am=core.createAnonAssetManager();
+     * @class AssetManager
+     * @constructor
+     * @param {Object} registry   carbon Registry instance
+     * @param {String} type       The asset type  for which the CRUD interface will be created
+     * @param {Object} rxtManager An instance of RxtManager class
+     * @param {Object} renderer   An instance of the AssetRenderer class
+     * @memberOf asset
+     */
     function AssetManager(registry, type, rxtManager, renderer) {
         this.registry = registry;
         this.rxtManager = rxtManager;
@@ -133,6 +148,7 @@ var asset = {};
         this.type = type;
         this.r = renderer;
         this.am = null;
+        //TODO: Move to constansts
         this.defaultPaging = {
             'start': 0,
             'count': 1000,
@@ -141,12 +157,30 @@ var asset = {};
             'paginationLimit': 1000
         };
     }
-    AssetManager.prototype.init = function() {
+
+    AssetManager.prototype.init = function () {
         var carbon = require('carbon');
         GovernanceUtils.loadGovernanceArtifacts(this.registry.registry);
         this.am = new carbon.registry.ArtifactManager(this.registry, this.type);
     };
-    AssetManager.prototype.create = function(options) {
+    /**
+     * Creates a new asset instance by calling the underlying artifact manager on
+     * a JSON object representing the asset.If the asset is added successfully the
+     * an id property is added to the options object and is updated with the id
+     * of the created asset
+     * @example
+     *     var asset={};
+     *     var attributes=asset.attributes={};
+     *     attributes.overview_name='a';
+     *     attributes.overview_version='1.0.0';
+     *     am.create(asset);
+     * @param  {Object} options A JSON object representing the asset to be created
+     * @memberOf AssetManager
+     * @instance
+     * @function create
+     * @lends AssetManager.prototype
+     */
+    AssetManager.prototype.create = function (options) {
         var id = this.am.add(options);
         if (!id) {
             log.warn('Unable to set the id of the newly created asset.The following asset may not have been created :' + stringify(asset));
@@ -154,10 +188,22 @@ var asset = {};
         }
         options.id = id;
     };
-    AssetManager.prototype.update = function(options) {
+    /**
+     * Updates an existing asset instance.The provided asset instance must have the id property as well as all
+     * asset attributes
+     * @param  {Object} options A JSON object of the asset instance to be updated
+     */
+    AssetManager.prototype.update = function (options) {
         this.am.update(options);
     };
-    AssetManager.prototype.remove = function(id) {
+    /**
+     * Removes the asset instance with the provided id
+     * @param  {String} id  A UUID representing an asset instance to be removed
+     * @throws The asset manager delete method requires an id to be provided
+     * @throws An artifact manager instance has not been set for this asset manager.Make sure init method is called prior to invoking
+     * CRUD operations
+     */
+    AssetManager.prototype.remove = function (id) {
         if (!id) {
             throw 'The asset manager delete method requires an id to be provided.';
         }
@@ -167,14 +213,13 @@ var asset = {};
         this.am.remove(id);
     };
     /**
-     * The method is responsible for updating the provided asset with the latest
-     * values in the registry.If the asset is not succsessfully synched with the registry
-     * counterpart a false value is returned.It gurantees that all properties in the provided
-     * asset are returned
-     * @param  {[type]} asset An asset object
-     * @return {[type]}       True if the asset is succsessfully synched
+     * Updates the provided asset with the latest values in the registry.If the asset is not succsessfully
+     * synched with the registrycounterpart a false value is returned.It gurantees that all properties in
+     * the provided asset are returned
+     * @param  {Object} asset An JSON object representing the asset to be updated
+     * @return {Boolean}      Returns true if the asset is successfully updated to the values of the registry
      */
-    AssetManager.prototype.synchAsset = function(asset) {
+    AssetManager.prototype.synchAsset = function (asset) {
         var locatedAsset = false;
         var ref = require('utils').reflection;
         //If the asset id is provided then we can use the get method to retrieve the asset
@@ -196,7 +241,7 @@ var asset = {};
         }
         dropEmptyFields(asset);
         var clone = parse(stringify(asset.attributes));
-        var result = this.am.find(function(instance) {
+        var result = this.am.find(function (instance) {
             for (var key in clone) {
                 //Do not compare arrays.We assume that attribute properties are sufficient
                 //to guarantee uniqueness
@@ -215,7 +260,14 @@ var asset = {};
         locatedAsset = true;
         return locatedAsset;
     };
-    AssetManager.prototype.list = function(paging) {
+    /**
+     * Returns a set of assets restricted by the paging object.If a paging object is not provided then a default
+     * paging object is used
+     * @param  {Object} paging A paging object (Optional)
+     * @return {Array}         An array of asset instance of the type instance for the asset manager
+     * @throws An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.
+     */
+    AssetManager.prototype.list = function (paging) {
         var paging = paging || this.defaultPaging;
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
@@ -224,7 +276,12 @@ var asset = {};
         addAssetsMetaData(assets, this);
         return assets;
     };
-    AssetManager.prototype.get = function(id) {
+    /**
+     * Returns the asset with the provided id
+     * @param  {String} id A UUID representing an asset instance
+     * @return {Object}    An asset instance
+     */
+    AssetManager.prototype.get = function (id) {
         if (!id) {
             throw 'The asset manager get method requires an id to be provided.';
         }
@@ -235,7 +292,22 @@ var asset = {};
         addAssetsMetaData(asset, this);
         return asset;
     };
-    AssetManager.prototype.search = function(query, paging) {
+    /**
+     * Executes a query to retrieve a set of assets bounded by a paging object.If a paging object is not provided
+     * then a default paging object is used
+     * @example
+     *     var query={};
+     *     var attributes = query.attributes={};
+     *     attributes.overview_name='wso2';
+     *     //Invocation without a paging object
+     *     var assets = am.search(query);
+     *     //Invocation with a paging object
+     *     var assets = am.search(query,paging);
+     * @param  {Object} query  A JSON object representing a query to be executed
+     * @param  {Object} paging A paging object
+     * @return {Array}        An array of asset instances filtered by the query object
+     */
+    AssetManager.prototype.search = function (query, paging) {
         var paging = paging || this.defaultPaging;
         if (!this.am) {
             throw 'An artifact manager instance manager has not been set for this asset manager.Make sure init method is called prior to invoking other operations.';
@@ -244,7 +316,28 @@ var asset = {};
         addAssetsMetaData(assets, this);
         return assets;
     };
-    AssetManager.prototype.recentAssets = function(opts) {
+    /**
+     * Returns the assets that have been recently added.A user can optionally define a query and the count of assets to be returned.The default count
+     * is set to 5
+     * The temporal nature of an asset is determined by a stamp attribute that can be defined in an asset configuration callback.By default
+     * the temporal nature of an asset will be checked based on the overview_createdtime property.
+     * @example
+     *     //option 1
+     *     var assets = am.recentAssets();
+     *
+     *     //option 2
+     *     var query={};
+     *     var attributes=query.attributes={};
+     *     var count=100;   //The number of recent assets to be returned
+     *     var assets =  am.recentAssets({
+     *         q:query,
+     *         count:count
+     *     });
+     *
+     * @param  {Object} opts An optional object that may contain a query
+     * @return {Array}       An array of recent assets
+     */
+    AssetManager.prototype.recentAssets = function (opts) {
         var opts = opts || {};
         var count = opts.count || constants.RECENT_ASSET_COUNT;
         var q = opts.q || {};
@@ -261,7 +354,7 @@ var asset = {};
         //addAssetsMetaData(items, this);
         return items;
     };
-    AssetManager.prototype.popularAssets = function(opts) {
+    AssetManager.prototype.popularAssets = function (opts) {
         var opts = opts || {};
         var count = opts.count || constants.POPULAR_ASSET_COUNT;
         var q = opts.q || {};
@@ -275,17 +368,22 @@ var asset = {};
         paging.count = count || paging.count;
         paging.sortBy = nameField;
         var items = this.search(q, paging);
-        //addAssetsMetaData(items, this);
         return items;
     };
     /**
-     * The method returns the list of tags for a given asset instance or asset type
+     * Returns the set of tags for a given asset instance or asset type
      * If an id is provided then the tags of that particular asset is returned,else
      * all of the tags applied to the current asset type are returned
-     * @param  {[type]} id [description]
-     * @return {[type]}    [description]
+     * @example
+     *     var tags = am.tags(); //This will return all tags of the am's type
+     *
+     *     var tagName=tags[0].name;
+     *     var tagAppliedCount=tags[0].count;
+     *
+     * @param  {String} id A UUID representing an asset instance
+     * @return {Array}     An array of tag name value pairs
      */
-    AssetManager.prototype.tags = function() {
+    AssetManager.prototype.tags = function () {
         var tag, tags, assetType, i, length, count;
         var tagz = [];
         var tz = {};
@@ -314,14 +412,14 @@ var asset = {};
         return tagz;
     };
     /**
-     * The method returns the list of assets that have the provided tag
+     * Returns the list of assets that have the provided tag
      * attached to it.If a paging value is provided then it is used,else
      * a default set of paging values are used
-     * @param  {[type]} tagName [description]
-     * @param  {[type]} paging  [description]
-     * @return {[type]}         [description]
+     * @param  {String} tagName The tag name for which the applied assets must be returned
+     * @param  {Object} paging  A paging object
+     * @return {Array}          An array of assets that have the tag applied to them
      */
-    AssetManager.prototype.tagged = function(tagName, paging) {
+    AssetManager.prototype.tagged = function (tagName, paging) {
         var assets = [];
         var paging = paging || constants.DEFAULT_TAG_PAGIN;
         var q = {};
@@ -330,27 +428,23 @@ var asset = {};
         return assets;
     };
     /**
-     * The methos adds a tag to a given asset
-     * @param {[type]} id  [description]
-     * @param {[type]} tag [description]
+     * Adds a tag to a given asset
+     * @param {String} id  A UUID representing an asset instance
+     * @param {String} tag  The name of the tag
      */
-    AssetManager.prototype.addTag = function(id, tag) {};
-    /**
-     * The method removes the provided tag from the asset
-     * @param  {[type]} id  [description]
-     * @param  {[type]} tag [description]
-     * @return {[type]}     [description]
-     */
-    AssetManager.prototype.untag = function(id, tag) {};
+    AssetManager.prototype.addTag = function (id, tag) {
+    };
+    AssetManager.prototype.untag = function (id, tag) {
+    };
     /**
      * The method returns the rating value of a given asset
-     * @param  {[type]} id [description]
-     * @return {[type]}    [description]
+     * @param  {String} id A UUID representing an asset instance
+     * @return {Object}    A rating object containing the average and user rating values
      */
-    AssetManager.prototype.rating = function(id, username) {
-        var rating={};
-        rating.average=0;
-        rating.user=0;
+    AssetManager.prototype.rating = function (id, username) {
+        var rating = {};
+        rating.average = 0;
+        rating.user = 0;
         if (!id) {
             log.error('Unable to locate rating of asset: ' + id);
             return rating;
@@ -362,16 +456,17 @@ var asset = {};
         try {
             rating = this.registry.rating(id, username);
         } catch (e) {
-            log.error('Unable to obtain the rating value of asset: ' + id + ' for user: ' + username+'.Exception: '+e);
+            log.error('Unable to obtain the rating value of asset: ' + id + ' for user: ' + username + '.Exception: ' + e);
         }
         return rating;
     };
     /**
-     * The method adds a rating to an asset
-     * @param {[type]} id     [description]
-     * @param {[type]} rating [description]
+     * Adds a rating value to an asset
+     * @param {String} id     A UUID representing an asset instance
+     * @param {Number} rating A value indicating the rating for the asset
+     * @return {Boolean}    True if the rating is applied to the asset,else false
      */
-    AssetManager.prototype.rate = function(id, rating) {
+    AssetManager.prototype.rate = function (id, rating) {
         var success = false;
         try {
             this.registry.rate(id, rating);
@@ -383,11 +478,11 @@ var asset = {};
         return success;
     };
     /**
-     * The method subscribes a user to a given asset
-     * @param  {[type]} id [description]
-     * @return {[type]}    [description]
+     * Subscribes a user to a given asset
+     * @param  {String} id A UUID representing an asset instance
+     * @return {Boolean}   True if the asset is successfully subscribed,else false
      */
-    AssetManager.prototype.subscribe = function(id, session) {
+    AssetManager.prototype.subscribe = function (id, session) {
         var path = this.getSubscriptionSpace(session);
         var success = false;
         if (!path) {
@@ -407,11 +502,11 @@ var asset = {};
         return success;
     };
     /**
-     * The method unsubscribes a given user to an asset
-     * @param  {[type]} id [description]
-     * @return {[type]}    [description]
+     * Unsubscribes a given user to an asset
+     * @param  {String} id A UUID representing an asset instance
+     * @return {Boolean}   True if the asset is successfully unsubscribed,else false
      */
-    AssetManager.prototype.unsubscribe = function(id, session) {
+    AssetManager.prototype.unsubscribe = function (id, session) {
         var path = this.getSubscriptionSpace(session);
         var success = false;
         if (!path) {
@@ -427,7 +522,14 @@ var asset = {};
         }
         return success;
     };
-    AssetManager.prototype.isSubscribed = function(id, session) {
+    /**
+     * Checks if the currently logged in user is subscribed to the provided asset.This method will internally
+     * call the subscription method
+     * @param  {String}  id      A UUID representing an asset instance
+     * @param  {Object}  session Jaggery session object
+     * @return {Boolean}          True if the user is subscribed to the asset,else false
+     */
+    AssetManager.prototype.isSubscribed = function (id, session) {
         //Obtain the list of all subscribptions of the user to this asset type
         var subscriptions = this.subscriptions(session);
         for (var index = 0; index < subscriptions.length; index++) {
@@ -437,7 +539,12 @@ var asset = {};
         }
         return false;
     };
-    AssetManager.prototype.subscriptions = function(session) {
+    /**
+     * Returns the list of asset subscriptions of the currently logged in user
+     * @param  {Object} session Jaggery session object
+     * @return {Array}          An array of asset instances for which the user has a subscription
+     */
+    AssetManager.prototype.subscriptions = function (session) {
         var userSpace = this.getSubscriptionSpace(session);
         var subscriptions = [];
         if (!userSpace) {
@@ -449,7 +556,7 @@ var asset = {};
         addAssetsMetaData(subscriptions, this);
         return subscriptions;
     };
-    AssetManager.prototype.getSubscriptionSpace = function(session) {
+    AssetManager.prototype.getSubscriptionSpace = function (session) {
         var server = require('store').server;
         var modUser = require('store').user;
         var user = server.current(session);
@@ -460,14 +567,14 @@ var asset = {};
         var space = modUser.userSpace(user);
         return space + core.getAssetSubscriptionSpace(this.type);
     };
-    var obtainSubscriptions = function(path, am, registry, type) {
+    var obtainSubscriptions = function (path, am, registry, type) {
         var items = [];
         var obj = registry.content(path);
         if (!obj) {
             log.debug('There is no content in the subscription path ' + path);
             return items;
         }
-        obj.forEach(function(path) {
+        obj.forEach(function (path) {
             try {
                 var iteamOut = am.get(path.substr(path.lastIndexOf('/') + 1));
                 if (iteamOut.lifecycleState == 'Published') {
@@ -483,13 +590,14 @@ var asset = {};
         return items;
     };
     /**
-     * The function will attach a lifecycle to the provided asset.The type of
+     * Attachs a lifecycle to the provided asset.The type of
      * lifecycle will be read from the configuration if a lifecycle is not provided.If a lifecycle cannot be found
-     * then then method return false.
-     * @param  {[type]} lifecycle An optional string that defines a lifecycle present for the tenant
-     * @return {[type]}
+     * then then method will return false.
+     * @param {Object} asset An asset instance to which the lifecycle must be attached
+     * @param  {String} lifecycle An optional string that defines a lifecycle name
+     * @return {Boolean} True if the lifecycle is successfully attached
      */
-    AssetManager.prototype.attachLifecycle = function(asset, lifecycle) {
+    AssetManager.prototype.attachLifecycle = function (asset, lifecycle) {
         var lifecycle = lifecycle || '';
         var success = false;
         if (!asset) {
@@ -513,7 +621,7 @@ var asset = {};
         }
         return success;
     };
-    AssetManager.prototype.invokeDefaultLcAction = function(asset) {
+    AssetManager.prototype.invokeDefaultLcAction = function (asset) {
         var success = false;
         if (!asset) {
             log.error('Failed to invoke default  lifecycle action as an asset object was not provided.');
@@ -528,12 +636,12 @@ var asset = {};
         return success;
     };
     /**
-     * The function will invoke a provided lifecycle action
-     * @param  {[type]} asset  The asset for which a lifecycle action must be completed
-     * @param  {[type]} action The lifecycle action to be performed
-     * @return {[type]}        True if the action is invoked,else false
+     * Invokes the provided lifecycle action
+     * @param  {Object} asset  The asset for which a lifecycle action must be completed
+     * @param  {String} action The lifecycle action to be performed
+     * @return {Boolean}        True if the action is invoked,else false
      */
-    AssetManager.prototype.invokeLcAction = function(asset, action) {
+    AssetManager.prototype.invokeLcAction = function (asset, action) {
         var success = false;
         if (!action) {
             log.error('Failed to invokeAction as an action was not provided for asset: ' + stringify(asset));
@@ -552,14 +660,14 @@ var asset = {};
         return success;
     };
     /**
-     * The function sets the check item at the provided index to the given state
-     * @param  {[type]} asset          [description]
-     * @param  {[type]} checkItemIndex The index of the check list item to be invoked
-     * @param  {[type]} checkItemState A boolean value which indicates the state of the check item
+     * Sets the check item at the provided index to the given state
+     * @param  {Object} asset          The asset instance for which the lifecycle check list item must be changed
+     * @param  {Number} checkItemIndex The index of the check list item to be invoked
+     * @param  {Boolean} checkItemState A boolean value which indicates the state of the check item
      *                                 (checked=true and unchecked=false)
-     * @return {[type]}                A boolean value indicating whether the check item state was changed
+     * @return {Boolean}                A boolean value indicating whether the check item state was changed
      */
-    AssetManager.prototype.invokeLifecycleCheckItem = function(asset, checkItemIndex, checkItemState) {
+    AssetManager.prototype.invokeLifecycleCheckItem = function (asset, checkItemIndex, checkItemState) {
         var success = false;
         if (!asset) {
             log.warn('Unable to locate asset details in order to invoke check item state change');
@@ -593,45 +701,11 @@ var asset = {};
         return success;
     };
     /**
-     * The function obtains all recent assets with an optional query object to filter the results
-     * @param  {[type]} query An optional query object
-     * @return {[type]}       [description]
+     * Returns all of the check list items for the asset
+     * @param  {Object} asset An asset instance
+     * @return {Array}       An array of check items along with the checked state
      */
-    /* AssetManager.prototype.recentAssets = function() {
-        var timeStampField = this.rxtManager.getTimeStampAttribute(this.type);
-        var ref = require('utils').reflection;
-        var results = [];
-        if (!timeStampField) {
-            log.warn('A timestamp field has not been defined for type: ' + this.type + '. Default time stamp field ' + DEFAULT_TIME_STAMP_FIELD + ' will be used.');
-            timeStampField = DEFAULT_TIME_STAMP_FIELD;
-        }
-        var query = {};
-        var options = {
-            start: 0,
-            count: DEFAULT_RECENT_ASSET_COUNT,
-            sortBy: timeStampField,
-            sort: 'older'
-        };
-        //Options object provided
-        if (arguments.length == 1) {
-            ref.copyAllPropValues(arguments[0], options);
-        }
-        //Options and Query object provided
-        else if (arguments.length == 2) {
-            ref.copyAllPropValues(arguments[0], options);
-            query = arguments[1];
-        }
-        results = this.am.search(query, options);
-        addAssetsMetaData(results, this);
-        return results;
-    };*/
-    /**
-     * The function returns all of the check items for the current state in which the provided
-     * asset is in
-     * @param  {[type]} asset [description]
-     * @return {[type]}       An array of check items along with the checked state
-     */
-    AssetManager.prototype.getLifecycleCheckItems = function(asset) {
+    AssetManager.prototype.getLifecycleCheckItems = function (asset) {
         var checkItems = [];
         try {
             checkItems = this.am.getCheckListItemNames(asset);
@@ -640,8 +714,9 @@ var asset = {};
         }
         return checkItems;
     };
-    AssetManager.prototype.createVersion = function(options, newVersion) {};
-    AssetManager.prototype.getName = function(asset) {
+    AssetManager.prototype.createVersion = function (options, newVersion) {
+    };
+    AssetManager.prototype.getName = function (asset) {
         var nameAttribute = this.rxtManager.getNameAttribute(this.type);
         if (asset.attributes) {
             var name = asset.attributes[nameAttribute];
@@ -653,7 +728,7 @@ var asset = {};
         }
         return '';
     };
-    AssetManager.prototype.getThumbnail = function(asset) {
+    AssetManager.prototype.getThumbnail = function (asset) {
         var thumbnailAttribute = this.rxtManager.getThumbnailAttribute(this.type);
         if (asset.attributes) {
             var thumb = asset.attributes[thumbnailAttribute];
@@ -665,7 +740,7 @@ var asset = {};
         }
         return '';
     };
-    AssetManager.prototype.getBanner = function(asset) {
+    AssetManager.prototype.getBanner = function (asset) {
         var bannerAttribute = this.rxtManager.getBannerAttribute(this.type);
         if (asset.attributes) {
             var banner = asset.attributes[bannerAttribute];
@@ -677,7 +752,7 @@ var asset = {};
         }
         return '';
     };
-    AssetManager.prototype.getTimeStamp = function(asset) {
+    AssetManager.prototype.getTimeStamp = function (asset) {
         var timestampAttribute = this.rxtManager.getTimeStampAttribute(this.type);
         if (asset.attributes) {
             var banner = asset.attributes[timestampAttribute];
@@ -690,14 +765,14 @@ var asset = {};
         return '';
     };
     /**
-     * The function provides an array of all fields that represent resources of the asset
+     * Returns an array of all fields that represent resources of the asset
      * such as thumbnails,banners and content
-     * @return {[type]} An array of attribute fields
+     * @return {Array} An array of attribute fields
      */
-    AssetManager.prototype.getAssetResources = function() {
+    AssetManager.prototype.getAssetResources = function () {
         return this.rxtManager.listRxtFieldsOfType(this.type, 'file');
     };
-    AssetManager.prototype.importAssetFromHttpRequest = function(options) {
+    AssetManager.prototype.importAssetFromHttpRequest = function (options) {
         var tables = this.rxtManager.listRxtTypeTables(this.type);
         var asset = {};
         var attributes = {};
@@ -722,7 +797,7 @@ var asset = {};
         asset.name = this.getName(asset);
         return asset;
     };
-    AssetManager.prototype.combineWithRxt = function(asset) {
+    AssetManager.prototype.combineWithRxt = function (asset) {
         var modAsset = {};
         modAsset.tables = [];
         modAsset.id = asset.id;
@@ -744,7 +819,6 @@ var asset = {};
             for (var fieldName in fields) {
                 field = fields[fieldName];
                 field.name.tableQualifiedName = table.name + '_' + fieldName;
-                //log.info(stringify(field));
                 //Check if the field exists in the attributes list
                 attrFieldValue = resolveField(asset.attributes || {}, table.name, fieldName, field, table);
                 //If the field exists then update the value 
@@ -756,7 +830,7 @@ var asset = {};
         modAsset.tables = tables;
         return modAsset;
     };
-    var renderSingleAssetPage = function(page, assets, am) {
+    var renderSingleAssetPage = function (page, assets, am) {
         page.assets.name = am.getName(assets);
         page.assets.thumbnail = am.getThumbnail(assets);
         page.assets.banner = am.getBanner(assets);
@@ -764,17 +838,17 @@ var asset = {};
         page.assetMeta.searchFields = am.getSearchableFields();
         return page;
     };
-    var renderSingleAssetPageCombined = function(page, assets, am) {
+    var renderSingleAssetPageCombined = function (page, assets, am) {
         page.assets = am.combineWithRxt(assets);
         renderSingleAssetPage(page, assets, am);
         return page;
     };
-    var renderSingleAssetPageBasic = function(page, assets, am) {
+    var renderSingleAssetPageBasic = function (page, assets, am) {
         page.assets = assets;
         renderSingleAssetPage(page, assets, am);
         return page;
     };
-    var renderMultipleAssetsPage = function(page, assets, am) {
+    var renderMultipleAssetsPage = function (page, assets, am) {
         page.assets = assets;
         addAssetsMetaData(page.assets, am);
         page.assetMeta.categories = am.getCategories();
@@ -784,10 +858,10 @@ var asset = {};
     /**
      * The function is used to add meta data of assets such as the name , thumbnail and banner attributes
      * to an asset
-     * @param {[type]} asset [description]
-     * @param {[type]} am    [description]
+     * @param {Object} asset The asset to be  enriched
+     * @param {Object} am    An asset manager instance
      */
-    var addAssetsMetaData = function(asset, am) {
+    var addAssetsMetaData = function (asset, am) {
         if (!asset) {
             log.error('Unable to add meta data to an empty asset');
             return;
@@ -802,7 +876,7 @@ var asset = {};
             addAssetMetaData(asset, am);
         }
     };
-    var addAssetMetaData = function(asset, am) {
+    var addAssetMetaData = function (asset, am) {
         if ((!asset) || (!asset.attributes)) {
             log.warn('Could not populate asset details of  type: ' + am.type);
             return;
@@ -813,28 +887,20 @@ var asset = {};
         asset.rating = 0;
     };
     /**
-     * The function will a render page with the asset details combined with the rxt template.If an array of assets
+     * Combines page details with the asset details combined with the rxt template.If an array of assets
      * is provided then the assets are not merged with the rxt template
-     * @param  {[type]} assets [description]
-     * @param  {[type]} page   [description]
-     * @return {[type]}        [description]
+     * @param  {Object} assets A asset instance
+     * @param  {Object} page   A UI Page object
+     * @return {Object}        processed page object
      */
-    AssetManager.prototype.render = function(assets, page) {
+    AssetManager.prototype.render = function (assets, page) {
         //Only process assets if both assets and pages are provided
         if (arguments.length == 2) {
             var refUtil = require('utils').reflection;
             //Combine with the rxt template only when dealing with a single asset
             if (refUtil.isArray(assets)) {
-                // page.assets = assets;
-                // page.assetMeta.categories = this.getCategories();
-                // page.assetMeta.searchFields = this.getSearchableFields();
                 page = renderMultipleAssetsPage(page, assets, this);
             } else {
-                // page.assets = this.combineWithRxt(assets);
-                // page.assets.name = this.getName(assets);
-                // page.assets.thumbnail = this.getThumbnail(assets);
-                // page.assets.categories = this.getCategories();
-                // page.assets.searchFields = this.getSearchableFields();
                 page = renderSingleAssetPageCombined(page, assets, this);
             }
         } else if (arguments.length == 1) {
@@ -843,60 +909,52 @@ var asset = {};
         page.rxt = this.rxtTemplate;
         var that = this;
         return {
-            create: function() {
+            create: function () {
                 page = that.r.create(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            update: function() {
+            update: function () {
                 page = that.r.update(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            list: function() {
+            list: function () {
                 page = that.r.list(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            details: function() {
+            details: function () {
                 page = that.r.details(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            lifecycle: function() {
+            lifecycle: function () {
                 page = that.r.lifecycle(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            _custom: function() {
+            _custom: function () {
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             }
         };
     };
     /**
-     * The function will not combine the assets details with the rxt template.Instead
+     * Combines the assets details with the rxt template.
      * it will return the asset as a simple JSON object containing no extra meta data
-     * @param  {[type]} assets [description]
-     * @param  {[type]} page   [description]
-     * @return {[type]}        [description]
+     * @param  {Object} assets A asset instance
+     * @param  {Object} page   A UI Page object
+     * @return {Object}        processed page object
      */
-    AssetManager.prototype.renderBasic = function(assets, page) {
+    AssetManager.prototype.renderBasic = function (assets, page) {
         //Only process assets if both assets and pages are provided
         if (arguments.length == 2) {
             var refUtil = require('utils').reflection;
             //Combine with the rxt template only when dealing with a single asset
             if (refUtil.isArray(assets)) {
-                // page.assets = assets;
-                // page.assetMeta.categories = this.getCategories();
-                // page.assetMeta.searchFields = this.getSearchableFields();
                 page = renderMultipleAssetsPage(page, assets, this);
             } else {
-                // page.assets = assets;
-                // page.assets.name = this.getName(assets);
-                // page.assets.thumbnail = this.getThumbnail(assets);
-                // page.assets.categories = this.getCategories();
-                // page.assets.searchFields = this.getSearchableFields();
                 page = renderSingleAssetPageBasic(page, assets, this);
             }
         } else if (arguments.length == 1) {
@@ -905,38 +963,43 @@ var asset = {};
         page.rxt = this.rxtTemplate;
         var that = this;
         return {
-            create: function() {
+            create: function () {
                 page = that.r.create(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            update: function() {
+            update: function () {
                 page = that.r.update(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            list: function() {
+            list: function () {
                 page = that.r.list(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            details: function() {
+            details: function () {
                 page = that.r.details(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            lifecycle: function() {
+            lifecycle: function () {
                 page = that.r.lifecycle(page) || page;
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             },
-            _custom: function() {
+            _custom: function () {
                 page = that.r.applyPageDecorators(page) || page;
                 return page;
             }
         };
     };
-    AssetManager.prototype.getCategories = function() {
+    /**
+     * Returns the set of categories for an asset type.If a category field is not present then an
+     * empty array will be returned
+     * @return {Array} An array of strings representing the categories of the asset type
+     */
+    AssetManager.prototype.getCategories = function () {
         var categoryField = this.rxtManager.getCategoryField(this.type);
         var categories = [];
         if (!categoryField) {
@@ -946,7 +1009,7 @@ var asset = {};
         categories = this.rxtManager.getRxtFieldValue(this.type, categoryField);
         return categories;
     };
-    AssetManager.prototype.getSearchableFields = function() {
+    AssetManager.prototype.getSearchableFields = function () {
         var searchFields = [];
         var fieldName;
         var field;
@@ -972,84 +1035,94 @@ var asset = {};
     function NavList() {
         this.items = [];
     }
-    NavList.prototype.push = function(label, icon, url) {
+
+    NavList.prototype.push = function (label, icon, url) {
         this.items.push({
             name: label,
             iconClass: icon,
             url: url
         });
     };
-    NavList.prototype.list = function() {
+    NavList.prototype.list = function () {
         return this.items;
     };
-
+    /**
+     * Represents the rendering interface of an asset
+     * @class
+     * @constructor
+     */
     function AssetRenderer(pagesRoot, assetsRoot) {
         this.assetPagesRoot = pagesRoot;
         this.assetsPagesRoot = assetsRoot;
     }
-    AssetRenderer.prototype.buildUrl = function(pageName) {
+
+    AssetRenderer.prototype.buildUrl = function (pageName) {
         return this.assetPagesRoot + '/' + pageName;
     };
-    AssetRenderer.prototype.buildBaseUrl = function(type) {
+    AssetRenderer.prototype.buildBaseUrl = function (type) {
         return this.assetsPagesRoot + type;
     };
-    AssetRenderer.prototype.buildAssetPageUrl = function(type, endpoint) {
+    AssetRenderer.prototype.buildAssetPageUrl = function (type, endpoint) {
         return core.getAssetPageUrl(type, endpoint);
     };
-    AssetRenderer.prototype.buildAssetApiUrl = function(type, endpoint) {
+    AssetRenderer.prototype.buildAssetApiUrl = function (type, endpoint) {
         return core.getAssetApiUrl(type, endpoint);
     };
-    AssetRenderer.prototype.buildAppPageUrl = function(endpoint) {
+    AssetRenderer.prototype.buildAppPageUrl = function (endpoint) {
         return core.getAppPageUrl(endpoint);
     };
-    AssetRenderer.prototype.buildAppApiUrl = function(endpoint) {
+    AssetRenderer.prototype.buildAppApiUrl = function (endpoint) {
         return core.getAppApiUrl(endpoint);
     };
-    AssetRenderer.prototype.thumbnail = function(page) {
+    AssetRenderer.prototype.thumbnail = function (page) {
         return '';
     };
-    AssetRenderer.prototype.navList = function() {
+    AssetRenderer.prototype.navList = function () {
         return new NavList();
     };
-    AssetRenderer.prototype.create = function(page) {};
-    AssetRenderer.prototype.update = function(page) {};
-    AssetRenderer.prototype.details = function(page) {};
-    AssetRenderer.prototype.list = function(page) {};
-    AssetRenderer.prototype.lifecycle = function(page) {};
-    AssetRenderer.prototype.leftNav = function(page) {
-        //var log = new Log();
-        //log.info('Default leftnav');
+    AssetRenderer.prototype.create = function (page) {
     };
-    AssetRenderer.prototype.ribbon = function(page) {};
+    AssetRenderer.prototype.update = function (page) {
+    };
+    AssetRenderer.prototype.details = function (page) {
+    };
+    AssetRenderer.prototype.list = function (page) {
+    };
+    AssetRenderer.prototype.lifecycle = function (page) {
+    };
+    AssetRenderer.prototype.leftNav = function (page) {
+    };
+    AssetRenderer.prototype.ribbon = function (page) {
+    };
     /**
-     * The function will apply decorators to a given page.If a user passes in an array of decorators to use
+     * Apply decorators to a given page.If a user passes in an array of decorators to use
      * then only those decorators are applied.If an array is not provided then all registered decorators are applied
      * to the page
-     * @param  {[type]} page            [description]
-     * @param  {[type]} decoratorsToUse [description]
-     * @return {[type]}                 [description]
+     * @param  {Object} page
+     * @param  {Array} decoratorsToUse
+     * @return {Object}
      */
-    AssetRenderer.prototype.applyPageDecorators = function(page, decoratorsToUse) {
+    AssetRenderer.prototype.applyPageDecorators = function (page, decoratorsToUse) {
         var pageDecorators = this.pageDecorators || {};
         for (var key in pageDecorators) {
             page = pageDecorators[key].call(this, page) || page;
         }
         return page;
     };
-    var isSelectedDecorator = function(decorator, decoratorsToUse) {
-            if (decoratorsToUse.indexOf(decorator) > -1) {
-                return true;
-            }
-            return false;
+    var isSelectedDecorator = function (decorator, decoratorsToUse) {
+        if (decoratorsToUse.indexOf(decorator) > -1) {
+            return true;
         }
-        /**
-         * The function create an asset manage given a registry instance,type and tenantId
-         * @param  {[type]} tenantId The id of the tenant
-         * @param  {[type]} registry The registry instance used to create the underlying artifact manager
-         * @param  {[type]} type     The type of the assets managed by the asset manager
-         * @return An asset manager instance
-         */
-    var createAssetManager = function(session, tenantId, registry, type) {
+        return false;
+    };
+    /**
+     * Creates an asset manage given a registry instance,type and tenantId
+     * @param  {Number} tenantId The id of the tenant
+     * @param  {Object} registry The registry instance used to create the underlying artifact manager
+     * @param  {String} type     The type of the assets managed by the asset manager
+     * @return {Object}
+     */
+    var createAssetManager = function (session, tenantId, registry, type) {
         var reflection = require('utils').reflection;
         var rxtManager = core.rxtManager(tenantId);
         var assetManager = new AssetManager(registry, type, rxtManager);
@@ -1070,7 +1143,7 @@ var asset = {};
         assetManager.init();
         return assetManager;
     };
-    var overridePageDecorators = function(to, from) {
+    var overridePageDecorators = function (to, from) {
         var fromPageDecorators = from.pageDecorators || {};
         var toPageDecorators = to.pageDecorators || {};
         if (!to.pageDecorators) {
@@ -1080,7 +1153,7 @@ var asset = {};
             to.pageDecorators[key] = fromPageDecorators[key];
         }
     };
-    var createRenderer = function(session, tenantId, type) {
+    var createRenderer = function (session, tenantId, type) {
         var reflection = require('utils').reflection;
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(tenantId, type);
@@ -1092,24 +1165,17 @@ var asset = {};
         //Override the page decorators
         overridePageDecorators(renderer, defaultRenderer);
         overridePageDecorators(renderer, customRenderer);
-        //reflection.override(renderer, defaultRenderer);
-        //reflection.override(renderer, customRenderer);
-        //log.info(assetResources.renderer.toSource());
-        //log.info(renderer.toSource());
-        //log.info('defaultRenderer: '+renderer.toSource());
         return renderer;
     };
     /**
      * The function will combine two arrays of endpoints together.If a common endpoint is found then
      * the information in the otherEndpoints array will be used to update the endpoints array.
-     * @param  {[type]} endpoints      [description]
-     * @param  {[type]} otherEndpoints [description]
      */
-    var combineEndpoints = function(endpoints, otherEndpoints) {
+    var combineEndpoints = function (endpoints, otherEndpoints) {
         for (var index in otherEndpoints) {
             var found = false; //Assume the endpoint will not be located
             for (var endpointIndex = 0;
-                ((endpointIndex < endpoints.length) && (!found)); endpointIndex++) {
+                 ((endpointIndex < endpoints.length) && (!found)); endpointIndex++) {
                 //Check if there is a similar endpoint and override the title and path
                 if (otherEndpoints[index].url == endpoints[endpointIndex].url) {
                     endpoints[endpointIndex].url = otherEndpoints[index].url;
@@ -1130,11 +1196,11 @@ var asset = {};
      * asset type.It will first check if the asset type has defined a server callback in an asset.js.If one is present
      * then it will used to override the default server call back defined in the default asset.js.In the case of the
      * endpoint property it will combine the endpoints defined in the default asset.js.
-     * @param  {[type]} session [description]
-     * @param  {[type]} type    The type of asset
-     * @return {[type]}
+     * @param  {Object} session [Jaggery session object
+     * @param  {String} type    The type of asset
+     * @return {Object} A server callback
      */
-    var createServer = function(session, type) {
+    var createServer = function (session, type) {
         var context = core.createAssetContext(session, type);
         var assetResources = core.assetResources(context.tenantId, type);
         var reflection = require('utils').reflection;
@@ -1174,11 +1240,16 @@ var asset = {};
         return defaultCb;
     };
     /**
-     * The function will create an Asset Manager instance using the registry of the currently
-     * logged in user
-     * @return An Asset Manager instance which will store assets in the currently logged in users registry
+     * Creates an Asset Manager instance using the registry of the currently
+     * logged in user.This asset manager can be used to perform CRUD operations on pages
+     * that are only accessible by logging.
+     * This method should NOT be used to create asset manager instances in pages that
+     * can be accessed by annonymous users
+     * @param {Object} session Jaggery session object
+     * @param {String} type The asset type for which the asset manager must be created
+     * @return {object} An Asset Manager instance which will store assets in the currently logged in users registry
      */
-    asset.createUserAssetManager = function(session, type) {
+    asset.createUserAssetManager = function (session, type) {
         var server = require('store').server;
         var user = require('store').user;
         var userDetails = server.current(session);
@@ -1188,65 +1259,92 @@ var asset = {};
         return am;
     };
     /**
-     * The function will create an Asset Manager using the system registry of the provided tenant
-     * @return An Asset Manager
+     * Create san Asset Manager using the system registry of the provided tenant
+     * @param {String} tenantId The tenant ID
+     * @param {type}    type    The asset type for which the asset manager must be created
+     * @return {Object} An asset manager instance
      */
-    asset.createSystemAssetManager = function(tenantId, type) {
+    asset.createSystemAssetManager = function (tenantId, type) {
         var server = require('store').server;
         var sysRegistry = server.systemRegistry(tenantId);
         return createAssetManager(tenantId, sysRegistry, type);
     };
-    asset.createAnonAssetManager = function(session, type, tenantId) {
+    /**
+     * Creates an asset manager instance using the annoymous registry.
+     * This method should be used pages that can be accessed by annoymous users.
+     * @param  {Object} session  Jaggery session object
+     * @param  {String} type      The asset type for which the asset manager must be created
+     * @param  {Number} tenantId  Tenant ID
+     * @return {Object}          An asset manager instance
+     */
+    asset.createAnonAssetManager = function (session, type, tenantId) {
         var server = require('store').server;
         var anonRegistry = server.anonRegistry(tenantId);
         var am = createAssetManager(session, tenantId, anonRegistry, type);
         am.r = createRenderer(session, tenantId, type);
         return am;
     };
-    asset.createRenderer = function(session, type) {
+    asset.createRenderer = function (session, type) {
         return createRenderer(session, type);
     };
     /**
-     * The function obtains a list of all endpoints available to currently
+     * Returns a list of all endpoints available to currently
      * logged in user for the provided asset type
-     * @param  {[type]} session [description]
-     * @param  {[type]} type    [description]
-     * @return {[type]}         [description]
+     * @param  {Object} session Jaggery session
+     * @param  {String} type     The asset type for which the endpoints must be returned
+     * @return {Object}         A JSON object containing a api and page endpoints
      */
-    asset.getAssetEndpoints = function(session, type) {
-//        var context = core.createAssetContext(session, type);
-        //var assetResources = core.assetResources(context.tenantId, type);
+    asset.getAssetEndpoints = function (session, type) {
         var serverCb = createServer(session, type);
         return serverCb ? serverCb.endpoints : {};
-        //return assetResources.server ? assetResources.server(context).endpoints : {};
     };
-    asset.getAssetApiEndpoints = function(session, type) {
+    /**
+     * Returns the API endpoints accessible to the currently logged in user for the provided
+     * asset type.This method internally calls the getAssetEndpoints
+     * @param  {Object} session Jaggery session object
+     * @param  {String} type    The asset type for which the API endpoints should be returned
+     * @return {Array}          An array of API endpoints
+     */
+    asset.getAssetApiEndpoints = function (session, type) {
         var endpoints = this.getAssetEndpoints(session, type);
         return endpoints['apis'] || [];
     };
-    asset.getAssetPageEndpoints = function(session, type) {
+    /**
+     * Returns the page endpoints accessible to the currently logged in user for the provided
+     * asset type.This method internally calls the getAssetEndpoints
+     * @param  {Object} session Jaggery session object
+     * @param  {String} type    The asset type for which the API endpoints should be returned
+     * @return {Array}          An array of page endpoints
+     */
+    asset.getAssetPageEndpoints = function (session, type) {
         var endpoints = this.getAssetEndpoints(session, type);
         return endpoints['pages'] || [];
     };
-    asset.getAssetExtensionPath = function(type) {
+    asset.getAssetExtensionPath = function (type) {
         return '/extensions/assets/' + type;
     };
-    asset.getAssetDefaultPath = function() {
+    asset.getAssetDefaultPath = function () {
         return '/extensions/assets/default';
     };
-    asset.getAssetApiDirPath = function(type) {
+    asset.getAssetApiDirPath = function (type) {
         return asset.getAssetExtensionPath(type) + '/apis';
     };
-    asset.getAssetPageDirPath = function(type) {
+    asset.getAssetPageDirPath = function (type) {
         return asset.getAssetExtensionPath(type) + '/pages';
     };
-    asset.getAssetPageUrl = function(type) {
+    asset.getAssetPageUrl = function (type) {
         return asset.getBaseUrl() + type;
     };
-    asset.getBaseUrl = function() {
+    asset.getBaseUrl = function () {
         return '/asts/';
     };
-    asset.getAssetApiEndpoint = function(type, endpointName) {
+    /**
+     * Returns the details of a specific API endpoint matched by the provided endpoint name
+     * @param  {String} type         The asset type for which the endpoint must be matched
+     * @param  {String} endpointName An endpoint name
+     * @return {String}              The path to the controller
+     */
+    asset.getAssetApiEndpoint = function (type, endpointName) {
         //Check if the path exists within the asset extension path
         var endpointPath = asset.getAssetApiDirPath(type) + '/' + endpointName;
         var endpoint = new File(endpointPath);
@@ -1259,7 +1357,13 @@ var asset = {};
         }
         return endpointPath;
     };
-    asset.getAssetPageEndpoint = function(type, endpointName) {
+    /**
+     * Returns the details of a specific page endpoint matched by the provided endpoint name
+     * @param  {String} type         The asset type for which the endpoint must be matched
+     * @param  {String} endpointName An endpoint name
+     * @return {String}              The path to the controller
+     */
+    asset.getAssetPageEndpoint = function (type, endpointName) {
         //Check if the path exists within the asset extension path
         var endpointPath = asset.getAssetPageDirPath(type) + '/' + endpointName;
         var endpoint = new File(endpointPath);
@@ -1272,29 +1376,25 @@ var asset = {};
         }
         return endpointPath;
     };
-    asset.resolve = function(request, path, themeName, themeObj, themeResolver) {
+    asset.resolve = function (request, path, themeName, themeObj, themeResolver) {
         var log = new Log();
-        //log.info('Path: ' + path);
-        //log.info('Request: ' + request.getRequestURI());
         var resPath = path;
         path = '/' + path;
         //Determine the type of the asset
         var uriMatcher = new URIMatcher(request.getRequestURI());
         var extensionMatcher = new URIMatcher(path);
+        //TODO: Use the constants
         var uriPattern = '/{context}/asts/{type}/{+options}';
         var extensionPattern = '/{root}/extensions/assets/{type}/{+suffix}';
         uriMatcher.match(uriPattern);
         extensionMatcher.match(extensionPattern);
         var pathOptions = extensionMatcher.elements() || {};
         var uriOptions = uriMatcher.elements() || {};
-        //log.info('URI details: ' + stringify(uriMatcher.elements()));
-        //log.info('Extension details: ' + stringify(extensionMatcher.elements()));
         //If the type is not metioned then return the path
         if (!pathOptions.type) {
             //Determine if the paths occur within the extensions directory
             var extensionResPath = '/extensions/assets/' + uriOptions.type + '/themes/' + themeName + '/' + resPath;
             var resFile = new File(extensionResPath);
-            //log.info('Checking if resource exists: ' + extensionResPath);
             if (resFile.isExists()) {
                 return extensionResPath;
             }
@@ -1304,16 +1404,12 @@ var asset = {};
         //Check if type has a similar path in its extension directory
         var extensionPath = '/extensions/assets/' + uriOptions.type + '/themes/' + themeName + '/' + pathOptions.root + '/' + pathOptions.suffix;
         var file = new File(extensionPath);
-        //log.info('Extension path: ' + extensionPath);
         if (file.isExists()) {
-            //log.info('Final path: ' + extensionPath);
             return extensionPath;
         }
         //If an extension directory does not exist then use theme directory
         extensionPath = pathOptions.root + '/' + pathOptions.suffix;
         var modPath = themeResolver.call(themeObj, extensionPath);
-        //log.info('Final path: ' + extensionPath);
-        //log.info('Mod path: ' + modPath);
         return modPath;
     };
 }(asset, core))

@@ -16,26 +16,56 @@
  *  under the License.
  *
  */
+/**
+ * The app namespace provides a set of utility methods to obtain application meta data related to the
+ * extension model.
+ * @namespace
+ * @example
+ *     var app =  require('rxt').app;
+ *     app.init('/publisher');
+ * @requires store
+ * @requires event
+ * @requires utils
+ */
 var app = {};
 (function(app, core) {
     var log = new Log('app-core');
-
+    /**
+     * Represents a set of endpoints
+     * @class
+     * @constructor
+     */
     function Endpoints() {
         this.endpoints = [];
     }
+    /**
+     * Returns an endpoint given its url signature
+     * @param  {string} url The url signature to be used in the search for endpoints
+     * @return {Object}     If a matching endpoint is found then an object is returned containing the path,title,owner and secured property,
+     *                      else null.
+     */
     Endpoints.prototype.getEndpointByUrl = function(url) {
         for (var index in this.endpoints) {
             if (this.endpoints[index].url == url) {
-                //If the secured property is not provided then the page is not
+                //If the secured property is not provided then the page is not considered to be secured
                 this.endpoints[index].secured = this.endpoints[index].secured ? this.endpoints[index].secured : false;
                 return this.endpoints[index];
             }
         }
         return null;
     };
+    /**
+     * Returns the list of all endpoints managed by this object
+     * @return {Array} An array of endpoint objects containing the path,title,owner and secured properties
+     */
     Endpoints.prototype.list = function() {
         return this.endpoints;
     };
+    /**
+     * Adds an endpoint to the list of endpoints managed by the object.If the endpoint is already managed by the object
+     * then the values are overriden by the provided endpoint object.
+     * @param {Object} endpoint An endpoint object containing a url signature,path to the controller, title (optional) and secured(optional)
+     */
     Endpoints.prototype.add = function(endpoint) {
         //First check if the endpoint already exists
         var existingEndpoint = this.getEndpointByUrl(endpoint.url);
@@ -48,20 +78,37 @@ var app = {};
         }
         this.endpoints.push(endpoint);
     };
+    /**
+     * Adds a set of endpoints to be managed.Internally this method will call the add method for each of the endpoints in the array
+     * @todo This method needs to be combined with the add method
+     * @param {Array} endpoints An array of endpoint objects
+     */
     Endpoints.prototype.addMultiple = function(endpoints) {
         for (var index in endpoints) {
             this.add(endpoints[index]);
-            log.info('Registered endpoint: ' + endpoints[index].url + ' (secured: ' + (endpoints[index].secured || false) + ')');
+            log.info('Registered endpoint: /' + endpoints[index].url + ' (secured: ' + (endpoints[index].secured || false) + ')');
         }
     };
-
+    /**
+     * Represents the an extensible application
+     * @class
+     *@constructor
+     */
     function App() {
         this.pages = new Endpoints();
         this.apis = new Endpoints();
     }
+    /**
+     * Returns all of the pages exposed by the extensible application
+     * @return {Array} An array of endpoint objects containing the url,path,secured and title properties
+     */
     App.prototype.getPageEndpoints = function() {
         return this.pages.list();
     };
+    /**
+     * Returns all of the apis exposed by the extensible application
+     * @return {Array} [description]
+     */
     App.prototype.getApiEndpoints = function() {
         return this.apis.list();
     };
@@ -83,11 +130,23 @@ var app = {};
     App.prototype.addApiEndpoints = function(endpoints) {
         this.apis.addMultiple(endpoints);
     };
-
+    /**
+     * Represents the functionality of  an extensible application
+     * @class
+     * @constructor
+     * @param {Object} appResources  The extensible application resources
+     * @param {Object} ctx           The context in which the application manager is evaluated
+     */
     function AppManager(appResources, ctx) {
         this.ctx = ctx;
         this.appResources = appResources;
     }
+    /**
+     * Returns a page url qualified by the asset extension
+     * @param  {String} type     The type of asset
+     * @param  {String} endpoint The endpoint name
+     * @return {String}          An extension qualified path
+     */
     AppManager.prototype.buildAssetPageUrl = function(type, endpoint) {
         return core.getAssetPageUrl(type, endpoint);
     };
@@ -100,6 +159,14 @@ var app = {};
     AppManager.prototype.buildAppApiUrl = function() {
         return core.getAppApiUrl(endpoint);
     };
+    /**
+     * Returns a UI page object after calling the page decorators for a given application extension.The
+     * method will determine form which the application extension it is exposed.AFter which the page decorators
+     * for that extension will be applied to the page object
+     * @param  {Array} assets [description] //TODO: Fill description !
+     * @param  {Object} page   A page object 
+     * @return Object A page object
+     */
     AppManager.prototype.render = function(assets, page) {
         page.assets = assets;
         var pageName = page.meta ? page.meta.pageName : null;
@@ -251,7 +318,6 @@ var app = {};
         } else {
             for (var index in dependencies) {
                 var temp = recursiveProcess(dependencies[index], map, stack);
-                //stack = temp.concat(stack);
             }
             stack.push(extName);
         }
@@ -336,16 +402,6 @@ var app = {};
         return comps.length > 0 ? comps[0] : null;
     };
     var getRenderer = function(appResources, extensionName) {
-        // var configs = core.configs(tenantId);
-        // if (!configs) {
-        //     log.warn('Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint');
-        //     throw 'Unable to locate configuration of tenant ' + tenantId + '.Cannot locate api endpoint';
-        // }
-        // var appResources = configs.appResources;
-        // if (!appResources) {
-        //     log.warn('The app configuration details could not be loaded for tenant: ' + tenantId);
-        //     throw 'The app configuration details could not be loaded for tenant: ' + tenantId;
-        // }
         if (!appResources[extensionName]) {
             log.warn('Unable to load extension details for ' + extensionName + '.A renderer could not be created');
             return null;
@@ -355,20 +411,33 @@ var app = {};
             log.warn('A renderer has not been defined in the app.js file.');
             return null;
         }
-        //var ctx = core.createAppContext(session);
-        //renderer = renderer(ctx);
         return renderer;
     };
+    /**
+     * Initializes the app setup logic
+     * @param  {String} context The context of the application
+     */
     app.init = function(context) {
         var event = require('event');
         event.on('tenantLoad', function(tenantId) {
             init(tenantId, context);
         });
     };
+    /**
+     * Returns the context of the application
+     * @return {String} The context of the application (e.g. publisher or store)
+     */
     app.getContext = function() {
         var context = application.get(constants.APP_CONTEXT);
         return context;
     };
+    /**
+     * Returns an object containing all of the app level extension scripts
+     * @param  {Number} tenantId  The tenant id  for which the application resources must be obtained
+     * @return {Object} An object containing all of the app extension callbacks
+     * @throws Unable to locate configuration of tenant.Cannot locate api endpoint
+     * @throws The app configuration details could not be loaded for tenant
+     */
     app.getAppResources = function(tenantId) {
         var configs = core.configs(tenantId);
         if (!configs) {
@@ -382,10 +451,17 @@ var app = {};
         }
         return appResources;
     };
+    /**
+     * Returns an application manager object that has user specific details.This method will check if there is a logged in
+     * user and obtain the tenantId from the user.If a user is not found then the tenantId will be set to super tenant
+     * @param  {Object} session A Jaggery session
+     * @return {Object}         An instance of AppManager with a user context
+     */
     app.createUserAppManager = function(session) {
         var server = require('store').server;
         var user = server.current(session);
-        var tenantId = -1234;
+        //Assume that there is no logged in user
+        var tenantId = -1234; //TODO: Replace this with constants.DEFAULT_TENANT
         if (user) {
             tenantId = user.tenantId;
         }
@@ -393,16 +469,32 @@ var app = {};
         var ctx = core.createAppContext(session);
         return new AppManager(appResources, ctx);
     };
+    /**
+     * Returns an application manager object that can be used in pages and endpoints that are
+     * publically visible
+     * @param  {Object} session  A Jaggery session
+     * @param  {Number} tenantId The tenant ID of tenant for which the annoymous application manager should be created
+     * @return {Object}          An instance of the AppManager with a annymous context
+     */
     app.createAnonAppManager = function(session, tenantId) {
         var server = require('store').server;
-        var user = server.current(session);
+        var user = server.current(session); //TODO: Replace this as it is not required
+        //TODO: Check if the tenant ID is provided
         var appResources = this.getAppResources(tenantId);
         var ctx = core.createAppContext(session);
         return new AppManager(appResources, ctx);
     };
+    /**
+     * Returns an array of all asset types that are activated in the ES.This method works by checking the assets property of the
+     * tenant-x.json file.If no asset types have been activated an empty array is returned
+     * @param  {Number} tenantId The tenant ID for which the activated assets must be returned
+     * @return {Array}          An array of strings indicating the asset types
+     *                          (The values returned reflect the shortName property in the rxt files)
+     * @throws Unable to locate tenant configurations in order to retrieve activated assets
+     */
     app.getActivatedAssets = function(tenantId) {
         var user = require('store').user;
-        var configs = user.configs(tenantId);
+        var configs = user.configs(tenantId); //TODO: Check if a tenant ID is provided
         if (!configs) {
             log.warn('Unable to locate tenant configurations in order to retrieve activated assets');
             throw 'Unable to locate tenant configurations in order to retrieve activated assets';
@@ -414,10 +506,15 @@ var app = {};
         }
         return assets;
     };
+    /**
+     * Returns the landing page for the application for a given tenant.The method will check the application.landingPage property in the
+     * tenant-x.json file.If no landing page is defined the root will be the landing page
+     * @param  {Number} tenantId  The tenant ID for which the landing page must be returned
+     * @return {String}          The landing page url
+     */
     app.getLandingPage = function(tenantId) {
-        var landingPage = '/';
-        //Obtain the configurations for the tenant
-        var userMod = require('store').user;
+        var landingPage = '/'; //Assume the landing page property has not been defined 
+        var userMod = require('store').user; //Obtain the configurations for the tenant
         var configs = userMod.configs(tenantId);
         if (!configs) {
             log.warn('Unable to locate landing page of tenant: ' + tenantId);
@@ -428,6 +525,16 @@ var app = {};
         }
         return landingPage;
     };
+    /**
+     * Executes the provided page handler.If the page cannot be located or if the handler cannot be located then
+     * the method will return True.
+     * @param  {String} handler  The name of the handler to be executed
+     * @param  {Object} req      Jaggery request object
+     * @param  {Object} res      Jaggery response object
+     * @param  {Object} session  Jaggery session object
+     * @param  {Object} pageName The page on which the handler should be invoked
+     * @return {Boolean}          True if the handler is executed without an error , False if the handler has failed to execute
+     */
     app.execPageHandlers = function(handler, req, res, session, pageName) {
         var ctx = core.createAppContext(session);
         var appResources = app.getAppResources(ctx.tenantId);
@@ -458,6 +565,16 @@ var app = {};
         }
         return pageHandlers[handler]();
     };
+    /**
+     * Executes the provided api endpoint handler.If the api endpoint cannot be located or if the handler cannot be located then
+     * the method will return True.
+     * @param  {String} handler  The name of the handler to be executed
+     * @param  {Object} req      Jaggery request object
+     * @param  {Object} res      Jaggery response object
+     * @param  {Object} session  Jaggery session object
+     * @param  {String} pageName The page on which the handler should be invoked
+     * @return {Boolean}          True if the handler is executed without an error , False if the handler has failed to execute
+     */
     app.execApiHandlers = function(handler, req, res, session, pageName) {
         var ctx = core.createAppContext(session);
         var appResources = app.getAppResources(ctx.tenantId);
@@ -489,9 +606,20 @@ var app = {};
         }
         return apiHandlers[handler]();
     };
+    /**
+     * @todo: Remove this method
+     */
     app.force = function() {
         init(-1234);
     }
+    /**
+     * Returns details about a page endpoint registered for the extensible application
+     * @param  {Number} tenantId The tenant ID for which the page endpoint must be returned
+     * @param  {Number} url      The url signature of the endpoint
+     * @return {Object}          An endpoint object containing url,path and secured
+     * @throws Unable to locate configuration of tenant.Cannot locate page endpoint
+     * @throws The app configuration details could not be loaded for tenant
+     */
     app.getPageEndpoint = function(tenantId, url) {
         var configs = core.configs(tenantId);
         if (!configs) {
@@ -505,8 +633,12 @@ var app = {};
         }
         return appConfig.getPageEndpoint(url);
     };
+    /**
+     * Returns details on the set of page endpoints registered for the extensible application
+     * @param  {Number} tenantId The tenant ID for which the page endpoints should be returned
+     * @return {Array}           An array of endpoint objects
+     */
     app.getPageEndpoints = function(tenantId) {
-        //Obtain the app object
         var configs = core.configs(tenantId);
         if (!configs) {
             log.warn('Unable to locate the tenant configuration');
@@ -519,6 +651,14 @@ var app = {};
         }
         return appConfig.getPageEndpoints();
     };
+    /**
+     * Returns the path to the controller handling a page endpoint.The method will first locate
+     * the endpoint using the provided url signature and then attempt to build the path.
+     * to the controller
+     * @param  {Number} tenantId The tenant ID for which the endpoint path must be returned
+     * @param  {String} url      The url signature for which the controller must be returned
+     * @return {String}          The path to the controller or null if the endpoint is not found
+     */
     app.getPageEndpointPath = function(tenantId, url) {
         var endpoint = this.getPageEndpoint(tenantId, url);
         if (!endpoint) {
@@ -527,6 +667,14 @@ var app = {};
         }
         return getAppExtensionBasePath() + '/' + endpoint.owner + '/pages/' + endpoint.path;
     };
+    /**
+     * Returns endpoint details of an api registered with the extensible application
+     * @param  {Number} tenantId The tenant ID for which the endpoint details must be returned
+     * @param  {String} url      The url signature of the api for which the endpoint details must be returned
+     * @return {Object}          An endpoint object containing the url,path and secured
+     * @throws Unable to locate configuration for tnenat.Cannot locate api endpoint
+     * @throws The app configuration details could not be loaded for tenant
+     */
     app.getApiEndpoint = function(tenantId, url) {
         var configs = core.configs(tenantId);
         if (!configs) {
@@ -540,6 +688,13 @@ var app = {};
         }
         return appConfig.getApiEndpoint(url);
     };
+    /**
+     * Returns details on the set of api endpoints registered with the extensible application
+     * @param  {Number} tenantId The tenant ID for which the api endpoints must be returned
+     * @return {Array}          An array of endpoint objects
+     * @throws Unable to locate tenant configuration
+     * @throws Unable to locate app configuration
+     */
     app.getApiEndpoints = function(tenantId) {
         //Obtain the app object
         var configs = core.configs(tenantId);
@@ -554,6 +709,13 @@ var app = {};
         }
         return appConfig.getApiEndpoints();
     };
+    /**
+     * Returns the path to controller handling api endpoint of the provided url signature.The method will first call
+     * the getApiEndpoint to obtain the endpoint details.
+     * @param  {Number} tenantId  The tenant ID for which the endpoint path must be returned
+     * @param  {String} url       The url signature of the api endpoint for which the api controller path must be returned
+     * @return {String}           The path to the controller endpoint or NULL if the endpoint is not located
+     */
     app.getApiEndpointPath = function(tenantId, url) {
         var endpoint = this.getApiEndpoint(tenantId, url);
         if (!endpoint) {
@@ -563,10 +725,10 @@ var app = {};
         return getAppExtensionBasePath() + '/' + endpoint.owner + '/apis/' + endpoint.path;
     };
     /**
-     * The function returns details about a given feature
-     * @param  {[type]} tenantId [description]
-     * @param  {[type]} url      [description]
-     * @return {[type]}          [description]
+     * Returns details on a particular feature of the extensible application
+     * @param  {Number} tenantId    The tenant ID for which the feature details must be returned
+     * @param  {String} featureName The name of the feature
+     * @return {Object}             An object defining a feature.If the feature cannot be located NULL will be returned
      */
     app.getFeatureDetails = function(tenantId, featureName) {
         var user = require('store').user;
@@ -584,11 +746,18 @@ var app = {};
             return null;
         }
         var urlUtils = require('utils').url;
-        //Populate any urls which are present with the correct server details
+        //Populate any urls which are present with the correct server details - fill in port and host names
         var keys = urlUtils.popServerDetails(configs.features[featureName].keys || {});
         configs.features[featureName].keys = keys;
         return configs.features[featureName];
     };
+    /**
+     * Returns whether a particular extensible application feature is enabled.If the feature is not located then the method will
+     * always return false.This method will first internally call the getFeatureDetails method to locate the feature
+     * @param  {Number}  tenantId     The tenant ID for which the feature details must be returned
+     * @param  {String}  featureName  The name of the feature
+     * @return {Boolean}             True if the feature is located and is enabled,False if the feature is not located or has been disabled
+     */
     app.isFeatureEnabled = function(tenantId, featureName) {
         var details = this.getFeatureDetails(tenantId, featureName);
         if (!details) {
@@ -597,6 +766,12 @@ var app = {};
         }
         return details.enabled ? details.enabled : false;
     };
+    /**
+     * Returns  the social feature is enabled.This method will internally call the getFeatureDetails method
+     * to locate the details about the social component.If the social feature is not found then NULL is returned
+     * @param  {Number} tenantId [description]
+     * @return {Object}          [description]
+     */
     app.getSocialFeatureDetails = function(tenantId) {
         var details = this.getFeatureDetails(tenantId, constants.SOCIAL_FEATURE);
         if (!details) {
@@ -606,23 +781,26 @@ var app = {};
         return details;
     };
     /**
-     * The method returns authentication details for the application.If a method is not provided
+     * Returns authentication details for the application.If a method is not provided
      * then the active method is picked up from the tenant configurations
-     * @param  {[type]} tenanId [description]
-     * @param  {[type]} method  [description]
-     * @return {[type]}         [description]
+     * @param  {Number} tenanId The tenant ID for which the authenticatiin details must be retuend
+     * @param  {String} method   The authentication method for which the details must be retuend
+     * @return {Object}         An object containing details about the authentication method.Any host name and ports are auto populated
+     * @throws Unable to configurations for the tenant.Cannot retrieve authentication feature details
+     * @throws Unable to locate configurations for the tenant.Cannot retrieve authentication feature details
+     * @throws Unable to locate authentication feature details for tentna t.Cannot retrieve authentication feature block
+     * @throws Unable to locate authentication methods for tenant.Cannot retireve authentication feature details
      */
     app.getAuthenticationDetails = function(tenanId, method) {
         var server = require('store').server;
         var configs = server.configs(tenanId);
         var method = method || null;
-
         if (!configs) {
             log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
             throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
         }
-        configs=configs['server.user.options'];
-        if(!configs){
+        configs = configs['server.user.options'];
+        if (!configs) {
             log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
             throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
         }
@@ -652,10 +830,14 @@ var app = {};
         return utils.popServerDetails(attributes);
     };
     /**
-     * The function returns the active authetnicaton method for the application
+     * Returns the active authetnicaton method for the application
      * for the given tenant
-     * @param  {[type]} tenantId [description]
-     * @return {[type]}          [description]
+     * @param  {Number} tenantId The tenant ID for which the authentication details must be returned
+     * @return {String}          The authenticaiton method
+     * @throws Unable to locate configurations for the tenant.Cannot retrieve authentication feature details
+     * @throws Unable to locate configurations for the tenant.Cannot retrieve authentication feature details
+     * @throws Unable to  locate authentication feature details  for tenant.Cannot retriee authentication feature block
+     * @throws Unable to locate authentication methods for tenant.Cannot retrieve authentication feature details
      */
     app.getAuthenticationMethod = function(tenantId) {
         var server = require('store').server;
@@ -665,8 +847,8 @@ var app = {};
             log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
             throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
         }
-        configs=configs['server.user.options'];
-        if(!configs){
+        configs = configs['server.user.options'];
+        if (!configs) {
             log.error('Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.');
             throw 'Unable to locate configurations for the tenant: ' + tenanId + '.Cannot retrieve authentication feature details.';
         }
@@ -682,14 +864,16 @@ var app = {};
         return authentication.activeMethod;
     };
     /**
-     * The function is responsible for routing requests for resources to appropriate path
-     * @param  {[type]} request       [description]
-     * @param  {[type]} path          [description]
-     * @param  {[type]} themeName     [description]
-     * @param  {[type]} themeObj      [description]
-     * @param  {[type]} themeResolver [description]
-     * @param  {[type]} session       [description]
-     * @return {[type]}               [description]
+     * Returns a path to a caramel resource that is qualified by application extensions.The method will check  if a given resource
+     * is provided by any application extensions.It is assumed that each extension will contain a theme with the provided themeName.If
+     * a resource is located in a extension theme directory the path will be changed to it
+     * @param  {Object} request       Jaggery request object
+     * @param  {String} path          The resource path to be resolved
+     * @param  {String} themeName     The name of the active caramel theme
+     * @param  {Object} themeObj      The caramel theme context
+     * @param  {Function} themeResolver The caramel theme resolver function
+     * @param  {Object} session       Jaggery session object
+     * @return {String}               A path which is qualified by an application extensions
      */
     app.resolve = function(request, path, themeName, themeObj, themeResolver, session) {
         var resPath = path;
@@ -709,14 +893,14 @@ var app = {};
             var pageName = getPage(uriOptions.suffix || '');
             var server = require('store').server;
             var user = server.current(session);
-            var tenantId = -1234;
+            var tenantId = -1234; //TODO: Replace this with constants.DEFAULT_TENANT
             if (user) {
                 tenantId = user.tenantId;
             }
             var endpoint = this.getPageEndpoint(tenantId, pageName);
             //If the uri does not point to an app extension endpoint then do nothing
             if (!endpoint) {
-                return null; //themeResolver.call(themeObj, resPath);
+                return null;
             }
             var extensionResourcePath = '/extensions/app/' + endpoint.owner + '/themes/' + themeName + '/' + resPath;
             //Check if the resource exists
@@ -725,7 +909,7 @@ var app = {};
                 return extensionResourcePath;
             }
             //If the resource does not exist then do nothing
-            return null; //themeResolver.call(themeObj, resPath);;
+            return null;
         }
         //The resource path references an app extension 
         var extensionPath = '/extensions/app/' + extensionOptions.name + '/themes/' + themeName + '/' + extensionOptions.root + '/' + extensionOptions.suffix;

@@ -18,7 +18,7 @@
  */
 var api = {};
 var responseProcessor = require('utils').response;
-(function(api) {
+(function (api) {
     /**
      * The function filter the requested fields from assets objects and build new asset object with requested fields
      * @param {[json]} options         :{"fields":<requested-fields>, "artifacts":<list-of-assets>}
@@ -26,7 +26,7 @@ var responseProcessor = require('utils').response;
      * @param {[obj]} res             :Response object
      * @param {[string]} [session]       :[sessioinid]
      */
-    var fieldExpansion = function(options, req, res, session) {
+    var fieldExpansion = function (options, req, res, session) {
         var fields = options.fields;
         var artifacts = options.assets;
         var extendedAssetTemplate = {};
@@ -55,7 +55,7 @@ var responseProcessor = require('utils').response;
      * @param {[json]} [options] []
      * @param {[json]} [asset] [asset obj to be saved]
      */
-    var putInStorage = function(options, asset, am, req, session) {
+    var putInStorage = function (options, asset, am, req, session) {
         var resourceFields = am.getAssetResources();
         var ref = require('utils').file;
         var storageModule = require('/modules/data/storage.js').storageModule();
@@ -94,7 +94,7 @@ var responseProcessor = require('utils').response;
      * @param {[json]} [original] [old asset]
      * @param {[json]} [asset] [new asset]
      */
-    var putInOldResources = function(original, asset, am) {
+    var putInOldResources = function (original, asset, am) {
         var resourceFields = am.getAssetResources();
         var resourceField;
         for (var index in resourceFields) {
@@ -109,13 +109,13 @@ var responseProcessor = require('utils').response;
     /**
      *
      */
-    var isPresent = function(key, data) {
+    var isPresent = function (key, data) {
         if ((data[key]) || (data[key] == '')) {
             return true;
         }
         return false;
     };
-    var putInUnchangedValues = function(original, asset, sentData) {
+    var putInUnchangedValues = function (original, asset, sentData) {
         for (var key in original.attributes) {
             //We need to add the original values if the attribute was not present in the data object sent from the client
             //and it was not deleted by the user (the sent data has an empty value)
@@ -128,7 +128,7 @@ var responseProcessor = require('utils').response;
     /**
      * The function create new asset
      */
-    api.create = function(options, req, res, session) {
+    api.create = function (options, req, res, session) {
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
@@ -161,7 +161,7 @@ var responseProcessor = require('utils').response;
     /**
      * The function update asset
      */
-    api.update = function(options, req, res, session) {
+    api.update = function (options, req, res, session) {
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
@@ -195,7 +195,7 @@ var responseProcessor = require('utils').response;
      * @param {[obj]}  [req]      [Request object]
      * @param {[obj]}  [res]           [Request object]
      */
-    api.search = function(options, req, res, session) {
+    api.search = function (options, req, res, session) {
         var asset = require('rxt').asset;
         var assetManager = asset.createUserAssetManager(session, options.type);
         var sort = (request.getParameter("sort") || '');
@@ -252,7 +252,7 @@ var responseProcessor = require('utils').response;
      * @param {[obj]}  [req]      [Request object]
      * @param {[obj]}  [res]      [Request object]
      */
-    api.get = function(options, req, res, session) {
+    api.get = function (options, req, res, session) {
         var asset = require('rxt').asset;
         var assetManager = asset.createUserAssetManager(session, options.type);
         try {
@@ -283,16 +283,20 @@ var responseProcessor = require('utils').response;
      * @param {[obj]}  [req]      [Request object]
      * @param {[obj]}  [res]      [Request object]
      */
-    api.remove = function(options, req, res, session) {
+    api.remove = function (options, req, res, session) {
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
+        var retrievedAsset = api.get(options, req, res, session);
+        if (!retrievedAsset) {
+            log.error('Id not valid');
+            return false;
+        }
         try {
             am.remove(options.id); //call asset manager to remove asset
-            result = true;
+            return true;
         } catch (e) {
             log.error('Asset with id: ' + asset.id + ' was not deleted due to ' + e);
-            result = false;
+            throw 'Asset deletion with id ' + options.id + ' failed.' + e;
         }
-        return result;
     };
 }(api))

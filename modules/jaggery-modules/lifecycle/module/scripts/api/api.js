@@ -16,18 +16,46 @@
  *  under the License.
  *
  */
+/**
+ * The api namespace exposes methods to retrieve information individual states of the lifecycles
+ * deployed to the Governance Registry
+ * @namespace
+ * @example
+ *     var api = require('lifecycle').api;
+ *     var superTenantId=-1234;
+ *     
+ *     api.getLifecycleList(superTenantId); 
+ * @requires store
+ * @requires event
+ * @requires utils
+ * @requires Packages.org.wso2.carbon.governance.lcm.util.CommonUtil
+ */
 var api = {};
 (function(api, core) {
     var log = new Log('lifecycle');
     var CHECKITEM_TOKEN = 'checkItems';
     var TRANSITION_EXECUTION = 'transitionExecution';
 
+    /**
+     * Represents a class which models a lifecycle
+     * @constructor
+     * @param {Object} definiton The JSON definition of a lifecycle
+     * @memberOf api
+     */
     function Lifecycle(definiton) {
         this.definition = definiton;
     }
+    /**
+     * Returns the JSON definition for the lifecycle managed by the instance
+     * @return {Object} Lifecycle definition
+     */
     Lifecycle.prototype.getDefinition = function() {
         return this.definition;
     };
+    /**
+     * Returns the name of the lifecycle
+     * @return {String} The name of the lifecycle
+     */
     Lifecycle.prototype.getName = function() {
         if (!this.definition.name) {
             throw 'Unable to locate name attribute in the lifecycle definition ';
@@ -35,8 +63,19 @@ var api = {};
         return this.definition.name;
     };
     /**
-     * The function will obtain the next state of states from the current state
-     * @return An array containing the name of the next set of states
+     * Returns a list of states which can be reached from the provided state
+     * @example
+     *     var states =  lc.nextStates('Initial');
+     *
+     *     for(var i =0 ;i< states.length; i++){
+     *         print(states[i].target);
+     *         print(states[i].event);
+     *     }
+     *     
+     * @return {Array}  The list of states reachable from the provided state
+     * @throws The lifecycle does not have any state information.Make sure that the states are defined in the scxml definition
+     * @throws The state is not present in the lifecycle
+     * @throws The stae has defined any transitions in the lifecycle
      */
     Lifecycle.prototype.nextStates = function(currentStateName) {
         var currentStateName = currentStateName ? currentStateName.toLowerCase() : currentStateName;
@@ -61,9 +100,9 @@ var api = {};
         return nextStates;
     };
     /**
-     * The function returns checklistItems binded with current state
-     * @param  {[type]} name The name of the state
-     * @return A json object representing the checklist items
+     * Returns the check list items for a state.If there are no check list items defined for a state an empty array is returned
+     * @param  {String} name The name of the state 
+     * @return {Array}       The list of check list items
      */
     Lifecycle.prototype.checklistItems = function(currentStateName) {
         var currentStateName = currentStateName ? currentStateName.toLowerCase() : currentStateName;
@@ -73,7 +112,6 @@ var api = {};
             var datamodel = states[currentStateName].datamodel.data;
             for (var index = 0; index < datamodel.length; index++) {
                 if (datamodel[index].name == 'checkItems') {
-                    //var items = {};
                     checklistItems = datamodel[index].item;
                     return checklistItems;
                 }
@@ -84,9 +122,9 @@ var api = {};
         return checklistItems;
     };
     /**
-     * The function builds a state object given raw state information
-     * @param  {[type]} rawState [description]
-     * @return {[type]}          [description]
+     * Builds a state object given raw state information
+     * @param  {String} rawState The state definitin
+     * @return {Object}           Processed state definition including check list items
      */
     var buildStateObject = function(rawState) {
         var state = {};
@@ -100,9 +138,9 @@ var api = {};
         return state;
     };
     /**
-     * The function returns the check list items for the current state
-     * @param  {[type]} data [description]
-     * @return {[type]}      [description]
+     * Returns the check list items by processing a state meta block
+     * @param  {Object} data A state meta block
+     * @return {Array}      Check list items
      */
     var getCheckitems = function(data) {
         var items = [];
@@ -116,9 +154,15 @@ var api = {};
         return items;
     };
     /**
-     * The function returns details about the current state
-     * @param  {[type]} name The name of the state
-     * @return A json object representing the state
+     * Returns details about the state
+     * @example
+     *     var state = lc.state('Initial');
+     *
+     *     print(state.id); //Initial
+     *     print(state.checkItems);
+     *     
+     * @param  {String} name The name of the state
+     * @return {Object}     Details about the state
      */
     Lifecycle.prototype.state = function(stateName) {
         //Convert the state to lowercase
@@ -137,14 +181,14 @@ var api = {};
         state = buildStateObject(rawState);
         //Add the next states
         state.nextStates = this.nextStates(stateName);
-        //log.info(rawState);
         return state;
     };
     /**
-     * The function returns the action that can cause transitions from the fromState to the toState
-     * @param  {[type]} fromState The from state
-     * @param  {[type]} toState   [description]
-     * @return {[type]}           [description]
+     * Returns the action that will cause a transition from the fromState to the toState.If there is no
+     * transition action then NULL is returned
+     * @param  {String} fromState The initial state before the transition
+     * @param  {String} toState   The desired state of the transition
+     * @return {String}           The action which will cause a transition 
      */
     Lifecycle.prototype.transitionAction = function(fromState, toState) {
         var fromState = fromState ? fromState.toLowerCase() : fromState;
@@ -164,11 +208,10 @@ var api = {};
         return null;
     };
     /**
-     * The function will return an array of execution event parameters.These parameters
-     * are consumed by the executor for the event
-     * @param  {[type]} state The state for which the execution event must be returned
-     * @param  action The transition action for this state
-     * @return {[type]}       An array of transition execution event parameters
+     * Returns the execution events that are triggered by the action for the state
+     * @param  {String} state The state name
+     * @param  {String} action The transition action 
+     * @return {Array}       An array of transition events
      */
     Lifecycle.prototype.transitionExecution = function(state, action) {
         var state = state ? state.toLowerCase() : state;
@@ -208,11 +251,16 @@ var api = {};
         }
         return parameters;
     };
-    // var getTenantId = function(session) {
-    //     var server = require('store').server;
-    //     var user = server.current(session);
-    //     return user.tenantId;
-    // };
+    /**
+     * Returns an instance of the Lifecycle class
+     * @example
+     *     var lc = api.getLifecycle('SimpleLifeCycle',-1234);
+     *     lc.nextStates('initial');
+     * @param  {String} lifecycleName The name of the lifecycle
+     * @param  {Number} tenantId       The tenant ID
+     * @return {Object}                An instance of the Lifecycle class
+     * @throws Unable to locate lifecycle without a tenant ID
+     */
     api.getLifecycle = function(lifecycleName, tenantId) {
         if (!tenantId) {
             throw 'Unable to locate lifecycle ' + lifecycleName + ' without a tenantId';
@@ -220,14 +268,17 @@ var api = {};
         var lcJSON = core.getJSONDef(lifecycleName, tenantId);
         if (!lcJSON) {
             log.warn('Unable to locate lifecycle ' + lifecycleName + ' for the tenant: ' + tenantId);
-            return null;
+            return null; //TODO: This should throw an exception
         }
         return new Lifecycle(lcJSON);
     };
     /**
-     * The function will return a list of available lifecycles for the tenant
-     * @param  tenantId:
-     * @return {[type]}       An array of lifecycles
+     * Returns a list of lifecycles that can be accessed by the tenant
+     * @example 
+     *     var lifecycles = api.getLifecycleList(-1234);
+     *     print(lifecycles); // ['SampleLifeCycle','MobileAppLifeCycle']
+     * @param  {Number} tenantId  The tenant ID
+     * @return {Array}       An array of lifecycle names 
      */
     api.getLifecycleList = function(tenantId) {
         if (!tenantId) {

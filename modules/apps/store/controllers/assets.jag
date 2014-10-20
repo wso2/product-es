@@ -1,8 +1,23 @@
 <%
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 var caramel;
 
 require('/modules/store.js').exec(function (ctx) {
-    var options, assets, paging, current, total, url, mainPage, subPage, title, selectedCategory, key,typeCount,
+    var options, assets, paging, current, total, url, mainPage, subPage, title, selectedCategory, key, typeCount,
             log = ctx.log,
             sso = ctx.sso,
             query = ctx.params.query,
@@ -14,14 +29,14 @@ require('/modules/store.js').exec(function (ctx) {
             configs = ctx.configs,
             site = ctx.site,
             subscriptions = {},
-            types=store.assetTypes(),
+            types = store.assetTypes(),
             subscription = false;
 
     caramel = require('caramel');
 
     url = '/assets/' + type + '/?' + (tag ? 'tag=' + tag + '&' : '') + (query ? 'query=' + query + '&' : '');
 
-    typeCount=types.length;
+    typeCount = types.length;
     paging = store.assetsPaging(request);
 
     mainPage = type;
@@ -136,7 +151,7 @@ require('/modules/store.js').exec(function (ctx) {
             url: url + 'sort='
         },
 
-        myAssets : { user:user, type: type, title: title, subscriptions: subscriptions[type], subscription : subscription},
+        myAssets: { user: user, type: type, title: title, subscriptions: subscriptions[type], subscription: subscription},
         recentAssets: store.recentAssets(type),
         assetTypeCount: typeCount
 

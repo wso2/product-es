@@ -1,34 +1,52 @@
 <%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
 var caramel;
-var DEFAULT_SOCIAL_APP_SCRIPT='https://localhost:9443/social/export-js/social.js' ;
-var DEFAULT_SOCIAL_APP='../../../social/';
-var DEFAULT_SOCIAL_SCRIPT_TYPE='text/javascript';
+var DEFAULT_SOCIAL_APP_SCRIPT = 'https://localhost:9443/social/export-js/social.js';
+var DEFAULT_SOCIAL_APP = '../../../social/';
+var DEFAULT_SOCIAL_SCRIPT_TYPE = 'text/javascript';
 
 /**
  * The function is used to create the social app configuration object that will be used to populate
  * the iframe hosting the social component
  * @returns A JSON object which contains the social app configuration details
  */
-var getSocialAppDetails=function(){
-    var config=require('/config/store.json').socialAppConnectionInfo||{};
+var getSocialAppDetails = function () {
+    var config = require('/config/store.json').socialAppConnectionInfo || {};
 
-    if(!config.hasOwnProperty('script')){
-               config['script']=DEFAULT_SOCIAL_APP_SCRIPT;
+    if (!config.hasOwnProperty('script')) {
+        config['script'] = DEFAULT_SOCIAL_APP_SCRIPT;
     }
 
-    if(!config.hasOwnProperty('scriptType')){
-         config['scriptType']=DEFAULT_SOCIAL_SCRIPT_TYPE;
+    if (!config.hasOwnProperty('scriptType')) {
+        config['scriptType'] = DEFAULT_SOCIAL_SCRIPT_TYPE;
     }
 
-    if(!config.hasOwnProperty('socialAppUrl')){
-        config['socialApp']=DEFAULT_SOCIAL_APP;
+    if (!config.hasOwnProperty('socialAppUrl')) {
+        config['socialApp'] = DEFAULT_SOCIAL_APP;
     }
 
     return config;
 };
 
 require('/modules/store.js').exec(function (ctx) {
-    var asset, aid, title,typeCount,
+    var asset, aid, title, typeCount,
             log = ctx.log,
             sso = ctx.sso,
             store = ctx.store,
@@ -43,7 +61,7 @@ require('/modules/store.js').exec(function (ctx) {
 
     caramel = require('caramel');
 
-    typeCount=types.length;
+    typeCount = types.length;
     matcher.match('/{context}' + configs.assetsUrlPrefix + '/{type}/{aid}');
     aid = matcher.elements().aid;
     title = store.assetLinks(type).title;
@@ -55,7 +73,7 @@ require('/modules/store.js').exec(function (ctx) {
     }
 
     //check asset LC state
-    if(configs.lifeCycleBehaviour.visibleIn.indexOf(String(asset.lifecycleState), 0) < 0){
+    if (configs.lifeCycleBehaviour.visibleIn.indexOf(String(asset.lifecycleState), 0) < 0) {
         response.sendError(404, 'Requested page cannot be found');
         return;
     }
@@ -65,7 +83,6 @@ require('/modules/store.js').exec(function (ctx) {
     }
 
     var rxtAttributes = utility.getRXTAttributes(tenantId, type);
-
 
 
     caramel.render({
@@ -98,8 +115,8 @@ require('/modules/store.js').exec(function (ctx) {
         ],
         myAssets: { user: user, type: type, title: title },
         recentAssets: store.recentAssets(type),
-        moreAssetsFromProvider:store.assetsFromProvider(asset,type),
-        socialAppDetails:getSocialAppDetails(),
+        moreAssetsFromProvider: store.assetsFromProvider(asset, type),
+        socialAppDetails: getSocialAppDetails(),
         assetTypeCount: typeCount
     });
 }, request, response, session);
