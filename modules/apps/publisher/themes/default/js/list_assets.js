@@ -30,7 +30,7 @@ infiniteScroll = true;
 /**
  * To render the next set of assets by appending to the available container
  * @param {string} partial  : to which partial should be added
- * @param {JSON} data     : data for the partial
+ * @param {JSON}   data     : data for the partial
  * @param {String} container : container to be appended
  * @param {String} cb       : callback function if any
  */
@@ -90,9 +90,11 @@ function getNextPage(param) {
 
                 } else {
                     infiniteScroll = true;
+                    if($(window).height() >= $(document).height()){
+                        scroll();
+                    }
                 }
-            }
-            else {//if no assets retrieved for this page
+            } else {//if no assets retrieved for this page
                 infiniteScroll = false;
             }
 
@@ -137,7 +139,7 @@ var scroll = function () {
     var startInitItems = store.publisher.itemsPerPage;// items-per-page by global store object
 
     if (infiniteScroll && startInitItems > 1) { //if scroll enabled
-        if ($(window).scrollTop() + $(window).height() >= $(document).height() * .5) {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() * .8) {
             var start = startInitItems * (currentPage++);
             var path = window.location.href;//current page path
             var param = '&&start=' + start + '&&count=' + startInitItems + setSortingParams(path);
