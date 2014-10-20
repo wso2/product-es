@@ -30,6 +30,7 @@ describe('Assets POST - Publisher API', function () {
      * Response: created asset
      * test: check for a return-id
      */
+
     it('Test add asset', function () {
         var url = server_url + '/assets?type=gadget';
         var asset = {'overview_name': 'WSO2 Test Gadget',
@@ -215,16 +216,18 @@ describe('Assets GET - Publisher API', function () {
      * test: check for default pagination size
      */
     it('Test get assets by type, without pagination', function () {
-        var url = server_url + '/assets?type=gadget';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+                expect(response.data.data.length).toEqual(12);
+            }, 15000);
         } catch (e) {
             log.debug(e);
         } finally {
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
-            expect(response.data.data.length).toEqual(0 || 12);
         }
     });
 
@@ -235,16 +238,18 @@ describe('Assets GET - Publisher API', function () {
      * test: check for pagination, 5 items
      */
     it('Test get assets by type, with pagination', function () {
-        var url = server_url + '/assets?type=gadget&start=0&count=5';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&start=0&count=5';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+                expect(response.data.data.length).toEqual(5);
+            }, 15000);
         } catch (e) {
             log.debug(e);
         } finally {
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
-            expect(response.data.data.length).toEqual(0 || 5);
         }
     });
 
@@ -256,18 +261,20 @@ describe('Assets GET - Publisher API', function () {
      */
     it('Test get assets by type, with field expansion for attributes', function () {
         var id = getAssetID();
-        var url = server_url + '/assets?type=gadget&fields=overview_name,overview_version,overview_provider';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&fields=overview_name,overview_version,overview_provider';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+                var count = Object.keys(response.data.data[0].attributes).length;
+                expect(count).toEqual(3);
+            }, 6000);
         } catch (e) {
             log.debug(e);
         } finally {
             deleteAssetWithID(id)
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
-            var count = Object.keys(response.data.data[0].attributes).length;
-            expect(count).toEqual(0 || 3);
         }
     });
 
@@ -279,18 +286,20 @@ describe('Assets GET - Publisher API', function () {
      */
     it('Test get assets by type, with field expansion for outer fields', function () {
         var id = getAssetID();
-        var url = server_url + '/assets?type=gadget&fields=name,id,type';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&fields=name,id,type';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+                var count = Object.keys(response.data.data[0]).length;
+                expect(count).toEqual(3);
+            }, 6000);
         } catch (e) {
             log.debug(e);
         } finally {
             deleteAssetWithID(id)
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
-            var count = Object.keys(response.data.data[0]).length;
-            expect(count).toEqual(3);
         }
     });
 
@@ -302,20 +311,22 @@ describe('Assets GET - Publisher API', function () {
      */
     it('Test get assets by type, with field expansion for outer fields and attributes', function () {
         var id = getAssetID();
-        var url = server_url + '/assets?type=gadget&fields=name,id,type,overview_version,overview_name';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&fields=name,id,type,overview_version,overview_name';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+                var count = Object.keys(response.data.data[0]).length;
+                expect(count).toEqual(4);
+                var attributeCount = Object.keys(response.data.data[0].attributes).length;
+                expect(attributeCount).toEqual(2);
+            }, 6000);
         } catch (e) {
             log.debug(e);
         } finally {
             deleteAssetWithID(id);
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
-            var count = Object.keys(response.data.data[0]).length;
-            expect(count).toEqual(4);
-            var attributeCount = Object.keys(response.data.data[0].attributes).length;
-            expect(attributeCount).toEqual(2);
         }
     });
 
@@ -327,18 +338,20 @@ describe('Assets GET - Publisher API', function () {
      */
     it('Test get assets by type, with field expansion for outer fields with not available fields', function () {
         var id = getAssetID();
-        var url = server_url + '/assets?type=gadget&fields=name,id,type,unavailable1,unavailable2';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&fields=name,id,type,unavailable1,unavailable2';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+                var count = Object.keys(response.data.data[0]).length;
+                expect(count).toEqual(3);
+            }, 6000);
         } catch (e) {
             log.debug(e);
         } finally {
             deleteAssetWithID(id);
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
-            var count = Object.keys(response.data.data[0]).length;
-            expect(count).toEqual(3);
         }
     });
     /*
@@ -349,20 +362,23 @@ describe('Assets GET - Publisher API', function () {
      */
     it('Test get assets by type, with field expansion for outer fields and attributes not available', function () {
         var id = getAssetID();
-        var url = server_url + '/assets?type=gadget&fields=name,id,type,overview_version,overview_unavailable';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&fields=name,id,type,overview_version,overview_unavailable';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+                expect(response.data.data).not.toBe(undefined);
+                var count = Object.keys(response.data.data[0]).length;
+                expect(count).toEqual(4);
+                var attributeCount = Object.keys(response.data.data[0].attributes).length;
+                expect(attributeCount).toEqual(1);
+            }, 6000);
         } catch (e) {
             log.debug(e);
         } finally {
             deleteAssetWithID(id);
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
-            var count = Object.keys(response.data.data[0]).length;
-            expect(count).toEqual(4);
-            var attributeCount = Object.keys(response.data.data[0].attributes).length;
-            expect(attributeCount).toEqual(1);
         }
     });
 
@@ -373,21 +389,23 @@ describe('Assets GET - Publisher API', function () {
      * test: sort assending
      */
     it('Test get assets by type, sort +overview_name', function () {
-        var url = server_url + '/assets?type=gadget&sort=+overview_name';
         var header = obtainAuthorizedHeaderForAPICall();
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&sort=+overview_name';
+                var response = get(url, {}, header, 'json');
+                for (var index = 0; index < response.data.data.length; index++) {
+                    var nextAsset = response.data.data[index + 1];
+                    if (nextAsset) {
+                        var isLessthan = compareStrings(response.data.data[index].name, nextAsset.name, 'isLessThan');
+                        expect(isLessthan).toBe(true);
+                    }
+                }
+            }, 15000);
         } catch (e) {
             log.debug(e);
         } finally {
             logoutAuthorizedUser(header);
-            for (var index = 0; index < response.data.data.length; index++) {
-                var nextAsset = response.data.data[index + 1];
-                if (nextAsset) {
-                    var isLessthan = compareStrings(response.data.data[index].name, nextAsset.name, 'isLessThan');
-                    expect(isLessthan).toBe(true);
-                }
-            }
         }
     });
 
@@ -398,24 +416,27 @@ describe('Assets GET - Publisher API', function () {
      * test: sort descending
      */
     it('Test get assets by type, sort -overview_name', function () {
-        var url = server_url + '/assets?type=gadget&sort=-overview_name';
         var header = obtainAuthorizedHeaderForAPICall();
 
         try {
-            var response = get(url, {}, header, 'json');
+            setTimeout(function () {
+                var url = server_url + '/assets?type=gadget&sort=-overview_name';
+                var response = get(url, {}, header, 'json');
+                expect(response.data.data).not.toBe(undefined);
+
+                for (var index = 0; index < response.data.data.length; index++) {
+                    var nextAsset = response.data.data[index + 1];
+                    if (nextAsset) {
+                        var isGreaterThan = compareStrings(response.data.data[index].name, nextAsset.name, 'isGreaterThan');
+                        expect(isGreaterThan).toBe(true);
+                    }
+                }
+            }, 15000);
         } catch (e) {
             log.debug(e);
         } finally {
             logoutAuthorizedUser(header);
-            expect(response.data.data).not.toBe(undefined);
 
-            for (var index = 0; index < response.data.data.length; index++) {
-                var nextAsset = response.data.data[index + 1];
-                if (nextAsset) {
-                    var isGreaterThan = compareStrings(response.data.data[index].name, nextAsset.name, 'isGreaterThan');
-                    expect(isGreaterThan).toBe(true);
-                }
-            }
         }
 
     });
