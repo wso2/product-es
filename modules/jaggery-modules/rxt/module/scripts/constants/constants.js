@@ -45,7 +45,7 @@ var constants = {};
     constants.Q_SORT='sortBy';
     constants.Q_TAG='tag';
     constants.Q_SORT_ORDER='sort';
-    constants.ASSET_DEFAULT_SORT_ORDER='ASC';
+    constants.ASSET_DEFAULT_SORT_ORDER='DESC';
     constants.Q_SORT_ORDER_ASCENDING = 'ASC';
     constants.Q_SORT_ORDER_DESCENDING = 'DESC'
 
@@ -111,7 +111,7 @@ var constants = {};
         start: 0,
         count: 10,
         sortBy: 'overview_createdtime',
-        sortOrder: 'ASC'
+        sortOrder: 'DESC'
     };
 
     constants.DEFAULT_ASSET_PAGIN={
