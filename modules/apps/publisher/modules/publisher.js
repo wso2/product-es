@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
 var PUBLISHER_CONFIG_PATH = '/_system/config/publisher/configs/publisher.json';
 
 var ASSETS_EXT_PATH = '/extensions/assets/';
@@ -82,7 +98,6 @@ var init = function (options) {
             log.debug('initializing deployementManager');
 
             deploymentManager.init();
-
             deploymentManager.autoDeploy();
 
             log.debug('finished auto deployment of default assets.');
@@ -90,7 +105,6 @@ var init = function (options) {
 
 
     });
-
 
     event.on('login', function (tenantId, user, session) {
         configureUser(tenantId, user);
@@ -102,7 +116,6 @@ var configs = function (tenantId) {
         registry = server.systemRegistry(tenantId);
     return JSON.parse(registry.content(PUBLISHER_CONFIG_PATH));
 };
-
 
 var addLifecycles = function (registry) {
     var lc,
@@ -134,7 +147,6 @@ var addLifecycles = function (registry) {
 
             CommonUtil.addLifecycle(lc, configReg, rootReg);
         }
-
     });
 };
 
@@ -164,7 +176,6 @@ var Publisher = function (tenantId, session) {
     this.DataInjectorModes = managers.DataInjectorModes;
     this.filterManager = managers.filterManager;
     this.storageSecurityProvider = managers.storageSecurityProvider;
-
 };
 
 /**
@@ -233,7 +244,6 @@ var buildManagers = function (tenantId, registry) {
     var storageSecurityProvider = new securityProviderModule.SecurityProvider();
     var filterManager = new filterManagementModule.FilterManager();
 
-
     log.debug('tenant: ' + tenantId);
 
     //The security provider requires the registry and user manager to work
@@ -289,11 +299,11 @@ var buildManagers = function (tenantId, registry) {
     var validationManager = new validationManagement.ValidationManager();
 
     var modelManager = new ext_mng.ModelManager({
-        parser:parser,
-        adapterManager:adapterManager,
-        actionManager:actionManager,
-        rxtManager:rxtManager,
-        validationManager:validationManager
+        parser: parser,
+        adapterManager: adapterManager,
+        actionManager: actionManager,
+        rxtManager: rxtManager,
+        validationManager: validationManager
     });
 
     return {
@@ -333,7 +343,6 @@ var loadTagDependencies = function (registry) {
 
         log.debug('tag query has been added.');
     }
-
 };
 
 /*
@@ -405,9 +414,7 @@ var buildPermissionsList = function (tenantId, username, permissions) {
                 log.debug('collection: ' + id + 'is present.');
             }
         }
-
     }
-
     return permissions;
 };
 
@@ -458,7 +465,6 @@ var configureUser = function (tenantId, user) {
 
         //user.addRoles(role);
     }
-
 };
 
 var checkIfEmpty = function (object) {
@@ -467,7 +473,6 @@ var checkIfEmpty = function (object) {
             return false;
         }
     }
-
     return true;
 };
 
