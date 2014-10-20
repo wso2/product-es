@@ -1,3 +1,4 @@
+<%
 /*
  * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
@@ -14,9 +15,6 @@
  * limitations under the License.
  */
 
-var resources = function (page, meta) {
-    return{
-        js: ['caramel.handlebars.client.js', 'list_assets.js'],
-        code: ['publisher.assets.hbs']
-    }
-};
+require("jaggery-test").test.run();
+
+%>

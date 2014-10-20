@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~   Licensed under the Apache License, Version 2.0 (the "License");
   ~   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~   See the License for the specific language governing permissions and
   ~   limitations under the License.
   -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -128,6 +129,8 @@
                                 <featureArtifactDef>org.jaggeryjs.modules:process.feature:${process.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:uuid.feature:${uuid.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:jaggery-test.feature:${jaggery-test.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.platform.version}
@@ -343,6 +346,10 @@
                                 <feature>
                                     <id>org.jaggeryjs.modules.uuid.feature.group</id>
                                     <version>${uuid.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.jaggeryjs.modules.jaggery-test.feature.group</id>
+                                    <version>${jaggery-test.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.modules.event.feature.group</id>

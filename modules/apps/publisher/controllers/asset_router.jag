@@ -82,7 +82,7 @@
 			return;
 		}
 
-		response.sendError(404,MSG_404); 
+		response.sendError(404,MSG_404);
 
 	}());
 %>
