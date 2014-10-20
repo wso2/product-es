@@ -1,21 +1,19 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
  */
+
 package org.wso2.carbon.store.notifications.internal;
 
 import org.apache.commons.logging.Log;
@@ -24,7 +22,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.eventing.services.EventingService;
-import org.wso2.carbon.store.notifications.management.Utils;
+import org.wso2.carbon.store.notifications.management.ComponentManager;
 import org.wso2.carbon.store.notifications.service.StoreNotificationService;
 
 /**
@@ -39,31 +37,61 @@ import org.wso2.carbon.store.notifications.service.StoreNotificationService;
 
 public class StoreNotificationsComponent {
 
-    private static Log log = LogFactory.getLog(StoreNotificationsComponent.class);
+    private static final Log log = LogFactory.getLog(StoreNotificationsComponent.class);
 
+    /**
+     * Activate the bundle
+     *
+     * @param context component context
+     */
     protected void activate(ComponentContext context) {
         BundleContext bundleContext = context.getBundleContext();
         bundleContext.registerService(StoreNotificationService.class,
                 new StoreNotificationService(), null);
+        ComponentManager.registerEvents();
         log.info("Store Notification service is activated");
     }
 
+    /**
+     * Set the RegistryEventingService
+     *
+     * @param eventingService Eventing Service
+     */
     protected void setRegistryEventingService(EventingService eventingService) {
-        Utils.setRegistryEventingService(eventingService);
-        log.debug("Successfully set registry eventing service");
+        ComponentManager.setRegistryEventingService(eventingService);
+        if (log.isDebugEnabled()) {
+            log.debug("Successfully set registry eventing service");
+        }
     }
 
+    /**
+     * Unset Registry Eventing Service
+     *
+     * @param eventingService Eventing Service
+     */
     protected void unsetRegistryEventingService(EventingService eventingService) {
-        Utils.setRegistryEventingService(null);
+        ComponentManager.setRegistryEventingService(null);
     }
 
+    /**
+     * Set RegistryService
+     *
+     * @param registryService Registry Service
+     */
     protected void setRegistryService(RegistryService registryService) {
-        Utils.setRegistryService(registryService);
-        log.debug("Successfully set registry service");
+        ComponentManager.setRegistryService(registryService);
+        if (log.isDebugEnabled()) {
+            log.debug("Successfully set registry service");
+        }
     }
 
+    /**
+     * Unset Registry Service
+     *
+     * @param registryService
+     */
     protected void unsetRegistryService(RegistryService registryService) {
-        Utils.setRegistryService(null);
+        ComponentManager.setRegistryService(null);
     }
 
 }

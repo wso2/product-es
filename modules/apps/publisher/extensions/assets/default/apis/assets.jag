@@ -36,7 +36,7 @@ require('/modules/publisher.js').exec(function(ctx) {
     var req = ctx.request;
     var session = ctx.session;
     var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
-    var assetApi = require('/modules/asset_api.js').api;    
+    var assetApi = require('/modules/asset_api.js').api;
     var lcApi = require('/modules/lifecycle_api.js').api;
 
     var CREATE_URL = '/{context}/apis/assets/';
@@ -79,10 +79,10 @@ require('/modules/publisher.js').exec(function(ctx) {
                 try{
                     var out = lcApi.invokeStateTransition(options, req, res, session);
                     response = responseProcessor.buildSuccessResponse(response, 200, out);
-                }catch(e){                    
+                }catch(e){
                     response = responseProcessor.buildErrorResponse(response, 500, e);
                 }
-                
+
             } else {
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this POST endpoint');
             }
@@ -116,10 +116,10 @@ require('/modules/publisher.js').exec(function(ctx) {
                 options.id = uriMatcher.elements().id;
                 var done = assetApi.remove(options, req, res, session);
                 var result = [];
-                if(done){
-                    response = responseProcessor.buildSuccessResponse(response,200,result);
-                }else{
-                    response = responseProcessor.buildErrorResponse(response,400,"No matching asset found");
+                if (done) {
+                    response = responseProcessor.buildSuccessResponse(response, 200, result);
+                } else {
+                    response = responseProcessor.buildErrorResponse(response, 400, "No matching asset found");
                 }
             }
             else {
