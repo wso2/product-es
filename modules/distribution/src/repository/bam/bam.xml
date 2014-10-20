@@ -2,8 +2,7 @@
 
     <clientStorePath>/home/manoj/wso2bam-2.4.1/repository/resources/security/client-truststore.jks</clientStorePath>
     <trustStorePassword>wso2carbon</trustStorePassword>
-    <bamhost>localhost</bamhost>
-    <thriftPort>7611</thriftPort>
+    <bamhost>localhost:7611</bamhost>
     <userName>admin</userName>
     <password>admin</password>
 </bamConfiguration>

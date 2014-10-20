@@ -1,8 +1,9 @@
 <%
 response.addHeader("Access-Control-Allow-Origin", "*");
 response.addHeader("Content-Type", "application/json");
-var log=new Log();
+var log = new Log();
 log.info('##### Asset Endpoint ######');
+
 
 require('/modules/store.js').exec(function (ctx) {
     var elems,

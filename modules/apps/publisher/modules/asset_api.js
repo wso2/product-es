@@ -132,6 +132,7 @@ var responseProcessor = require('utils').response;
         var asset = require('rxt').asset;
         var am = asset.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');
+
         var asset = null;
         if (request.getParameter("asset") != null) {
             asset = parse(request.getParameter("asset"));
