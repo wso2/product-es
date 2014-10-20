@@ -66,8 +66,7 @@ var handleApiEndpoint = function (request, session, uriParams) {
         if (endpoint) {
             request.getMappedPath = mapper(endpoint);
             include(endpoint);
-        }
-        else {
+        } else {
             response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate an api endpoint for the type: ' + type)
         }
     } catch (e) {

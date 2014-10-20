@@ -17,6 +17,7 @@
  *  under the License.
  *
  */
+
 /**
  * Description: The API accepts a set of credentials which it attempts to verify.If the
  provided credentials are authenticated , the logged in user is set to the provided
@@ -86,7 +87,6 @@ switch (METHOD) {
 
     default:// other methods       
         result = responseProcessor.buildErrorResponse(response, 404, 'Your request malformed!');
-
 }
 
 %>

@@ -90,8 +90,7 @@ require('/modules/publisher.js').exec(function (ctx) {
                     if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
                         log.error(e.message);
                         response = responseProcessor.buildErrorResponse(response, e.code, e.message);
-                    }
-                    else {
+                    } else {
                         response = responseProcessor.buildErrorResponse(res, 500, 'Failed to update asset of type: ' + options.type);
                     }
                 }
@@ -155,8 +154,7 @@ require('/modules/publisher.js').exec(function (ctx) {
                     log.error(e);
                     response = responseProcessor.buildErrorResponse(response, 500, "An error occurred while deleting asset");
                 }
-            }
-            else {
+            } else {
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this DELETE endpoint');
             }
             break;
