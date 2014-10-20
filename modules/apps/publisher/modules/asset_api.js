@@ -45,6 +45,7 @@ var result;
      * The function filter the requested fields from assets objects and build new asset object with requested fields
      * @param  options   The object contains array of required fields and array of assets for filtering fields
      */
+
     var fieldExpansion = function (options) {
         var fields = options.fields;
         var artifacts = options.assets;
@@ -109,6 +110,7 @@ var result;
      * @param am    The asset manager instance
      * @param asset The asset to be saved
      */
+
     var putInStorage = function (asset, am) {
         var resourceFields = am.getAssetResources();
         var ref = utils.file;
@@ -177,6 +179,7 @@ var result;
      * @param  sentData to change
      * @return The updated-asset
      */
+
     var putInUnchangedValues = function (original, asset, sentData) {
         for (var key in original.attributes) {
             //We need to add the original values if the attribute was not present in the data object sent from the client
@@ -202,6 +205,7 @@ var result;
         var assetModule = rxtModule.asset;
         var am = assetModule.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');//get asset attributes from the request
+
         var asset = null;
         if (request.getParameter("asset")) {
             asset = parse(request.getParameter("asset"));
@@ -238,8 +242,10 @@ var result;
      * @return updated-asset
      */
     api.update = function (options, req, res, session) {
+
         var assetModule = rxtModule.asset;
         var am = assetModule.createUserAssetManager(session, options.type);
+
         var assetReq = req.getAllParameters('UTF-8');
         var asset = null;
         if (request.getParameter("asset")) {
@@ -407,16 +413,20 @@ var result;
      * @return Boolean value whether deleted or not
      */
     api.remove = function (options, req, res, session) {
-        var assetModule = rxtModule.asset;
-        var am = assetModule.createUserAssetManager(session, options.type);
-        var success = false;
+        var asset = rxtModule.asset;
+        var am = asset.createUserAssetManager(session, options.type);
+        var retrievedAsset = api.get(options, req, res, session);
+        if (!retrievedAsset) {
+            log.error('Id not valid');
+            return false;
+        }
         try {
-            am.remove(options.id);//call asset manager to remove asset
-            success = true;
+            am.remove(options.id); //call asset manager to remove asset
+            return true;
         } catch (e) {
             log.error('Asset with id: ' + asset.id + ' was not deleted due to ' + e);
             success = false;
         }
-        return success;
     };
+
 }(api));

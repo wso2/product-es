@@ -43,7 +43,9 @@ require('/modules/publisher.js').exec(function (ctx) {
     var res = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
+
     var uriMatcher = new URIMatcher(req.getRequestURI());
+
     var assetApi = require('/modules/asset_api.js').api;
     var lcApi = require('/modules/lifecycle_api.js').api;
 
