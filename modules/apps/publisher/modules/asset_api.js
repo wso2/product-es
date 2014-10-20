@@ -98,8 +98,7 @@ var result;
             throw e;
         } else if (type == constants.LOG_EXCEPTION_AND_CONTINUE) {
             log.debug(exception);
-        }
-        else {
+        } else {
             log.error(exception);
             throw exception;
         }
@@ -145,7 +144,6 @@ var result;
         }
     };
 
-
     /**
      * The function get current asset in the storage
      * @param original  The current asset resources available in the store
@@ -158,7 +156,7 @@ var result;
             resourceField = resourceFields[index];
             //If the asset attribute value is null then use the old resource
 //            if ((!asset.attributes[resourceField]) || (asset.attributes[resourceField] == '')) {
-            if (!asset.attributes[resourceField] && asset.attributes.hasOwnProperty(resourceField)) {
+            if (!asset.attributes[resourceField]) {
                 log.debug('Copying old resource attribute value for ' + resourceField);
                 asset.attributes[resourceField] = original.attributes[resourceField];
             }
@@ -183,9 +181,11 @@ var result;
         for (var key in original.attributes) {
             //We need to add the original values if the attribute was not present in the data object sent from the client
             //and it was not deleted by the user (the sent data has an empty value)
-            if (((!asset.attributes[key]) || (asset.attributes[key].length == 0)) && (!isPresent(key, sentData))) {
-                log.debug('Copying old attribute value for ' + key);
-                asset.attributes[key] = original.attributes[key];
+            if (original.attributes.hasOwnProperty(key)) {
+                if (((!asset.attributes[key]) || (asset.attributes[key].length == 0)) && (!isPresent(key, sentData))) {
+                    log.debug('Copying old attribute value for ' + key);
+                    asset.attributes[key] = original.attributes[key];
+                }
             }
         }
     };
@@ -229,7 +229,6 @@ var result;
         return asset;
     };
 
-
     /**
      * The function to update an existing asset via api
      * @param  options  incoming
@@ -272,7 +271,7 @@ var result;
                 asset = null;
                 var errMassage = 'Failed to update the asset of id:' + options.id;
                 log.error(e);
-                if (log.isDebugEnabeld()) {
+                if (log.isDebugEnabled()) {
                     log.debug('Failed to update the asset ' + stringify(asset));
                 }
                 handleError(errMassage, constants.LOG_EXCEPTION_AND_TERMINATE, constants.ERROR_STATUS_CODES.INTERNAL_SERVER_ERROR);
@@ -281,7 +280,6 @@ var result;
         }
         return asset;
     };
-
 
     /**
      *
@@ -304,6 +302,24 @@ var result;
         }
     };
 
+    /**
+     * This function id to validate and build the query object from the string
+     * @param query This is the query string to be parsed
+     * @return Returns the parsed Json object containing query
+     */
+    function validateQuery(query) {
+        var q = {};
+        try {
+            q = parse(query);
+
+        } catch (e) {
+            log.error("Invalid Query \'" + query + "\'");
+            if (log.isDebugEnabled()) {
+                log.debug(e);
+            }
+        }
+        return q;
+    }
 
     /**
      * The function search for assets
@@ -327,7 +343,7 @@ var result;
             var assets;
             if (q) {//if search-query parameters are provided
                 var qString = '{' + q + '}';
-                var query = parse(qString);
+                var query = validateQuery(qString);
                 assets = assetManager.search(query, paging);// asset manager back-end call with search-query
             } else {
                 assets = assetManager.list(paging);// asset manager back-end call for asset listing
@@ -346,7 +362,6 @@ var result;
         }
         return result;
     };
-
 
     /**
      * The function get an asset by id
