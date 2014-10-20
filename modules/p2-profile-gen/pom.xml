@@ -277,9 +277,15 @@
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.event.stream.manager.feature:${cep.component.version}
                                 </featureArtifactDef-->
+
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.social.feature:${carbon.social.version}
                                 </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -354,6 +360,12 @@
                                     <id>org.wso2.store.modules.sso.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.store.modules.bampublisher.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>org.wso2.store.modules.store.feature.group</id>
                                     <version>${project.version}</version>
@@ -420,10 +432,9 @@
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.store.modules.bampublisher.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
                                 </feature>
-
                                 <!-- sso -->
                                 <feature>
                                     <id>
@@ -573,6 +584,7 @@
                                     <id>org.wso2.carbon.social.feature.group</id>
                                     <version>${carbon.social.version}</version>
                                 </feature>
+
                             </features>
                         </configuration>
                     </execution>
