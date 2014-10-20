@@ -241,25 +241,51 @@ var responseProcessor = require('utils').response;
         }
         return result;
     };
-    var getSort=function(req,constants){
-        return req.getParameter(constants.Q_SORT)||constants.ASSET_DEFAULT_SORT;
+
+    /**
+     * @param req       The global request object
+     * @param constants The constants rxt object where all the constants are defined
+     * @return returns the String for sortby parameter
+     */
+    var getSort = function (req, constants) {
+        return req.getParameter(constants.Q_SORT) || constants.ASSET_DEFAULT_SORT;
     };
-    var getSortOrder=function(req,constants){
-        return req.getParameter(constants.Q_SORT_ORDER)||constants.ASSET_DEFAULT_SORT_ORDER;
+
+    /**
+     * @param req       The global request object
+     * @param constants The constants rxt object where all the constants are defined
+     * @return returns the String for sortOrder parameter
+     */
+    var getSortOrder = function (req, constants) {
+        return req.getParameter(constants.Q_SORT_ORDER) || constants.ASSET_DEFAULT_SORT_ORDER;
     };
-    var getTag=function(req,constants){
-        return req.getParameter(constants.Q_TAG)||null;
+
+    /**
+     * @param req       The global request object
+     * @param constants The constants rxt object where all the constants are defined
+     * @return returns the String for tag
+     */
+    var getTag = function (req, constants) {
+        return req.getParameter(constants.Q_TAG) || null;
     };
-    api.assetsPaging=function(assets,type,req){
-        var paging={};
-        var constants=require('rxt').constants;
-        var sort=getSort(req,constants);
-        var sortOrder = getSortOrder(req,constants);
-        var url=constants.ASSET_BASE_URL+type+'/list?sortBy='+sort+"&sort="+sortOrder;
-        paging.sort=sort;
-        paging.size=assets.length;
-        paging.tag=getTag(req,constants);
-        paging.url=url;
+
+    /**
+     * This function is to create paging object for store list page
+     * @param assets list of assets
+     * @param type Asset type
+     * @param req Global request object
+     * @return Returns a json object of paging information
+     */
+    api.assetsPaging = function (assets, type, req) {
+        var paging = {};
+        var constants = require('rxt').constants;
+        var sort = getSort(req, constants);
+        var sortOrder = getSortOrder(req, constants);
+        var url = constants.ASSET_BASE_URL + type + '/list?sortBy=' + sort + "&sort=" + sortOrder;
+        paging.sort = sort;
+        paging.size = assets.length;
+        paging.tag = getTag(req, constants);
+        paging.url = url;
         return paging;
     };
 }(api))
