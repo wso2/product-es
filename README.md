@@ -5,3 +5,6 @@ WSO2 Enterprise Store (ES) enables users to manage and provision the entire ente
 
 WSO2 Enterprise Store is shipped with three assets which are namely, gadgets, sites and e-books. However, WSO2 ES supports any type of enterprise asset such as APIs, mobile apps, web apps,services etc. This is made possible by WSO2 ES empowering its users the freedom to add their own digital asset types together with their own customized life cycles. WSO2 ES goes the extra mile by allowing users to also extend the ES by carrying out additional customizations (such as, customizing the asset subscription process based on how the asset needs to be accessed, adding new customized pages for the assets etc.).
 
+
+
+
