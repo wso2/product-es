@@ -15,17 +15,10 @@
 *specific language governing permissions and limitations
 *under the License.
 */
+
 package org.wso2.es.integration.common.utils;
 
-import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
-
-import javax.xml.xpath.XPathExpressionException;
-
-public abstract class ESIntegrationUITest extends ESIntegrationTest{
-
-
-    protected String getLoginURL() throws XPathExpressionException {
-        return UrlGenerationUtil.getLoginURL(esContext.getInstance());
-    }
-
+public class ManifestConstants {
+    public static final String MANIFEST_FILE_NAME="test_manifest.json";
+    public static final String SAMPLE_DIR="samples";
 }

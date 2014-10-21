@@ -46,5 +46,15 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
+            <scope>compile</scope>
+        </dependency>
+          <dependency>
+              <groupId>com.google.code.gson</groupId>
+              <artifactId>gson</artifactId>
+              <version>2.2.4</version>
+          </dependency>
     </dependencies>
 </project>
