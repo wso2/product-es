@@ -15,20 +15,22 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.es.integration.common.utils;
+package org.wso2.es.integration.common.utils.domain;
 
-import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
+import java.util.Collection;
 
-import javax.xml.xpath.XPathExpressionException;
+/**
+ * Represents a set of resources of a package
+ */
+public class ResourcePackage {
+    private String packageName;
+    private Collection<Resource> resources;
 
-public abstract class ESIntegrationUITest extends ESIntegrationTest{
-
-
-    protected String getLoginURL() throws XPathExpressionException {
-        return UrlGenerationUtil.getLoginURL(esContext.getInstance());
+    public String getPackageName() {
+        return packageName;
     }
 
-    protected String getWebAppURL() throws XPathExpressionException {
-        return  UrlGenerationUtil.getWebAppURL(esContext.getContextTenant(), esContext.getInstance());
+    public Collection<Resource> getResources() {
+        return resources;
     }
 }

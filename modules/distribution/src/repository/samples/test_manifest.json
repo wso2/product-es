@@ -1,0 +1,16 @@
+{
+    "packages": {
+        "servicex_sample": {
+            "resources": [{
+                "src": "samples/extension_samples/servicex_sample/publisher/assets/servicex",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/extensions/assets/servicex"
+            }, {
+                "src": "samples/extensions_samples/servicex_sample/store/assets/servicex",
+                "dest": "repository/deployment/server/jaggeryapps/store/extensions/assets/servicex"
+            }, {
+                "src": "samples/extensions_samples/servicex_sample/publisher/config/publisher-tenant.json",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/config/publisher-tenant.json"
+            }]
+        }
+    }
+}
