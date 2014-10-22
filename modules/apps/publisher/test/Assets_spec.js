@@ -217,6 +217,7 @@ describe('Assets GET - Publisher API', function () {
     it('Test get assets by type, without pagination', function () {
         var url = server_url + '/assets?type=gadget';
         var header = obtainAuthorizedHeaderForAPICall();
+        url = encodeURI(url);
         try {
             var response = get(url, {}, header, 'json');
         } catch (e) {
@@ -224,7 +225,7 @@ describe('Assets GET - Publisher API', function () {
         } finally {
             logoutAuthorizedUser(header);
             expect(response.data.data).not.toBe(undefined);
-            expect(response.data.data.length).toEqual(0 || 12);
+            expect(response.data.data.length).toEqual(12);
         }
     });
 
@@ -237,6 +238,7 @@ describe('Assets GET - Publisher API', function () {
     it('Test get assets by type, with pagination', function () {
         var url = server_url + '/assets?type=gadget&start=0&count=5';
         var header = obtainAuthorizedHeaderForAPICall();
+        url = encodeURI(url);
         try {
             var response = get(url, {}, header, 'json');
         } catch (e) {
@@ -244,7 +246,7 @@ describe('Assets GET - Publisher API', function () {
         } finally {
             logoutAuthorizedUser(header);
             expect(response.data.data).not.toBe(undefined);
-            expect(response.data.data.length).toEqual(0 || 5);
+            expect(response.data.data.length).toEqual(5);
         }
     });
 
@@ -257,6 +259,7 @@ describe('Assets GET - Publisher API', function () {
     it('Test get assets by type, with field expansion for attributes', function () {
         var id = getAssetID();
         var url = server_url + '/assets?type=gadget&fields=overview_name,overview_version,overview_provider';
+        url = encodeURI(url);
         var header = obtainAuthorizedHeaderForAPICall();
         try {
             var response = get(url, {}, header, 'json');
@@ -267,7 +270,7 @@ describe('Assets GET - Publisher API', function () {
             logoutAuthorizedUser(header);
             expect(response.data.data).not.toBe(undefined);
             var count = Object.keys(response.data.data[0].attributes).length;
-            expect(count).toEqual(0 || 3);
+            expect(count).toEqual(3);
         }
     });
 
