@@ -1,0 +1,12 @@
+<%
+
+var app = require('rxt').app;
+var server=require('store').server;
+var opts = app.getAuthenticationDetails(-1234);
+//var configs=server.configs(-1234);
+//print(configs['server.user.options']);
+print(opts);
+//log.info('Authentication details: ' + stringify(opts));
+//print(userMod.configs(-1234));
+
+%>

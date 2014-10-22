@@ -1,5 +1,5 @@
 <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
  ~ Version 2.0 (the "License"); you may not use this file except
@@ -60,6 +60,11 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy
             </directory>
             <outputDirectory>${project.artifactId}-${project.version}/repository/conf/multitenancy</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/resources</outputDirectory>
         </fileSet>
 
         <fileSet>
@@ -216,6 +221,8 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
+        
+        
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${project.artifactId}-${project.version}/repository/components/patches/</outputDirectory>
@@ -232,6 +239,26 @@
                 <include>**/social.tbox</include>
             </includes>
         </fileSet-->
+        
+        <fileSet>
+            <directory>${project.basedir}/../components/asset-client/target</directory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+            <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+        </fileSet>
+        
+        <fileSet>
+           <directory>${project.basedir}/../components/asset-client/src/samples</directory>
+            <includes>
+                <include>build.xml</include>
+                <include>*.txt</include>
+            </includes>
+           <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
+       </fileSet>
+        
+
+        
     </fileSets>
     <dependencySets>
         <!--        <dependencySet>
@@ -255,6 +282,8 @@
                 <include>org.apache.rampart:rampart:mar</include>
             </includes>
         </dependencySet>
+        
+		
     </dependencySets>
     <files>
         <file>
@@ -264,10 +293,10 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--        <file>
-            <source>target/shindig</source>
-            <outputDirectory>${project.artifactId}-${project.version}/repository/deployment/server/webapps/ROOT</outputDirectory>
-        </file>-->
+
+
+
+        
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${project.artifactId}-${project.version}</outputDirectory>
@@ -314,11 +343,11 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <file>
+        <!--file>
             <source>src/repository/conf/log4j.properties</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
-        </file>
+        </file-->
         <file>
             <source>src/repository/conf/multitenancy/cloud-services-desc.xml</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/conf/multitenancy/</outputDirectory>
@@ -337,13 +366,13 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/conf/etc</outputDirectory>
         </file-->
         <!-- Including log4j.properties file -->
-        <!--        <file>
+        <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties
             </source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/conf/
             </outputDirectory>
-        </file>-->
+        </file>
         <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/axis2/axis2.xml</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/conf/axis2/</outputDirectory>
@@ -382,6 +411,9 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/database</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        
+        
+
         <!--        <file>
             <source>conf/wso2is-user-certs.jks</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/resources/security/</outputDirectory>
@@ -392,6 +424,28 @@
             <outputDirectory>${project.artifactId}-${project.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>-->
+        
 
-    </files>
+       </files>
+  
+  <!-- 
+      <moduleSets>
+      
+    <moduleSet>
+    
+
+      
+      <includes>
+        <include>org.wso2.store:asset-client</include>
+      </includes>
+      <binaries>
+        <attachmentClassifier>jar-with-dependencies</attachmentClassifier>
+        <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
+
+-->
+
+
+
 </assembly>

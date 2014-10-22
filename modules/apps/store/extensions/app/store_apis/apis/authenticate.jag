@@ -1,0 +1,93 @@
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+/**
+ * Description: The API accepts a set of credentials which it attempts to verify.If the 
+                provided credentials are authenticated , the logged in user is set to the provided
+                username and the session id is returned.If the authentication fails then the 
+                a message indicating the failure is returned.
+
+                E.g. invocation
+                POST /api/login
+                username={name}
+                password={password}
+ */
+var log = new Log('login-api');
+var user = require('store').user;
+var credentials = {};
+var result = {};
+var method = request.getMethod();
+var responseProcessor = require('utils').response;
+response.contentType = 'application/json';
+var SESSION_MAP = 'sso_sessions'; //We need to create the session map as it is required by the session listener
+/**
+ * The function adds the session to a session map.If a session map is not present
+ * in the application context it is added
+ * @param {[type]} app             Application context
+ * @param {[type]} sessionInstance The session to be added
+ */
+var addToSessionMap = function(app, sessionInstance) {
+    var ssoSessions = app.get(SESSION_MAP);
+    var sessionId = sessionInstance.getId();
+    if (!ssoSessions) {
+        app.put(SESSION_MAP, {});
+        ssoSessions = app.get(SESSION_MAP);
+        log.debug('Created session as session was not present');
+    }
+    if (!ssoSessions[sessionId]) {
+        ssoSessions[sessionId] = '';
+        log.debug('Added session: ' + sessionId + ' to session map');
+    } else {
+        log.warn('Session already exists in the session map');
+    }
+};
+
+switch(method){
+    case 'POST':
+        credentials.username = request.getParameter('username');
+        credentials.password = request.getParameter('password');
+        //Check if a username and password is provided
+        if ((!credentials.username) || (!credentials.password)) {      
+            //result = responseProcessor.buildErrorResponse(400,'Username and Password must be provided');
+            //response.status = 400;
+            response = responseProcessor.buildErrorResponse(response,400,'Username and Password must be provided');
+
+        } else {
+            var isAuthenticated = user.login(credentials.username, credentials.password, session);
+            if (isAuthenticated) {
+                session.put("LOGGED_IN_USER", credentials.username);
+                session.put("Loged", "true");         
+                //response.status = 200;
+                response = responseProcessor.buildSuccessResponse(response,200,{'sessionId':session.getId()});
+                //Add to the session map as it is required by the session listener
+                addToSessionMap(application, session);
+            } else {       
+                //response.status = 401;     
+                response = responseProcessor.buildErrorResponse(response,401,'username/password is incorrect');
+
+            }
+        }        
+        break;
+
+    default:       
+        result = responseProcessor.buildErrorResponse(response,404,'Your request malformed!');       
+       
+}
+
+ %>

@@ -1,3 +1,31 @@
+
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * The core namespace contains methods that load the lifecycle definitions from the registry
+ * @namespace
+ * @example
+ *     var core = require('lifecycle').core;
+ *     core.init(); //Should only be called once in the lifecycle of an app.Ideally in an init script
+ * @requires store
+ * @requires event
+ * @requires utils
+ * @requires Packages.org.wso2.carbon.governance.lcm.util.CommonUtil
+ */
 var core = {};
 (function(core) {
     var CommonUtil = Packages.org.wso2.carbon.governance.lcm.util.CommonUtil;
@@ -24,11 +52,10 @@ var core = {};
         return configReg;
     };
     /**
-     * The JSON conversion produces some properties which need to be accessed
-     * using array indexes.This method converts these types of array references
-     * to properties
-     * @param  {[type]} obj [description]
-     * @return {[type]}     [description]
+     * Converts array references to properties.The JSON conversion produces some properties which need to be accessed
+     * using array indexes.
+     * @param  {Object} obj  Unaltered JSON object
+     * @return {Object}      JSON object with resolved array references
      */
     var transformJSONLifecycle = function(obj) {
         obj.configuration = obj.configuration[0];
@@ -90,12 +117,22 @@ var core = {};
     core.force = function(tenantId) {
         init(tenantId);
     };
+    /**
+     * Initializes the logic which loads the lifecycle definitions on a per tenant basis
+     * The loading of lifecycle definitions take place whenever a tenant is loaded
+     */
     core.init = function() {
         var event = require('event');
         event.on('tenantLoad', function(tenantId) {
             init(tenantId);
         });
     };
+    /**
+     * Returns the lifecycle map which is stored in the application context 
+     * The map is maintained on a per user basis
+     * @param  {Number} tenantId  The tenant ID
+     * @return {Object}           The lifecycle map
+     */
     core.configs = function(tenantId) {
         var lcMap = application.get(LC_MAP);
         if (!lcMap) {
@@ -109,6 +146,12 @@ var core = {};
         }
         return lcMap[tenantId];
     };
+    /**
+     * Returns the raw SCXML definition of the lifecycle
+     * @param  {String} lifecycleName The name of the lifecycle for which the definition must be fetched
+     * @param  {Number} tenantId      The tenant ID
+     * @return {String}               The raw SCXML definition of the lifecycle 
+     */
     core.getRawDef = function(lifecycleName, tenantId) {
         var lcMap = core.configs(tenantId);
         if (!lcMap) {
@@ -122,6 +165,14 @@ var core = {};
         }
         return lcMap.raw[lifecycleName];
     };
+    /**
+     * Returns the JSON definition of the provided lifecycle for the given tenant
+     * @param  {String} lifecycleName  The name of the cycle for which the definition must be returned
+     * @param  {Number} tenantId       The tenant ID
+     * @return {Object}                The JSON definitin of the lifecycle
+     * @throws There is no lifcycle information for the tenant
+     * @throws There is no json lifecycle information for the lifecycle of the tenant               
+     */
     core.getJSONDef = function(lifecycleName, tenantId) {
         var lcMap = core.configs(tenantId);
         if (!lcMap) {
@@ -135,7 +186,14 @@ var core = {};
         }
         return lcMap.json[lifecycleName];
     };
-    core.getLifecycleList = function(tenantId){
+    /**
+     * Returns the list of all lifecycles that have been deployed to the Governance Registry
+     * @param  {Number} tenantId  The tenants ID
+     * @return {Array}            An array containing the names of all the lifecycles deployed to the Registry
+     * @throws There is no lifecycle information for the tenant
+     * @throws There is no json lifecycle information
+     */
+    core.getLifecycleList = function(tenantId) {
         var lcMap = core.configs(tenantId);
         if (!lcMap) {
             throw 'There is no lifecycle information for the tenant: ' + tenantId;
@@ -145,10 +203,9 @@ var core = {};
         }
         var map = lcMap.json;
         var list = [];
-        for(var i in map){
+        for (var i in map) {
             list.push(i);
         }
         return list;
     }
-
 }(core));

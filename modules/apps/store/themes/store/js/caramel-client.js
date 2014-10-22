@@ -6,8 +6,12 @@
      * @return {*}
      */
     caramel.url = function (path) {
-        return this.context + (path.charAt(0) !== '/' ? '/' : '') + path;
+        if(path.length>0){
+            return this.context + (path.charAt(0) !== '/' ? '/' : '') + path;
+        }
+        return this.context;
     };
+
 
     caramel.get = function(path) {
         var args = Array.prototype.slice.call(arguments);

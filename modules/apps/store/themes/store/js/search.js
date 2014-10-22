@@ -1,7 +1,21 @@
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
 $(function () {
     History.Adapter.bind(window, 'statechange', function () {
-
-
         var state = History.getState();
         if (state.data.id === 'sort-assets') {
             renderAssets(state.data.context);
@@ -25,7 +39,6 @@ $(function () {
                     pagination: ".assetSliderPag"
 
                 });
-
                 mouseStop();
                 /*el.append(result.paging);
                  caramel.js($('body'), data.body['assets'].resources.js, 'assets', function () {
@@ -38,7 +51,6 @@ $(function () {
             });
         }
     });
-
 
     /*
      var search = function () {
@@ -96,15 +108,40 @@ $(function () {
      */
 
     var buildParams = function (query) {
-        return 'query=' + query;
+        return 'q=' + query;
+    };
+
+    /**
+     * The function builds a json object with fields containing values
+     * @param  {[type]} containerId [description]
+     * @return {[type]}             [description]
+     */
+    var getSearchFields = function (containerId) {
+        var q = {};
+        var output = '';
+        $inputs = $(containerId + ' :input');
+        $inputs.each(function () {
+            if ((this.name != undefined) && (this.name != '') && (this.value) && (this.value != '')) {
+                output += '"' + this.name + '": ' + '"' + $(this).val() + '",';
+            }
+            //q[this.name]=$(this).val();
+        });
+        //Check if the the user has only entered text
+        if (output === '') {
+            var searchQuery = $('#search').val();
+            if (searchQuery !== '') {
+                output = '"overview_name":"' + searchQuery + '"';
+            }
+        }
+        return output;//JSON.stringify(q);
     };
 
     var search = function () {
-        var url, searchVal = $('#search').val();
+        var url, searchVal = getSearchFields('#search-dropdown-cont');//$('#search').val();
         //var url, searchVal = test($('#search').val());
         currentPage = 1;
         if (store.asset) {
-            url = caramel.url('/assets/' + store.asset.type + '/?' + buildParams(searchVal));
+            url = caramel.url('/asts/' + store.asset.type + '/list?' + buildParams(searchVal));
             caramel.data({
                 title: null,
                 header: ['header'],
@@ -129,28 +166,30 @@ $(function () {
             theme.loading($('#assets-container').parent());
         } else if (searchVal.length > 0 && searchVal != undefined) {
             url = caramel.url('/?' + buildParams(searchVal));
-            caramel.data({
-                title: null,
-                header: ['header'],
-                body: ['top-assets', 'navigation', 'sort-assets']
-            }, {
-                url: url,
-                success: function (data, status, xhr) {
-                    //TODO: Integrate a new History.js library to fix this
-                    if ($.browser.msie == true && $.browser.version < 10) {
-                        renderAssets(data);
-                    } else {
-                        History.pushState({
-                            id: 'top-assets',
-                            context: data
-                        }, document.title, url);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    theme.loaded($('#assets-container').parent(), '<p>Error while retrieving data.</p>');
-                }
-            });
-            theme.loading($('#assets-container').parent());
+            window.location = url;
+            //TODO: The top assets page should render results without causing a page reload
+            /*caramel.data({
+             title: null,
+             header: ['header'],
+             body: ['top-assets', 'navigation', 'sort-assets']
+             }, {
+             url: url,
+             success: function (data, status, xhr) {
+             //TODO: Integrate a new History.js library to fix this
+             if ($.browser.msie == true && $.browser.version < 10) {
+             renderAssets(data);
+             } else {
+             History.pushState({
+             id: 'top-assets',
+             context: data
+             }, document.title, url);
+             }
+             },
+             error: function (xhr, status, error) {
+             theme.loaded($('#assets-container').parent(), '<p>Error while retrieving data.</p>');
+             }
+             });
+             theme.loading($('#assets-container').parent());*/
         }
 
         $('.search-bar h2').find('.page').text(' / Search: "' + searchVal + '"');
@@ -175,19 +214,18 @@ $(function () {
 
     })
         .click(function (e) {
-            if($('#search-dropdown-cont').hasClass('search-dropdown-cont-single')){
+            if ($('#search-dropdown-cont').hasClass('search-dropdown-cont-single')) {
                 $(this).animate({width: '1170px'}, 100);
-            }else{
+            } else {
                 $(this).animate({width: '500px'}, 100);
             }
             e.stopPropagation();
-        })
-        /*
-         .blur(function(){
-         $(this).animate({width:'100%'});
-         })*/
+        });
+    /*
+     .blur(function(){
+     $(this).animate({width:'100%'});
+     })*/
 
-    ;
 
     $(document).click(function () {
         $('#search').animate({width: '100%'});
@@ -337,7 +375,7 @@ $(function () {
 
         $('#search-dropdown-cont').children('div').each(function () {
             var $this = $(this);
-            var data=getValue($this);
+            var data = getValue($this);
             if (data.value.length > 0) {
                 if (data.value.length > 0) {
                     $('#search').val($('#search').val() + ' ' + data.name + ':"' + data.value + '"');
@@ -347,9 +385,7 @@ $(function () {
                     $('#search').val(data.name + ':"' + data.value + '"');
                 }
             }
-
         });
-
     };
 
     /**
@@ -372,10 +408,9 @@ $(function () {
 
         //Check if a field exists  and obtain the value
         if (field) {
-            data.name=field.attr('name');
+            data.name = field.attr('name');
             data.value = field.val();
         }
-
         return data;
     };
 

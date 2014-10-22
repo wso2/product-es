@@ -27,4 +27,12 @@
         <name>time</name>
         <path>scripts/time/time.js</path>
     </script>
+    <script>
+        <name>url</name>
+        <path>scripts/url/url.js</path>
+    </script>
+    <script>
+        <name>exception</name>
+        <path>scripts/exception/exception.js</path>
+    </script>
 </module>
