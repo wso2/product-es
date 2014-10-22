@@ -199,6 +199,15 @@
                 <include>**/**</include>
             </includes>
         </fileSet>
+
+        <fileSet>
+            <directory>src/repository/conf/bam</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/conf/bam</outputDirectory>
+            <includes>
+                <include>**/es-bam.xml</include>
+            </includes>
+        </fileSet>
+
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/

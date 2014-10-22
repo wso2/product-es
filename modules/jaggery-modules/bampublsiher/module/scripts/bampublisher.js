@@ -23,11 +23,11 @@ var bamclient = {};
     var Publisher = Packages.org.wso2.store.bamclient.EventPublisher,
         carbon = require('carbon'),
         log = new Log();
-
     var server = require('store').server;
+    var userutil = Packages.org.wso2.carbon.user.core.util.UserCoreUtil;
 
-    var eventStreamDefinition = '{"name":"asseteventsStreamNew1","version":"1.0.0","nickName":"asseteventsStream","description":"assets events stream","metaData":[{"name":"clientType","type":"STRING"}],"payloadData":[{"name":"user","type":"STRING"},{"name":"tenant","type":"STRING"},{"name":"event","type":"STRING"},{"name":"assetId","type":"STRING"},{"name":"assetType","type":"STRING"},{"name":"assetName","type":"STRING"},{"name":"description","type":"STRING"}]}';
-    bamclient.publishEvents = function (eventName, assetId, assetType, assetName, description) {
+
+    bamclient.publishAssetEvents = function (session, eventName, assetUDID, assetType, assetName, description) {
 
         var user = server.current(session);
         log.info("user" + user);
@@ -38,8 +38,10 @@ var bamclient = {};
         }
 
         log.info("tenantId:" + tenantId);
-        var streamdefObj = parse(eventStreamDefinition);
-        Publisher.getInstance().publishEvents(streamdefObj.name, streamdefObj.version, eventStreamDefinition, stringify(streamdefObj.metaData), new Array(user.username, tenantId, eventName, assetId, assetType, assetName, description));
+        var userName = user.userName;
+        var userStore = userutil.getDomainFromThreadLocal();
+        Publisher.getInstance().publishAssetStatistics(eventName, tenantId, userStore, user.username, assetUDID, assetType, description);
+
     };
 
 

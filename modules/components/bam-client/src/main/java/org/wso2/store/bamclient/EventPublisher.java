@@ -18,13 +18,18 @@
 
 package org.wso2.store.bamclient;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
 import org.wso2.carbon.databridge.agent.thrift.lb.DataPublisherHolder;
 import org.wso2.carbon.databridge.agent.thrift.lb.LoadBalancingDataPublisher;
 import org.wso2.carbon.databridge.agent.thrift.lb.ReceiverGroup;
 import org.wso2.carbon.databridge.agent.thrift.util.DataPublisherUtil;
+import org.wso2.store.bamclient.usage.ESBamPublisherUsageConstants;
 import org.wso2.store.util.Configuration;
+import org.wso2.store.util.ConfigurationConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,8 +39,18 @@ import java.util.ArrayList;
 
 public class EventPublisher {
 
-	private static final Logger logger = Logger.getLogger(EventPublisher.class);
+	private static final Logger log = Logger.getLogger(EventPublisher.class);
+	static Gson gson = null;
 	private static EventPublisher instance = null;
+	private static String assetStatisticsDefaultStream =
+			"{\"name\":" + ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_NAME + "," +
+			"\"version\":" + ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_VERSION +
+			",\"nickName\":\"asseteventsStream\",\"description\":\"assets events stream\"" +
+			",\"metaData\":[{\"name\":\"clientType\",\"type\":\"STRING\"}],\"payloadData\":[{\"name\":\"userstore\",\"type\":\"STRING\"},{\"name\":\"tenant\"," +
+			"\"type\":\"STRING\"},{\"name\":\"user\",\"type\":\"STRING\"},{\"name\":\"event\"," +
+			"\"type\":\"STRING\"},{\"name\":\"assetId\",\"type\":\"STRING\"},{\"name\":\"assetType\"," +
+			"\"type\":\"STRING\"},{\"name\":\"description\",\"type\":\"STRING\"}]}";
+
 	private LoadBalancingDataPublisher loadBalancingDataPublisher = null;
 
 	private EventPublisher() throws Exception {
@@ -43,23 +58,27 @@ public class EventPublisher {
 		try {
 
 			InputStream inputStream =
-					new FileInputStream(new File(System.getProperty("carbon.home") + File.separator
-					                             + "repository" + File.separator + "bam" +
-					                             File.separator + "bam.xml"));
+					new FileInputStream(new File(
+							System.getProperty("carbon.home") + File.separator
+							+ "repository" + File.separator + "conf" + File.separator + "bam" +
+							File.separator + "es-bam.xml"));
 
 			Configuration configuration = new Configuration(inputStream);
 
+			String trustStoreFilePath = System.getProperty("carbon.home") + File.separator
+			                            + "repository" + File.separator + "resources" +
+			                            File.separator + "security" +
+			                            File.separator + "client-truststore.jks";
 
-			String trustStoreFilePath = configuration.getFirstProperty("clientStorePath");
-			String trustStorePwd = configuration.getFirstProperty("trustStorePassword");
-			String bamHost = configuration.getFirstProperty("bamhost");
+			String trustStorePwd =
+					configuration.getFirstProperty(ConfigurationConstants.BAM_TRUST_STORE_PWD);
+			String bamHost = configuration.getFirstProperty(ConfigurationConstants.BAM_HOST);
 
-			String userName = configuration.getFirstProperty("userName");
-			String password = configuration.getFirstProperty("password");
+			String userName = configuration.getFirstProperty(ConfigurationConstants.BAM_USERNAME);
+			String password = configuration.getFirstProperty(ConfigurationConstants.BAM_PWD);
 
-			logger.debug("trustStoreFilePath:" + trustStoreFilePath);
-			logger.debug("trustStorePwd:" + trustStorePwd);
-			logger.debug("trustStorePwd:" + bamHost);
+			log.debug("trustStoreFilePath:" + trustStoreFilePath);
+			log.debug("bamhost:" + bamHost);
 
 			String receiverUrls = "";
 
@@ -74,7 +93,7 @@ public class EventPublisher {
 				}
 			}
 
-			logger.debug("receiverUrls" + receiverUrls);
+			log.debug("receiverUrls" + receiverUrls);
 
 			ArrayList<ReceiverGroup> allReceiverGroups = new ArrayList<ReceiverGroup>();
 			ArrayList<String> receiverGroupUrls = DataPublisherUtil.getReceiverGroups(receiverUrls);
@@ -85,7 +104,7 @@ public class EventPublisher {
 				String[] urls = aReceiverGroupURL.split(",");
 
 				for (String aUrl : urls) {
-					logger.debug("aUrl:" + aUrl);
+					log.debug("aUrl:" + aUrl);
 					DataPublisherHolder aNode =
 							new DataPublisherHolder(null, aUrl.trim(), userName, password);
 					dataPublisherHolders.add(aNode);
@@ -97,13 +116,10 @@ public class EventPublisher {
 			loadBalancingDataPublisher = new LoadBalancingDataPublisher(allReceiverGroups);
 
 		} catch (FileNotFoundException fileNotFoundEx) {
-			logger.error("bam conf file not found", fileNotFoundEx);
-			throw new Exception(fileNotFoundEx);
-
-		} catch (Exception e) {
-			logger.error("bam client configuration error", e);
-			throw new Exception(e);
+			log.error("bam conf file not found", fileNotFoundEx);
+			throw fileNotFoundEx;
 		}
+
 	}
 
 	public static EventPublisher getInstance() throws Exception {
@@ -116,26 +132,57 @@ public class EventPublisher {
 	public void publishEvents(String streamName, String streamVersion, String streamDefinition,
 	                          String metaData, String data) throws Exception {
 
-		logger.debug("streamName>>" + streamName);
-		logger.debug("streamVersion>>" + streamVersion);
-		logger.debug("streamDefinition>>" + streamDefinition);
-		logger.debug(metaData);
-		logger.debug(data);
+		log.debug("streamName>>" + streamName);
+		log.debug("streamVersion>>" + streamVersion);
+		log.debug("streamDefinition>>" + streamDefinition);
+		log.debug(metaData);
+		log.debug(data);
 
 		if (!loadBalancingDataPublisher.isStreamDefinitionAdded(streamName, streamVersion)) {
 			loadBalancingDataPublisher
 					.addStreamDefinition(streamDefinition, streamName, streamVersion);
-			logger.debug("stream created:");
+			log.debug("stream created:");
 		}
 
 		try {
 			loadBalancingDataPublisher
 					.publish(streamName, streamVersion, System.currentTimeMillis(),
-					         metaData.split(","), new Object[] { "es" }, data.split(","));
+					         null, new Object[] { "es" }, data.split(","));
 		} catch (AgentException e) {
-			logger.error("data publish error", e);
-			throw new Exception(e);
+			log.error("data publish error", e);
+			throw e;
 		}
+	}
+
+	public void publishAssetStatistics(String eventName, String tenantId, String userStore,
+	                                   String username,
+	                                   String assetUDID, String assetType, String description)
+			throws Exception {
+
+		JsonObject streamDefinition =
+				(JsonObject) new JsonParser().parse(assetStatisticsDefaultStream);
+
+
+		String strData =
+				userStore + "," + tenantId + "," + username + "," + eventName + "," + assetUDID +
+				"," + assetType + "," + description;
+
+		publishEvents(ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_NAME,
+		              ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_VERSION,
+		              assetStatisticsDefaultStream, streamDefinition.get("metaData").toString(),
+		              strData);
+	}
+
+	public static void main(String args[]){
+
+		JsonObject streamDefinition =
+				(JsonObject) new JsonParser().parse(assetStatisticsDefaultStream);
+		System.out.println(streamDefinition.get("metaData").toString());;
+
+	}
+
+	public void shutDownPublisher() throws RuntimeException {
+		loadBalancingDataPublisher.stop();
 	}
 
 }
