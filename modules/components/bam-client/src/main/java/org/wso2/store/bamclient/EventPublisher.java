@@ -30,7 +30,6 @@ import org.wso2.carbon.databridge.agent.thrift.util.DataPublisherUtil;
 import org.wso2.store.bamclient.usage.ESBamPublisherUsageConstants;
 import org.wso2.store.util.Configuration;
 import org.wso2.store.util.ConfigurationConstants;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,11 +41,13 @@ public class EventPublisher {
 	private static final Logger log = Logger.getLogger(EventPublisher.class);
 	static Gson gson = null;
 	private static EventPublisher instance = null;
+
 	private static String assetStatisticsDefaultStream =
 			"{\"name\":" + ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_NAME + "," +
 			"\"version\":" + ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_VERSION +
 			",\"nickName\":\"asseteventsStream\",\"description\":\"assets events stream\"" +
-			",\"metaData\":[{\"name\":\"clientType\",\"type\":\"STRING\"}],\"payloadData\":[{\"name\":\"userstore\",\"type\":\"STRING\"},{\"name\":\"tenant\"," +
+			",\"metaData\":[{\"name\":\"clientType\",\"type\":\"STRING\"}]," +
+			"\"payloadData\":[{\"name\":\"userstore\",\"type\":\"STRING\"},{\"name\":\"tenant\"," +
 			"\"type\":\"STRING\"},{\"name\":\"user\",\"type\":\"STRING\"},{\"name\":\"event\"," +
 			"\"type\":\"STRING\"},{\"name\":\"assetId\",\"type\":\"STRING\"},{\"name\":\"assetType\"," +
 			"\"type\":\"STRING\"},{\"name\":\"description\",\"type\":\"STRING\"}]}";
@@ -124,9 +125,20 @@ public class EventPublisher {
 
 	public static EventPublisher getInstance() throws Exception {
 		if (instance == null) {
-			instance = new EventPublisher();
+			synchronized (instance) {
+				instance = new EventPublisher();
+			}
 		}
 		return instance;
+	}
+
+	public static void main(String args[]) {
+
+		JsonObject streamDefinition =
+				(JsonObject) new JsonParser().parse(assetStatisticsDefaultStream);
+		System.out.println(streamDefinition.get("metaData").toString());
+		;
+
 	}
 
 	public void publishEvents(String streamName, String streamVersion, String streamDefinition,
@@ -162,7 +174,6 @@ public class EventPublisher {
 		JsonObject streamDefinition =
 				(JsonObject) new JsonParser().parse(assetStatisticsDefaultStream);
 
-
 		String strData =
 				userStore + "," + tenantId + "," + username + "," + eventName + "," + assetUDID +
 				"," + assetType + "," + description;
@@ -171,14 +182,6 @@ public class EventPublisher {
 		              ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_VERSION,
 		              assetStatisticsDefaultStream, streamDefinition.get("metaData").toString(),
 		              strData);
-	}
-
-	public static void main(String args[]){
-
-		JsonObject streamDefinition =
-				(JsonObject) new JsonParser().parse(assetStatisticsDefaultStream);
-		System.out.println(streamDefinition.get("metaData").toString());;
-
 	}
 
 	public void shutDownPublisher() throws RuntimeException {
