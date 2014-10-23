@@ -35,7 +35,9 @@ var api = {};
         }
         var am = getAssetManager(session, options.type);
         try {
-            success = am.rate(options.id, options.value);
+            var asst = am.get(options.id);
+            success = am.rate(asst.path, options.value);
+            //TODO get a api from registry to get ratings by id
         } catch (e) {
             log.error('Could not rate the asset type: ' + options.type + ' id: ' + options.id + ' with rating: ' + options.value + '.Exception: ' + e);
         }
@@ -58,8 +60,8 @@ var api = {};
             assets=[assets];
         }
         for (var index in assets) {
-            id = assets[index].id;
-            rating = am.rating(id, username);
+            rating = am.rating(assets[index].path, username);
+
             average = rating ? rating.average : 0;
             assets[index].rating = rating ? rating.user : 0;
             assets[index].avgRating = average;
