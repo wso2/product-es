@@ -17,7 +17,7 @@
                 "src": "samples/extension_samples/servicex/publisher/app/servicex_globals",
                 "dest": "repository/deployment/server/jaggeryapps/publisher/extensions/app/servicex_globals"
             }, {
-                "src": "samples/extensions_samples/servicex/store/app/servicex_globals",
+                "src": "samples/extension_samples/servicex/store/app/servicex_globals",
                 "dest": "repository/deployment/server/jaggeryapps/store/extensions/app/servicex_globals"
             }]
         }

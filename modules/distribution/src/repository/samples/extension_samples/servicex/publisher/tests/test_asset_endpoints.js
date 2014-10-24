@@ -16,15 +16,17 @@
  *  under the License.
  *
  */
-
 var configs = require('test_asset_configs.json');
-
-describe('ES Publisher Extension - API Tests',function(){
-	it('Test calls the new asset extension API endpoint',function(){
-
-	});
-
-	it('Test calls the overriden extension API endpoint ',function(){
-		
-	});
+describe('ES Publisher Extension - API Tests', function() {
+    it('Test calls the new asset extension API endpoint', function() {
+        var url = '/apis/servicex/new_api';
+        var response;
+        try {
+            response = get(url, {}, {}, 'json');
+        } catch (e) {
+            log.error(e);
+        } finally {
+            expect(response.data.message).toBe('new_api');
+        }
+    });
 });

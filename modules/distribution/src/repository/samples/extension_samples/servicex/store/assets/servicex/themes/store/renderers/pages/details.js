@@ -17,22 +17,35 @@
  *
  */
 var render = function(theme, data, meta, require) {
-    theme('single-col-fluid', {
-        title: 'Asset',
+    var log = new Log();
+    var navigation = 'navigation';
+    var navigationContext = data;
+    switch (data.assetTypeCount) {
+        case 1:
+            navigation = 'navigation-single';
+            break;
+        default:
+            break;
+    }
+    theme('2-column-right', {
+        title: data.meta.title,
         header: [{
             partial: 'header',
             context: data
         }],
-        ribbon: [{
-            partial: 'ribbon',
+        navigation: [{
+            partial: navigation,
+            context: navigationContext
+        }],
+        body: [{
+            partial: 'asset',
             context: data
         }],
-        leftnav: [{
-            partial:'left-nav',
-            context:data
-        }],
-        listassets: [{
-            partial: 'caramel_content',
+        right: [{
+            partial: 'recent-assets',
+            context: data
+        }, {
+            partial: 'tags',
             context: data
         }]
     });

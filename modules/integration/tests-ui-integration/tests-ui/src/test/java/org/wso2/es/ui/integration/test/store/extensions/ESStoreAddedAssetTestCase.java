@@ -16,12 +16,15 @@
  * under the License.
  */
 
-package org.wso2.es.ui.integration.test.publisher.extensions;
+package org.wso2.es.ui.integration.test.store.extensions;
 
 import org.openqa.selenium.Alert;
+
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
+
 import static org.testng.Assert.*;
+
 import org.openqa.selenium.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -32,28 +35,31 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetOverridePartialTestCase extends ESIntegrationUITest {
+public class ESStoreAddedAssetTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
- 
-  @BeforeClass(alwaysRun = true)
-  public void setUp() throws Exception {
+
+    @BeforeClass(alwaysRun = true)
+    public void setUp() throws Exception {
         super.init();
         driver = BrowserManager.getWebDriver();
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, webApp);
-  }
+    }
 
-  @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetOverridePartialTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/update");
- }
+    @Test(groups = "wso2.es", description = "")
+    public void testESStoreAddedAssetTestCase() throws Exception {
+        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[3]/li")).click();
+        //driver.wait(3000);
+        assertTrue(isElementPresent(By.id("assetNewPageH1")));
+    }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl,webApp);
+        ESUtil.logout(driver, baseUrl, webApp);
         driver.quit();
     }
 

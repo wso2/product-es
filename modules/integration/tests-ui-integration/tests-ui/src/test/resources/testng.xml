@@ -13,9 +13,13 @@
 
 
     <test name="ES-UI-tests" parallel="false" verbose="2">
-        <packages>
-            <package name="org.wso2.es.ui.integration.test.*"/>
-        </packages>
+        <!--<packages>-->
+            <!--<package name="org.wso2.es.ui.integration.test.*"/>-->
+        <!--</packages>-->
+        <classes>
+            <class name="org.wso2.es.ui.integration.test.publisher.extensions.ESPublisherAssetCaramelPageTestCase" />
+            <class name="org.wso2.es.ui.integration.test.store.extensions.ESStoreAddedAssetTestCase"/>
+        </classes>
     </test>
 
 

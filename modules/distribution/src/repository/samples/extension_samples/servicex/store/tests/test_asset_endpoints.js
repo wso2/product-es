@@ -1,4 +1,3 @@
-<%
 /*
  *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,8 +16,17 @@
  *  under the License.
  *
  */
-var result = {};
-result.status = 200;
-result.message = "new_api";
-print(result); 
-%>
+var configs = require('test_asset_configs.json');
+describe('ES Store Extension - API Tests', function() {
+    it('Test calls the new asset extension API endpoint', function() {
+        var url = '/apis/servicex/new_api';
+        var response;
+        try {
+            response = get(url, {}, {}, 'json');
+        } catch (e) {
+            log.error(e);
+        } finally {
+            expect(response.data.message).toBe('new_api');
+        }
+    });
+});

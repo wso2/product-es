@@ -1,0 +1,9 @@
+{
+	"baseUrl":{
+		"https":"https://localhost:9443/publisher/apis"
+	},
+	"authConfiguration":{
+		"username":"admin",
+		"password":"admin"
+	}	
+}

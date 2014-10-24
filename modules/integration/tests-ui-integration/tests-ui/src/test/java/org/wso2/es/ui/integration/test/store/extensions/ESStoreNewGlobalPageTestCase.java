@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.es.ui.integration.test.publisher.extensions;
+package org.wso2.es.ui.integration.test.store.extensions;
 
 import org.openqa.selenium.Alert;
 import java.util.regex.Pattern;
@@ -32,7 +32,7 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetOverridePartialTestCase extends ESIntegrationUITest {
+public class ESStoreNewGlobalPageTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -47,8 +47,9 @@ public class ESPublisherAssetOverridePartialTestCase extends ESIntegrationUITest
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetOverridePartialTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/update");
+  public void testESStoreNewGlobalPageTestCase() throws Exception {
+    driver.get(baseUrl + "/store/pages/servicex_global");
+    assertTrue(isElementPresent(By.id("assetNewGlobalPage")));
  }
 
     @AfterClass(alwaysRun = true)
