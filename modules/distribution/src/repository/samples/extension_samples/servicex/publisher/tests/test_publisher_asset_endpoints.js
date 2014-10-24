@@ -16,17 +16,44 @@
  *  under the License.
  *
  */
-var configs = require('test_asset_configs.json');
+var configs = require('test_publisher_asset_configs.json');
+var baseUrl = configs.baseUrl;
+var username = configs.authConfiguration.username;
+var password = configs.authConfiguration.password;
 describe('ES Publisher Extension - API Tests', function() {
     it('Test calls the new asset extension API endpoint', function() {
-        var url = '/apis/servicex/new_api';
+        var url = baseUrl.https + '/asts/servicex/apis/new_api';
         var response;
+        var header = obtainAuthorizedHeaderForAPICall();
+        var log = new Log();
         try {
-            response = get(url, {}, {}, 'json');
+            response = get(url, {}, header, 'json');
         } catch (e) {
             log.error(e);
         } finally {
+            logoutAuthorizedUser(header);
             expect(response.data.message).toBe('new_api');
         }
     });
 });
+/**
+ *
+ * @return {{Cookie: string}}
+ */
+var obtainAuthorizedHeaderForAPICall = function() {
+    var authenticate = post(baseUrl.https + '/apis/authenticate', {
+        "password": password,
+        "username": username
+    }, {}, 'json');
+    var header = {
+        'Cookie': "JSESSIONID=" + authenticate.data.data.sessionId + ";"
+    };
+    return header
+};
+/**
+ * The function to send logout request to publisher API
+ * @param header
+ */
+var logoutAuthorizedUser = function(header) {
+    post(baseUrl.https + '/apis/logout', {}, header, 'json');
+};

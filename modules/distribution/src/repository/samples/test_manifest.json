@@ -19,7 +19,19 @@
             }, {
                 "src": "samples/extension_samples/servicex/store/app/servicex_globals",
                 "dest": "repository/deployment/server/jaggeryapps/store/extensions/app/servicex_globals"
-            }]
+            }, {
+                "src": "samples/extension_samples/servicex/publisher/tests/test_publisher_asset_configs.json",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/test/test_publisher_asset_configs.json"
+            }, {
+                "src": "samples/extension_samples/servicex/publisher/tests/test_publisher_asset_endpoints.js",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/test/test_publisher_asset_endpoints.js"
+            }, {
+                "src": "samples/extension_samples/servicex/store/tests/test_store_asset_endpoints.js",
+                "dest": "repository/deployment/server/jaggeryapps/store/test/test_store_asset_endpoints.js"
+            },{
+                "src":"samples/extension_samples/servicex/store/tests/test_store_asset_configs.json",
+                "dest":"repository/deployment/server/jaggeryapps/store/test/test_store_asset_configs.json"
+                }]
         }
     }
 }
