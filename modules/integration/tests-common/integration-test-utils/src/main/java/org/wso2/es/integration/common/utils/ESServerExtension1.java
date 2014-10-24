@@ -18,6 +18,7 @@ package org.wso2.es.integration.common.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 
 public class ESServerExtension1 extends ExecutionListenerExtension {
@@ -58,6 +59,4 @@ public class ESServerExtension1 extends ExecutionListenerExtension {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
     }
-
-
 }

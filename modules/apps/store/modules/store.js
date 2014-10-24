@@ -196,9 +196,9 @@ var Store = function (tenantId, session) {
         this.session = session;
         this.userSpace = user.userSpace(this.user);
     } else {
-        configs(tenantId).assets.forEach(function (type) {
+      /* configs(tenantId).assets.forEach(function (type) {
             assetManagers[type] = assetManager(type, server.anonRegistry(tenantId));
-        });
+        });*/
     }
 };
 
