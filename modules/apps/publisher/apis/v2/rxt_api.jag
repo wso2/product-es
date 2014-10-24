@@ -52,7 +52,6 @@ require('/modules/publisher.js').exec(function(ctx) {
             if (uriMatcher.match(GET_RXT_FIELDS_BY_TYPE_URL)) {
 
                 try {
-
                     var rxtType = uriMatcher.elements().rxtType;
                     var type = uriMatcher.elements().type;
 

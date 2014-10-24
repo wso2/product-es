@@ -202,6 +202,11 @@ var result;
      * @return The created asset or null if failed to create the asset
      */
     api.create = function (options, req, res, session) {
+
+        var asset = require('rxt').asset;
+        var am = asset.createUserAssetManager(session, options.type);
+        var assetReq = req.getAllParameters('UTF-8');
+
         var assetModule = rxtModule.asset;
         var am = assetModule.createUserAssetManager(session, options.type);
         var assetReq = req.getAllParameters('UTF-8');//get asset attributes from the request

@@ -40,7 +40,7 @@
 
         <java fork="true" classname="org.wso2.store.client.ArtifactPublisher">
             <classpath>
-             <path location="${jar.dir}/asset-client-1.0.0-SNAPSHOT-jar-with-dependencies.jar"/>
+             <path location="${jar.dir}/asset-client-2.0.0-SNAPSHOT-jar-with-dependencies.jar"/>
             </classpath>
                 <arg line="-host ${host}"/>
 		<arg line="-port ${port}"/>	

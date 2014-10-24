@@ -182,32 +182,7 @@
         -->
         <productGroup name="ES" clusteringEnabled="false" default="true">
 
-            <instance name="lbw001" type="lb_worker_manager" nonBlockingTransportEnabled="true">
-                <hosts>
-                    <host type="worker">es.wso2con.com</host>
-                    <host type="manager">mgt.es.wso2con.com</host>
-                </hosts>
-                <ports>
-                    <port type="nhttps">8243</port>
-                    <port type="nhttp">8280</port>
-                </ports>
-                <properties>
-
-                </properties>
-            </instance>
-            <instance name="es001" type="manager" nonBlockingTransportEnabled="false">
-                <hosts>
-                    <host type="default">localhost</host>
-                </hosts>
-                <ports>
-                    <port type="http">9764</port>
-                    <port type="https">9444</port>
-                </ports>
-                <properties>
-                </properties>
-            </instance>
-
-            <instance name="es002" type="standalone" nonBlockingTransportEnabled="false">
+            <instance name="es001" type="standalone" nonBlockingTransportEnabled="false">
                 <hosts>
                     <host type="default">localhost</host>
                 </hosts>
@@ -216,25 +191,16 @@
                     <port type="https">9443</port>
                 </ports>
                 <properties>
+
                 </properties>
             </instance>
-            <instance name="es003" type="worker" nonBlockingTransportEnabled="false">
-                <hosts>
-                    <host type="default">localhost</host>
-                </hosts>
-                <ports>
-                    <port type="http">9765</port>
-                    <port type="https">9445</port>
-                </ports>
-                <properties>
-                </properties>
-            </instance>
+
         </productGroup>
+
     </platform>
 
     <listenerExtensions>
 
-        <!--<className>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</className>-->
         <platformExecutionManager>
             <extentionClasses>
                 <!--<class>-->
