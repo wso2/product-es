@@ -283,7 +283,7 @@ public class ArtifactPublisher {
 					uploadAssets(assetArr, dir);
 
 				} catch (Exception ex) {
-					log.error("file not completely uploaded" + file.getName());
+					log.error("file not completely uploaded " + file.getName());
 				}
 			}
 
