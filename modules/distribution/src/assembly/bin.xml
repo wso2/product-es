@@ -268,12 +268,12 @@
             <includes>
                 <include>build.xml</include>
                 <include>*.txt</include>
+                <include>sample-gadgets*/*/*</include>
+                <include>sample-gadgets/*.json</include>
             </includes>
            <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
        </fileSet>
-        
 
-        
     </fileSets>
     <dependencySets>
         <!--        <dependencySet>

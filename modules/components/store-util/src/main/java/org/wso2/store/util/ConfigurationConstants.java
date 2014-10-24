@@ -26,5 +26,6 @@ public class ConfigurationConstants {
 	public static String BAM_HOST = "bamhost";
 	public static String BAM_USERNAME = "userName";
 	public static String BAM_PWD = "password";
+	public static String BAM_FAILOBER = "failOver";
 
 }

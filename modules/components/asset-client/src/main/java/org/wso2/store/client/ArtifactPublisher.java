@@ -36,6 +36,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -46,297 +47,308 @@ import java.util.List;
 
 public class ArtifactPublisher {
 
-    protected static final Logger log = Logger.getLogger(ArtifactPublisher.class);
+	protected static final Logger log = Logger.getLogger(ArtifactPublisher.class);
+
+	static CloseableHttpClient httpClient = null;
+	static HttpPost httppost = null;
+	static HttpGet httpGet = null;
+	static CloseableHttpResponse response = null;
+	static SSLConnectionSocketFactory sslConnectionSocketFactory = null;
+	static HttpContext httpContext = null;
 
-    static CloseableHttpClient httpClient = null;
-    static HttpPost httppost = null;
-    static HttpGet httpGet = null;
-    static CloseableHttpResponse response = null;
-    static SSLConnectionSocketFactory sslConnectionSocketFactory = null;
-    static HttpContext httpContext = null;
+	static Gson gson = null;
 
-    static Gson gson = null;
+	static HashMap<String, List<String>> rxtFileAttributesMap = null;
 
-    static HashMap<String, List<String>> rxtFileAttributesMap = null;
+	static String hostName = "";
+	static String port = "";
+	static String userName = "";
+	static String pwd = "";
+	static String sessionId = "";
+	static String context = "";
+	static String location;
 
-    static String hostName = "";
-    static String port = "";
-    static String userName = "";
-    static String pwd = "";
-    static String sessionId = "";
-    static String context = "";
-    static String location;
+	public static void main(String args[]) throws Exception {
 
-    public static void main(String args[]) throws Exception{
+		CliParser parser = new CliParser(new BasicParser());
+		CliOptions cliOptions = null;
 
-        CliParser parser = new CliParser(new BasicParser());
-        CliOptions cliOptions = null;
+		try {
+			cliOptions = parser.parse(CliOptions.class, args);
 
-        try {
-            cliOptions = parser.parse(CliOptions.class, args);
+		} catch (ParserException parseException) {
+			log.error("command line arguments parsing error:", parseException);
+			return;
+		}
 
-        }catch (ParserException parseException){
-            log.error("command line arguments parsing error:", parseException);
-            return;
-        }
+		hostName = cliOptions.getHostName();
+		port = cliOptions.getPort();
+		userName = cliOptions.getUserName();
+		pwd = cliOptions.getPwd();
+		context = cliOptions.getContext();
+		location = cliOptions.getLocation();
 
-        hostName = cliOptions.getHostName();
-        port = cliOptions.getPort();
-        userName = cliOptions.getUserName();
-        pwd = cliOptions.getPwd();
-        context = cliOptions.getContext();
-        location = cliOptions.getLocation();
+		File samplesDirectory = new File(location);
 
-        File samplesDirectory = new File(location);
+		try {
+			SSLContextBuilder builder = new SSLContextBuilder();
+			builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+			sslConnectionSocketFactory = new SSLConnectionSocketFactory(builder.build());
 
-        try {
-            SSLContextBuilder builder = new SSLContextBuilder();
-            builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-            sslConnectionSocketFactory = new SSLConnectionSocketFactory(builder.build());
+			httpContext = new BasicHttpContext();
+			sessionId =
+					getSession(sslConnectionSocketFactory, httpContext, hostName, port, userName,
+					           pwd);
 
-            httpContext = new BasicHttpContext();
-            sessionId = getSession(sslConnectionSocketFactory, httpContext, hostName, port, userName, pwd);
+		} catch (Exception ex) {
+			log.error("logging session fetching error");
+			return;
+		}
 
-        }catch (Exception ex){
-            log.error("logging session fetching error");
-            return;
-        }
+		String[] rxtArr = null;
+		try {
+			rxtArr = getRxtTypes();
 
-        String[] rxtArr = null;
-        try {
-             rxtArr = getRxtTypes();
+		} catch (Exception ex) {
+			log.error("Error in get rxt types");
+			return;
 
-        }catch (Exception ex){
-            log.error("Error in get rxt types");
-            return;
+		}
 
-        }
+		rxtFileAttributesMap = new HashMap<String, List<String>>();
+		for (String rxtType : rxtArr) {
+			rxtFileAttributesMap.put(rxtType, getAttributesForType(rxtType, "file"));
+		}
+		readAssets(samplesDirectory);
+	}
 
-        rxtFileAttributesMap = new HashMap<String, List<String>>();
-        for (String rxtType : rxtArr) {
-            rxtFileAttributesMap.put(rxtType, getAttributesForType(rxtType, "file"));
-        }
-        readAssets(samplesDirectory);
-    }
+	private static String getSession(SSLConnectionSocketFactory sslsf, HttpContext httpContext,
+	                                 String hostName, String port, String userName, String pwd)
+			throws Exception {
 
+		gson = new Gson();
+		String authUrl = "https://" + hostName + ":" + port + "/" + context +
+		                 Constants.PUBLISHER_AUTHORIZATION_URL + "?username=" + userName +
+		                 "&password=" + pwd;
 
-    private static String getSession(SSLConnectionSocketFactory sslsf, HttpContext httpContext, String hostName, String port, String userName, String pwd) throws Exception {
+		httppost = new HttpPost(authUrl);
+		httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
 
-        gson = new Gson();
-        String authUrl = "https://" + hostName + ":" + port + "/" + context + Constants.PUBLISHER_AUTHORIZATION_URL + "?username=" + userName + "&password=" + pwd;
+		String sessionId = "";
+		response = null;
 
-        httppost = new HttpPost(authUrl);
-        httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+		try {
 
-        String sessionId = "";
-        response = null;
+			response = httpClient.execute(httppost, httpContext);
 
-        try {
+		} catch (ClientProtocolException clientProtocolException) {
+			log.error("client protocol exception in logging" + authUrl, clientProtocolException);
+			throw new Exception(clientProtocolException.getMessage(), clientProtocolException);
 
-            response = httpClient.execute(httppost, httpContext);
+		} catch (IOException ioException) {
+			log.error("io error in logging" + authUrl, ioException);
+			throw new Exception(ioException.getMessage(), ioException);
 
-        } catch (ClientProtocolException clientProtocolException) {
-            log.error("client protocol exception in logging"+authUrl, clientProtocolException);
-            throw new Exception(clientProtocolException.getMessage(), clientProtocolException);
+		}
 
-        } catch (IOException ioException) {
-            log.error("io error in logging"+authUrl, ioException);
-            throw new Exception(ioException.getMessage(), ioException);
+		try {
+			String responseJson = EntityUtils.toString(response.getEntity());
+			Authorize authorize = gson.fromJson(responseJson, Authorize.class);
 
-        }
+			if (authorize.getData() != null) {
+				sessionId = authorize.getData().getSessionId();
+				log.info("Logged:" + sessionId);
 
-        try {
-            String responseJson = EntityUtils.toString(response.getEntity());
-            Authorize authorize = gson.fromJson(responseJson, Authorize.class);
+			} else {
+				log.info("login failure!!!" + responseJson);
 
-            if (authorize.getData() != null) {
-                sessionId = authorize.getData().getSessionId();
-                log.info("Logged:" + sessionId);
+			}
 
-            } else {
-                log.info("login failure!!!" + responseJson);
+		} catch (IOException ioException) {
+			log.error(ioException);
+			throw new Exception(ioException.getMessage(), ioException);
 
-            }
+		} finally {
+			httpClient.close();
+		}
 
-        } catch (IOException ioException) {
-            log.error(ioException);
-            throw new Exception(ioException.getMessage(), ioException);
+		return sessionId;
+	}
 
-        } finally {
-            httpClient.close();
-        }
+	private static String[] getRxtTypes() throws Exception {
 
-        return sessionId;
-    }
+		String apiUrl = "https://" + hostName + ":" + port + "/" + context + Constants.RXT_URL;
 
+		httpGet = new HttpGet(apiUrl);
+		httpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
+		response = null;
 
-    private static String[] getRxtTypes() throws Exception{
+		try {
+			response = httpClient.execute(httpGet, httpContext);
 
-        String apiUrl = "https://" + hostName + ":" + port + "/" + context + Constants.RXT_URL;
+		} catch (ClientProtocolException clientProtocolException) {
+			log.error("client protocol exception connecting to RXT API:" + apiUrl,
+			          clientProtocolException);
+			throw new Exception(clientProtocolException);
 
-        httpGet = new HttpGet(apiUrl);
-        httpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
-        response = null;
+		} catch (IOException ioException) {
+			log.error("error connecting RXT API:" + apiUrl, ioException);
+			throw new Exception(ioException);
+		}
 
-        try{
-            response = httpClient.execute(httpGet, httpContext);
+		String responseJson = null;
+		String[] arrRxt = null;
 
-        }catch(ClientProtocolException clientProtocolException) {
-              log.error("client protocol exception connecting to RXT API:"+apiUrl, clientProtocolException);
-              throw new Exception(clientProtocolException);
+		try {
+			responseJson = EntityUtils.toString(response.getEntity());
+			arrRxt = gson.fromJson(responseJson, String[].class);
 
-        }catch(IOException ioException) {
-              log.error("error connecting RXT API:"+apiUrl, ioException);
-              throw new Exception(ioException);
-        }
+		} catch (Exception ioException) {
+			ioException.printStackTrace();
 
-        String responseJson = null;
-        String[] arrRxt = null;
+		} finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
 
-        try {
-            responseJson = EntityUtils.toString(response.getEntity());
-            arrRxt = gson.fromJson(responseJson, String[].class);
+			}
+		}
+		return arrRxt;
+	}
 
-        } catch (Exception ioException) {
-            ioException.printStackTrace();
+	private static List<String> getAttributesForType(String rxtType, String type) throws Exception {
 
-        } finally {
-            try {
-                httpClient.close();
-            } catch (IOException e) {
+		String apiUrl = "https://" + hostName + ":" + port + "/" + context +
+		                Constants.RXT_ATTRIBUTES_FOR_GIVEN_TYPE + "/" + rxtType + "/" + type;
+		httpGet = new HttpGet(apiUrl);
 
-            }
-        }
-        return arrRxt;
-    }
+		CloseableHttpClient httpclient =
+				HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
 
-    private static List<String> getAttributesForType(String rxtType, String type) throws Exception{
+		response = null;
+		gson = new Gson();
 
-        String apiUrl = "https://" + hostName + ":" + port + "/" + context + Constants.RXT_ATTRIBUTES_FOR_GIVEN_TYPE + "/" + rxtType + "/" + type;
-        httpGet = new HttpGet(apiUrl);
+		try {
 
-        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
+			response = httpclient.execute(httpGet, httpContext);
 
-        response = null;
-        gson = new Gson();
+		} catch (ClientProtocolException clientProtocolException) {
+			log.error("client protocol error in get RXT attributes for rxt type" + apiUrl,
+			          clientProtocolException);
+			throw new Exception(clientProtocolException);
 
-        try {
+		} catch (IOException ioException) {
+			log.error("io error in get RXT attributes for rxt type" + apiUrl, ioException);
+			throw new Exception(ioException);
 
-            response = httpclient.execute(httpGet, httpContext);
+		}
 
-        } catch (ClientProtocolException clientProtocolException) {
-            log.error("client protocol error in get RXT attributes for rxt type"+apiUrl, clientProtocolException);
-            throw new Exception(clientProtocolException);
-
-        } catch (IOException ioException) {
-            log.error("io error in get RXT attributes for rxt type"+apiUrl, ioException);
-            throw new Exception(ioException);
-
-        }
-
-        String responseJson = null;
-        String[] attrArr = null;
-
-        try {
-
-            responseJson = EntityUtils.toString(response.getEntity());
-            attrArr = gson.fromJson(responseJson, String[].class);
-
-        } catch (Exception ioException) {
-            log.error("io error in get RXT attributes for rxt type"+apiUrl, ioException);
-            throw new Exception(ioException);
-
-        } finally {
-            try {
-                httpclient.close();
-            } catch (IOException e) {
-            }
-        }
-        return Arrays.asList(attrArr);
-
-    }
-
-
-    private static void readAssets(File dir)  {
-
-        Asset[] assetArr = null;
-        BufferedReader br = null;
-
-
-        for (final File file : dir.listFiles()) {
-
-            if (file.isFile() && file.getName().substring(file.getName().lastIndexOf(".") + 1).equals("json")) {
-                try {
-                    br = new BufferedReader(new FileReader(file));
-                    JsonParser parser = new JsonParser();
-                    JsonArray jarray = (JsonArray) parser.parse(br).getAsJsonObject().get("assets");
-
-                    assetArr = gson.fromJson(jarray, Asset[].class);
-                    uploadAssets(assetArr, dir);
-
-                }catch(Exception ex){
-                    log.error("file not completely uploaded"+file.getName());
-                }
-            }
-
-            if (file.list() != null && file.list().length > 0) {
-                readAssets(file);
-            }
-        }
-
-    }
-
-    private static void uploadAssets(Asset[] assetArr, File dir) {
-
-        HashMap<String, String> attrMap = null;
-        MultipartEntityBuilder multiPartBuilder = null;
-        List<String> fileAttributes = null;
-
-        File imageFile = null;
-        String responseJson = null;
-        StringBuffer publisherUrlBuff = null;
-
-        for (Asset asset : assetArr) {
-             publisherUrlBuff = new StringBuffer();
-             if (asset.getId() != null) {
-                 publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context + Constants.PUBLISHER_URL + "/" + asset.getId() + "?type=" + asset.getType());
-             } else {
-                 publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context + Constants.PUBLISHER_URL + "?type=" + asset.getType());
-             }
-            multiPartBuilder = MultipartEntityBuilder.create();
-            multiPartBuilder.addTextBody("sessionId", sessionId);
-            multiPartBuilder.addTextBody("asset", gson.toJson(asset));
-
-            attrMap = asset.getAttributes();
-
-            for (String attrKey : attrMap.keySet()) {
-                httpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
-                httppost = new HttpPost(publisherUrlBuff.toString());
-                fileAttributes = rxtFileAttributesMap.get(asset.getType());
-
-                if (fileAttributes != null && fileAttributes.contains(attrKey)) {
-                    imageFile = new File(dir + File.separator + Constants.RESOURCE_DIR_NAME + File.separator + attrMap.get(attrKey));
-                    multiPartBuilder.addBinaryBody(attrKey, imageFile);
-                    httppost.setEntity(multiPartBuilder.build());
-                }
-            }
-            try {
-                response = httpClient.execute(httppost, httpContext);
-                responseJson = EntityUtils.toString(response.getEntity());
-                log.info(responseJson.toString());
-
-            } catch (Exception ex) {
-                log.error(asset);
-                log.error("error in asset Upload", ex);
-            } finally {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                }
-            }
-
-        }
-    }
-
+		String responseJson = null;
+		String[] attrArr = null;
+
+		try {
+
+			responseJson = EntityUtils.toString(response.getEntity());
+			attrArr = gson.fromJson(responseJson, String[].class);
+
+		} catch (Exception ioException) {
+			log.error("io error in get RXT attributes for rxt type" + apiUrl, ioException);
+			throw new Exception(ioException);
+
+		} finally {
+			try {
+				httpclient.close();
+			} catch (IOException e) {
+			}
+		}
+		return Arrays.asList(attrArr);
+
+	}
+
+	private static void readAssets(File dir) {
+
+		Asset[] assetArr = null;
+		BufferedReader br = null;
+
+		for (final File file : dir.listFiles()) {
+
+			if (file.isFile() &&
+			    file.getName().substring(file.getName().lastIndexOf(".") + 1).equals("json")) {
+				try {
+					br = new BufferedReader(new FileReader(file));
+					JsonParser parser = new JsonParser();
+					JsonArray jarray = (JsonArray) parser.parse(br).getAsJsonObject().get("assets");
+
+					assetArr = gson.fromJson(jarray, Asset[].class);
+					uploadAssets(assetArr, dir);
+
+				} catch (Exception ex) {
+					log.error("file not completely uploaded" + file.getName());
+				}
+			}
+
+			if (file.list() != null && file.list().length > 0) {
+				readAssets(file);
+			}
+		}
+
+	}
+
+	private static void uploadAssets(Asset[] assetArr, File dir) {
+
+		HashMap<String, String> attrMap = null;
+		MultipartEntityBuilder multiPartBuilder = null;
+		List<String> fileAttributes = null;
+
+		File imageFile = null;
+		String responseJson = null;
+		StringBuffer publisherUrlBuff = null;
+
+		for (Asset asset : assetArr) {
+			publisherUrlBuff = new StringBuffer();
+			if (asset.getId() != null) {
+				publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context +
+				                        Constants.PUBLISHER_URL + "/" + asset.getId() + "?type=" +
+				                        asset.getType());
+			} else {
+				publisherUrlBuff.append("https://" + hostName + ":" + port + "/" + context +
+				                        Constants.PUBLISHER_URL + "?type=" + asset.getType());
+			}
+			multiPartBuilder = MultipartEntityBuilder.create();
+			multiPartBuilder.addTextBody("sessionId", sessionId);
+			multiPartBuilder.addTextBody("asset", gson.toJson(asset));
+
+			attrMap = asset.getAttributes();
+
+			for (String attrKey : attrMap.keySet()) {
+				httpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory)
+				                        .build();
+				httppost = new HttpPost(publisherUrlBuff.toString());
+				fileAttributes = rxtFileAttributesMap.get(asset.getType());
+
+				if (fileAttributes != null && fileAttributes.contains(attrKey)) {
+					imageFile = new File(
+							dir + File.separator + Constants.RESOURCE_DIR_NAME + File.separator +
+							attrMap.get(attrKey));
+					multiPartBuilder.addBinaryBody(attrKey, imageFile);
+					httppost.setEntity(multiPartBuilder.build());
+				}
+			}
+			try {
+				response = httpClient.execute(httppost, httpContext);
+				responseJson = EntityUtils.toString(response.getEntity());
+				log.info(responseJson.toString());
+			} catch (Exception ex) {
+				log.error(asset);
+				log.error("error in asset Upload", ex);
+			} finally {
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+				}
+			}
+
+		}
+	}
 
 }

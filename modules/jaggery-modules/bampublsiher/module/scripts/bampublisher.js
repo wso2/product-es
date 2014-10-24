@@ -40,9 +40,12 @@ var bamclient = {};
         log.info("tenantId:" + tenantId);
         var userName = user.userName;
         var userStore = userutil.getDomainFromThreadLocal();
-        Publisher.getInstance().publishAssetStatistics(eventName, tenantId, userStore, user.username, assetUDID, assetType, description);
+
+        try {
+            Publisher.getInstance().publishAssetStatistics(eventName, tenantId, userStore, user.username, assetUDID, assetType, description);
+        }catch(e){
+            log.error("error bam client:",e);
+        }
 
     };
-
-
 }(bamclient));

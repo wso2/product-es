@@ -61,6 +61,7 @@
                         </Import-Package>
 
                         <DynamicImport-Package>*</DynamicImport-Package>
+                        <Bundle-Activator>org.wso2.store.bamclient.Activator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>

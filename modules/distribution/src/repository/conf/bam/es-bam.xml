@@ -18,7 +18,8 @@
 
 <bamConfiguration xmlns="http://wso2.org/carbon/es/bamconfiguration">
     <trustStorePassword>wso2carbon</trustStorePassword>
-    <bamhost>localhost:7611</bamhost>
+    <bamhost>{tcp://localhost:7611}</bamhost>
+    <failOver>false</failOver>
     <userName>admin</userName>
     <password>admin</password>
 </bamConfiguration>

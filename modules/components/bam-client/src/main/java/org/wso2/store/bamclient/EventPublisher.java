@@ -30,6 +30,7 @@ import org.wso2.carbon.databridge.agent.thrift.util.DataPublisherUtil;
 import org.wso2.store.bamclient.usage.ESBamPublisherUsageConstants;
 import org.wso2.store.util.Configuration;
 import org.wso2.store.util.ConfigurationConstants;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -73,28 +74,23 @@ public class EventPublisher {
 
 			String trustStorePwd =
 					configuration.getFirstProperty(ConfigurationConstants.BAM_TRUST_STORE_PWD);
-			String bamHost = configuration.getFirstProperty(ConfigurationConstants.BAM_HOST);
+			String receiverUrls = configuration.getFirstProperty(ConfigurationConstants.BAM_HOST);
+			Boolean failOver = Boolean.parseBoolean(
+					configuration.getFirstProperty(ConfigurationConstants.BAM_FAILOBER));
 
 			String userName = configuration.getFirstProperty(ConfigurationConstants.BAM_USERNAME);
 			String password = configuration.getFirstProperty(ConfigurationConstants.BAM_PWD);
 
-			log.debug("trustStoreFilePath:" + trustStoreFilePath);
-			log.debug("bamhost:" + bamHost);
-
-			String receiverUrls = "";
+			if (log.isDebugEnabled()) {
+				log.debug("trustStoreFilePath:" + trustStoreFilePath);
+			}
 
 			System.setProperty("javax.net.ssl.trustStore", trustStoreFilePath);
 			System.setProperty("javax.net.ssl.trustStorePassword", trustStorePwd);
 
-			for (String hostWithPort : bamHost.split(",")) {
-				if (receiverUrls.length() == 0) {
-					receiverUrls += "{" + "tcp://" + hostWithPort + "}";
-				} else {
-					receiverUrls += "," + "{" + "tcp://" + hostWithPort + "}";
-				}
+			if (log.isDebugEnabled()) {
+				log.debug("receiverUrls" + receiverUrls);
 			}
-
-			log.debug("receiverUrls" + receiverUrls);
 
 			ArrayList<ReceiverGroup> allReceiverGroups = new ArrayList<ReceiverGroup>();
 			ArrayList<String> receiverGroupUrls = DataPublisherUtil.getReceiverGroups(receiverUrls);
@@ -105,12 +101,14 @@ public class EventPublisher {
 				String[] urls = aReceiverGroupURL.split(",");
 
 				for (String aUrl : urls) {
-					log.debug("aUrl:" + aUrl);
+					if (log.isDebugEnabled()) {
+						log.debug("aUrl:" + aUrl);
+					}
 					DataPublisherHolder aNode =
 							new DataPublisherHolder(null, aUrl.trim(), userName, password);
 					dataPublisherHolders.add(aNode);
 				}
-				ReceiverGroup group = new ReceiverGroup(dataPublisherHolders);
+				ReceiverGroup group = new ReceiverGroup(dataPublisherHolders, failOver);
 				allReceiverGroups.add(group);
 			}
 
@@ -125,7 +123,7 @@ public class EventPublisher {
 
 	public static EventPublisher getInstance() throws Exception {
 		if (instance == null) {
-			synchronized (instance) {
+			synchronized (EventPublisher.class) {
 				instance = new EventPublisher();
 			}
 		}
@@ -133,27 +131,27 @@ public class EventPublisher {
 	}
 
 	public static void main(String args[]) {
-
 		JsonObject streamDefinition =
 				(JsonObject) new JsonParser().parse(assetStatisticsDefaultStream);
-		System.out.println(streamDefinition.get("metaData").toString());
-		;
-
 	}
 
 	public void publishEvents(String streamName, String streamVersion, String streamDefinition,
 	                          String metaData, String data) throws Exception {
 
-		log.debug("streamName>>" + streamName);
-		log.debug("streamVersion>>" + streamVersion);
-		log.debug("streamDefinition>>" + streamDefinition);
-		log.debug(metaData);
-		log.debug(data);
+		if (log.isDebugEnabled()) {
+			log.debug("streamName>>" + streamName);
+			log.debug("streamVersion>>" + streamVersion);
+			log.debug("streamDefinition>>" + streamDefinition);
+			log.debug(metaData);
+			log.debug(data);
+		}
 
 		if (!loadBalancingDataPublisher.isStreamDefinitionAdded(streamName, streamVersion)) {
 			loadBalancingDataPublisher
 					.addStreamDefinition(streamDefinition, streamName, streamVersion);
-			log.debug("stream created:");
+			if (log.isDebugEnabled()) {
+				log.debug("stream created:");
+			}
 		}
 
 		try {
