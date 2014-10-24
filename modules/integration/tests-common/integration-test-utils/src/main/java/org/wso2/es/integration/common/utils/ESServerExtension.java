@@ -18,39 +18,56 @@ package org.wso2.es.integration.common.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.context.ContextXpathConstants;
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
+import org.wso2.carbon.integration.common.extensions.carbonserver.TestServerManager;
+import org.wso2.carbon.integration.common.extensions.utils.ExtensionCommonConstants;
+import org.wso2.carbon.utils.ServerConstants;
+
+import javax.xml.xpath.XPathExpressionException;
 
 public class ESServerExtension extends ExecutionListenerExtension {
 
+    private ESServerManager serverManager;
     private static final Log log = LogFactory.getLog(ESServerExtension.class);
+    private String executionEnvironment;
 
     public void initiate() {
         try {
-            log.info("Initializing Testing Enterprise Store Jaggery-APPs =============================");
-            //TODO
-        } catch (Exception e) {
+            if (getParameters().get(ExtensionCommonConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND) == null) {
+                getParameters().put(ExtensionCommonConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND, "0");
+            }
+            serverManager = new ESServerManager(getAutomationContext(), null, getParameters());
+            executionEnvironment =
+                    getAutomationContext().getConfigurationValue(ContextXpathConstants.EXECUTION_ENVIRONMENT);
+        } catch (XPathExpressionException e) {
             handleException("Error while initiating test environment", e);
         }
     }
 
     public void onExecutionStart() {
         try {
-            log.info("Waiting till Jaggey-Apps get initialized =============================");
-            Thread.sleep(20000);
-            //TODO implement a logic to confirm that web apps are fully deployed instead of thread sleep
-            log.info("Start Test execution =============================");
-
+            if (executionEnvironment.equalsIgnoreCase(ExecutionEnvironment.STANDALONE.name())) {
+                String carbonHome = serverManager.startServer();
+                System.setProperty(ServerConstants.CARBON_HOME, carbonHome);
+                log.info("#### Delaying test startup for 20s in order to allow assets to be indexed #### ");
+                Thread.sleep(20000);
+            }
         } catch (Exception e) {
-            handleException("Fail to wait till Jaggey-Apps get initialized ", e);
+            handleException("Fail to start carbon server ", e);
         }
     }
 
     public void onExecutionFinish() {
         try {
-            log.info("Completed excecuting test cases for testing Jaggery-Apps =============================");
 
+            if (executionEnvironment.equalsIgnoreCase(ExecutionEnvironment.STANDALONE.name())) {
+                serverManager.stopServer();
+            }
         } catch (Exception e) {
-            handleException("Fail to stop complete testing Jaggery-Apps ", e);
+            handleException("Fail to stop carbon server ", e);
         }
     }
 
@@ -58,6 +75,4 @@ public class ESServerExtension extends ExecutionListenerExtension {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
     }
-
-
 }

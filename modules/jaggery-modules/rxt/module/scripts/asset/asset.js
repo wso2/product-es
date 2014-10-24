@@ -411,6 +411,89 @@ var asset = {};
         }
         return tagz;
     };
+
+    /*
+     The function checks whether two artifacts are similar
+     @searchArtifact: The artifact containing the search criteria
+     @artifact: The artifact to which the searchArtifact must be compared
+     @return: If the two artifacts are similar True ,else False.
+     */
+    var matchArtifact = function (searchArtifact, artifact) {
+        var status = true;//We assume that all attributes will match
+        var ignoredProperty = 'attributes';
+        var term = '';
+
+        log.debug('Invoked matchArtifact: '+artifact.attributes.overview_name);
+        log.debug('Ignoring property: ' + ignoredProperty);
+
+        //First go through all of the non attribute properties
+        for (var searchKey in searchArtifact) {
+
+            log.debug('Examining property: ' + searchKey);
+
+            if ((searchKey != ignoredProperty) && (artifact.hasOwnProperty(searchKey))) {
+
+
+                //Match against spaces and lower case
+                term = artifact[searchKey] || '';
+                term = term.toString().toLowerCase().trim() + '';
+
+                //Determine if the searchKey points to an array
+                if (searchArtifact[searchKey] instanceof Array) {
+
+                    log.debug('Checking against array of values: ' + searchArtifact[searchKey]);
+                    log.debug('Artifact value '+term);
+                    //Check if the value of the artifact property is defined in the
+                    //searchArtifact property array.
+                    status = (searchArtifact[searchKey].indexOf(term) != -1) ? true : false;
+                }
+                else {
+                    log.debug('Artifact value: '+term);
+                    log.debug('Searched value:'+searchArtifact[searchKey]);
+                    //Update the status
+                    status = (searchArtifact[searchKey] == term);
+                }
+
+            }
+        }
+
+        log.debug('Properties match: ' + status);
+
+        //If it is not a match at this time then return false, no need to check
+        //if the attributes match.
+        if(status==false){
+
+            log.debug(artifact.attributes.overview_name+' no match.');
+            return status;
+        }
+
+        //Only search attributes if the user has provided any
+        if (searchArtifact.attributes) {
+
+            //Check if the attributes match
+            status = matchAttr(searchArtifact.attributes, artifact.attributes);
+
+            log.debug('Attribute match : ' + status);
+
+        }
+
+        return status;
+    };
+
+    var matchAttr = function (searchAttr, artifactAttr) {
+        var attribute, attr, val, match;
+        for (attribute in searchAttr) {
+            if (searchAttr.hasOwnProperty(attribute)) {
+                attr = searchAttr[attribute];
+                val = artifactAttr[attribute];
+                match = (attr instanceof RegExp) ? attr.test(val) : (attr == val);
+                if (!match) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
     /**
      * Returns the list of assets that have the provided tag
      * attached to it.If a paging value is provided then it is used,else
@@ -420,12 +503,24 @@ var asset = {};
      * @return {Array}          An array of assets that have the tag applied to them
      */
     AssetManager.prototype.tagged = function (tagName, paging) {
+        //TODO instead of this logic need to request for a search by tag api from artifact level
         var assets = [];
         var paging = paging || constants.DEFAULT_TAG_PAGIN;
-        var q = {};
-        q.tag = tagName;
-        assets = this.search(q, paging);
-        return assets;
+        if (tagName) {
+            var registry = this.registry, tag = tagName;
+            try {
+                assets = this.am.find(function (artifact) {
+                    if (registry.tags(artifact.path).indexOf(tag) != -1) {
+                        //return matchAttr(options.attributes, artifact.attributes); -To accommodate filtering by lifecycle state
+                        return matchArtifact(options, artifact);
+                    }
+                    return false;
+                }, paging);
+            } catch (e) {
+                log.error(e);
+            }
+            return assets;
+        }
     };
     /**
      * Adds a tag to a given asset
