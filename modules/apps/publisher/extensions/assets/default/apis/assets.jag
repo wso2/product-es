@@ -1,86 +1,111 @@
 <%
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 /*
- Descripiton: Invoke routed api endpoints
+ Description: Invoke routed api endpoints
+ Filename : assets.jag
+ * can be extended by asset type
+
+ ENDPOINTS:
+ GET
+ /apis/assets/
+ /apis/assets/{id}
+ /apis/assets/{id}/state
+
+ POST
+ /apis/assets/
+ /apis/assets/{id}
+ /apis/assets/{id}/state
+
+ DELETE
+ /apis/assets/{id}
 
  */
-var DEFAULT_PAGIN = {
-    'start': 0,
-    'count': 10,
-    'sortOrder': 'ASC',
-    'sortBy': '',
-    'paginationLimit': 1000
-};
-require('/modules/publisher.js').exec(function(ctx) {
-    var log = new Log();
+
+require('/modules/publisher.js').exec(function (ctx) {
+    var log = new Log('asset_api_endpoints');
     var ref = require('utils').request;
     var responseProcessor = require('utils').response;
     var res = ctx.response;
     var req = ctx.request;
     var session = ctx.session;
-    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+
+    var uriMatcher = new URIMatcher(req.getRequestURI());
+
     var assetApi = require('/modules/asset_api.js').api;
     var lcApi = require('/modules/lifecycle_api.js').api;
 
     var CREATE_URL = '/{context}/apis/assets/';
     var UPDATE_URL = '/{context}/apis/assets/{id}';
-    var CHANGE_STATE_URL = '/{context}/apis/assets/{id}/{nextState}';
-    var GET_STATE_URL = '/{context}/apis/assets/{id}/state';
     var LIST_ASSETS_URL = '/{context}/apis/assets/';
     var GET_ASSET_URL = '/{context}/apis/assets/{id}';
-    var GET_CURRENT_STATE_URL = '/{context}/apis/assets/{id}/state';
     var DELETE_ASSET_URL = '/{context}/apis/assets/{id}';
     var ASSET_STATE_URL = '/{context}/apis/assets/{id}/state';
 
     var method = req.getMethod();
     var options = ref.getQueryOptions(req.getQueryString());
+    var response = ctx.response;
     response.contentType = 'application/json';
-    var result = {};
 
     switch (method) {
         case 'POST':// POST endpoints
+            var newAsset;
             if (uriMatcher.match(CREATE_URL)) {//to create asset
-                var asset = assetApi.create(options, req, res, session);
-                //If the asset is successfully created then return the asset
-                if (asset) {
-                    response = responseProcessor.buildSuccessResponse(res, 201, asset)
-                } else {
+                try {
+                    newAsset = assetApi.create(options, req, res, session);
+                    //If the asset is successfully created then return the asset
+                    if (newAsset) {
+                        response = responseProcessor.buildSuccessResponse(res, 201, newAsset)
+                    } else {
+                        response = responseProcessor.buildErrorResponse(res, 500, 'Failed to create asset of type: ' + options.type);
+                    }
+                } catch (e) {
+                    log.error(e);
                     response = responseProcessor.buildErrorResponse(res, 500, 'Failed to create asset of type: ' + options.type);
                 }
+
             } else if (uriMatcher.match(UPDATE_URL)) {//to update asset
                 options.id = uriMatcher.elements().id;
-                var asset = assetApi.update(options, req, res, session);
-                //if the asset is sucessfully updated
-                if (asset) {
-                    response = responseProcessor.buildSuccessResponse(response, 200, asset)
-                } else {
-                    response = responseProcessor.buildErrorResponse(response, 500, 'Unable to update the asset');
+                try {
+                    asset = assetApi.update(options, req, res, session);
+                    //if the asset is successfully updated
+                    if (asset) {
+                        response = responseProcessor.buildSuccessResponse(response, 200, asset)
+                    } else {
+                        response = responseProcessor.buildErrorResponse(response, 500, 'Unable to update the asset');
+                    }
+                } catch (e) {
+                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
+                        log.error(e.message);
+                        response = responseProcessor.buildErrorResponse(response, e.code, e.message);
+                    } else {
+                        response = responseProcessor.buildErrorResponse(res, 500, 'Failed to update asset of type: ' + options.type);
+                    }
                 }
-            } else if (uriMatcher.match(ASSET_STATE_URL)) {//ch=ange asset's LC state
+
+            } else if (uriMatcher.match(ASSET_STATE_URL)) {//change asset's LC state
                 var elements = uriMatcher.elements();
                 options.id = elements.id;
-                try{
+                try {
                     var out = lcApi.invokeStateTransition(options, req, res, session);
                     response = responseProcessor.buildSuccessResponse(response, 200, out);
-                }catch(e){
-                    response = responseProcessor.buildErrorResponse(response, 500, e);
+                } catch (e) {
+                    log.error(e);
+                    response = responseProcessor.buildErrorResponse(response, e.code, e.message);
                 }
 
             } else {
@@ -99,12 +124,18 @@ require('/modules/publisher.js').exec(function(ctx) {
                 if (asset) {
                     response = responseProcessor.buildSuccessResponse(response, 200, asset);
                 } else {
-                    response = responseProcessor.buildErrorResponse(response, 400, "No matching asset found");
+                    response = responseProcessor.buildErrorResponse(response, 404, "No matching asset found by id : " + options.id);
                 }
-            } else if (uriMatcher.match(ASSET_STATE_URL)) {//return asset stste by id
-                options.id = uriMatcher.elements().id;
-                var state = lcApi.getState(options, req, res, session);
-                response = responseProcessor.buildSuccessResponse(response, 200,state);
+            } else if (uriMatcher.match(ASSET_STATE_URL)) {//return asset state by id
+                try {
+                    options.id = uriMatcher.elements().id;
+                    var state = lcApi.getState(options, req, res, session);
+                    response = responseProcessor.buildSuccessResponse(response, 200, state);
+                } catch (e) {
+                    log.error(e);
+                    response = responseProcessor.buildErrorResponse(response, e.code, e.message);
+                }
+
             } else {
                 response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
             }
@@ -113,17 +144,20 @@ require('/modules/publisher.js').exec(function(ctx) {
         case 'DELETE': // DELETE endpoints
             options.type = req.getParameter('type');
             if (uriMatcher.match(DELETE_ASSET_URL)) {
-                options.id = uriMatcher.elements().id;
-                var done = assetApi.remove(options, req, res, session);
-                var result = [];
-                if (done) {
-                    response = responseProcessor.buildSuccessResponse(response, 200, result);
-                } else {
-                    response = responseProcessor.buildErrorResponse(response, 400, "No matching asset found");
+                try {
+                    options.id = uriMatcher.elements().id;
+                    var done = assetApi.remove(options, req, res, session);
+                    if (done) {
+                        response = responseProcessor.buildSuccessResponse(response, 200, "Asset Deleted Successfully");
+                    } else {
+                        response = responseProcessor.buildErrorResponse(response, 400, "Unable to Delete Asset of id:" + options.id);
+                    }
+                } catch (e) {
+                    log.error(e);
+                    response = responseProcessor.buildErrorResponse(response, 500, "An error occurred while deleting asset");
                 }
-            }
-            else {
-                response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
+            } else {
+                response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this DELETE endpoint');
             }
             break;
         default://other un-implemented endpoints

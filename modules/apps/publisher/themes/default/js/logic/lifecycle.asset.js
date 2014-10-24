@@ -13,6 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+
 /*
  Description: The script is responsible for the implementing the client side logic;
  - Promoting an asset to the next stage of its life-cycle

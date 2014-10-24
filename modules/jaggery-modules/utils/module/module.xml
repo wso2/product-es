@@ -31,4 +31,8 @@
         <name>url</name>
         <path>scripts/url/url.js</path>
     </script>
+    <script>
+        <name>exception</name>
+        <path>scripts/exception/exception.js</path>
+    </script>
 </module>

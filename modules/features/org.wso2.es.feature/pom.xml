@@ -124,6 +124,9 @@
                                     org.jaggeryjs.modules.markdown:${markdown.feature.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
+                                    org.jaggeryjs.modules.jaggery-test:${jaggery-test.feature.version}
+                                </importFeatureDef>
+                                <importFeatureDef>
                                     org.wso2.store.modules.event:${project.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
