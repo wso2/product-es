@@ -17,7 +17,7 @@
             <!--<package name="org.wso2.es.ui.integration.test.*"/>-->
         <!--</packages>-->
         <classes>
-            <class name="org.wso2.es.ui.integration.test.store.StoreRatings"/>
+            <class name="org.wso2.es.ui.integration.test.store.ESStoreRatings"/>
             <class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssets"/>
             <class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetList"/>
             <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginTestCase"/>

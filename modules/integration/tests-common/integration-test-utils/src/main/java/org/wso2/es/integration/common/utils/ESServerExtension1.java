@@ -20,9 +20,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 
-public class ESServerExtension extends ExecutionListenerExtension {
+public class ESServerExtension1 extends ExecutionListenerExtension {
 
-    private static final Log log = LogFactory.getLog(ESServerExtension.class);
+    private static final Log log = LogFactory.getLog(ESServerExtension1.class);
 
     public void initiate() {
         try {

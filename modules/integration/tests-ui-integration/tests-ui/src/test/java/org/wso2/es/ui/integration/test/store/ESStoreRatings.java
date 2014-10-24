@@ -35,7 +35,7 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class StoreRatings extends ESIntegrationUITest {
+public class ESStoreRatings extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "store";
