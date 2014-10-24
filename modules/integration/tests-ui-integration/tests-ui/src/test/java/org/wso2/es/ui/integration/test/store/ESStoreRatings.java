@@ -40,12 +40,13 @@ public class ESStoreRatings extends ESIntegrationUITest {
     private String baseUrl;
     private String webApp = "store";
     private boolean acceptNextAlert = true;
-
+    WebDriverWait wait;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
         driver = BrowserManager.getWebDriver();
+        wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         driver.get(baseUrl + "/" + webApp);
 
@@ -53,7 +54,6 @@ public class ESStoreRatings extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.store.ratings", description = "Test Start Add Rating")
     public void testStoreAddRatings() throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("img")).click();
@@ -88,7 +88,6 @@ public class ESStoreRatings extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.store.ratings", description = "Test View My Rating", dependsOnMethods = "testESAddRating")
     public void testESStoreViewMyRating() throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
         driver.switchTo().defaultContent();
 
         driver.findElement(By.cssSelector("i.icon-cog")).click();
@@ -106,7 +105,6 @@ public class ESStoreRatings extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.store.ratings", description = "Test View Rating As Annon", dependsOnMethods = "testESAddRating")
     public void testESStoreViewRating() throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
         driver.switchTo().defaultContent();
 
         driver.findElement(By.cssSelector("i.icon-cog")).click();
@@ -124,7 +122,6 @@ public class ESStoreRatings extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.store", description = "Test Logout and view rating", dependsOnMethods = "testESStoreViewRating")
     public void testStoreAddLogoutAndViewRatings() throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, 6);
         driver.switchTo().defaultContent();
         driver.findElement(By.linkText("admin")).click();
         driver.findElement(By.linkText("Sign out")).click();
