@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.es.integration.common.utils;
 
@@ -43,6 +43,10 @@ public class ManifestManager {
         init();
     }
 
+    /**
+     * Reads the resources defined in the installation manifest and then
+     * moves the resources defined
+     */
     public void execute() {
         //Obtain the list of all resource packages
         Collection<String> packages = manifest.getResourcePackageNames();
@@ -129,6 +133,14 @@ public class ManifestManager {
         return carbonHome + File.separator + filePath;
     }
 
+    /**
+     * Copies a file from the source to a destination location.The method will check if the
+     * source file is a directory or file and call the appropriate copy operation
+     * @param source The source file to be copied
+     * @param destination The destination location to which the file must be moved
+     * @return  True if the file is copied else false
+     * @throws IOException  Thrown if the file copy operation fails
+     */
     private boolean copy(File source, File destination) throws IOException {
         boolean success = false;
         if (!source.exists()) {

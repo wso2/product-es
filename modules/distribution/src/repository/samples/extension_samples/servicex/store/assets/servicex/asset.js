@@ -13,6 +13,11 @@ asset.server=function(){
 				title:'Servicex Listing Page',
 				url:'list',
 				path:'list.jag'
+			},
+			{
+				title:'New Servicex Caramel Page',
+				url:'new_caramel_page',
+				path:'new_caramel_page.jag'
 			}]
 		}
 	};

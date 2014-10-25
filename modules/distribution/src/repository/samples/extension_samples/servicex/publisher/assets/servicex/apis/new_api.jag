@@ -19,6 +19,6 @@
  */
 var result = {};
 result.status = 200;
-result.message = "new api";
+result.message = "new_api";
 print(result); 
 %>

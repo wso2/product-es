@@ -1,20 +1,4 @@
-/*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package org.wso2.es.ui.integration.extension.test.extensions;
+package org.wso2.es.ui.integration.test.publisher.extensions;
 
 import org.openqa.selenium.Alert;
 import java.util.regex.Pattern;
@@ -25,12 +9,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.openqa.selenium.support.ui.Select;
-import org.wso2.es.ui.integration.extension.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationUITest {
+public class ESStoreNewGlobalPageTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -45,9 +29,9 @@ public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationU
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/details");
-    assertTrue(isElementPresent(By.id("assetOveriddenDetailsPage")));
+  public void testESStoreNewGlobalPageTestCase() throws Exception {
+    driver.get(baseUrl + "/store/pages/servicex_global");
+    assertTrue(isElementPresent(By.id("assetNewGlobalPage")));
  }
 
     @AfterClass(alwaysRun = true)
