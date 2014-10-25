@@ -76,7 +76,6 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
         super.init(userMode);
         this.currentUserName = userInfo.getUserName().split("@")[0];
         this.currentUserPwd = userInfo.getPassword().split("0")[0];
-        this.resourcePath = "/_system/governance/gadgets/" + this.currentUserName + "/" + this.assetName + "/1.0.0";
         driver = BrowserManager.getWebDriver();
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
@@ -86,6 +85,7 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         normalUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName();
         normalUserPwd = automationContext.getSuperTenant().getTenantUser("user1").getPassword();
+        this.resourcePath = "/_system/governance/gadgets/" + this.normalUserName + "/" + this.assetName + "/2.0.0";
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
