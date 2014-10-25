@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.es.ui.integration.test.store;
 
 import org.apache.commons.logging.Log;
@@ -28,7 +44,7 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
     private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
     private static final Log log = LogFactory.getLog(ESStoreSearchGadgetList.class);
-
+    WebDriverWait wait;
 
     private String assetName = "Sample Asset";
     private String assetVersion = "1.2.3";
@@ -43,6 +59,7 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
     public void setUp() throws Exception {
         super.init();
         driver = BrowserManager.getWebDriver();
+        wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         driver.get(baseUrl + "/" + webApp);
     }
@@ -56,7 +73,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText("Templates");
         driver.findElement(By.id("search-button2")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Line Plus Bar Chart"));
         assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size());
 
@@ -72,7 +88,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         driver.findElement(By.name("overview_provider")).sendKeys("admin");
         driver.findElement(By.id("search-button2")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
 
         assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size());
@@ -90,7 +105,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).sendKeys("Bar Chart");
         driver.findElement(By.id("search-button2")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
 
         assertEquals("Bar Chart", driver.findElement(By.cssSelector("h4")).getText());
@@ -107,7 +121,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).sendKeys("Line Chart");
         driver.findElement(By.id("search-button2")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
 
         assertEquals("We couldn't find anything for you.", driver.findElement(By.cssSelector("div.empty-assert")).getText());
@@ -123,7 +136,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         driver.findElement(By.name("overview_version")).sendKeys("9.9.9");
         driver.findElement(By.id("search-button2")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
 
         assertEquals("We couldn't find anything for you.", driver.findElement(By.cssSelector("div.empty-assert")).getText());
@@ -137,7 +149,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys("unavailable");
         driver.findElement(By.id("search-button2")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
 
         assertEquals("We couldn't find anything for you.", driver.findElement(By.cssSelector("div.empty-assert")).getText());
@@ -145,8 +156,7 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.store", description = "Add asset", dependsOnMethods = "testStoreSearchUnAvailableAuthor")
     public void testAddasset() throws Exception {
-        ESUtil.login(driver, baseUrl, "publisher");
-        WebDriverWait wait = new WebDriverWait(driver, 6);
+        ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(), userInfo.getPassword());
         boolean isAdded = false;
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElement(By.linkText("Add")).click();
@@ -213,7 +223,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText(assetCategory);
         driver.findElement(By.id("search-button2")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
 
         driver.get(baseUrl + "/store/asts/gadget/list?q=\"overview_name\": \"Sample Asset\",\"overview_category\": \"WSO2\"");
@@ -232,7 +241,6 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText(assetCategory);
         driver.findElement(By.id("search-button2")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
 
         assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());

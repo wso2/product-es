@@ -59,7 +59,6 @@ public class ESPublisherLoginTestCase extends ESIntegrationUITest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-
         driver.quit();
     }
 
