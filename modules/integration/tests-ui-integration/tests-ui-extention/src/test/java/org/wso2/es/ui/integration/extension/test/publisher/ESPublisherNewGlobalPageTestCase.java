@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.es.ui.integration.test.publisher.extensions;
+package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.Alert;
 import java.util.regex.Pattern;
@@ -27,12 +27,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.openqa.selenium.support.ui.Select;
-import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.extension.util.ESUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherOverridenGlobalPageTestCase extends ESIntegrationUITest {
+public class ESPublisherNewGlobalPageTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -47,9 +47,9 @@ public class ESPublisherOverridenGlobalPageTestCase extends ESIntegrationUITest 
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESPublisherOverridenGlobalPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/pages/splash");
-    assertTrue(isElementPresent(By.id("assetOverridenGlobalPage")));
+  public void testESPublisherNewGlobalPageTestCase() throws Exception {
+    driver.get(baseUrl + "/publisher/pages/servicex_global");
+    assertTrue(isElementPresent(By.id("assetNewGlobalPage")));
  }
 
     @AfterClass(alwaysRun = true)

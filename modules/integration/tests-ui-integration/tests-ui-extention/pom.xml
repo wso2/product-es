@@ -13,7 +13,7 @@
     <groupId>org.wso2.store</groupId>
     <artifactId>org.wso2.es.ui.integration.test.extension</artifactId>
     <packaging>jar</packaging>
-    <name>org.wso2.es.ui.integration.test.estension</name>
+    <name>org.wso2.es.ui.integration.test.extension</name>
 
     <build>
         <plugins>

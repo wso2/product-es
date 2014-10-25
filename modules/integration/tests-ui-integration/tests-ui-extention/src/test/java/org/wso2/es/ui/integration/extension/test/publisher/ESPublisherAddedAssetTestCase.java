@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.es.ui.integration.test.publisher.extensions;
+package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.Alert;
 import java.util.regex.Pattern;
@@ -27,12 +27,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.openqa.selenium.support.ui.Select;
-import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.extension.util.ESUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationUITest {
+public class ESPublisherAddedAssetTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -47,9 +47,13 @@ public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationU
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/details");
-    assertTrue(isElementPresent(By.id("assetOveriddenDetailsPageH1")));
+  public void testESPublisherAddedAssetTestCase() throws Exception {
+    driver.get(baseUrl + "/publisher/");
+    assertTrue(isElementPresent(By.cssSelector("button.btn.dropdown-toggle")));
+    // ERROR: Caught exception [ERROR: Unsupported command [selectWindow | null | ]]
+    driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+    driver.findElement(By.linkText("Service")).click();
+    assertTrue(isElementPresent(By.cssSelector("span.publisherTitle")));
  }
 
     @AfterClass(alwaysRun = true)

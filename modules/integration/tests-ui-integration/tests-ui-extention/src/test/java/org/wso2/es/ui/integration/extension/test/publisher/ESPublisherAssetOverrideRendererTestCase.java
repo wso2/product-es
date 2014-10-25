@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.es.ui.integration.test.publisher.extensions;
+package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.Alert;
 import java.util.regex.Pattern;
@@ -27,12 +27,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.openqa.selenium.support.ui.Select;
-import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.extension.util.ESUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetNewPageTestCase extends ESIntegrationUITest {
+public class ESPublisherAssetOverrideRendererTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -47,9 +47,8 @@ public class ESPublisherAssetNewPageTestCase extends ESIntegrationUITest {
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetNewPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/new_page");
-    assertTrue(isElementPresent(By.id("assetNewPageH1")));
+  public void testESPublisherAssetOverrideRendererTestCase() throws Exception {
+    driver.get(baseUrl + "/publisher/asts/servicex/lifecycle");
  }
 
     @AfterClass(alwaysRun = true)

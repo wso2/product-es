@@ -16,56 +16,45 @@
  * under the License.
  */
 
-package org.wso2.es.ui.integration.test.publisher.extensions;
+package org.wso2.es.ui.integration.extension.test.store;
 
 import org.openqa.selenium.Alert;
-
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.*;
-
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.openqa.selenium.support.ui.Select;
-import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.extension.util.ESUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetCaramelPageTestCase extends ESIntegrationUITest {
+public class ESStoreAssetNewPageTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
-
-    @BeforeClass(alwaysRun = true)
-    public void setUp() throws Exception {
+ 
+  @BeforeClass(alwaysRun = true)
+  public void setUp() throws Exception {
         super.init();
         driver = BrowserManager.getWebDriver();
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, webApp);
-    }
+  }
 
-    @Test(groups = "wso2.es", description = "")
-    public void testESPublisherAssetCaramelPageTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/asts/servicex/new_caramel_page");
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("Overview")));
-        //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.linkText("Overview")));
-        //assertTrue(isElementPresent(By.cssSelector("span.publisherTitle")));
-        //assertTrue(isElementPresent(By.linkText("Overview")));
-        assertTrue(isElementPresent(By.linkText("Edit")));
-        assertTrue(isElementPresent(By.linkText("Life Cycle")));
-    }
+  @Test(groups = "wso2.es", description = "")
+  public void testESStoreAssetNewPageTestCase() throws Exception {
+    driver.get(baseUrl + "/store/asts/servicex/new_page");
+    assertTrue(isElementPresent(By.id("assetNewPageH1")));
+ }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl, webApp);
+        ESUtil.logout(driver, baseUrl,webApp);
         driver.quit();
     }
 

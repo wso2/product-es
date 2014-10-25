@@ -14,16 +14,16 @@
 
 
     <test name="ES-UI-tests" parallel="false" verbose="2" preserve-order="true">
-        <!--<packages>-->
-            <!--<package name="org.wso2.es.ui.integration.test.*"/>-->
-        <!--</packages>-->
-        <classes>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreRatings"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssets"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetList"/>
-            <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginTestCase"/>
-            <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortByLinksTestCase"/>
-        </classes>
+        <packages>
+            <package name="org.wso2.es.ui.integration.test.*"/>
+        </packages>
+        <!--<classes>-->
+            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreRatings"/>-->
+            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssets"/>-->
+            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetList"/>-->
+            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginTestCase"/>-->
+            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortByLinksTestCase"/>-->
+        <!--</classes>-->
     </test>
 
 
