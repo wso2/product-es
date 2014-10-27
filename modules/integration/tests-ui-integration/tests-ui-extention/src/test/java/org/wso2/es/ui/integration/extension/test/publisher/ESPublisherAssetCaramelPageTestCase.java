@@ -33,6 +33,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.openqa.selenium.support.ui.Select;
 import org.wso2.es.ui.integration.extension.util.ESUtil;
+import org.wso2.es.ui.integration.extension.util.ESWebDriver;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
@@ -54,11 +55,11 @@ public class ESPublisherAssetCaramelPageTestCase extends ESIntegrationUITest {
     @Test(groups = "wso2.es", description = "")
     public void testESPublisherAssetCaramelPageTestCase() throws Exception {
         driver.get(baseUrl + "/publisher/asts/servicex/new_caramel_page");
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("Overview")));
+        //WebDriverWait wait = new WebDriverWait(driver, 10);
+        //wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("Overview")));
         //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.linkText("Overview")));
         //assertTrue(isElementPresent(By.cssSelector("span.publisherTitle")));
-        //assertTrue(isElementPresent(By.linkText("Overview")));
+        assertTrue(isElementPresent(By.linkText("Overview")));
         assertTrue(isElementPresent(By.linkText("Edit")));
         assertTrue(isElementPresent(By.linkText("Life Cycle")));
     }
