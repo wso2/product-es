@@ -53,7 +53,7 @@ public class EventPublisher {
 			"\"type\":\"STRING\"},{\"name\":\"assetId\",\"type\":\"STRING\"},{\"name\":\"assetType\"," +
 			"\"type\":\"STRING\"},{\"name\":\"description\",\"type\":\"STRING\"}]}";
 
-	private LoadBalancingDataPublisher loadBalancingDataPublisher = null;
+	private static LoadBalancingDataPublisher loadBalancingDataPublisher = null;
 
 	private EventPublisher() throws Exception {
 
@@ -123,16 +123,16 @@ public class EventPublisher {
 
 	public static EventPublisher getInstance() throws Exception {
 		if (instance == null) {
-			synchronized (EventPublisher.class) {
-				instance = new EventPublisher();
-			}
+			instance = new EventPublisher();
 		}
 		return instance;
 	}
 
-	public static void main(String args[]) {
-		JsonObject streamDefinition =
-				(JsonObject) new JsonParser().parse(assetStatisticsDefaultStream);
+	public static void shutDownPublisher() throws RuntimeException {
+
+		if (loadBalancingDataPublisher != null) {
+			loadBalancingDataPublisher.stop();
+		}
 	}
 
 	public void publishEvents(String streamName, String streamVersion, String streamDefinition,
@@ -180,10 +180,6 @@ public class EventPublisher {
 		              ESBamPublisherUsageConstants.ES_STATISTICS_STREAM_VERSION,
 		              assetStatisticsDefaultStream, streamDefinition.get("metaData").toString(),
 		              strData);
-	}
-
-	public void shutDownPublisher() throws RuntimeException {
-		loadBalancingDataPublisher.stop();
 	}
 
 }

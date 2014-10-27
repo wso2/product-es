@@ -18,11 +18,13 @@
 
 package org.wso2.store.bamclient;
 
+import org.apache.log4j.Logger;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-
 public class Activator implements BundleActivator {
+
+	private static final Logger log = Logger.getLogger(EventPublisher.class);
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
@@ -31,8 +33,7 @@ public class Activator implements BundleActivator {
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
-
-		EventPublisher eventPublisher = EventPublisher.getInstance();
-		eventPublisher.shutDownPublisher();
+		log.debug("BAM client bundle shut down");
+		EventPublisher.shutDownPublisher();
 	}
 }
