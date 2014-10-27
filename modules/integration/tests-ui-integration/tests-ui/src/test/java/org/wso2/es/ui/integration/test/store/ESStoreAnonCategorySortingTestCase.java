@@ -23,48 +23,59 @@ import java.util.concurrent.TimeUnit;
 import static org.testng.Assert.*;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
-
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESStoreAnonCategorySortingTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
+    WebDriverWait wait;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        wait = new WebDriverWait(driver, 30);
     }
 
     @Test(groups = "wso2.es", description = "Testing sorting")
     public void testStoreSort() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.cssSelector("i.icon-star")).click();
-        assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h4")).getText(),
+        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4")).getText(),
                 "Popularity Sort failed");
-        assertEquals("Line Chart", driver.findElement(By.xpath
+        assertEquals("Line Plus Bar Chart", driver.findElement(By.xpath
                 ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(), "Popularity Sort failed");
 
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
         driver.findElement(By.cssSelector("i.icon-sort-alphabetical")).click();
-        assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h4")).getText(),
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
+
+        assertEquals("Bar Chart", driver.findElement(By.cssSelector("h4")).getText(),
                 "Alphabetical Sort failed");
-        assertEquals("Line Chart", driver.findElement(By.xpath
+        assertEquals("Bubble Chart", driver.findElement(By.xpath
                 ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(), "Alphabetical Sort failed");
+
 
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
         driver.findElement(By.cssSelector("i.icon-calendar")).click();
-        assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h4")).getText(),
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "WSO2 Carbon Commits List Discussion"));
+
+        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4")).getText(),
                 "Recent Sort failed");
-        assertEquals("Line Chart", driver.findElement(By.xpath
+        assertEquals("Line Plus Bar Chart", driver.findElement(By.xpath
                 ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(), "Recent Sort failed");
     }
 
@@ -73,21 +84,27 @@ public class ESStoreAnonCategorySortingTestCase extends ESIntegrationUITest {
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("Google")).click();
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
+
         assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size(), "Google Category wrong");
 
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("WSO2")).click();
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "WSO2 Carbon Commits List Discussion"));
         assertEquals(5, driver.findElements(By.cssSelector("div.asset-details")).size(), "WSO2 Category wrong");
 
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("Templates")).click();
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Line Plus Bar Chart"));
         assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size(),
                 "Templates Category wrong");
     }
 
     @Test(groups = "wso2.es", description = "Testing category drop down", dependsOnMethods = "testCategories")
     public void testCategoryMenu() throws Exception {
-        assertEquals("Templates", driver.findElement(By.cssSelector("div.breadcrumb-head")).getText(),
+        assertEquals("All Categories", driver.findElement(By.cssSelector("div.breadcrumb-head")).getText(),
                 "Category drop down not showing selected category ");
     }
 

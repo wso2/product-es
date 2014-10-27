@@ -28,19 +28,20 @@ import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 import com.thoughtworks.selenium.*;
 import org.testng.annotations.*;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.*;
 
 import java.util.regex.Pattern;
 
 public class ESPublisherLoginTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String webAppURL;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         webAppURL = getWebAppURL();
         driver.get(webAppURL);
     }

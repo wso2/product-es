@@ -30,9 +30,9 @@
     </listeners>
 
     <test name="Test - ES Platform Test" preserve-order="true" parallel="false">
-        <packages>
-            <package name="org.wso2.store.platform.integration.*"/>
-        </packages>
+        <!--<packages>-->
+            <!--<package name="org.wso2.store.platform.integration.*"/>-->
+        <!--</packages>-->
     </test>
 
 

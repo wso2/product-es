@@ -33,9 +33,6 @@
     <test name="Test - ES Platform Test" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.carbon.integration.common.tests.JaggeryServerTest"/>
-            <class name="org.wso2.carbon.integration.common.tests.JaggeryServerTest"/>
-        </classes>
-        <classes>
             <class name="org.wso2.es.integration.ArtifactUploadClientTestCase"/>
         </classes>
     </test>

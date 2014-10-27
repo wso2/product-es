@@ -33,10 +33,10 @@ import org.openqa.selenium.support.ui.Select;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESUtil;
-
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private WebDriverWait wait;
     private String baseUrl;
     private boolean acceptNextAlert = true;
@@ -49,7 +49,7 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -61,11 +61,11 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/store/asts/gadget/list");
         assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
                 .getText(), "Gadget Menu missing");
-        assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h4")).getText(), "Gadgets missing");
+        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4")).getText(), "Gadgets missing");
         assertEquals("Recently Added", driver.findElement(By.xpath
                 ("//div[@id='container-assets']/div/div[2]/div[1]/div/h4")).getText(),
                 "Recently Added section missing");
-        assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("div.span3 > div.row-fluid" +
+        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("div.span3 > div.row-fluid" +
                 ".recently-added > div.span9 > strong > a")).getText(), "Recently added Gadgets missing");
         assertEquals("Tags", driver.findElement(By.xpath
                 ("//div[@id='container-assets']/div/div[2]/div[2]/div/h4")).getText(), "Tags section missing");
@@ -78,11 +78,11 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
         assertTrue(isElementPresent(By.id("search")), "Search tray missing");
     }
 
-    @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links")
+    @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links", enabled = false)
     public void testLinksFromPage() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.cssSelector("h4")).click();
-        assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h3")).getText(),
+        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h3")).getText(),
                 "Cannot view selected Gadget's page through Gadget list");
 
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();

@@ -33,9 +33,10 @@ import org.openqa.selenium.support.ui.Select;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private WebDriverWait wait;
     private String baseUrl;
     private String webApp = "store";
@@ -48,7 +49,7 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -68,13 +69,15 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
             assertEquals("Bookmarked", driver.findElement(By.id("btn-add-gadget")).getText(), "Bookmarking failed");
 
             driver.findElement(By.linkText("My Items")).click();
-            assertEquals("Bubble Chart", driver.findElement(By.cssSelector("strong")).getText(),
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("strong")));
+
+            assertEquals("Line Chart", driver.findElement(By.cssSelector("strong")).getText(),
                     "Bookmarked asset not shown in My Items page");
 
             driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
             assertTrue(isElementPresent(By.linkText("My Assets")), "My Assets section missing");
             driver.findElement(By.cssSelector("i.icon-angle-down.pull-right")).click();
-            assertEquals("Bubble Chart", driver.findElement(By.cssSelector("strong > a")).getText(),
+            assertEquals("Line Chart", driver.findElement(By.cssSelector("strong > a")).getText(),
                     "Bookmarked asset not shown in My Assets section");
 
             driver.findElement(By.linkText("View all")).click();

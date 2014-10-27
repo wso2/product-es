@@ -26,10 +26,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
-
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESStoreSearchTopAssets extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "store";
     private boolean acceptNextAlert = true;
@@ -38,7 +38,7 @@ public class ESStoreSearchTopAssets extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         driver.get(baseUrl + "/" + webApp);
 
@@ -56,14 +56,10 @@ public class ESStoreSearchTopAssets extends ESIntegrationUITest {
         assertEquals("WSO2 Carbon Div List Discussion", driver.findElement(By.xpath("//div[@id='top-asset-slideshow-gadget']/div[3]/div[2]/div/a/h4")).getText());
         assertEquals("WSO2 Dev List Discussion", driver.findElement(By.xpath("//div[@id='top-asset-slideshow-gadget']/div[4]/div[2]/div/a/h4")).getText());
         assertEquals(6, driver.findElements(By.cssSelector("div.asset-details")).size());
-//        try {
-//            assertEquals(5, driver.findElements(By.cssSelector("div.asset-details")).size());
-//        } catch (Error e) {
-//            verificationErrors.append(e.toString());
-//        }
+
     }
 
-    @Test(groups = "wso2.es.store.annon", description = "Test Recently added right navigations results")
+    @Test(groups = "wso2.es.store.annon", description = "Test Recently added right navigation's results", dependsOnMethods = "testESStoreSearchTopAssets")
     public void testESStoreSearchTopAssetsRecentlyAdded() throws Exception {
         assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("strong > a")).getText());
         assertEquals("WSO2 Architecture List Discussion", driver.findElement(By.xpath("//a[contains(text(),'WSO2 Architecture List Discussion')]")).getText());
@@ -71,11 +67,7 @@ public class ESStoreSearchTopAssets extends ESIntegrationUITest {
         assertEquals("WSO2 Dev List Discussion", driver.findElement(By.xpath("//a[contains(text(),'WSO2 Dev List Discussion')]")).getText());
         assertEquals("WSO2 Jira", driver.findElement(By.xpath("//a[contains(text(),'WSO2 Jira')]")).getText());
         assertEquals(6, driver.findElements(By.cssSelector("div.row-fluid.recently-added")).size());
-//        try {
-//            assertEquals(6, driver.findElements(By.cssSelector("div.row-fluid.recently-added")).size());
-//        } catch (Error e) {
-//            verificationErrors.append(e.toString());
-//        }
+
     }
 
     @AfterClass(alwaysRun = true)

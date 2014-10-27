@@ -36,9 +36,10 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESPublishToStore extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private WebDriverWait wait;
     private String baseUrl;
     private boolean acceptNextAlert = true;
@@ -53,7 +54,7 @@ public class ESPublishToStore extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         driver.get(baseUrl + "/publisher/asts/gadget/list");
@@ -87,19 +88,26 @@ public class ESPublishToStore extends ESIntegrationUITest {
             closeAlertAndGetItsText();
         }
         driver.findElement(By.cssSelector("a.btn")).click();
-        do {
-            driver.get(baseUrl + "/publisher/asts/gadget/list");
-        } while (!isElementPresent(By.linkText(assetName)));
+//        do {
+//            driver.get(baseUrl + "/publisher/asts/gadget/list");
+//        } while (!isElementPresent(By.linkText(assetName)));
+        driver.findElementPoll(By.linkText(assetName),30);
         driver.findElement(By.linkText("Publishing Asset")).click();
         driver.findElement(By.linkText("Life Cycle")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.pull-left"),
                 "Lifecycle - " + assetName));
         driver.findElement(By.id("In-Review")).click();
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"), "Add a comment"));
+
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "IN-REVIEW"));
         driver.findElement(By.id("Published")).click();
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"), "Add a comment"));
+
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();

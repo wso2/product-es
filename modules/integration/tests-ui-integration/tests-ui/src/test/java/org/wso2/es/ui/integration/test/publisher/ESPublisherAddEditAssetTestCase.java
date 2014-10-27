@@ -27,6 +27,7 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +39,7 @@ import static org.testng.Assert.assertEquals;
 public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
     private static final Log log = LogFactory.getLog(ESPublisherAddEditAssetTestCase.class);
 
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
@@ -74,7 +75,7 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         this.currentUserName = userInfo.getUserName().split("@")[0];
         this.currentUserPwd = userInfo.getPassword().split("@")[0];
         this.resourcePath = "/_system/governance/gadgets/" + this.currentUserName + "/" + this.assetName + "/1.0.0";
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
@@ -107,16 +108,19 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_description")).sendKeys("Test description");
         driver.findElement(By.id("btn-create-asset")).click();
 
-        boolean isSuccessful;
-        if (isAlertPresent()) {
-            isSuccessful = false;
-        } else {
-            do {
-                driver.get(baseUrl + "/publisher/asts/gadget/list");
-            } while (!isElementPresent(By.linkText(assetName)));
-            isSuccessful = true;
-        }
-        assertTrue(isSuccessful, "Adding an asset failed for user:" + currentUserName);
+        driver.findElementPoll(By.linkText(assetName),30);
+//        boolean isSuccessful;
+//        if (isAlertPresent()) {
+//            isSuccessful = false;
+//        } else {
+//            do {
+//                driver.get(baseUrl + "/publisher/asts/gadget/list");
+//            } while (!isElementPresent(By.linkText(assetName)));
+//            isSuccessful = true;
+//        }
+//
+
+        assertTrue(isElementPresent(By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
     }
 
     @Test(groups = "wso2.es", description = "Testing editing an asset", dependsOnMethods = "testAddAsset",

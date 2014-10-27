@@ -95,7 +95,7 @@ var result;
         } else if (type == constants.LOG_EXCEPTION_AND_TERMINATE) {
             log.error(exception);
             var msg = 'An error occurred while serving the request!';
-            e = exceptionModule.buildExceptionObject(msg, constants.ERROR_STATUS_CODES.INTERNAL_SERVER_ERROR);
+            e = exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
             throw e;
         } else if (type == constants.LOG_EXCEPTION_AND_CONTINUE) {
             log.debug(exception);
@@ -266,7 +266,7 @@ var result;
             log.error(e);
             asset = null;
             var msg = 'Unable to locate the asset with id: ' + options.id;
-            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.ERROR_STATUS_CODES.NOT_FOUND);
+            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.NOT_FOUND);
         }
         if (original) {
             putInStorage(asset, am);
@@ -285,7 +285,7 @@ var result;
                 if (log.isDebugEnabled()) {
                     log.debug('Failed to update the asset ' + stringify(asset));
                 }
-                handleError(errMassage, constants.LOG_EXCEPTION_AND_TERMINATE, constants.ERROR_STATUS_CODES.INTERNAL_SERVER_ERROR);
+                handleError(errMassage, constants.LOG_EXCEPTION_AND_TERMINATE, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
 
             }
         }
