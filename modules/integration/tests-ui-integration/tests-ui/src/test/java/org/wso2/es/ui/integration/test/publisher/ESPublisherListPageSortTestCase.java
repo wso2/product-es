@@ -29,6 +29,7 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,7 @@ import static org.testng.Assert.fail;
 public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
     private static final Log log = LogFactory.getLog(ESPublisherListPageSortTestCase.class);
 
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
@@ -76,7 +77,7 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
         super.init(userMode);
         this.currentUserName = userInfo.getUserName().split("@")[0];
         this.currentUserPwd = userInfo.getPassword().split("0")[0];
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 30);
@@ -106,9 +107,10 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
     @Test(groups = "wso2.es", description = "Test sort by name, provider, version & created time", enabled = true)
     public void testListPageSort() throws Exception {
         log.info("----------------------------- Asset List Sort Test ----------------------------------------");
-        do {
-            driver.get(baseUrl + "/publisher/asts/gadget/list");
-        } while (!isElementPresent(By.linkText(assetName)));
+//        do {
+//            driver.get(baseUrl + "/publisher/asts/gadget/list");
+//        } while (!isElementPresent(By.linkText(assetName)));
+        driver.findElementPoll(By.linkText(assetName), 30);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.partialLinkText("NAME"), "NAME"));
         try {
             driver.findElement(By.partialLinkText("NAME")).click();

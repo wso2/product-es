@@ -39,11 +39,11 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.ESUtil;
-
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
     private static final Log log = LogFactory.getLog(ESPublisherLCTransitionTestCase.class);
-    private WebDriver driver;
+    private ESWebDriver driver;
     private WebDriverWait wait;
     private String baseUrl;
     private boolean acceptNextAlert = true;
@@ -66,7 +66,7 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
         this.currentUserName = userInfo.getUserName();
         this.currentUserPwd = userInfo.getPassword();
         resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/" + assetVersion;
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -86,12 +86,15 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.publisher", description = "Testing LC transition")
     public void testLc() throws Exception {
-        do {
-            driver.get(baseUrl + "/publisher/asts/gadget/list");
-        } while (!isElementPresent(By.linkText(assetName)));
+//        do {
+//            driver.get(baseUrl + "/publisher/asts/gadget/list");
+//        } while (!isElementPresent(By.linkText(assetName)));
+        driver.findElementPoll(By.linkText(assetName),30);
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Life Cycle")).click();
-        driver.findElement(By.id("Unpublished")).click();
+        driver.findElement(By.id("In-Review")).click();
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"), "Add a comment"));
+
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys("test");
         driver.findElement(By.id("commentModalSave")).click();

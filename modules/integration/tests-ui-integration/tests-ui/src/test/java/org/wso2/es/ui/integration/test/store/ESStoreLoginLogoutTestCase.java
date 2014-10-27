@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +32,7 @@ import static org.testng.Assert.fail;
 
 
 public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
@@ -39,7 +40,7 @@ public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }

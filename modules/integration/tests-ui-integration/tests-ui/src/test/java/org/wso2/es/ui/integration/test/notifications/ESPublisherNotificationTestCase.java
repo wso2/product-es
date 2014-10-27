@@ -11,6 +11,7 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +21,7 @@ import static org.testng.Assert.fail;
 
 public class ESPublisherNotificationTestCase extends ESIntegrationUITest {
     private static final Log log = LogFactory.getLog(ESPublisherNotificationTestCase.class);
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private StringBuffer verificationErrors = new StringBuffer();
     private String publisherApp = "publisher";
@@ -57,7 +58,7 @@ public class ESPublisherNotificationTestCase extends ESIntegrationUITest {
         log.info("********* Starting Notification Test Case for Super Tenant:" + currentUserName + " " +
                 "*******************");
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         baseUrl = getWebAppURL();
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
@@ -75,9 +76,10 @@ public class ESPublisherNotificationTestCase extends ESIntegrationUITest {
             "change event", enabled = true)
     public void testLCNotification() throws Exception {
         log.info("--------------------------- LC Notification test -----------------------------------------------");
-        do {
-            driver.get(baseUrl + "/publisher/asts/gadget/list");
-        } while (!isElementPresent(By.linkText(assetName)));
+//        do {
+//            driver.get(baseUrl + "/publisher/asts/gadget/list");
+//        } while (!isElementPresent(By.linkText(assetName)));
+        driver.findElementPoll(By.linkText(assetName),30);
         boolean hasMail = ESUtil.containsEmail(resourceLocation + File.separator + "notifications" + File
                 .separator + "smtp.properties", emailPwd, email, LCNotificationSubject);
         assertTrue(hasMail, "LC Notification failed for user:" + currentUserName);

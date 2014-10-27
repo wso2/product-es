@@ -27,6 +27,7 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +39,7 @@ import static org.testng.Assert.fail;
 public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
     private static final Log log = LogFactory.getLog(ESPublisherSubscriptionTestCase.class);
 
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
@@ -75,7 +76,7 @@ public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
     public void setUp() throws Exception {
         log.info("************ Starting Notification Test Case for Super Tenant:" + currentUserName + "********");
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
@@ -95,9 +96,11 @@ public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
             closeAlertAndGetItsText();
         }
         driver.get(baseUrl + "/carbon/");
-        do {
-            driver.findElement(By.linkText("Gadgets")).click();
-        } while (!isElementPresent(By.linkText(assetName)));
+        driver.findElement(By.linkText("Gadgets")).click();
+        driver.findElementPoll(By.linkText(assetName),30);
+//        do {
+//            driver.findElement(By.linkText("Gadgets")).click();
+//        } while (!isElementPresent(By.linkText(assetName)));
         driver.findElement(By.linkText(assetName)).click();
         String subscription1 = driver.findElement(By.cssSelector("#subscriptionsTable > tbody > tr" +
                 ".tableOddRow > td"))

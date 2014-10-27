@@ -33,7 +33,7 @@ import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
 public class ESPublisherAddedAssetTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
@@ -41,7 +41,7 @@ public class ESPublisherAddedAssetTestCase extends ESIntegrationUITest {
   @BeforeClass(alwaysRun = true)
   public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, webApp);
   }

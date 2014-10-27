@@ -16,27 +16,19 @@
 
 package org.wso2.es.ui.integration.test.store;
 
-import org.openqa.selenium.Alert;
-
-import java.util.regex.Pattern;
-import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.*;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.openqa.selenium.support.ui.Select;
-import org.wso2.es.ui.integration.util.ESUtil;
-import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
-
 public class ESStoreRatings extends ESIntegrationUITest {
-    private WebDriver driver;
+    //private ESWebDriver driver;
+    private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "store";
     private boolean acceptNextAlert = true;
@@ -45,7 +37,8 @@ public class ESStoreRatings extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        //driver = new ESWebDriver();
+        driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         driver.get(baseUrl + "/" + webApp);
@@ -55,21 +48,38 @@ public class ESStoreRatings extends ESIntegrationUITest {
     @Test(groups = "wso2.es.store.ratings", description = "Test Start Add Rating")
     public void testStoreAddRatings() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
+
         driver.findElement(By.cssSelector("i.icon-cog")).click();
-        driver.findElement(By.cssSelector("img")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h3"), "WSO2 Carbon Commits List Discussion"));
+        driver.findElement(By.cssSelector("h4")).click();
+
+//        driver.findElement(By.cssSelector("i.icon-cog")).click();
+//        driver.findElement(By.cssSelector("h4")).click();
+
+        //--------------------------
+//        driver.findElement(By.cssSelector("img")).click();
+        //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.linkText("User Reviews")));
+        //wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h3"), "WSO2 Carbon Commits List Discussion"));
         driver.findElement(By.linkText("User Reviews")).click();
+
+        driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
+
+       // wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.com-guest"), "Please Sign in to add a Review"));
+        driver.switchTo().defaultContent();
 
     }
 
     @Test(groups = "wso2.es.store.ratings", description = "Test Login to Add Rating", dependsOnMethods = "testStoreAddRatings")
     public void testESloginToAddRating() throws Exception {
+        driver.findElement(By.linkText("User Reviews")).click();
+
         driver.findElement(By.linkText("Sign in")).click();
         driver.findElement(By.id("username")).clear();
         driver.findElement(By.id("username")).sendKeys("admin");
         driver.findElement(By.id("password")).clear();
         driver.findElement(By.id("password")).sendKeys("admin");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
+        //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.linkText("User Reviews")));
+
         driver.findElement(By.linkText("User Reviews")).click();
     }
 
@@ -83,6 +93,8 @@ public class ESStoreRatings extends ESIntegrationUITest {
         driver.findElement(By.id("btn-post")).click();
         driver.switchTo().defaultContent();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
+        //wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.com-rating-2star")));
+
         assertEquals("", driver.findElement(By.cssSelector("div.com-rating-2star")).getText());
     }
 
@@ -93,7 +105,7 @@ public class ESStoreRatings extends ESIntegrationUITest {
         driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("h4")).click();
 
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("span.asset-rating > div"), ""));
+        //wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("span.asset-rating > div"), ""));
 
         assertEquals("", driver.findElement(By.cssSelector("span.asset-rating > div")).getText());
         driver.findElement(By.linkText("User Reviews")).click();
@@ -110,7 +122,7 @@ public class ESStoreRatings extends ESIntegrationUITest {
         driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("h4")).click();
 
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("span.asset-rating > div"), ""));
+        //wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("span.asset-rating > div"), ""));
 
         assertEquals("", driver.findElement(By.cssSelector("span.asset-rating > div")).getText());
         driver.findElement(By.linkText("User Reviews")).click();
@@ -127,15 +139,13 @@ public class ESStoreRatings extends ESIntegrationUITest {
         driver.findElement(By.linkText("Sign out")).click();
         //driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("h4")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h3"), "WSO2 Carbon Commits List Discussion"));
+        //wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h3"), "WSO2 Carbon Commits List Discussion"));
 
-        // driver.findElement(By.cssSelector("li.dropdown. > span")).click();
-        //driver.findElement(By.cssSelector("h4")).click();
         driver.findElement(By.linkText("User Reviews")).click();
 
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
 
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.com-guest"), "Please Sign in to add a Review"));
+        //wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.com-guest"), "Please Sign in to add a Review"));
 
         assertEquals("Please Sign in to add a Review", driver.findElement(By.cssSelector("div.com-guest")).getText());
         assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
