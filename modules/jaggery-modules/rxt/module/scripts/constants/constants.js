@@ -76,7 +76,7 @@ var constants = {};
     constants.GET_LIFECYCLE_DEFINITION_BY_NAME_URL = '/{context}/apis/lifecycles/{lifecycleName}';
     constants.GET_LIFECYCLE_STATE_URL = '/{context}/apis/lifecycles/{lifecycleName}/{currentState}';
 
-    constants.ERROR_STATUS_CODES = {
+    constants.STATUS_CODES = {
         OK: 200,
         CREATED:201,
         ACCEPTED: 202,

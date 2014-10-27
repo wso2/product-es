@@ -50,11 +50,10 @@ require('/modules/publisher.js').exec(function (ctx) {
         case 'GET':
             if (uriMatcher.match(constants.GET_LIFECYCLES_URL)) {
                 // to return available lifecycle list
-
                 try {
                     var lcList = lcApi.getLifecycles(options, req, response, session);
                     //call lifecycle module to get list
-                    response = responseProcessor.buildSuccessResponse(response, 200, lcList);// return list
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, lcList);// return list
                 } catch (e) {
                     log.error(e);
                     response = responseProcessor.buildErrorResponse(response, e.code, e.message);//return error response
@@ -66,7 +65,7 @@ require('/modules/publisher.js').exec(function (ctx) {
                     options.name = uriMatcher.elements().lifecycleName;// required lifecycle's name
                     var lcDefinition = lcApi.getLifecycle(options, req, response, session);
                     //call lifecycle module to get definition
-                    response = responseProcessor.buildSuccessResponse(response, 200, lcDefinition);//send response
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, lcDefinition);//send response
                 } catch (e) {
                     log.error(e);
                     response = responseProcessor.buildErrorResponse(response, e.code, e.messagee);//send error response
@@ -80,19 +79,19 @@ require('/modules/publisher.js').exec(function (ctx) {
                     var lc = lcApi.getLifecycle(options, req, response, session);
                     //call lifecycle module to get state details
                     var state = lc.state(currentState);
-                    response = responseProcessor.buildSuccessResponse(response, 200, state);
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, state);
                 } catch (e) {
                     log.error(e);
                     response = responseProcessor.buildErrorResponse(response, e.code, e.message);
                 }
 
             } else {//unimplemented http GET endpoint
-                response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this GET endpoint');
+                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.NOT_IMPLEMENTED, 'Unable to locate this GET endpoint!');
             }
             break;
 
         default://unimplemented http request method
-            response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate this endpoint for ' + method)
+            response = responseProcessor.buildErrorResponse(response,  constants.STATUS_CODES.NOT_IMPLEMENTED, 'Unable to locate this endpoint for ' + method)
     }
 }, request, response, session);
 %>
