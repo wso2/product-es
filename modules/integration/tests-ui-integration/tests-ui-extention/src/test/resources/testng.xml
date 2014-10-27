@@ -29,17 +29,24 @@
 
 
     <test name="ES-UI-extension-tests" parallel="false" verbose="2" preserve-order="true">
-        <packages>
-            <package name="org.wso2.es.ui.integration.extension.test.*"/>
-        </packages>
-        <!--<classes>-->
-            <!--<class name="org.wso2.es.ui.integration.extension.test.extensions."/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssets"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetList"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortByLinksTestCase"/>-->
+        <!--<packages>-->
+            <!--<package name="org.wso2.es.ui.integration.extension.test.*"/>-->
+        <!--</packages>-->
+        <classes>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAddedAssetTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetCaramelPageTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetNewPageTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetOverrideExistingPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetOverridePartialTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherNewGlobalPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherOverridenGlobalPageTestCase"/>
 
-        <!--</classes>-->
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreAddedAssetTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreAssetNewPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreAssetOverrideExistingPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreNewGlobalPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreOverriddenGlobalPageTestCase"/>
+        </classes>
     </test>
 
 

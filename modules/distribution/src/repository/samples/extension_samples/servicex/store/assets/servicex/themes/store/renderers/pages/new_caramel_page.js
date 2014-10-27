@@ -28,8 +28,8 @@ var render = function(theme, data, meta, require) {
             context: data
         }],
         leftnav: [{
-        	partial:'left-nav',
-        	context:data
+            partial:'left-nav',
+            context:data
         }],
         listassets: [{
             partial: 'caramel_content',

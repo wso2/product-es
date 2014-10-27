@@ -27,6 +27,7 @@
 
     <modules>
         <module>tests-ui</module>
+        <module>tests-ui-extention</module>
     </modules>
 
 </project>
