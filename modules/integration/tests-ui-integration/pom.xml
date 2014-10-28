@@ -23,11 +23,11 @@
     <artifactId>es-ui-integration-tests</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0-SNAPSHOT</version>
-    <name>WSO2 ES UI Intetration Test</name>
+    <name>WSO2 ES UI Integration Test</name>
 
     <modules>
         <module>tests-ui</module>
-        <module>tests-ui-extention</module>
+        <module>tests-ui-extension</module>
     </modules>
 
 </project>

@@ -33,7 +33,7 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESStoreAssetOverrideExistingPageTestCase extends ESIntegrationUITest {
+public class ESStoreOverriddenGlobalPageTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -48,9 +48,9 @@ public class ESStoreAssetOverrideExistingPageTestCase extends ESIntegrationUITes
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESStoreAssetOverrideExistingPageTestCase() throws Exception {
-    driver.get(baseUrl + "/store/asts/servicex/list");
-    assertTrue(isElementPresent(By.id("assetListingPageH1")));
+  public void testESStoreOverriddenGlobalPageTestCase() throws Exception {
+    driver.get(baseUrl+"/store/pages/top-assets");
+    assertTrue(isElementPresent(By.id("assetOverridenGlobalPage")));
  }
 
     @AfterClass(alwaysRun = true)
