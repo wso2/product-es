@@ -33,7 +33,7 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationUITest {
+public class ESPublisherAddedAssetTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -44,13 +44,17 @@ public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationU
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         ESUtil.login(driver, baseUrl, webApp);
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/details");
-    assertTrue(isElementPresent(By.id("assetOveriddenDetailsPageH1")));
+  public void testESPublisherAddedAssetTestCase() throws Exception {
+    driver.get(baseUrl + "/publisher/");
+    assertTrue(isElementPresent(By.cssSelector("button.btn.dropdown-toggle")));
+    driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+    driver.findElement(By.linkText("Service")).click();
+    assertTrue(isElementPresent(By.cssSelector("span.publisherTitle")));
  }
 
     @AfterClass(alwaysRun = true)

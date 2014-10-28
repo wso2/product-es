@@ -33,10 +33,10 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESStoreOverriddenGlobalPageTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+public class ESStoreAssetOverrideExistingPageTestCase extends ESIntegrationUITest {
+    private ESWebDriver driver;
     private String baseUrl;
-    private String webApp = "publisher";
+    private String webApp = "store";
     private boolean acceptNextAlert = true;
  
   @BeforeClass(alwaysRun = true)
@@ -44,18 +44,20 @@ public class ESStoreOverriddenGlobalPageTestCase extends ESIntegrationUITest {
         super.init();
         driver = new ESWebDriver();//BrowserManager.getWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, webApp);
+        driver.get(baseUrl + "/" + webApp);
+        //ESUtil.login(driver, baseUrl, webApp);
   }
 
   @Test(groups = "wso2.es", description = "")
-  public void testESStoreOverriddenGlobalPageTestCase() throws Exception {
-    driver.get("https://localhost:9443/store/pages/top-assets");
-    assertTrue(isElementPresent(By.id("assetOverridenGlobalPage")));
+  public void testESStoreAssetOverrideExistingPageTestCase() throws Exception {
+
+      driver.get(baseUrl + "/store/asts/servicex/list");
+      assertTrue(isElementPresent(By.id("assetListingPageH1")));
  }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl,webApp);
+       // ESUtil.logout(driver, baseUrl,webApp);
         driver.quit();
     }
 

@@ -19,10 +19,15 @@
 package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.Alert;
+
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
+
 import static org.testng.Assert.*;
+
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,29 +38,40 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESPublisherAssetNewPageTestCase extends ESIntegrationUITest {
+public class ESPublisherAssetCaramelPageTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
- 
-  @BeforeClass(alwaysRun = true)
-  public void setUp() throws Exception {
+
+    @BeforeClass(alwaysRun = true)
+    public void setUp() throws Exception {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         ESUtil.login(driver, baseUrl, webApp);
-  }
+    }
 
-  @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetNewPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/new_page");
-    assertTrue(isElementPresent(By.id("assetNewPageH1")));
- }
+    @Test(groups = "wso2.es", description = "")
+    public void testESPublisherAssetCaramelPageTestCase() throws Exception {
+        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+        driver.findElement(By.linkText("Service")).click();
+        driver.get(baseUrl + "/publisher/asts/servicex/new_caramel_page");
+        //WebDriverWait wait = new WebDriverWait(driver, 10);
+        //wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("Overview")));
+        //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.linkText("Overview")));
+        //assertTrue(isElementPresent(By.cssSelector("span.publisherTitle")));
+//        driver.findElementPoll(By.linkText("Overview"),5);
+        assertTrue(isElementPresent(By.linkText("Overview")));
+        assertTrue(isElementPresent(By.linkText("Edit")));
+        assertTrue(isElementPresent(By.linkText("Life Cycle")));
+    }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl,webApp);
+        ESUtil.logout(driver, baseUrl, webApp);
         driver.quit();
     }
 
