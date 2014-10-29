@@ -16,15 +16,12 @@
  * under the License.
  */
 
-package org.wso2.es.ui.integration.extension.test.store;
+package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.Alert;
-
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.*;
-
 import org.openqa.selenium.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -32,36 +29,36 @@ import org.testng.annotations.Test;
 import org.openqa.selenium.support.ui.Select;
 import org.wso2.es.ui.integration.extension.util.ESUtil;
 import org.wso2.es.ui.integration.extension.util.ESWebDriver;
-//import org.wso2.es.ui.integration.util.ESWebDriver;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 
-public class ESStoreAddedAssetTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+public class ESPublisherAssetNewPageTestCase extends ESIntegrationUITest {
+    private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
 
-    @BeforeClass(alwaysRun = true)
-    public void setUp() throws Exception {
+  @BeforeClass(alwaysRun = true)
+  public void setUp() throws Exception {
         super.init();
-        driver = new ESWebDriver();//BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, webApp);
-    }
+  }
 
-    @Test(groups = "wso2.es", description = "")
-    public void testESStoreAddedAssetTestCase() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[3]/li")).click();
-        //driver.wait(3000);
-        assertTrue(isElementPresent(By.id("assetNewPageH1")));
-    }
+  @Test(groups = "wso2.es", description = "")
+  public void testESPublisherAssetNewPageTestCase() throws Exception {
+      driver.get(baseUrl + "/publisher/asts/gadget/list");
+      driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+      driver.findElement(By.linkText("Service")).click();
+      driver.get(baseUrl + "/publisher/asts/servicex/new_page");
+      assertTrue(isElementPresent(By.id("assetNewPageH1")));
+ }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl, webApp);
+        ESUtil.logout(driver, baseUrl,webApp);
         driver.quit();
     }
 
