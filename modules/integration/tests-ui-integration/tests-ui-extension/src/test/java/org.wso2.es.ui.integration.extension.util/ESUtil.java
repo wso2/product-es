@@ -29,7 +29,8 @@ public class ESUtil extends ESIntegrationUITest {
     private static String adminConsoleSuffix = "/carbon/admin/index.jsp";
 
 
-    public static void login(WebDriver driver, String url, String webApp) throws XPathExpressionException {
+    public static void login(WebDriver driver, String url, String webApp,
+                             String userName, String password) throws XPathExpressionException {
 
         if (webApp.equalsIgnoreCase("store")) {
             url = url + storeSuffix;
@@ -42,30 +43,32 @@ public class ESUtil extends ESIntegrationUITest {
         }
 
         driver.findElement(By.id("username")).clear();
-        driver.findElement(By.id("username")).sendKeys("admin");
+        driver.findElement(By.id("username")).sendKeys(userName);
         driver.findElement(By.id("password")).clear();
-        driver.findElement(By.id("password")).sendKeys("admin");
+        driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         driver.get(url);
     }
 
-    public static void logout(WebDriver driver, String url, String webApp) throws XPathExpressionException {
+    public static void logout(WebDriver driver, String url, String webApp,
+                              String userName) throws XPathExpressionException {
         if (webApp.equalsIgnoreCase("store")) {
             url = url + storeSuffix;
         } else if (webApp.equalsIgnoreCase("publisher")) {
             url = url + publisherSuffix;
         }
         driver.get(url);
-        driver.findElement(By.linkText("admin")).click();
+        driver.findElement(By.linkText(userName)).click();
         driver.findElement(By.linkText("Sign out")).click();
     }
 
-    public static void loginToAdminConsole(WebDriver driver, String url) throws XPathExpressionException {
+    public static void loginToAdminConsole(WebDriver driver, String url,
+                                           String userName, String password) throws XPathExpressionException {
         driver.get(url+adminConsoleSuffix);
         driver.findElement(By.id("txtUserName")).clear();
-        driver.findElement(By.id("txtUserName")).sendKeys("admin");
+        driver.findElement(By.id("txtUserName")).sendKeys(userName);
         driver.findElement(By.id("txtPassword")).clear();
-        driver.findElement(By.id("txtPassword")).sendKeys("admin");
+        driver.findElement(By.id("txtPassword")).sendKeys(password);
         driver.findElement(By.cssSelector("input.button")).click();
     }
 }

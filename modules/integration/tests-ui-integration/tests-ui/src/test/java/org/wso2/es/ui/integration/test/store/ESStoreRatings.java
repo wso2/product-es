@@ -27,17 +27,19 @@ import org.wso2.es.ui.integration.util.ESWebDriver;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 public class ESStoreRatings extends ESIntegrationUITest {
-    //private ESWebDriver driver;
     private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "store";
-    private boolean acceptNextAlert = true;
     WebDriverWait wait;
+
+    private String currentUserName;
+    private String currentUserPwd;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        //driver = new ESWebDriver();
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
@@ -74,9 +76,9 @@ public class ESStoreRatings extends ESIntegrationUITest {
 
         driver.findElement(By.linkText("Sign in")).click();
         driver.findElement(By.id("username")).clear();
-        driver.findElement(By.id("username")).sendKeys("admin");
+        driver.findElement(By.id("username")).sendKeys(currentUserName);
         driver.findElement(By.id("password")).clear();
-        driver.findElement(By.id("password")).sendKeys("admin");
+        driver.findElement(By.id("password")).sendKeys(currentUserPwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.linkText("User Reviews")));
 
@@ -135,7 +137,7 @@ public class ESStoreRatings extends ESIntegrationUITest {
     @Test(groups = "wso2.es.store", description = "Test Logout and view rating", dependsOnMethods = "testESStoreViewRating")
     public void testStoreAddLogoutAndViewRatings() throws Exception {
         driver.switchTo().defaultContent();
-        driver.findElement(By.linkText("admin")).click();
+        driver.findElement(By.linkText(currentUserName)).click();
         driver.findElement(By.linkText("Sign out")).click();
         //driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("h4")).click();

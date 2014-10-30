@@ -40,19 +40,20 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
     private WebDriverWait wait;
     private String baseUrl;
     private String webApp = "store";
-    private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
+    private String bookmarkedAsset;
 
-    private String currentUserName = "admin";
-    private String currentUserPwd = "admin";
+    private String currentUserName;
+    private String currentUserPwd;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
     }
 
@@ -61,7 +62,7 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/store/pages/top-assets");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
         driver.findElement(By.xpath("//div[@id='assets-container']/div/div[3]/a/div/img")).click();
-        driver.findElement(By.id("btn-add-gadget")).click();
+        bookmarkedAsset = driver.findElement(By.cssSelector("h3")).getText();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("btn-add-gadget"), "Bookmark"));
         driver.findElement(By.id("btn-add-gadget")).click();
         try {
@@ -71,13 +72,13 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
             driver.findElement(By.linkText("My Items")).click();
             wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("strong")));
 
-            assertEquals("Line Chart", driver.findElement(By.cssSelector("strong")).getText(),
+            assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("strong")).getText(),
                     "Bookmarked asset not shown in My Items page");
 
             driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
             assertTrue(isElementPresent(By.linkText("My Assets")), "My Assets section missing");
             driver.findElement(By.cssSelector("i.icon-angle-down.pull-right")).click();
-            assertEquals("Line Chart", driver.findElement(By.cssSelector("strong > a")).getText(),
+            assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("strong > a")).getText(),
                     "Bookmarked asset not shown in My Assets section");
 
             driver.findElement(By.linkText("View all")).click();
@@ -113,30 +114,6 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
             return true;
         } catch (NoSuchElementException e) {
             return false;
-        }
-    }
-
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
         }
     }
 

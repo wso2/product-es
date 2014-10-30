@@ -17,7 +17,6 @@
 package org.wso2.es.ui.integration.util;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 import javax.mail.*;
@@ -31,7 +30,7 @@ public class ESUtil extends ESIntegrationUITest {
     private static String storeSuffix = "/store";
     private static String adminConsoleSuffix = "/carbon/admin/index.jsp";
 
-    public static void login(WebDriver driver, String url, String webApp,
+    public static void login(ESWebDriver driver, String url, String webApp,
                              String userName, String pwd) throws XPathExpressionException {
 
         if (webApp.equalsIgnoreCase("store")) {
@@ -43,7 +42,7 @@ public class ESUtil extends ESIntegrationUITest {
             url = url + publisherSuffix;
             driver.get(url);
         }
-
+        driver.findElementPoll(By.id("username"), 30);
         driver.findElement(By.id("username")).clear();
         driver.findElement(By.id("username")).sendKeys(userName);
         driver.findElement(By.id("password")).clear();
@@ -52,7 +51,7 @@ public class ESUtil extends ESIntegrationUITest {
         driver.get(url);
     }
 
-    public static void logout(WebDriver driver, String url, String webApp,
+    public static void logout(ESWebDriver driver, String url, String webApp,
                               String userName) throws XPathExpressionException {
         if (webApp.equalsIgnoreCase("store")) {
             url = url + storeSuffix;
@@ -64,7 +63,7 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.linkText("Sign out")).click();
     }
 
-    public static void loginToAdminConsole(WebDriver driver, String url, String userName, String pwd
+    public static void loginToAdminConsole(ESWebDriver driver, String url, String userName, String pwd
     ) throws XPathExpressionException {
         driver.get(url+adminConsoleSuffix);
         driver.findElement(By.id("txtUserName")).clear();
@@ -74,12 +73,13 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.cssSelector("input.button")).click();
     }
 
-    public static void logoutFromAdminConsole(WebDriver driver, String url){
+    public static void logoutFromAdminConsole(ESWebDriver driver, String url){
         driver.get(url + adminConsoleSuffix);
         driver.findElement(By.linkText("Sign-out")).click();
     }
 
-    public static void setupUserProfile(WebDriver driver, String url, String userName, String firstName,String lastName,
+    public static void setupUserProfile(ESWebDriver driver, String url, String userName, String firstName,
+                                        String lastName,
                                         String email){
         String userProfileElement;
         if(userName.equals("admin")){
@@ -155,4 +155,6 @@ public class ESUtil extends ESIntegrationUITest {
             e.printStackTrace();
         }
     }
+
+
 }
