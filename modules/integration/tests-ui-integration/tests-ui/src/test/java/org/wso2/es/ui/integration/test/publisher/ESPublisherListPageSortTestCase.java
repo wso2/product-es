@@ -104,14 +104,11 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es", description = "Test sort by name, provider, version & created time", enabled = true)
     public void testListPageSort() throws Exception {
-<<<<<<< HEAD
         log.info("----------------------------- Asset List Sort Test ----------------------------------------");
 //        do {
 //            driver.get(baseUrl + "/publisher/asts/gadget/list");
 //        } while (!isElementPresent(By.linkText(assetName)));
         driver.get(baseUrl + "/publisher/asts/gadget/list");
-=======
->>>>>>> upstream/master
         driver.findElementPoll(By.linkText(assetName), 30);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.partialLinkText("NAME"), "NAME"));
         try {

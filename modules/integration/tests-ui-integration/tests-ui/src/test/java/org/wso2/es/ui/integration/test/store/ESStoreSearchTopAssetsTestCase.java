@@ -38,12 +38,12 @@ public class ESStoreSearchTopAssetsTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/" + webApp);
     }
 
-    @Test(groups = "wso2.es.store.annon", description = "Test Recent Gadgets")
+    @Test(groups = "wso2.es.store.anon", description = "Test Recent Gadgets")
     public void testESStoreSearchTopAssets() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets?null#");
         driver.findElement(By.id("search")).click();
         driver.findElement(By.id("search")).clear();
-        driver.findElement(By.id("search")).sendKeys("wso2");
+        driver.findElement(By.id("search")).sendKeys("list");
         driver.findElement(By.cssSelector("i.icon-search")).click();
         assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4"))
                 .getText());
@@ -53,12 +53,12 @@ public class ESStoreSearchTopAssetsTestCase extends ESIntegrationUITest {
                 "'top-asset-slideshow-gadget']/div[3]/div[2]/div/a/h4")).getText());
         assertEquals("WSO2 Dev List Discussion", driver.findElement(By.xpath("//div[@id='top-" +
                 "asset-slideshow-gadget']/div[4]/div[2]/div/a/h4")).getText());
-        assertEquals(6, driver.findElements(By.cssSelector("div.asset-details")).size(), "Top " +
-                "assets search result count incorrect");
+        assertEquals(4, driver.findElements(By.cssSelector("div.asset-details")).size(), "Top " +
+                "Assets search result count incorrect");
 
     }
 
-    @Test(groups = "wso2.es.store.annon", description = "Test Recently added right navigation's " +
+    @Test(groups = "wso2.es.store.anon", description = "Test Recently added right navigation's " +
             "results",
             dependsOnMethods = "testESStoreSearchTopAssets")
     public void testESStoreSearchTopAssetsRecentlyAdded() throws Exception {
@@ -70,8 +70,8 @@ public class ESStoreSearchTopAssetsTestCase extends ESIntegrationUITest {
                 By.xpath("//a[contains(text(),'WSO2 Carbon Div List Discussion')]")).getText());
         assertEquals("WSO2 Dev List Discussion", driver.findElement(
                 By.xpath("//a[contains(text(),'WSO2 Dev List Discussion')]")).getText());
-        assertEquals("WSO2 Jira", driver.findElement(By.xpath("//a[contains(text(),'WSO2 Jira')]")).getText());
-        assertEquals(6, driver.findElements(By.cssSelector("div.row-fluid.recently-added")).size(), "Top assets search result recently added count incorrect");
+        assertEquals(4, driver.findElements(By.cssSelector("div.row-fluid.recently-added")).size
+                (), "Top assets search result recently added count incorrect");
 
     }
 

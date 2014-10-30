@@ -87,7 +87,6 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
         assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
         assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")));
-        assertEquals("", driver.findElement(By.cssSelector("div.com-rating-2star")).getText());
     }
 
     @Test(groups = "wso2.es.store.ratings", description = "Test Submit Second Rating",
@@ -140,7 +139,7 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.findElement(By.linkText("User Reviews")).click();
 
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
-        assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
+//        assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
         assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")));
         assertEquals("cool!", driver.findElement(By.xpath("//div[@id='stream']/div[1]/div/div/p"))
                 .getText());

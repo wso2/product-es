@@ -1,20 +1,14 @@
 package org.wso2.es.ui.integration.test.notifications;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.*;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
