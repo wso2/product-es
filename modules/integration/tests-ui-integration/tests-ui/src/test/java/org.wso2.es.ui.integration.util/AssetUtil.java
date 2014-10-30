@@ -20,7 +20,11 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+
+import static org.testng.Assert.assertEquals;
 
 public class AssetUtil extends ESIntegrationUITest {
 
@@ -40,19 +44,6 @@ public class AssetUtil extends ESIntegrationUITest {
         driver.findElement(By.id("btn-create-asset")).click();
     }
 
-    public static void deleteAsset(WebDriver driver, String baseUrl, String assetName, String assetType) {
-        driver.get(baseUrl + "/carbon/");
-        driver.findElement(By.linkText(assetType)).click();
-        if (!isElementPresent(driver, By.linkText(assetName))) {
-            driver.findElement(By.linkText(assetType)).click();
-        }
-        String assetText = driver.findElement(By.xpath("//table[@id='customTable']/tbody/tr[14]/td[2]")).getText();
-        if (assetName.equalsIgnoreCase(assetText)) {
-            driver.findElement(By.xpath("(//a[contains(text(),'Delete')])[14]")).click();
-            driver.findElement(By.cssSelector("button[type=\"button\"]")).click();
-        }
-    }
-
     public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
                                      String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
@@ -64,18 +55,28 @@ public class AssetUtil extends ESIntegrationUITest {
         return closeAlertAndGetItsText(driver, true);
     }
 
-    public static void changeLCState(WebDriver driver, String baseUrl, String assetType, String assetName,
-                                     String toState) {
-        //TODO lc transition using API call
+    public static void changeLCState(WebDriver driver, WebDriverWait wait, String toState, String comment) {
+        driver.findElement(By.id(toState)).click();
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"), "Add a comment"));
+
+        driver.findElement(By.id("commentModalText")).clear();
+        driver.findElement(By.id("commentModalText")).sendKeys(comment);
+        driver.findElement(By.id("commentModalSave")).click();
     }
 
-    private static boolean isElementPresent(WebDriver driver, By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public static void addRatingsAndReviews(ESWebDriver driver, String review, String starCount){
+        driver.findElement(By.linkText("User Reviews")).click();
+        driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
+        driver.findElement(By.id("com-body")).clear();
+        driver.findElement(By.id("com-body")).sendKeys(review);
+        driver.findElement(By.linkText(starCount)).click();
+        driver.findElement(By.id("btn-post")).click();
+        driver.switchTo().defaultContent();
+    }
+
+    public static void publishAssetToStore(WebDriver driver, WebDriverWait wait){
+        changeLCState(driver, wait, "In-Review", "to review");
+        changeLCState(driver, wait, "Published", "published");
     }
 
     private static String closeAlertAndGetItsText(WebDriver driver, boolean acceptNextAlert) {

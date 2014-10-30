@@ -36,7 +36,6 @@ import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
-
     private WebDriverWait wait;
     private String baseUrl;
     private StringBuffer verificationErrors = new StringBuffer();
@@ -47,69 +46,72 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
     @Test(groups = "wso2.es", description = "Test Anonymous User Home Page")
     public void testAnonHomePage() throws Exception {
         driver.get(baseUrl + "/store");
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a.brand")));
-
-        assertTrue(isElementPresent(By.cssSelector("a.brand")), "Home Page error: Logo missing");
-        assertEquals("Sign in", driver.findElement(By.linkText("Sign in")).getText(),
-                "Home Page error: Sign in button missing");
-        assertTrue(isElementPresent(By.id("btn-register")), "Home Page error: Register button missing");
-        assertEquals("Gadget", driver.findElement(By.xpath
-                ("//div[@id='container-search']/div/div/div/div/a[1]/li")).getText(),
-                "Home Page error: Gadget menu missing");
-        assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")
-        ).getText(), "Home Page error: Site menu missing");
-        assertEquals("Recent Gadgets", driver.findElement(By.linkText("Recent Gadgets")).getText(),
-                "Home Page error: Recent Gadgets links missing");
-        assertEquals("Recent Sites", driver.findElement(By.linkText("Recent Sites")).getText(),
-                "Home Page error: Recent Sites links missing");
-        assertTrue(isElementPresent(By.id("search")), "Home Page error: Search missing");
-        assertTrue(isElementPresent(By.cssSelector("div.span3.store-right > div.row > div.span3")),
-                "Home Page error: Recent Added side list missing");
+        try {
+            assertTrue(isElementPresent(By.cssSelector("a.brand")), "Home Page error: Logo missing");
+            assertEquals("Sign in", driver.findElement(By.linkText("Sign in")).getText(),
+                    "Home Page error: Sign in button missing");
+            assertTrue(isElementPresent(By.id("btn-register")), "Home Page error: Register button missing");
+            assertEquals("Gadget", driver.findElement(By.xpath
+                    ("//div[@id='container-search']/div/div/div/div/a[1]/li")).getText(),
+                    "Home Page error: Gadget menu missing");
+            assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")
+            ).getText(), "Home Page error: Site menu missing");
+            assertEquals("Recent Gadgets", driver.findElement(By.linkText("Recent Gadgets")).getText(),
+                    "Home Page error: Recent Gadgets links missing");
+            assertEquals("Recent Sites", driver.findElement(By.linkText("Recent Sites")).getText(),
+                    "Home Page error: Recent Sites links missing");
+            assertTrue(isElementPresent(By.id("search")), "Home Page error: Search missing");
+            assertTrue(isElementPresent(By.cssSelector("div.span3.store-right > div.row > div.span3")),
+                    "Home Page error: Recent Added side list missing");
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
     }
 
     @Test(groups = "wso2.es", description = "Test Anonymous User Recent sliding")
-    public void testName() throws Exception {
+    public void testSliding() throws Exception {
         //TODO how to detect sliding is successful?
     }
 
     @Test(groups = "wso2.es", description = "Test Anonymous Navigation from top menu")
     public void testAnonNavigationTop() throws Exception {
-//        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li")));
-
+        driver.get(baseUrl + "/store");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li")).click();
-//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "WSO2 Carbon Commits List Discussion"));
-        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4")).getText(),
-                "Gadgets Menu not working");
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")).click();
-//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
-//                ("//div[@id='assets-container']/div/div[1]/div/div/a/h4"), "Pinterest"));
-        assertEquals("Pinterest", driver.findElement(By.xpath
-                ("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).getText(), "Sites Menu not working");
+        try {
+            assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h4")).getText(),
+                    "Gadgets Menu not working");
+            driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")).click();
+            assertEquals("Amazon", driver.findElement(By.xpath
+                    ("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).getText(), "Sites Menu not working");
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
         driver.findElement(By.cssSelector("a.brand")).click();
     }
 
     @Test(groups = "wso2.es", description = "Test Anonymous Navigation page links")
     public void testAnonNavigationLinks() throws Exception {
-        //wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a.brand")));
+        driver.get(baseUrl + "/store");
 
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Gadgets")).click();
-       // wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "WSO2 Carbon Commits List Discussion"));
-        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4")).getText(),
-                "Recent Gadgets link not working");
-        driver.findElement(By.cssSelector("a.brand")).click();
-        driver.findElement(By.linkText("Recent Sites")).click();
-//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
-//                ("//div[@id='assets-container']/div/div[1]/div/div/a/h4"), "Pinterest"));
-        assertEquals("Pinterest", driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4"))
-                .getText(),
-                "Recent Sites link not working");
+        try {
+            assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h4")).getText(),
+                    "Recent Gadgets link not working");
+            driver.findElement(By.cssSelector("a.brand")).click();
+            driver.findElement(By.linkText("Recent Sites")).click();
+            assertEquals("Amazon", driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4"))
+                    .getText(),
+                    "Recent Sites link not working");
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
     }
 
     @AfterClass(alwaysRun = true)

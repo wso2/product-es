@@ -69,7 +69,6 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         AssetUtil.addNewAsset(driver, baseUrl, "gadget", currentUserName, assetName, assetVersion, "12");
@@ -86,9 +85,6 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.publisher", description = "Testing LC transition")
     public void testLc() throws Exception {
-//        do {
-//            driver.get(baseUrl + "/publisher/asts/gadget/list");
-//        } while (!isElementPresent(By.linkText(assetName)));
         driver.findElementPoll(By.linkText(assetName),30);
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Life Cycle")).click();
@@ -106,20 +102,12 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
+        driver.get(baseUrl + "/publisher/logout");
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.quit();
         String verificationErrorString = verificationErrors.toString();
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
-        }
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
         }
     }
 

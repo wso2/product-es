@@ -37,25 +37,35 @@ import java.util.regex.Pattern;
 public class ESPublisherLoginTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String webAppURL;
+    private String userName;
+    private String password;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
+        userName = userInfo.getUserName();
+        password = userInfo.getPassword();
         driver = new ESWebDriver();
         webAppURL = getWebAppURL();
         driver.get(webAppURL);
     }
 
     @Test(groups = "wso2.es", description = "verify login to ES Publisher")
-    public void testLogintoPublisher() throws Exception {
+    public void testLoginToPublisher() throws Exception {
         driver.get(webAppURL + "/publisher/asts/gadget");
         driver.findElement(By.id("username")).clear();
-        driver.findElement(By.id("username")).sendKeys("admin");
+        driver.findElement(By.id("username")).sendKeys(userName);
         driver.findElement(By.id("password")).clear();
-        driver.findElement(By.id("password")).sendKeys("admin");
+        driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         assertEquals("Asset | WSO2 Enterprise Store back-office", driver.getTitle());
-        driver.close();
+    }
+
+    @Test(groups = "wso2.es", description = "verify login to ES Publisher", dependsOnMethods = "testLoginToPublisher")
+    public void testLogoutFromPublisher() throws Exception {
+        driver.get(webAppURL + "/publisher/asts/gadget");
+        driver.findElement(By.linkText(userName)).click();
+        driver.findElement(By.linkText("Sign out")).click();
     }
 
     @AfterClass(alwaysRun = true)

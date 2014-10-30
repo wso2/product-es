@@ -39,29 +39,33 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private WebDriverWait wait;
     private String baseUrl;
-    private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
     private String webApp = "store";
 
-    private String currentUserName = "admin";
-    private String currentUserPwd = "admin";
+    private String currentUserName;
+    private String currentUserPwd;
+
+    private String firstAsset;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.store", description = "Test Gadgets Page")
     public void testGadgetPage() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
+        try {
         assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
                 .getText(), "Gadget Menu missing");
         assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4")).getText(), "Gadgets missing");
+        firstAsset = driver.findElement(By.cssSelector("h4")).getText();
         assertEquals("Recently Added", driver.findElement(By.xpath
                 ("//div[@id='container-assets']/div/div[2]/div[1]/div/h4")).getText(),
                 "Recently Added section missing");
@@ -76,13 +80,16 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
         assertTrue(isElementPresent(By.cssSelector("i.icon-sort-alphabetical")), "Alphabetical sort missing");
         assertTrue(isElementPresent(By.cssSelector("i.icon-calendar")), "Recent sort missing");
         assertTrue(isElementPresent(By.id("search")), "Search tray missing");
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
     }
 
-    @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links", enabled = false)
+    @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links", dependsOnMethods = "testGadgetPage")
     public void testLinksFromPage() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.cssSelector("h4")).click();
-        assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h3")).getText(),
+        try {
+        assertEquals(firstAsset, driver.findElement(By.cssSelector("h3")).getText(),
                 "Cannot view selected Gadget's page through Gadget list");
 
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
@@ -94,6 +101,9 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
         driver.findElement(By.linkText("pie")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Pie Chart"));
         assertEquals(1, driver.findElements(By.cssSelector("div.span3.asset")).size(), "Tags not working");
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
     }
 
     @AfterClass(alwaysRun = true)
@@ -112,30 +122,6 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
             return true;
         } catch (NoSuchElementException e) {
             return false;
-        }
-    }
-
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
         }
     }
 
