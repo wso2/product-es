@@ -20,8 +20,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
 
-import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.*;
 
 import org.openqa.selenium.*;
@@ -42,21 +40,20 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
     private String baseUrl;
     private String webApp = "store";
     private boolean acceptNextAlert = true;
-    private StringBuffer verificationErrors = new StringBuffer();
     private static final Log log = LogFactory.getLog(ESStoreSearchGadgetListTestCase.class);
     WebDriverWait wait;
 
-    private String assetName = "Sample Asset";
-    private String assetVersion = "1.2.3";
-    private String assetAuthor = "testAuthor";
-    private String assetCreatedTime = "123";
-    private String assetCategory = "WSO2";
-    private String assetURL = "www.example.com";
-    private String assetDescription = "this is a sample asset";
-    private String resourcePath = "/_system/governance/gadgets/" + this.assetAuthor + "/" + this.assetName + "/" + this.assetVersion;
+    private static String assetName = "Sample Asset";
+    private static String assetVersion = "1.2.3";
+    private static String assetAuthor = "testAuthor";
+    private static String assetCreatedTime = "123";
+    private static String assetCategory = "WSO2";
+    private static String assetURL = "www.example.com";
+    private static String assetDescription = "this is a sample asset";
+    private static String resourcePath = "/_system/governance/gadgets/" + assetAuthor + "/" + assetName + "/" + assetVersion;
 
-    private String adminUserName = "admin";
-    private String adminUserPwd = "admin";
+    private String adminUserName;// = "admin";//automationcontext
+    private String adminUserPwd;// = "admin";
     private String backendURL;
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
@@ -64,15 +61,14 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-       // driver = new ESWebDriver();
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        adminUserName = userInfo.getUserName();
+        adminUserPwd = userInfo.getPassword();
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
-
         driver.get(baseUrl + "/" + webApp);
     }
 
@@ -84,29 +80,30 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("search")).click();
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText("Templates");
         driver.findElement(By.id("search-button2")).click();
-
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Line Plus Bar Chart"));
-        assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size());
+        assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size(),"Number of Template gadgets" +
+                " are incorrect");//TODO message, avoid css selectors
 
     }
 
-    @Test(groups = "wso2.es.store", description = "Search By Category-Google and Provider-Admin", dependsOnMethods = "testStoreSearchByCategoryTemplate")
+    @Test(groups = "wso2.es.store", description = "Search By Category-Google and Provider-Admin",
+            dependsOnMethods = "testStoreSearchByCategoryTemplate")
     public void testESStoreSearchGadgetByProviderAndCategory() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets?null");
         driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("i.icon-sort-down")).click();
         driver.findElement(By.id("search")).click();
         driver.findElement(By.name("overview_provider")).clear();
-        driver.findElement(By.name("overview_provider")).sendKeys("admin");
+        driver.findElement(By.name("overview_provider")).sendKeys(adminUserName);
         driver.findElement(By.id("search-button2")).click();
-
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
-
-        assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size());
+        assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size(),"Seach result count" +
+                " does not match");
 
     }
 
-    @Test(groups = "wso2.es.store", description = "Search By Name- Bar Chart", dependsOnMethods = "testESStoreSearchGadgetByProviderAndCategory")
+    @Test(groups = "wso2.es.store", description = "Search By Name- Bar Chart",
+            dependsOnMethods = "testESStoreSearchGadgetByProviderAndCategory")
     public void testESStoreSearchAssetsByName() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets?null");
         driver.findElement(By.cssSelector("a.brand")).click();
@@ -116,9 +113,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys("Bar Chart");
         driver.findElement(By.id("search-button2")).click();
-
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
-
+//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
         assertEquals("Bar Chart", driver.findElement(By.cssSelector("h4")).getText());
     }
 
@@ -132,9 +127,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys("Line Chart");
         driver.findElement(By.id("search-button2")).click();
-
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
-
+//        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
         assertEquals("We couldn't find anything for you.", driver.findElement(By.cssSelector("div.empty-assert")).getText());
     }
 
@@ -147,9 +140,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_version")).clear();
         driver.findElement(By.name("overview_version")).sendKeys("9.9.9");
         driver.findElement(By.id("search-button2")).click();
-
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
-
+//        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
         assertEquals("We couldn't find anything for you.", driver.findElement(By.cssSelector("div.empty-assert")).getText());
     }
 
@@ -161,19 +152,16 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys("unavailable");
         driver.findElement(By.id("search-button2")).click();
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
-
+//        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
         assertEquals("We couldn't find anything for you.", driver.findElement(By.cssSelector("div.empty-assert")).getText());
     }
 
     @Test(groups = "wso2.es.store", description = "Add asset", dependsOnMethods = "testStoreSearchByCategoryTemplate")
     public void testAddasset() throws Exception {
         ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(), userInfo.getPassword());
-//        boolean isAdded = false;
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElement(By.linkText("Add")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Overview"));
-
+//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Overview"));
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys(assetAuthor);
         driver.findElement(By.name("overview_name")).clear();
@@ -192,17 +180,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
             String alert = closeAlertAndGetItsText();
             log.warn(alert + ": modal box appeared");
         }
-//        int count = 0;
-//        do {
-//            driver.get(baseUrl + "/publisher/asts/gadget/list");
-//            driver.findElement(By.cssSelector("a.btn")).click();
-//            if (isElementPresent(By.linkText(assetName))) {
-//                isAdded = true;
-//            }
-//            count++;
-//        } while (!isAdded && count < 6);
-        //waitTillElementPresent(By.linkText(assetName), driver);
-        driver.findElementPoll(By.linkText(assetName),13);
+        driver.findElementPoll(By.linkText(assetName), 10);
         driver.findElement(By.cssSelector("a.btn")).click();
         driver.findElement(By.linkText(assetName)).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
@@ -213,18 +191,15 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();
-
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "IN-REVIEW"));
-
+        assertEquals(driver.findElement(By.id("state")).getText(),"IN-REVIEW");
+//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "IN-REVIEW"));
         driver.findElement(By.id("Published")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"), "Add a comment"));
-
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();
-
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "PUBLISHED"));
-
+        assertEquals(driver.findElement(By.id("state")).getText(),"PUBLISHED");
     }
 
     @Test(groups = "wso2.es.store", description = "Search by newly added asset Name", dependsOnMethods = "testAddasset")
@@ -238,14 +213,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText(assetCategory);
         driver.findElement(By.id("search-button2")).click();
-//        int count = 0;
-//        while (!isElementPresent(By.linkText(assetName)) && count < 13) {
-//            String url = driver.getCurrentUrl();
-//            driver.get(url);
-//            count++;
-//        }
-        driver.findElementPoll(By.linkText(assetName),13);
-        //waitTillElementPresent(By.linkText(assetName), driver);
+        driver.findElementPoll(By.linkText(assetName), 10);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
         assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
 
@@ -261,61 +229,19 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_version")).sendKeys(assetVersion);
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText(assetCategory);
         driver.findElement(By.id("search-button2")).click();
-
-        //waitTillElementPresent(By.linkText(assetName), driver);
-        driver.findElementPoll(By.linkText(assetName),13);
-
+        driver.findElementPoll(By.linkText(assetName), 10);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
-
         assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("img")));
         driver.findElement(By.cssSelector("img")).click();
-
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.linkText("Description"), "Description"));
         assertEquals("Version 1.2.3", driver.findElement(By.cssSelector("small")).getText());
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        //deleteAssetFromManagementConsole(driver);
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.quit();
-    }
-
-    private void waitTillElementPresent(By by, org.openqa.selenium.WebDriver driver) {
-        int count = 0;
-        while (!isElementPresent(by) && count < 20) {
-            String url = driver.getCurrentUrl();
-            driver.get(url);
-            count++;
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//            }
-        }
-    }
-
-    private void deleteAssetFromManagementConsole(org.openqa.selenium.WebDriver driver) {
-        driver.get(baseUrl + "/carbon/admin/login.jsp");
-        driver.findElement(By.id("txtUserName")).clear();
-        driver.findElement(By.id("txtUserName")).sendKeys("admin");
-        driver.findElement(By.id("txtPassword")).clear();
-        driver.findElement(By.id("txtPassword")).sendKeys("admin");
-        driver.findElement(By.cssSelector("input.button")).click();
-        driver.findElement(By.linkText("Gadgets")).click();
-        driver.findElement(By.xpath("(//a[contains(text(),'Delete')])[14]")).click();
-        driver.findElement(By.cssSelector("button[type=\"button\"]")).click();
-        driver.findElement(By.linkText("Sign-out")).click();
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
     private boolean isAlertPresent() {

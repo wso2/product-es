@@ -81,7 +81,7 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
     @Test(groups = "wso2.es", description = "Test Anonymous Navigation from top menu")
     public void testAnonNavigationTop() throws Exception {
 //        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li")));
-
+        driver.get(baseUrl + "/store");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li")).click();
 //        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "WSO2 Carbon Commits List Discussion"));
         assertEquals("WSO2 Carbon Commits List Discussion", driver.findElement(By.cssSelector("h4")).getText(),
@@ -97,7 +97,7 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
     @Test(groups = "wso2.es", description = "Test Anonymous Navigation page links")
     public void testAnonNavigationLinks() throws Exception {
         //wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a.brand")));
-
+        driver.get(baseUrl + "/store");
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Gadgets")).click();
        // wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "WSO2 Carbon Commits List Discussion"));
