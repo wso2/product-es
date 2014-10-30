@@ -37,13 +37,13 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.*;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
-public class ESStoreSearchGadgetList extends ESIntegrationUITest {
+public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "store";
     private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
-    private static final Log log = LogFactory.getLog(ESStoreSearchGadgetList.class);
+    private static final Log log = LogFactory.getLog(ESStoreSearchGadgetListTestCase.class);
     WebDriverWait wait;
 
     private String assetName = "Sample Asset";

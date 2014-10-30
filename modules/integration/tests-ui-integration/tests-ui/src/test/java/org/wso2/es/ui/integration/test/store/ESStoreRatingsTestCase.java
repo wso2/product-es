@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
-public class ESStoreRatings extends ESIntegrationUITest {
+public class ESStoreRatingsTestCase extends ESIntegrationUITest {
     //private ESWebDriver driver;
     private ESWebDriver driver;
     private String baseUrl;

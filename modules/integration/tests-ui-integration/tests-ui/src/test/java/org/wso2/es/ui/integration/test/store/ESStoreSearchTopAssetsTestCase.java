@@ -28,7 +28,7 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
-public class ESStoreSearchTopAssets extends ESIntegrationUITest {
+public class ESStoreSearchTopAssetsTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "store";
