@@ -27,12 +27,19 @@ import java.util.Set;
 public class ESWebDriver implements org.openqa.selenium.WebDriver {
 
     private org.openqa.selenium.WebDriver driver;
-    private WebDriverWait wait;
+    private int maxWaitTime;
 
     public ESWebDriver() throws Exception {
-        driver = BrowserManager.getWebDriver();
+        driver = BrowserManager.getWebDriver(); // get the default webdriver to the calss
+        maxWaitTime = 30;
     }
 
+    /**
+     * This method will keep refreshing/reloading the current url for a given number of poll-count
+     * untill a given element is available
+     * @param by        Element that is expected to be present
+     * @param pollCount Number of time page need to be reloaded into webdriver
+     */
     public void findElementPoll(By by, int pollCount) {
         //long start;
         int count = 0;
@@ -43,6 +50,11 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
         }
     }
 
+    /**
+     * This method checks whether a given element is present in the page
+     * @param by Element to be present in the page
+     * @return true if element is present false otherwise
+     */
     private boolean isElementPresent(By by) {
         try {
             driver.findElement(by);
@@ -52,7 +64,13 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
         }
     }
 
+    /**
+     * This method will wait untill a given element is present in the page for a given amount of time
+     * @param by            Element to be present in the current page
+     * @param waitTimeSec   Time to wait in seconds
+     */
     private void waitTillElementPresent(By by, int waitTimeSec) {
+        WebDriverWait wait;
         wait = new WebDriverWait(driver, waitTimeSec);
         wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
@@ -77,9 +95,14 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
         return driver.findElements(by);
     }
 
+    /**
+     * This method has override the findElement method in a way it will wait for maximum of 30 seconds
+     * @param by By element for findElement method
+     * @return return the result of default WebDriver.findElement(By by) subjected to 30sec of max wait time
+     */
     @Override
     public WebElement findElement(By by) {
-        waitTillElementPresent(by, 30);
+        waitTillElementPresent(by, this.maxWaitTime);
         return driver.findElement(by);
     }
 
