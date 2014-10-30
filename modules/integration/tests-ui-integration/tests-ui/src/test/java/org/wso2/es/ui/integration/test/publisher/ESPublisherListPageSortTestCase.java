@@ -110,6 +110,7 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
 //        do {
 //            driver.get(baseUrl + "/publisher/asts/gadget/list");
 //        } while (!isElementPresent(By.linkText(assetName)));
+        driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElementPoll(By.linkText(assetName), 30);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.partialLinkText("NAME"), "NAME"));
         try {
