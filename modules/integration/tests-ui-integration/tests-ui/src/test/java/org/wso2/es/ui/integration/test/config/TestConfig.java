@@ -31,33 +31,35 @@ public class TestConfig extends ESIntegrationUITest {
     private ServerConfigurationManager serverManager;
     private String resourceLocation;
     private String backendURL;
-    private ResourceAdminServiceClient resourceAdminServiceClient;
-    private String superAdminName = "admin";
-    private String superAdminPwd = "admin";
-    private String superUserName = "testuser11";
-    private String superUserPwd = "testuser11";
+    private String superAdminName;
+    private String superAdminPwd;
+    private String superUserName;
 
-    private String tenantAdminName = "admin@wso2.com";
-    private String tenantAdminPwd = "admin";
-    private String tenantUserName = "testuser11@wso2.com";
-    private String tenantUserPwd = "testuser11";
+    private String tenantAdminName;
+    private String tenantAdminPwd;
+    private String tenantUserName;
 
     private UserManagementClient userManagementClient;
 
     @BeforeSuite
     public void configureESTestSuite() throws Exception {
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        superAdminName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        superAdminPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
+        superUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName();
         serverManager = new ServerConfigurationManager(automationContext);
         resourceLocation = getResourceLocation();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, superAdminName, superAdminPwd);
         serverManager.applyConfiguration(new File(resourceLocation + File.separator + "notifications" + File
                 .separator + "axis2.xml"));
         userManagementClient = new UserManagementClient(backendURL, superAdminName, superAdminPwd);
         userManagementClient.updateUserListOfRole("Internal/publisher", new String[]{superUserName}, null);
 
+        automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
+        tenantAdminName = automationContext.getContextTenant().getTenantAdmin().getUserName();
+        tenantAdminPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
+        tenantUserName = automationContext.getContextTenant().getTenantUser("user1").getUserName();
         userManagementClient = new UserManagementClient(backendURL, tenantAdminName, tenantAdminPwd);
         userManagementClient.addInternalRole("publisher", new String[]{tenantUserName}, null);
-
     }
 }

@@ -18,12 +18,13 @@ package org.wso2.es.ui.integration.test.publisher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESUtil;
@@ -46,8 +47,8 @@ public class ESPublisherTenantAddEditAssetTestCase extends ESIntegrationUITest {
     private String assetName;
     private String providerName;
 
-    private String adminUserName = "admin";
-    private String adminUserPwd = "admin";
+    private String adminUserName;
+    private String adminUserPwd;
 
     private String currentUserName;
     private String currentUserPwd;
@@ -59,37 +60,35 @@ public class ESPublisherTenantAddEditAssetTestCase extends ESIntegrationUITest {
 
     private String email = "esmailsample@gmail.com";
     private String emailPwd = "esMailTest";
-
-    private String failText = "Unable to add the asset";
-
+    private TestUserMode userMode;
 
     @Factory(dataProvider = "userMode")
-    public ESPublisherTenantAddEditAssetTestCase(String user, String pwd, String assetName) {
-        this.currentUserName = user;
-        this.currentUserPwd = pwd;
+    public ESPublisherTenantAddEditAssetTestCase(TestUserMode userMode, String assetName) {
+        this.userMode = userMode;
         this.assetName = assetName;
-        this.providerName = user.split("@")[0];
-        this.resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName + "/1.0.0";
     }
 
     @BeforeClass(alwaysRun = true, enabled = true)
     public void setUp() throws Exception {
-        log.info("************ Starting Add Edit Test Case for Tenant:" + currentUserName + "********");
-        super.init();
+        super.init(userMode);
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
-        baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        baseUrl = getStorePublisherUrl();
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
+        this.providerName = currentUserName.split("@")[0];
+        this.resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName + "/1.0.0";
 
         ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es", description = "Testing adding a new asset", enabled = true)
     public void testAddAsset() throws Exception {
-        log.info("----------------------------- Add Asset Test ----------------------------------------");
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElement(By.linkText("Add")).click();
         driver.findElement(By.name("overview_provider")).clear();
@@ -108,24 +107,12 @@ public class ESPublisherTenantAddEditAssetTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("btn-create-asset")).click();
 
         driver.findElementPoll(By.linkText(assetName),30);
-//        boolean isSuccessful;
-//        if (isAlertPresent()) {
-//            isSuccessful = false;
-//        } else {
-//            do {
-//                driver.get(baseUrl + "/publisher/asts/gadget/list");
-//            } while (!isElementPresent(By.linkText(assetName)));
-//            isSuccessful = true;
-//        }
         assertTrue(isElementPresent(By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
-//        assertTrue(isSuccessful, "Adding an asset failed for user:" + currentUserName);
-
     }
 
     @Test(groups = "wso2.es", description = "Testing editing an asset", dependsOnMethods = "testAddAsset",
             enabled = true)
     public void testEditAsset() throws Exception {
-        log.info("----------------------------- Edit Asset Test ----------------------------------------");
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
@@ -135,34 +122,38 @@ public class ESPublisherTenantAddEditAssetTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys("Edited Test description");
         driver.findElement(By.id("editAssetButton")).click();
-        closeAlertAndGetItsText(driver, true);
+        closeAlertAndGetItsText();
 
         driver.findElement(By.linkText("Overview")).click();
-        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
-        assertEquals(driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr/td[2]")).getText(), providerName,
-                "Incorrect provider");
-        assertEquals(driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[2]/td[2]")).getText(), assetName,
-                "Incorrect asset name");
-        assertEquals(driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[3]/td[2]")).getText(), "1.0.0",
-                "Incorrect version");
-        assertEquals(driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[5]/td[2]")).getText(), "WSO2",
-                "Incorrect Category");
-        assertEquals(driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[6]/td[2]")).getText(),
-                "http://wso2.com/", "Incorrect URL");
-        assertEquals(driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[7]/td[2]")).getText(),
-                "Edited Test description", "Incorrect description");
+        try {
+            assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
+            assertEquals(driver.findElement(By.xpath
+                    ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr/td[2]")).getText(), providerName,
+                    "Incorrect provider");
+            assertEquals(driver.findElement(By.xpath
+                    ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[2]/td[2]")).getText(), assetName,
+                    "Incorrect asset name");
+            assertEquals(driver.findElement(By.xpath
+                    ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[3]/td[2]")).getText(), "1.0.0",
+                    "Incorrect version");
+            assertEquals(driver.findElement(By.xpath
+                    ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[5]/td[2]")).getText(), "WSO2",
+                    "Incorrect Category");
+            assertEquals(driver.findElement(By.xpath
+                    ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[6]/td[2]")).getText(),
+                    "http://wso2.com/", "Incorrect URL");
+            assertEquals(driver.findElement(By.xpath
+                    ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[7]/td[2]")).getText(),
+                    "Edited Test description", "Incorrect description");
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
     }
 
     @AfterClass(alwaysRun = true, enabled = true)
     public void tearDown() throws Exception {
         resourceAdminServiceClient.deleteResource(resourcePath);
-        ESUtil.logout(driver, baseUrl, "publisher", providerName);
+        driver.get(baseUrl + "/publisher/logout");
         ESUtil.deleteAllEmail(resourceLocation + File.separator + "notifications" + File.separator + "smtp" +
                 ".properties", emailPwd, email);
         driver.close();
@@ -171,13 +162,12 @@ public class ESPublisherTenantAddEditAssetTestCase extends ESIntegrationUITest {
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
         }
-        log.info("************ Finishing Add Edit Test Case for Tenant:" + currentUserName + "********");
     }
 
     @DataProvider(name = "userMode")
-    public static Object[][] userInfoProvider() {
-        return new Object[][]{{"admin@wso2.com", "admin", "Add Edit asset - TenantAdmin"}, {"testuser11@wso2.com",
-                "testuser11", "Add Edit asset - TenantUser"}};
+    private static Object[][] userModeProvider() {
+        return new Object[][]{{TestUserMode.TENANT_ADMIN, "Add Edit asset - TenantAdmin"},
+                {TestUserMode.TENANT_USER, "Add Edit asset - TenantUser"}};
     }
 
     private boolean isElementPresent(By by) {
@@ -189,16 +179,7 @@ public class ESPublisherTenantAddEditAssetTestCase extends ESIntegrationUITest {
         }
     }
 
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private static String closeAlertAndGetItsText(WebDriver driver, boolean acceptNextAlert) {
+    private String closeAlertAndGetItsText() {
         try {
             Alert alert = driver.switchTo().alert();
             String alertText = alert.getText();

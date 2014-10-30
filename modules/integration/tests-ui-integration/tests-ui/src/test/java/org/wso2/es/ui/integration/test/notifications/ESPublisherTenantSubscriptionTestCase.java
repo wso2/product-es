@@ -37,7 +37,6 @@ import static org.testng.Assert.fail;
 
 
 public class ESPublisherTenantSubscriptionTestCase extends ESIntegrationUITest {
-    private static final Log log = LogFactory.getLog(ESPublisherTenantSubscriptionTestCase.class);
     private ESWebDriver driver;
     private String baseUrl;
     private String webApp = "publisher";
@@ -48,8 +47,8 @@ public class ESPublisherTenantSubscriptionTestCase extends ESIntegrationUITest {
     private String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
     private String assetName;
 
-    private String adminUserName = "admin@wso2.com";
-    private String adminUserPwd = "admin";
+    private String adminUserName;
+    private String adminUserPwd;
     private String providerName;
 
     private String currentUserName;
@@ -63,25 +62,24 @@ public class ESPublisherTenantSubscriptionTestCase extends ESIntegrationUITest {
     private String email = "esmailsample@gmail.com";
     private String emailPwd = "esMailTest";
 
-
     @Factory(dataProvider = "userMode")
-    public ESPublisherTenantSubscriptionTestCase(String user, String pwd, String assetName) {
-        this.currentUserName = user;
-        this.currentUserPwd = pwd;
+    public ESPublisherTenantSubscriptionTestCase(TestUserMode testUserMode, String assetName) {
+        this.userMode = testUserMode;
         this.assetName = assetName;
-        this.providerName = currentUserName.split("@")[0];
-        this.resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName + "/1.0.0";
-
     }
 
     @BeforeClass(alwaysRun = true, enabled = true)
     public void setUp() throws Exception {
-        log.info("****************** Starting Subscription Test Case for Tenant:"+currentUserName+" **********************");
-        super.init();
+        super.init(userMode);
         driver = new ESWebDriver();
-        baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
+        baseUrl = getStorePublisherUrl();
+        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
+        adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
+        providerName = currentUserName.split("@")[0];
+        resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName + "/1.0.0";
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
@@ -90,9 +88,8 @@ public class ESPublisherTenantSubscriptionTestCase extends ESIntegrationUITest {
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
     }
 
-    @Test(groups = "wso2.es", description = "Check if subscriptions are created", enabled = true)
+    @Test(groups = "wso2.es", description = "Check if subscriptions are created")
     public void testSubscriptionCreation() throws Exception {
-        log.info("----------------------------- Subscription Test ----------------------------------------");
         AssetUtil.addNewAsset(driver, baseUrl, "gadget", providerName, assetName, "1.0.0", "12");
         if (isAlertPresent()) {
             closeAlertAndGetItsText();
@@ -100,9 +97,6 @@ public class ESPublisherTenantSubscriptionTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/carbon/");
         driver.findElement(By.linkText("Gadgets")).click();
         driver.findElementPoll(By.linkText(assetName), 30);
-//        do {
-//            driver.findElement(By.linkText("Gadgets")).click();
-//        } while (!isElementPresent(By.linkText(assetName)));
         driver.findElement(By.linkText(assetName)).click();
         String subscription1 = driver.findElement(By.cssSelector("#subscriptionsTable > tbody > tr" +
                 ".tableOddRow > td"))
@@ -118,15 +112,19 @@ public class ESPublisherTenantSubscriptionTestCase extends ESIntegrationUITest {
             subscription1Name = UPDATE_SUBSCRIPTION;
             subscription2Name = LC_SUBSCRIPTION;
         }
+        try {
             assertEquals(subscription1Name, subscription1);
             assertEquals(subscription2Name, subscription2);
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
     }
 
     @AfterClass(alwaysRun = true, enabled = true)
     public void tearDown() throws Exception {
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
-        ESUtil.logout(driver, baseUrl, "publisher", providerName);
+        driver.get(baseUrl + "/publisher/logout");
         ESUtil.deleteAllEmail(resourceLocation + File.separator + "notifications" + File.separator + "smtp" +
                 ".properties", emailPwd, email);
         driver.close();
@@ -135,22 +133,12 @@ public class ESPublisherTenantSubscriptionTestCase extends ESIntegrationUITest {
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
         }
-        log.info("************* Finishing Notification Test Case for Tenant:"+currentUserName+" *******************");
     }
 
     @DataProvider(name = "userMode")
-    public static Object[][] userInfoProvider() {
-        return new Object[][]{{"admin@wso2.com", "admin", "Subscription asset - TenantAdmin"}, {"testuser11@wso2.com",
-                "testuser11", "Subscription asset - TenantUser"}};
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    private static Object[][] userModeProvider() {
+        return new Object[][]{{TestUserMode.TENANT_ADMIN, "Notification asset - TenantAdmin"},
+                {TestUserMode.TENANT_USER, "Notification asset - TenantUser"}};
     }
 
     private boolean isAlertPresent() {

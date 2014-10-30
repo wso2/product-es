@@ -34,15 +34,18 @@ import static org.testng.Assert.fail;
 public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
-    private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
+
+    private String currentUserName;
+    private String currentUserPwd;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
     @Test(groups = "wso2.es.store", description = "Test Store Login and Logout")
@@ -50,17 +53,20 @@ public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/store/pages/top-assets?null");
         driver.findElement(By.linkText("Sign in")).click();
         driver.findElement(By.id("username")).clear();
-        driver.findElement(By.id("username")).sendKeys("admin");
+        driver.findElement(By.id("username")).sendKeys(currentUserName);
         driver.findElement(By.id("password")).clear();
-        driver.findElement(By.id("password")).sendKeys("admin");
+        driver.findElement(By.id("password")).sendKeys(currentUserPwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        //TODO failing only while in selenium test - working manually
-        assertTrue(isElementPresent(By.linkText("My Items")), "My Items link missing");
-        assertTrue(isElementPresent(By.linkText("admin")), "Logged in user not shown");
-        driver.findElement(By.linkText("admin")).click();
-        driver.findElement(By.linkText("Sign out")).click();
-        assertTrue(isElementPresent(By.linkText("Sign in")), "Sign in link missing");
-        assertEquals("Register", driver.findElement(By.id("btn-register")).getText(), "Register button missing");
+        try {
+            assertTrue(isElementPresent(By.linkText("My Items")), "My Items link missing");
+            assertTrue(isElementPresent(By.linkText(currentUserName)), "Logged in user not shown");
+            driver.findElement(By.linkText(currentUserName)).click();
+            driver.findElement(By.linkText("Sign out")).click();
+            assertTrue(isElementPresent(By.linkText("Sign in")), "Sign in link missing");
+            assertEquals("Register", driver.findElement(By.id("btn-register")).getText(), "Register button missing");
+        } catch (Error e) {
+            verificationErrors.append(e.toString());
+        }
     }
 
     @AfterClass(alwaysRun = true)
@@ -78,30 +84,6 @@ public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
             return true;
         } catch (NoSuchElementException e) {
             return false;
-        }
-    }
-
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
         }
     }
 

@@ -37,7 +37,6 @@ import static org.testng.Assert.fail;
 
 
 public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
-    private static final Log log = LogFactory.getLog(ESPublisherSubscriptionTestCase.class);
 
     private ESWebDriver driver;
     private String baseUrl;
@@ -48,9 +47,10 @@ public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
     private String LC_SUBSCRIPTION = "Store LC State Change Event via Role Profile";
     private String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
     private String assetName;
+    private TestUserMode userMode;
 
-    private String adminUserName = "admin";
-    private String adminUserPwd = "admin";
+    private String adminUserName;
+    private String adminUserPwd;
 
     private String currentUserName;
     private String currentUserPwd;
@@ -65,24 +65,25 @@ public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
 
 
     @Factory(dataProvider = "userMode")
-    public ESPublisherSubscriptionTestCase(String user, String pwd, String assetName) {
-        this.currentUserName = user;
-        this.currentUserPwd = pwd;
+    public ESPublisherSubscriptionTestCase(TestUserMode testUserMode, String assetName) {
+        this.userMode = testUserMode;
         this.assetName = assetName;
-        this.resourcePath = "/_system/governance/gadgets/" + this.currentUserName + "/" + this.assetName + "/1.0.0";
     }
 
     @BeforeClass(alwaysRun = true, enabled = true)
     public void setUp() throws Exception {
-        log.info("************ Starting Notification Test Case for Super Tenant:" + currentUserName + "********");
-        super.init();
+        super.init(userMode);
         driver = new ESWebDriver();
+        currentUserName = userInfo.getUserName().split("@")[0];
+        currentUserPwd = userInfo.getPassword();
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName().split("@")[0];
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
+        resourcePath = "/_system/governance/gadgets/" + this.currentUserName + "/" + this.assetName + "/1.0.0";
 
         ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
@@ -90,7 +91,6 @@ public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es", description = "Check if subscriptions are created", enabled = true)
     public void testSubscriptionCreation() throws Exception {
-        log.info("----------------------------- Subscription Test ----------------------------------------");
         AssetUtil.addNewAsset(driver, baseUrl, "gadget", currentUserName, assetName, "1.0.0", "12");
         if (isAlertPresent()) {
             closeAlertAndGetItsText();
@@ -98,9 +98,6 @@ public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/carbon/");
         driver.findElement(By.linkText("Gadgets")).click();
         driver.findElementPoll(By.linkText(assetName),30);
-//        do {
-//            driver.findElement(By.linkText("Gadgets")).click();
-//        } while (!isElementPresent(By.linkText(assetName)));
         driver.findElement(By.linkText(assetName)).click();
         String subscription1 = driver.findElement(By.cssSelector("#subscriptionsTable > tbody > tr" +
                 ".tableOddRow > td"))
@@ -137,22 +134,12 @@ public class ESPublisherSubscriptionTestCase extends ESIntegrationUITest {
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
         }
-        log.info("************ Finishing Notification Test Case for Super Tenant:" + currentUserName + "********");
     }
 
     @DataProvider(name = "userMode")
-    public static Object[][] userInfoProvider() {
-        return new Object[][]{{"admin", "admin", "Subscription asset - SuperAdmin"}, {"testuser11", "testuser11",
-                "Subscription asset - SuperUser"}};
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    private static Object[][] userModeProvider() {
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN, "Notification asset - SuperAdmin"},
+                {TestUserMode.SUPER_TENANT_USER, "Notification asset - SuperUser"}};
     }
 
     private boolean isAlertPresent() {

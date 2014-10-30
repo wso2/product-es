@@ -55,8 +55,10 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
     private String assetDescription = "this is a sample asset";
     private String resourcePath = "/_system/governance/gadgets/" + this.assetAuthor + "/" + this.assetName + "/" + this.assetVersion;
 
-    private String adminUserName = "admin";
-    private String adminUserPwd = "admin";
+    private String adminUserName;
+    private String adminUserPwd;
+    private String currentUserName;
+    private String currentUserPwd;
     private String backendURL;
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
@@ -64,12 +66,16 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
        // driver = new ESWebDriver();
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
 
@@ -97,7 +103,7 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
         driver.findElement(By.cssSelector("i.icon-sort-down")).click();
         driver.findElement(By.id("search")).click();
         driver.findElement(By.name("overview_provider")).clear();
-        driver.findElement(By.name("overview_provider")).sendKeys("admin");
+        driver.findElement(By.name("overview_provider")).sendKeys(currentUserName);
         driver.findElement(By.id("search-button2")).click();
 
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
@@ -168,7 +174,7 @@ public class ESStoreSearchGadgetList extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es.store", description = "Add asset", dependsOnMethods = "testStoreSearchByCategoryTemplate")
     public void testAddasset() throws Exception {
-        ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(), userInfo.getPassword());
+        ESUtil.login(driver, baseUrl, "publisher", currentUserName, currentUserPwd);
 //        boolean isAdded = false;
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElement(By.linkText("Add")).click();
