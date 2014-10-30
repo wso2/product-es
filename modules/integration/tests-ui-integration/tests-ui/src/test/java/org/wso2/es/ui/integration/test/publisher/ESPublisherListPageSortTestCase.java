@@ -73,13 +73,11 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
 
     @BeforeClass(alwaysRun = true, enabled = true)
     public void setUp() throws Exception {
-        log.info("************ Starting Add Edit Test Case for Tenant:" + currentUserName + "********");
         super.init(userMode);
         this.currentUserName = userInfo.getUserName().split("@")[0];
         this.currentUserPwd = userInfo.getPassword().split("0")[0];
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 30);
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
@@ -106,11 +104,14 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es", description = "Test sort by name, provider, version & created time", enabled = true)
     public void testListPageSort() throws Exception {
+<<<<<<< HEAD
         log.info("----------------------------- Asset List Sort Test ----------------------------------------");
 //        do {
 //            driver.get(baseUrl + "/publisher/asts/gadget/list");
 //        } while (!isElementPresent(By.linkText(assetName)));
         driver.get(baseUrl + "/publisher/asts/gadget/list");
+=======
+>>>>>>> upstream/master
         driver.findElementPoll(By.linkText(assetName), 30);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.partialLinkText("NAME"), "NAME"));
         try {
@@ -154,7 +155,6 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
         }
-        log.info("************ Finishing Add Edit Test Case for Tenant:" + currentUserName + "********");
     }
 
     @DataProvider(name = "userMode")
@@ -163,15 +163,6 @@ public class ESPublisherListPageSortTestCase extends ESIntegrationUITest {
                 new TestUserMode[]{TestUserMode.SUPER_TENANT_ADMIN},
                 new TestUserMode[]{TestUserMode.SUPER_TENANT_USER},
         };
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
     private boolean isAlertPresent() {

@@ -42,7 +42,6 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
     private boolean acceptNextAlert = true;
     private static final Log log = LogFactory.getLog(ESStoreSearchGadgetListTestCase.class);
     WebDriverWait wait;
-
     private static String assetName = "Sample Asset";
     private static String assetVersion = "1.2.3";
     private static String assetAuthor = "testAuthor";
@@ -67,6 +66,8 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         adminUserName = userInfo.getUserName();
         adminUserPwd = userInfo.getPassword();
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         driver.get(baseUrl + "/" + webApp);
@@ -81,8 +82,8 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText("Templates");
         driver.findElement(By.id("search-button2")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Line Plus Bar Chart"));
-        assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size(),"Number of Template gadgets" +
-                " are incorrect");//TODO message, avoid css selectors
+        assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size(), "Number of Template gadgets" +
+                " are incorrect");
 
     }
 
@@ -97,7 +98,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_provider")).sendKeys(adminUserName);
         driver.findElement(By.id("search-button2")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Bar Chart"));
-        assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size(),"Seach result count" +
+        assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size(), "Seach result count" +
                 " does not match");
 
     }
@@ -191,7 +192,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();
-        assertEquals(driver.findElement(By.id("state")).getText(),"IN-REVIEW");
+        assertEquals(driver.findElement(By.id("state")).getText(), "IN-REVIEW");
 //        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "IN-REVIEW"));
         driver.findElement(By.id("Published")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"), "Add a comment"));
@@ -199,7 +200,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "PUBLISHED"));
-        assertEquals(driver.findElement(By.id("state")).getText(),"PUBLISHED");
+        assertEquals(driver.findElement(By.id("state")).getText(), "PUBLISHED");
     }
 
     @Test(groups = "wso2.es.store", description = "Search by newly added asset Name", dependsOnMethods = "testAddasset")
@@ -220,7 +221,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
     }
 
     @Test(groups = "wso2.es.store", description = "Search by newly added asset Version", dependsOnMethods = "testAddasset")
-    public void testESStoreSearchNewlyAddedAssetsVesion() throws Exception {
+    public void testESStoreSearchNewlyAddedAssetsVersion() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets");
         driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("i.icon-sort-down")).click();

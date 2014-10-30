@@ -56,7 +56,6 @@ public class ESPublishToStore extends ESIntegrationUITest {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         wait = new WebDriverWait(driver, 30);
         providerName = userInfo.getUserName();
@@ -88,10 +87,7 @@ public class ESPublishToStore extends ESIntegrationUITest {
             closeAlertAndGetItsText();
         }
         driver.findElement(By.cssSelector("a.btn")).click();
-//        do {
-//            driver.get(baseUrl + "/publisher/asts/gadget/list");
-//        } while (!isElementPresent(By.linkText(assetName)));
-        driver.findElementPoll(By.linkText(assetName),30);
+        driver.findElementPoll(By.linkText(assetName), 30);
         driver.findElement(By.linkText("Publishing Asset")).click();
         driver.findElement(By.linkText("Life Cycle")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.pull-left"),
@@ -136,15 +132,6 @@ public class ESPublishToStore extends ESIntegrationUITest {
         String verificationErrorString = verificationErrors.toString();
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
-        }
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
         }
     }
 

@@ -35,7 +35,6 @@ import static org.testng.Assert.fail;
 public class ESRegisterUserTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
-    private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
     private UserManagementClient userManagementClient;
     private String backendURL;
@@ -45,7 +44,6 @@ public class ESRegisterUserTestCase extends ESIntegrationUITest {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         userManagementClient = new UserManagementClient(backendURL, userInfo.getUserName(), userInfo.getPassword());
@@ -93,30 +91,6 @@ public class ESRegisterUserTestCase extends ESIntegrationUITest {
             return true;
         } catch (NoSuchElementException e) {
             return false;
-        }
-    }
-
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
         }
     }
 
