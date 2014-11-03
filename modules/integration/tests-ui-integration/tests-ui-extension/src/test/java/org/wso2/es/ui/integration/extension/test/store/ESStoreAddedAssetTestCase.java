@@ -40,7 +40,7 @@ import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 public class ESStoreAddedAssetTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
-    private String webApp = "publisher";
+    private String webApp = "store";
     private boolean acceptNextAlert = true;
 
     @BeforeClass(alwaysRun = true)
@@ -48,7 +48,7 @@ public class ESStoreAddedAssetTestCase extends ESIntegrationUITest {
         super.init();
         driver = new ESWebDriver();//BrowserManager.getWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, webApp);
+        driver.get(baseUrl + "/" + webApp);
     }
 
     @Test(groups = "wso2.es", description = "")
@@ -62,7 +62,6 @@ public class ESStoreAddedAssetTestCase extends ESIntegrationUITest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl, webApp);
         driver.quit();
     }
 

@@ -36,26 +36,25 @@ import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 public class ESStoreOverriddenGlobalPageTestCase extends ESIntegrationUITest {
     private WebDriver driver;
     private String baseUrl;
-    private String webApp = "publisher";
+    private String webApp = "store";
     private boolean acceptNextAlert = true;
- 
-  @BeforeClass(alwaysRun = true)
-  public void setUp() throws Exception {
+
+    @BeforeClass(alwaysRun = true)
+    public void setUp() throws Exception {
         super.init();
         driver = new ESWebDriver();//BrowserManager.getWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, webApp);
-  }
+        driver.get(baseUrl + "/" + webApp);
+    }
 
-  @Test(groups = "wso2.es", description = "")
-  public void testESStoreOverriddenGlobalPageTestCase() throws Exception {
-    driver.get(baseUrl+"/store/pages/top-assets");
-    assertTrue(isElementPresent(By.id("assetOverridenGlobalPage")));
- }
+    @Test(groups = "wso2.es", description = "")
+    public void testESStoreOverriddenGlobalPageTestCase() throws Exception {
+        driver.get(baseUrl + "/store/pages/top-assets");
+        assertTrue(isElementPresent(By.id("assetOverridenGlobalPage")));
+    }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl,webApp);
         driver.quit();
     }
 
