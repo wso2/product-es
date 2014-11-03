@@ -1,5 +1,5 @@
 /*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,19 @@
 
 package org.wso2.es.ui.integration.test.store;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-
-import java.util.concurrent.TimeUnit;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.testng.Assert.*;
 
 
 public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
-    private StringBuffer verificationErrors = new StringBuffer();
 
     private String currentUserName;
     private String currentUserPwd;
@@ -48,34 +42,33 @@ public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
         baseUrl = getWebAppURL();
     }
 
-    @Test(groups = "wso2.es.store", description = "Test Store Login and Logout")
-    public void testESStoreLoginLogoutTestCase() throws Exception {
-        driver.get(baseUrl + "/store/pages/top-assets?null");
+    @Test(groups = "wso2.es.store", description = "Test Store Login")
+    public void testESStoreLogin() throws Exception {
+        driver.get(baseUrl + "/store");
         driver.findElement(By.linkText("Sign in")).click();
         driver.findElement(By.id("username")).clear();
         driver.findElement(By.id("username")).sendKeys(currentUserName);
         driver.findElement(By.id("password")).clear();
         driver.findElement(By.id("password")).sendKeys(currentUserPwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        try {
-            assertTrue(isElementPresent(By.linkText("My Items")), "My Items link missing");
-            assertTrue(isElementPresent(By.linkText(currentUserName)), "Logged in user not shown");
-            driver.findElement(By.linkText(currentUserName)).click();
-            driver.findElement(By.linkText("Sign out")).click();
-            assertTrue(isElementPresent(By.linkText("Sign in")), "Sign in link missing");
-            assertEquals("Register", driver.findElement(By.id("btn-register")).getText(), "Register button missing");
-        } catch (Error e) {
-            verificationErrors.append(e.toString());
-        }
+        assertTrue(isElementPresent(By.linkText("My Items")), "My Items link missing");
+        assertTrue(isElementPresent(By.linkText(currentUserName)), "Logged in user not shown");
+    }
+
+    @Test(groups = "wso2.es.store", description = "Test Store Logout",
+            dependsOnMethods = "testESStoreLogin")
+    public void testESStoreLogout() throws Exception {
+        driver.get(baseUrl + "/store");
+        driver.findElement(By.linkText(currentUserName)).click();
+        driver.findElement(By.linkText("Sign out")).click();
+        assertTrue(isElementPresent(By.linkText("Sign in")), "Sign in link missing");
+        assertEquals("Register", driver.findElement(By.id("btn-register")).getText(),
+                "Register button missing");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.quit();
-        String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
-            fail(verificationErrorString);
-        }
     }
 
     private boolean isElementPresent(By by) {

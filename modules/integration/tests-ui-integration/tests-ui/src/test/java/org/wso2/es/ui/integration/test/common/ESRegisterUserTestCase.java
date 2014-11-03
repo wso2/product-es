@@ -1,5 +1,5 @@
 /*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,25 @@
 
 package org.wso2.es.ui.integration.test.common;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-
-import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
+/**
+ * Register a new user for ES
+ * check login for store and publisher
+ */
 public class ESRegisterUserTestCase extends ESIntegrationUITest {
     private ESWebDriver driver;
     private String baseUrl;
-    private StringBuffer verificationErrors = new StringBuffer();
     private UserManagementClient userManagementClient;
     private String backendURL;
 
@@ -44,13 +43,16 @@ public class ESRegisterUserTestCase extends ESIntegrationUITest {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("ES",
+                TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        userManagementClient = new UserManagementClient(backendURL, userInfo.getUserName(), userInfo.getPassword());
+        userManagementClient = new UserManagementClient(backendURL, userInfo.getUserName(),
+                userInfo.getPassword());
     }
 
     @Test(groups = "wso2.es.common", description = "Testing user registration")
     public void testESRegisterUserTestCase() throws Exception {
+        //Register new user
         driver.get(baseUrl + "/store");
         driver.findElement(By.id("btn-register")).click();
         driver.findElement(By.id("reg-username")).clear();
@@ -60,29 +62,20 @@ public class ESRegisterUserTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("reg-password2")).clear();
         driver.findElement(By.id("reg-password2")).sendKeys("testusernew");
         driver.findElement(By.id("registrationSubmit")).click();
-        try {
-            assertTrue(isElementPresent(By.linkText("My Items")));
-            assertTrue(isElementPresent(By.linkText("testusernew")));
-        } catch (Error e) {
-            verificationErrors.append(e.toString());
-        }
+        //check login for store
+        assertTrue(isElementPresent(By.linkText("My Items")), "Login failed for Store");
+        assertTrue(isElementPresent(By.linkText("testusernew")), "Login failed for Store");
+        //check login for publisher
         driver.get(baseUrl + "/publisher");
-        try {
-            assertTrue(isElementPresent(By.linkText("testusernew")));
-        } catch (Error e) {
-            verificationErrors.append(e.toString());
-        }
+        assertTrue(isElementPresent(By.linkText("testusernew")), "Login failed for Publisher");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
+        //logout and delete new user
         driver.get(baseUrl + "/publisher/logout");
         userManagementClient.deleteUser("testusernew");
         driver.quit();
-        String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
-            fail(verificationErrorString);
-        }
     }
 
     private boolean isElementPresent(By by) {

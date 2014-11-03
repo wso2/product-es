@@ -1,5 +1,5 @@
 /*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,11 @@ import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 import java.io.File;
 
+/**
+ * Restarts server before the test suite
+ * Add a new role for publisher in tenant domain
+ * Assign publisher role to test users
+ */
 public class TestConfig extends ESIntegrationUITest {
 
     private ServerConfigurationManager serverManager;
@@ -43,23 +48,29 @@ public class TestConfig extends ESIntegrationUITest {
 
     @BeforeSuite
     public void configureESTestSuite() throws Exception {
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("ES",
+                TestUserMode.SUPER_TENANT_ADMIN);
         superAdminName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
         superAdminPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         superUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName();
         serverManager = new ServerConfigurationManager(automationContext);
         resourceLocation = getResourceLocation();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        serverManager.applyConfiguration(new File(resourceLocation + File.separator + "notifications" + File
-                .separator + "axis2.xml"));
+        //restart server with mailto config added in axis2.xml
+        serverManager.applyConfiguration(new File(resourceLocation + File.separator +
+                "notifications" + File.separator + "axis2.xml"));
+        //assign publisher role to the normal user
         userManagementClient = new UserManagementClient(backendURL, superAdminName, superAdminPwd);
-        userManagementClient.updateUserListOfRole("Internal/publisher", new String[]{superUserName}, null);
+        userManagementClient.updateUserListOfRole("Internal/publisher",
+                new String[]{superUserName}, null);
 
         automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
         tenantAdminName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         tenantAdminPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
         tenantUserName = automationContext.getContextTenant().getTenantUser("user1").getUserName();
-        userManagementClient = new UserManagementClient(backendURL, tenantAdminName, tenantAdminPwd);
+        userManagementClient = new UserManagementClient(backendURL, tenantAdminName,
+                tenantAdminPwd);
+        //create a publisher role and assign it to tenant user in the tenant domain
         userManagementClient.addInternalRole("publisher", new String[]{tenantUserName}, null);
     }
 }

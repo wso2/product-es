@@ -19,9 +19,12 @@
 package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.Alert;
+
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
+
 import static org.testng.Assert.*;
+
 import org.openqa.selenium.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -38,30 +41,30 @@ public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationU
     private String baseUrl;
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
- 
-  @BeforeClass(alwaysRun = true)
-  public void setUp() throws Exception {
+
+    @BeforeClass(alwaysRun = true)
+    public void setUp() throws Exception {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, webApp);
-  }
+        ESUtil.login(driver, baseUrl, webApp, userInfo.getUserName(), userInfo.getPassword());
+    }
 
-  @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
-     // driver.get(baseUrl + "/publisher/asts/gadget/list");
-      driver.get(baseUrl + "/publisher/asts/gadget/list");
-      driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
-      driver.findElement(By.linkText("Service")).click();
-      driver.get(baseUrl + "/publisher/asts/servicex/details");
+    @Test(groups = "wso2.es", description = "")
+    public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
+        // driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+        driver.findElement(By.linkText("Service")).click();
+        driver.get(baseUrl + "/publisher/asts/servicex/details");
 //      driver.findElementPoll(By.id("assetOveriddenDetailsPageH1"),30);
-     assertTrue(isElementPresent(By.id("assetOveriddenDetailsPageH1")));
+        assertTrue(isElementPresent(By.id("assetOveriddenDetailsPageH1")));
 //      assertTrue(isElementPresent(By.cssSelector("h1")));
- }
+    }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl,webApp);
+        driver.get("/publisher/logout");
         driver.quit();
     }
 

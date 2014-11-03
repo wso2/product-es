@@ -44,8 +44,7 @@ public class ESPublisherAddedAssetTestCase extends ESIntegrationUITest {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        ESUtil.login(driver, baseUrl, webApp);
+        ESUtil.login(driver, baseUrl, webApp, userInfo.getUserName(), userInfo.getPassword());
   }
 
   @Test(groups = "wso2.es", description = "")
@@ -59,7 +58,7 @@ public class ESPublisherAddedAssetTestCase extends ESIntegrationUITest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl,webApp);
+        driver.get("/publisher/logout");
         driver.quit();
     }
 
