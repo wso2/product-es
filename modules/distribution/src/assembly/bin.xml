@@ -199,6 +199,15 @@
                 <include>**/**</include>
             </includes>
         </fileSet>
+
+        <fileSet>
+            <directory>src/repository/conf/bam</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/conf/bam</outputDirectory>
+            <includes>
+                <include>**/es-bam.xml</include>
+            </includes>
+        </fileSet>
+
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/
@@ -221,7 +230,13 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
-        
+        <fileSet>
+            <directory>src/repository/bam</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/bam/</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
         
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
@@ -253,11 +268,16 @@
             <includes>
                 <include>build.xml</include>
                 <include>*.txt</include>
+                <include>sample-gadgets*/*/*</include>
+                <include>sample-gadgets/*.json</include>
             </includes>
            <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
        </fileSet>
-        
 
+       <fileSet>
+        <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/samples</directory>
+        <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
+       </fileSet>
         
     </fileSets>
     <dependencySets>

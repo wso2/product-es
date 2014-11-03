@@ -1,5 +1,5 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *WSO2 Inc. licenses this file to you under the Apache License,
 *Version 2.0 (the "License"); you may not use this file except
@@ -28,7 +28,7 @@ import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import javax.xml.xpath.XPathExpressionException;
 
 public abstract class ESIntegrationTest {
-    protected final static String PRODUCT_NAME = "ES";
+
     protected AutomationContext esContext = null;
     protected Tenant tenantInfo;
     protected User userInfo;
@@ -42,7 +42,7 @@ public abstract class ESIntegrationTest {
 
     protected void init(TestUserMode userType) throws Exception {
 
-        esContext = new AutomationContext(PRODUCT_NAME, userType);
+        esContext = new AutomationContext(ESIntegrationTestConstants.ES_PRODUCT_NAME, userType);
         LoginLogoutClient loginLogoutClient = new LoginLogoutClient(esContext);
         sessionCookie = loginLogoutClient.login();
         //return the current tenant as the userType(TestUserMode)
@@ -70,7 +70,7 @@ public abstract class ESIntegrationTest {
     }
 
     protected String getResourceLocation() throws XPathExpressionException {
-        return TestConfigurationProvider.getResourceLocation(PRODUCT_NAME);
+        return TestConfigurationProvider.getResourceLocation(ESIntegrationTestConstants.ES_PRODUCT_NAME);
     }
 
 

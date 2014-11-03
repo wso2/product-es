@@ -70,6 +70,7 @@ var handleApiEndpoint = function (request, session, uriParams) {
             response = responseProcessor.buildErrorResponse(response, 404, 'Unable to locate an api endpoint for the type: ' + type)
         }
     } catch (e) {
+        log.error(e);
         response = responseProcessor.buildErrorResponse(response, 404, e);
 
     }
@@ -79,8 +80,8 @@ var server = require('store').server;
 var user = server.current(session);
 //remove
 if (!user) {//unless user is authenticated
-    log.warn('Auth failure');
-    response = responseProcessor.buildErrorResponse(response, 400, "Authorization Error");
+    log.error('Auth failure');
+    response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.UNAUTHORIZED, "Authorization Error");
 }
 else {
     if (matcher.match(apiEndpoint)) {// if endpoint is defined

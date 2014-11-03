@@ -96,11 +96,6 @@ asset.configure = function() {
                 fields: {
                     provider: {
                         readonly: true
-                    },
-                    version: {
-                        name: {
-                            label: 'Version'
-                        }
                     }
                 }
             },

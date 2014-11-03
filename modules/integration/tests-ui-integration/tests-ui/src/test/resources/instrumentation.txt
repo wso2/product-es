@@ -1,1 +1,4 @@
-org.wso2.carbon.es
+org.wso2.carbon.store.notifications
+org.wso2.carbon.social
+org.wso2.store
+org.wso2.jaggery.scxml

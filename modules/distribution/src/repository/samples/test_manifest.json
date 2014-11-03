@@ -1,0 +1,37 @@
+{
+    "packages": {
+        "servicex": {
+            "resources": [{
+                "src": "samples/extension_samples/servicex/publisher/assets/servicex",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/extensions/assets/servicex"
+            }, {
+                "src": "samples/extension_samples/servicex/store/assets/servicex",
+                "dest": "repository/deployment/server/jaggeryapps/store/extensions/assets/servicex"
+            }, {
+                "src": "samples/extension_samples/servicex/publisher/config/publisher-tenant.json",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/config/publisher-tenant.json"
+            }, {
+                "src": "samples/extension_samples/servicex/store/config/store-tenant.json",
+                "dest": "repository/deployment/server/jaggeryapps/store/config/store-tenant.json"
+            }, {
+                "src": "samples/extension_samples/servicex/publisher/app/servicex_globals",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/extensions/app/servicex_globals"
+            }, {
+                "src": "samples/extension_samples/servicex/store/app/servicex_globals",
+                "dest": "repository/deployment/server/jaggeryapps/store/extensions/app/servicex_globals"
+            }, {
+                "src": "samples/extension_samples/servicex/publisher/tests/test_publisher_asset_configs.json",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/test/test_publisher_asset_configs.json"
+            }, {
+                "src": "samples/extension_samples/servicex/publisher/tests/test_publisher_asset_endpoints.js",
+                "dest": "repository/deployment/server/jaggeryapps/publisher/test/test_publisher_asset_endpoints.js"
+            }, {
+                "src": "samples/extension_samples/servicex/store/tests/test_store_asset_endpoints.js",
+                "dest": "repository/deployment/server/jaggeryapps/store/test/test_store_asset_endpoints.js"
+            },{
+                "src":"samples/extension_samples/servicex/store/tests/test_store_asset_configs.json",
+                "dest":"repository/deployment/server/jaggeryapps/store/test/test_store_asset_configs.json"
+                }]
+        }
+    }
+}

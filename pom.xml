@@ -39,10 +39,13 @@
         <module>modules/components/sso-common</module>
         <module>modules/jaggery-modules</module>
         <module>modules/components/asset-client</module>
+        <module>modules/components/store-util</module>
+        <module>modules/components/bam-client</module>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
         <module>modules/integration</module>
+
     </modules>
     <build>
         <extensions>

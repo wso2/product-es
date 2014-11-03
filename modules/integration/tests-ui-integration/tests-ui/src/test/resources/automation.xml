@@ -30,7 +30,7 @@
         <!--
          Change this to true if you want to generate coverage statistics
         -->
-        <coverage>false</coverage>
+        <coverage>true</coverage>
         <!--
          Change this to true if you want to enable framework dashboard
         -->
@@ -243,13 +243,13 @@
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
-                    <name>org.wso2.es.integration.common.utils.ESServerExtension</name>
+                    <name>org.wso2.es.integration.common.utils.ESServerExtension1</name>
                     <!--<parameter name="-DportOffset" value="0" />-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
-                <!--<class>-->
-                    <!--<name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>-->
-                <!--</class>-->
+                <class>
+                    <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>
+                </class>
             </extentionClasses>
         </platformExecutionManager>
 

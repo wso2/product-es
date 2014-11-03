@@ -1,0 +1,53 @@
+<!--
+  ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="ESTestSuite" parallel="false">
+    <parameter name="useDefaultListeners" value="false"/>
+
+    <listeners>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
+    </listeners>
+
+
+    <test name="ES-UI-extension-tests" parallel="false" verbose="2" preserve-order="true">
+        <!--<packages>-->
+            <!--<package name="org.wso2.es.ui.integration.extension.test.*"/>-->
+        <!--</packages>-->
+        <classes>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAddedAssetTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetCaramelPageTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetNewPageTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetOverrideExistingPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetOverridePartialTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherNewGlobalPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherOverridenGlobalPageTestCase"/>
+
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreAddedAssetTestCase" />
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreAssetNewPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreAssetOverrideExistingPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreNewGlobalPageTestCase"/>
+            <class name="org.wso2.es.ui.integration.extension.test.store.ESStoreOverriddenGlobalPageTestCase"/>
+        </classes>
+    </test>
+
+
+</suite>
