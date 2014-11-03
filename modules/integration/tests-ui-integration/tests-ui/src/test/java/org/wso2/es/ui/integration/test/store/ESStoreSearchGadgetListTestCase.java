@@ -35,11 +35,9 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.*;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
-public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
+public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
+
     private String webApp = "store";
-    private boolean acceptNextAlert = true;
     private static final Log log = LogFactory.getLog(ESStoreSearchGadgetListTestCase.class);
     WebDriverWait wait;
     private static String assetName = "Sample Asset";
@@ -54,8 +52,6 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
 
     private String adminUserName;
     private String adminUserPwd;
-    private String backendURL;
-
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @BeforeClass(alwaysRun = true)
@@ -66,6 +62,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         baseUrl = getWebAppURL();
         adminUserName = userInfo.getUserName();
         adminUserPwd = userInfo.getPassword();
+        acceptNextAlert = true;
         AutomationContext automationContext = new AutomationContext("ES",
                 TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
@@ -170,7 +167,7 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
     }
 
     @Test(groups = "wso2.es.store", description = "Add asset",
-            dependsOnMethods = "testStoreSearchByCategoryTemplate")
+            dependsOnMethods = "testESStoreSearchAssetsByName")
     public void testAddAsset() throws Exception {
         ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(),
                 userInfo.getPassword());
@@ -211,7 +208,8 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "IN-REVIEW"));
-        assertEquals(driver.findElement(By.id("state")).getText(), "IN-REVIEW");
+        assertEquals(driver.findElement(By.id("state")).getText(), "IN-REVIEW",
+                "Not Promoted to In-Review");
         driver.get(driver.getCurrentUrl());
         driver.findElement(By.id("Published")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"),
@@ -220,7 +218,8 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("commentModalText")).sendKeys("ok");
         driver.findElement(By.id("commentModalSave")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "PUBLISHED"));
-        assertEquals(driver.findElement(By.id("state")).getText(), "PUBLISHED");
+        assertEquals(driver.findElement(By.id("state")).getText(), "PUBLISHED",
+                "Not Promoted to Published");
     }
 
     @Test(groups = "wso2.es.store", description = "Search by newly added asset Name",
@@ -237,7 +236,8 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("search-button2")).click();
         driver.findElementPoll(By.linkText(assetName), 10);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
-        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
+        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText(),
+                "Newly added gadget is not found in the result of search by name : " + assetName);
 
     }
 
@@ -254,12 +254,15 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("search-button2")).click();
         driver.findElementPoll(By.linkText(assetName), 10);
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
-        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
+        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText(),
+                "Newly added gadget is not found in the result of search by version : " +
+                        assetVersion);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("img")));
         driver.findElement(By.cssSelector("img")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.linkText("Description"),
                 "Description"));
-        assertEquals("Version 1.2.3", driver.findElement(By.cssSelector("small")).getText());
+        assertEquals("Version 1.2.3", driver.findElement(By.cssSelector("small")).getText(),
+                "Newly added gadget's version is incorrect in the store");
     }
 
     @AfterClass(alwaysRun = true)
@@ -268,28 +271,28 @@ public class ESStoreSearchGadgetListTestCase extends ESIntegrationUITest {
         driver.quit();
     }
 
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
-        }
-    }
+//    private boolean isAlertPresent() {
+//        try {
+//            driver.switchTo().alert();
+//            return true;
+//        } catch (NoAlertPresentException e) {
+//            return false;
+//        }
+//    }
+//
+//    private String closeAlertAndGetItsText() {
+//        try {
+//            Alert alert = driver.switchTo().alert();
+//            String alertText = alert.getText();
+//            if (acceptNextAlert) {
+//                alert.accept();
+//            } else {
+//                alert.dismiss();
+//            }
+//            return alertText;
+//        } finally {
+//            acceptNextAlert = true;
+//        }
+//    }
 
 }

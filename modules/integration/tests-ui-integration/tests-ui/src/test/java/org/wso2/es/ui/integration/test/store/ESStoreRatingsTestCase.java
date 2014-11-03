@@ -23,15 +23,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
-public class ESStoreRatingsTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
+public class ESStoreRatingsTestCase extends BaseUITestCase {
+    //private ESWebDriver driver;
+//    private String baseUrl;
     private String webApp = "store";
-    WebDriverWait wait;
+
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -85,8 +85,10 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.switchTo().defaultContent();
         driver.get(driver.getCurrentUrl());
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
-        assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")));
+        assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")),
+                "Rating is not added");
+        assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText(),
+                "Review Comment not added");
     }
 
     @Test(groups = "wso2.es.store.ratings", description = "Test Submit Second Rating",
@@ -101,8 +103,8 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("com-body")).clear();
         driver.findElement(By.id("com-body")).sendKeys("Nice!");
         driver.findElement(By.id("btn-post")).click();
-        assertEquals("Please add your Rating", driver.findElement(By.cssSelector("div.com-alert"))
-                .getText());
+        assertEquals("Please add your Rating", driver.findElement(By.cssSelector("div.com-alert")
+        ).getText(), "Alert Doesn't appear");
         driver.findElement(By.linkText("4")).click();
         driver.findElement(By.id("btn-post")).click();
         // ERROR: Caught exception [ERROR: Unsupported command [selectWindow | name=socialIfr | ]]
@@ -117,20 +119,21 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.findElement(By.cssSelector("h4")).click();
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
-        //assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")));
+        assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")),
+                "My First Rating Doesn't appear");
         assertEquals("cool!", driver.findElement(By.xpath("//div[@id='stream']/div[1]/div/div/p"))
-                .getText());
+                .getText(), "My First Review Doesn't appear");
         assertEquals("", driver.findElement(By.cssSelector("div.com-rating-4star")).getText());
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-4star")));
+        assertTrue(isElementPresent(By.cssSelector("div.com-rating-4star")),
+                "My Second Rating Doesn't appear");
         assertEquals("Nice!", driver.findElement(By.xpath("//div[@id='stream']/div[2]/div/div/p"))
-                .getText());
+                .getText(), "My Second Review Doesn't appear");
 
     }
 
     @Test(groups = "wso2.es.store.ratings", description = "Test View Rating As Anon user",
-            dependsOnMethods = "testESTryingToAddReviewWithoutRating")
-    public void testESStoreViewRating() throws Exception {
+            dependsOnMethods = "testStoreAddLogoutAndViewRatings")
+    public void testESStoreAnonViewRating() throws Exception {
         driver.switchTo().defaultContent();
 
         driver.findElement(By.cssSelector("i.icon-cog")).click();
@@ -139,19 +142,20 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.findElement(By.linkText("User Reviews")).click();
 
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
-//        assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
         assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")));
         assertEquals("cool!", driver.findElement(By.xpath("//div[@id='stream']/div[1]/div/div/p"))
-                .getText());
-        assertEquals("", driver.findElement(By.cssSelector("div.com-rating-4star")).getText());
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-4star")));
+                .getText(), "First Review doesn't appear to anonymous user");
+        assertEquals("", driver.findElement(By.cssSelector("div.com-rating-4star")).getText(),
+                "First Rating doesn't appear to anonymous user");
+        assertTrue(isElementPresent(By.cssSelector("div.com-rating-4star")),
+                "Second Rating doesn't appear to anonymous user");
         assertEquals("Nice!", driver.findElement(By.xpath("//div[@id='stream']/div[2]/div/div/p"))
-                .getText());
+                .getText(), "Second Review doesn't appear to anonymous user");
 
     }
 
     @Test(groups = "wso2.es.store", description = "Test Logout and view rating",
-            dependsOnMethods = "testESStoreViewRating")
+            dependsOnMethods = "testESStoreViewMyRating")
     public void testStoreAddLogoutAndViewRatings() throws Exception {
         driver.switchTo().defaultContent();
         driver.findElement(By.linkText("admin")).click();
@@ -160,7 +164,8 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
         assertEquals("Please Sign in to add a Review",
-                driver.findElement(By.cssSelector("div.com-guest")).getText());
+                driver.findElement(By.cssSelector("div.com-guest")).getText(),
+                "Sign in massage doesn't appear in anon user view");
         assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText());
     }
 
@@ -169,13 +174,14 @@ public class ESStoreRatingsTestCase extends ESIntegrationUITest {
         driver.quit();
     }
 
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
+//
+//    private boolean isElementPresent(By by) {
+//        try {
+//            driver.findElement(by);
+//            return true;
+//        } catch (NoSuchElementException e) {
+//            return false;
+//        }
+//    }
 
 }

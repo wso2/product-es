@@ -23,11 +23,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
-public class ESStoreSearchTopAssetsTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
+public class ESStoreSearchTopAssetsTestCase extends BaseUITestCase {
+//    private ESWebDriver driver;
+//    private String baseUrl;
     private String webApp = "store";
 
     @BeforeClass(alwaysRun = true)
