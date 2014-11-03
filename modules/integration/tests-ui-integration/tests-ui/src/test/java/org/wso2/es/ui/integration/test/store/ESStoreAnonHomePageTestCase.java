@@ -16,11 +16,6 @@
 
 package org.wso2.es.ui.integration.test.store;
 
-import org.openqa.selenium.Alert;
-
-import java.util.regex.Pattern;
-import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.*;
 
 import org.openqa.selenium.*;
@@ -29,8 +24,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.openqa.selenium.support.ui.Select;
-import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
@@ -97,8 +90,6 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
 
     @Test(groups = "wso2.es", description = "Test Anonymous Navigation page links")
     public void testAnonNavigationLinks() throws Exception {
-        driver.get(baseUrl + "/store");
-
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Gadgets")).click();
         try {

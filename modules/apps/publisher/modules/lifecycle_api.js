@@ -35,38 +35,42 @@ var error = '';
         } catch (e) {
             var asset;
             var msg = 'Unable to locate the asset with id: ' + options.id;
-            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.NOT_FOUND);
+            log.error(msg);
+            if(log.isDebugEnabled()){
+                log.debug(e);
+            }
+            throw exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.NOT_FOUND);
         }
         return asset;
     };
 
-    /**
-     *
-     * @param exception The exception body
-     * @param type      The type of exception that how it should be handled
-     * @param code      Exception status code
-     */
-    var handleError = function (exception, type, code) {
-        if (type == constants.THROW_EXCEPTION_TO_CLIENT) {
-            log.debug(exception);
-            var e = exceptionModule.buildExceptionObject(exception, code);
-            throw e;
-        } else if (type == constants.LOG_AND_THROW_EXCEPTION) {
-            log.error(exception);
-            throw exception;
-        } else if (type == constants.LOG_EXCEPTION_AND_TERMINATE) {
-            log.error(exception);
-            var msg = 'An error occurred while serving the request!';
-            var e = exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
-            throw e;
-        } else if (type == constants.LOG_EXCEPTION_AND_CONTINUE) {
-            log.debug(exception);
-        }
-        else {
-            log.error(exception);
-            throw e;
-        }
-    };
+//    /**
+//     *
+//     * @param exception The exception body
+//     * @param type      The type of exception that how it should be handled
+//     * @param code      Exception status code
+//     */
+//    var handleError = function (exception, type, code) {
+//        if (type == constants.THROW_EXCEPTION_TO_CLIENT) {
+//            log.debug(exception);
+//            var e = exceptionModule.buildExceptionObject(exception, code);
+//            throw e;
+//        } else if (type == constants.LOG_AND_THROW_EXCEPTION) {
+//            log.error(exception);
+//            throw exception;
+//        } else if (type == constants.LOG_EXCEPTION_AND_TERMINATE) {
+//            log.error(exception);
+//            var msg = 'An error occurred while serving the request!';
+//            var e = exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
+//            throw e;
+//        } else if (type == constants.LOG_EXCEPTION_AND_CONTINUE) {
+//            log.debug(exception);
+//        }
+//        else {
+//            log.error(exception);
+//            throw e;
+//        }
+//    };
 
 
     /**
@@ -75,8 +79,10 @@ var error = '';
      */
     var validateOptions = function (options) {
         if (!options.type) {
-            var error = 'Unable to obtain state information without knowing the type of asset of id: ' + options.id;
-            handleError(error, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.BAD_REQUEST);
+            var error = 'Unable to obtain state information without knowing the type of asset of id: ' +
+                options.id;
+            log.error(error);
+            throw exceptionModule.buildExceptionObject(error, constants.STATUS_CODES.BAD_REQUEST);
         }
     };
 
@@ -97,7 +103,7 @@ var error = '';
             error = 'The asset ' + options.id + ' does not have a lifecycle state.';
         }
         if(error){
-            handleError(error, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.NOT_FOUND);
+            throw exceptionModule.buildExceptionObject(error, constants.STATUS_CODES.NOT_FOUND);
         }
 
     };
@@ -114,7 +120,7 @@ var error = '';
         validateOptions(options);
         if (!options.nextState) {
             error = 'A next state has not been provided';
-            handleError(error, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.BAD_REQUEST)
+            throw exceptionModule.buildExceptionObject(error, constants.STATUS_CODES.BAD_REQUEST)
         }
         //Obtain the tenantId
         var server = storeModule.server;
@@ -131,13 +137,16 @@ var error = '';
         //check whether a transition action available from asset.lifecycleState to options.nextState
         if (!action) {
             error = 'It is not possible to reach ' + options.nextState + ' from ' + asset.lifecycleState;
-            handleError(error, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.BAD_REQUEST)
+            throw exceptionModule.buildExceptionObject(error, constants.STATUS_CODES.BAD_REQUEST)
         }
         try {
             success = am.invokeLcAction(asset, action);
         } catch (e) {
             error = 'Error while changing state to ' + options.nextState + ' from ' + asset.lifecycleState;
-            handleError(error, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.INTERNAL_SERVER_ERROR)
+            if(log.isDebugEnabled()){
+                log.debug(e);
+            }
+            throw exceptionModule.buildExceptionObject(error, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
         return success;
     };
@@ -158,7 +167,7 @@ var error = '';
 
         if (!stateReq.checkItems && !stateReq.nextState) {
             var error = 'Checklist items or next state is not provided!';
-            handleError(error, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.BAD_REQUEST);//TODO use utility method
+            throw exceptionModule.buildExceptionObject(error, constants.STATUS_CODES.BAD_REQUEST);
         }
         if (stateReq.checkItems) {
             options.checkItems = JSON.parse(stateReq.checkItems);
@@ -176,7 +185,7 @@ var error = '';
                     options.comment = stateReq.comment;
                 } else {
                     msg = msg + ' Please provide a comment for this state transition!';
-                    handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.BAD_REQUEST);
+                    throw exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.BAD_REQUEST);
                 }
             }
             options.nextState = stateReq.nextState;
@@ -185,7 +194,7 @@ var error = '';
                 msg = msg + ' State changed successfully to ' + options.nextState + '!';
             } else {
                 msg = msg + ' An error occurred while changing state to ' + options.nextState + '!';
-                handleError(error, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
+                throw exceptionModule.buildExceptionObject(error, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
                 //msg = '';
             }
 
@@ -223,7 +232,9 @@ var error = '';
             }
         } catch (e) {
             var msg = 'No check items are available for this asset state';
-            handleError(msg, constants.LOG_EXCEPTION_AND_CONTINUE, null);
+            if(log.isDebugEnabled()){
+                log.debug(e);
+            }
         }
 
         return checkItems;
@@ -240,21 +251,27 @@ var error = '';
         //Check if the index provided is valid
         var msg;
         if ((checkItemIndex < 0) || (checkItemIndex > state.checkItems.length - 1)) {
-            msg = 'Unable to change the state of the check item as the index does not point to a valid check item.The check item index must be between 0 and ' + state.checkItems.length + '.';
-            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.BAD_REQUEST);
+            msg = 'Unable to change the state of the check item as the index does not point to' +
+                ' a valid check item.The check item index must be between 0 and ' + state.checkItems.length + '.';
+            throw exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.BAD_REQUEST);
         }
         //Check if the check item state is the same as the next state
         if (state.checkItems[checkItemIndex].checked == checkItemState) {
-            msg = 'The state of the check item at index ' + checkItemIndex + ' was not changed as it is already ' + checkItemState;
-            handleError(msg, constants.LOG_EXCEPTION_AND_CONTINUE, null)
+            msg = 'The state of the check item at index ' + checkItemIndex +
+                ' was not changed as it is already ' + checkItemState;
+            log.warn(msg);
+            return;
             //throw msg;
         }
         //Invoke the state change
         try {
             am.invokeLifecycleCheckItem(asset, checkItemIndex, checkItemState);
         } catch (e) {
+            if(log.isDebugEnabled()){
+                log.debug(e);
+            }
             msg = 'Unable to change the state of check item ' + checkItemIndex + ' to ' + checkItemState;
-            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
+            throw exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
     };
 
@@ -271,9 +288,9 @@ var error = '';
         var msg = '';
         //Check if the current state has any check items
         if ((state.checkItems) && (state.checkItems.length < 1)) {
-            msg = 'Unable to change the state of the check item as the current state(' + state.id + ') does not have any check items';
-            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.BAD_REQUEST);
-
+            msg = 'Unable to change the state of the check item as the current state(' + state.id +
+                ') does not have any check items';
+            throw exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.BAD_REQUEST);
         }
 
         //Assume checking items will succeed
@@ -321,7 +338,7 @@ var error = '';
         state = lifecycle.state(asset.lifecycleState);
         if (!state) {
             var msg = 'Unable to locate state information for ' + asset.lifecycleState;
-            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.NOT_FOUND);
+            throw exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.NOT_FOUND);
         }
         //Obtain the deletable states
         state.deletableStates = rxtManager.getDeletableStates(options.type);
@@ -346,7 +363,8 @@ var error = '';
         var lifecycle = null;
         var user = server.current(session);
         if (!options.name) {
-            log.warn('Unable to locate lifecycle definition as a name has not been provided.Please invoke the API with a lifecycle name');
+            log.warn('Unable to locate lifecycle definition as a name has not been provided.' +
+                'Please invoke the API with a lifecycle name');
             return lifecycle;
         }
         lifecycle = lcApi.getLifecycle(options.name, user.tenantId);
@@ -372,7 +390,8 @@ var error = '';
     };
 
     /**
-     * The function changes the state of a set of check items sent as an array with each element been  { index: number , checked:true}
+     * The function changes the state of a set of check items sent as an array with each element been
+     * { index: number , checked:true}
      * @param  options options.id=<asset-id>
      * @param  req     jaggery request
      * @param  res     jaggery response

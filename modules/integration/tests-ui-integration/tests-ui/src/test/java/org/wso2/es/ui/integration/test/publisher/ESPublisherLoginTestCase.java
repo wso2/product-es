@@ -61,7 +61,8 @@ public class ESPublisherLoginTestCase extends ESIntegrationUITest {
         assertEquals("Asset | WSO2 Enterprise Store back-office", driver.getTitle());
     }
 
-    @Test(groups = "wso2.es", description = "verify login to ES Publisher", dependsOnMethods = "testLoginToPublisher")
+    @Test(groups = "wso2.es", description = "verify login to ES Publisher",
+            dependsOnMethods = "testLoginToPublisher")
     public void testLogoutFromPublisher() throws Exception {
         driver.get(webAppURL + "/publisher/asts/gadget");
         driver.findElement(By.linkText(userName)).click();
