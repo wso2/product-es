@@ -18,7 +18,6 @@ package org.wso2.es.ui.integration.test.store;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.Alert;
 
 import static org.testng.Assert.*;
 
@@ -33,13 +32,10 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.*;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
 
-    private String webApp = "store";
     private static final Log log = LogFactory.getLog(ESStoreSearchGadgetListTestCase.class);
-    WebDriverWait wait;
     private static String assetName = "Sample Asset";
     private static String assetVersion = "1.2.3";
     private static String assetAuthor = "testAuthor";
@@ -50,8 +46,6 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     private static String resourcePath = "/_system/governance/gadgets/" + assetAuthor + "/"
             + assetName + "/" + assetVersion;
 
-    private String adminUserName;
-    private String adminUserPwd;
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @BeforeClass(alwaysRun = true)
@@ -70,7 +64,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
                 adminUserPwd);
-        driver.get(baseUrl + "/" + webApp);
+        driver.get(baseUrl + "/" + storeApp);
     }
 
     @Test(groups = "wso2.es.store", description = "Search By Category Template")

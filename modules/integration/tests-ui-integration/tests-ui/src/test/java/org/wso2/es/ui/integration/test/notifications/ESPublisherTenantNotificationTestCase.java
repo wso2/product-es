@@ -1,42 +1,55 @@
+/*
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.es.ui.integration.test.notifications;
-import org.openqa.selenium.*;
+
+import org.openqa.selenium.By;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import java.io.File;
-
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
-public class ESPublisherTenantNotificationTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
-    private StringBuffer verificationErrors = new StringBuffer();
-    private String publisherApp = "publisher";
+/**
+ * Notification framework test for Tenant: Tenant admin & Tenant user
+ * Adds a new asset
+ * Update it & check for notifications
+ * Do an LC transition on it & check for notifications
+ */
+public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
     private String resourceLocation;
-    private String backendURL;
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    private String assetName;
     private TestUserMode userMode;
     private String email = "esmailsample@gmail.com";
     private String emailPwd = "esMailTest";
+    private String firstName = "name 1";
+    private String lastName = "name 2";
+    private String version = "1.0.0";
+    private String createdTime = "12";
+    private String assetType = "gadget";
+    private String assetDescription = "Test Description";
 
-    private String currentUserName;
-    private String currentUserPwd;
-    private String adminUserName;
-    private String adminUserPwd;
-    private String providerName;
-
-    private String resourcePath;
-
-    private String LCNotificationSubject;
-    private String updateNotificationSubject;
+    private String LCNotificationSubject = "[StoreLifecycleStateChange] at path: ";
+    private String updateNotificationSubject = "[StoreAssetUpdate] at path: ";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherTenantNotificationTestCase(TestUserMode testUserMode, String assetName) {
@@ -51,57 +64,65 @@ public class ESPublisherTenantNotificationTestCase extends ESIntegrationUITest {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         baseUrl = getStorePublisherUrl();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("ES",
+                TestUserMode.TENANT_ADMIN);
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
         resourceLocation = getResourceLocation();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
+                adminUserPwd);
         providerName = currentUserName.split("@")[0];
-        resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName + "/1.0.0";
-        LCNotificationSubject = "[StoreLifecycleStateChange] at path: " + this.resourcePath;
-        updateNotificationSubject = "[StoreAssetUpdate] at path: " + this.resourcePath;
+        resourcePath = "/_system/governance/gadgets/" + providerName + "/" + assetName + "/" +
+                version;
+        LCNotificationSubject += resourcePath;
+        updateNotificationSubject += resourcePath;
+        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
+                .separator + "smtp.properties";
 
+        //Update user profiles through Admin console
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
-        ESUtil.setupUserProfile(driver, baseUrl, currentUserName, "firstName", "lastName", "esmailsample@gmail.com");
+        ESUtil.setupUserProfile(driver, baseUrl, currentUserName, firstName, lastName, email);
+        //login to publisher & add a new gadget
         ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
-        AssetUtil.addNewAsset(driver, baseUrl, "gadget", providerName, assetName, "1.0.0", "12");
+        AssetUtil.addNewAsset(driver, baseUrl, assetType, providerName, assetName, version, createdTime);
     }
 
 
     @Test(groups = "wso2.es.notification", description = "Testing mails for LC state " +
             "change event")
     public void testLCNotification() throws Exception {
+        //check notification for initial LC state change
         driver.findElementPoll(By.linkText(assetName), 30);
-        boolean hasMail = ESUtil.containsEmail(resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties", emailPwd, email, LCNotificationSubject);
+        //read email using smtp
+        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, emailPwd, email,
+                LCNotificationSubject);
         assertTrue(hasMail, "LC Notification failed for user:" + currentUserName);
     }
 
     @Test(groups = "wso2.es.notification", description = "Testing mails for asset update " +
             "event", dependsOnMethods = "testLCNotification")
     public void testUpdateNotification() throws Exception {
+        //Update gadget and check lC state change notification
         driver.get(baseUrl + "/publisher/asts/gadget/list");
-        AssetUtil.updateAsset(driver, baseUrl, "gadget", assetName, "Test Description");
+        AssetUtil.updateAsset(driver, baseUrl, assetType, assetName, assetDescription);
         driver.get(baseUrl + "/publisher/asts/gadget/list");
-        Thread.sleep(10000);//TODO: remove sleep
-        boolean hasMail = ESUtil.containsEmail(resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties", emailPwd, email, updateNotificationSubject);
+        //read email using smtp
+        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, emailPwd, email,
+                updateNotificationSubject);
         assertTrue(hasMail, "Asset Update Notification failed for user:" + currentUserName);
     }
 
     @AfterClass(groups = "wso2.es.notification", alwaysRun = true)
     public void tearDown() throws Exception {
+        //delete gadget and email, logout from admin console and publisher
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
         driver.get(baseUrl + "/publisher/logout");
-        ESUtil.deleteAllEmail(resourceLocation + File.separator + "notifications" + File.separator + "smtp" +
-                ".properties", emailPwd, email);
-        driver.quit();
-        String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
-            fail(verificationErrorString);
+        if(!currentUserName.equals(adminUserName)){
+            ESUtil.deleteAllEmail(smtpPropertyLocation, emailPwd, email);
         }
+        driver.quit();
     }
 
     @DataProvider(name = "userMode")

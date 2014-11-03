@@ -23,6 +23,7 @@ import javax.mail.*;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class ESUtil extends ESIntegrationUITest {
@@ -63,9 +64,9 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.linkText("Sign out")).click();
     }
 
-    public static void loginToAdminConsole(ESWebDriver driver, String url, String userName, String pwd
-    ) throws XPathExpressionException {
-        driver.get(url+adminConsoleSuffix);
+    public static void loginToAdminConsole(ESWebDriver driver, String url, String userName,
+                                           String pwd) throws XPathExpressionException {
+        driver.get(url + adminConsoleSuffix);
         driver.findElement(By.id("txtUserName")).clear();
         driver.findElement(By.id("txtUserName")).sendKeys(userName);
         driver.findElement(By.id("txtPassword")).clear();
@@ -73,19 +74,20 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.cssSelector("input.button")).click();
     }
 
-    public static void logoutFromAdminConsole(ESWebDriver driver, String url){
+    public static void logoutFromAdminConsole(ESWebDriver driver, String url) {
         driver.get(url + adminConsoleSuffix);
         driver.findElement(By.linkText("Sign-out")).click();
     }
 
-    public static void setupUserProfile(ESWebDriver driver, String url, String userName, String firstName,
-                                        String lastName,
-                                        String email){
+    public static void setupUserProfile(ESWebDriver driver, String url, String userName,
+                                        String firstName, String lastName, String email) {
         String userProfileElement;
-        if(userName.equals("admin")){
-            userProfileElement = "//a[contains(text(),'User\n                                                                                            Profile')]";
-        }else {
-            userProfileElement = "(//a[contains(text(),'User\n                                                                                            Profile')])[2]";
+        if (userName.equals("admin")) {
+            userProfileElement = "//a[contains(text(),'User\n                                    " +
+                    "                                                        Profile')]";
+        } else {
+            userProfileElement = "(//a[contains(text(),'User\n                                   " +
+                    "                                                         Profile')])[2]";
         }
         driver.get(url + adminConsoleSuffix);
         driver.findElement(By.cssSelector("#menu-panel-button3 > span")).click();
@@ -103,57 +105,55 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.cssSelector("#menu-panel-button1 > span")).click();
     }
 
-    public static boolean containsEmail(String smtpPropertyFile, String password, String email, String subject){
+    public static boolean containsEmail(String smtpPropertyFile, String password, String email,
+                                        String subject) throws IOException, MessagingException,
+            InterruptedException {
         Properties props = new Properties();
         boolean hasEmail = false;
-        try {
-            props.load(new FileInputStream(new File(smtpPropertyFile)));
-            Session session = Session.getDefaultInstance(props, null);
-            Store store = session.getStore("imaps");
-            store.connect("smtp.gmail.com", email, password);
-            Folder inbox = store.getFolder("inbox");
-            inbox.open(Folder.READ_ONLY);
+        int maxPollCount = 20;
+        int pollCount = 0;
+        props.load(new FileInputStream(new File(smtpPropertyFile)));
+        Session session = Session.getDefaultInstance(props, null);
+        Store store = session.getStore("imaps");
+        store.connect("smtp.gmail.com", email, password);
+        Folder inbox = store.getFolder("inbox");
+        inbox.open(Folder.READ_ONLY);
 
+        while ((pollCount <= maxPollCount) && !hasEmail) {
             Message[] messages = inbox.getMessages();
-            for (Message msg : messages){
-                if(subject.equals(msg.getSubject())){
+            for (Message msg : messages) {
+                if (subject.equals(msg.getSubject())) {
                     hasEmail = true;
                     break;
                 }
             }
-            inbox.close(true);
-            store.close();
-            return hasEmail;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return hasEmail;
+            Thread.sleep(2000);
         }
+        inbox.close(true);
+        store.close();
+        return hasEmail;
     }
 
-    public static void deleteAllEmail(String smtpPropertyFile, String password, String email){
+    public static void deleteAllEmail(String smtpPropertyFile, String password,
+                                      String email) throws IOException, MessagingException {
         Properties props = new Properties();
-        try {
-            props.load(new FileInputStream(new File(smtpPropertyFile)));
-            Session session = Session.getDefaultInstance(props, null);
+        props.load(new FileInputStream(new File(smtpPropertyFile)));
+        Session session = Session.getDefaultInstance(props, null);
 
-            Store store = session.getStore("imaps");
-            store.connect("smtp.gmail.com", email, password);
+        Store store = session.getStore("imaps");
+        store.connect("smtp.gmail.com", email, password);
 
-            Folder inbox = store.getFolder("inbox");
-            inbox.open(Folder.READ_WRITE);
-            int messageCount = inbox.getMessageCount();
+        Folder inbox = store.getFolder("inbox");
+        inbox.open(Folder.READ_WRITE);
+        int messageCount = inbox.getMessageCount();
 
-            Message[] messages = inbox.getMessages();
+        Message[] messages = inbox.getMessages();
 
-            for(int i=0; i<messageCount; i++){
-                messages[i].setFlag(Flags.Flag.DELETED, true);
-            }
-            inbox.close(true);
-            store.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (int i = 0; i < messageCount; i++) {
+            messages[i].setFlag(Flags.Flag.DELETED, true);
         }
+        inbox.close(true);
+        store.close();
     }
 
 
