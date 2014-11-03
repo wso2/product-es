@@ -1,5 +1,5 @@
 /*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+
+import static org.testng.Assert.fail;
 
 /**
  * This is the Basic UI test class by which all the other ui-test-cases are extended.
@@ -34,6 +37,19 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
     protected String backendURL;
     protected WebDriverWait wait;
     protected boolean acceptNextAlert = true;
+    protected String publisherApp = "publisher";
+    protected String storeApp = "store";
+
+    protected String currentUserName;
+    protected String currentUserPwd;
+    protected String adminUserName;
+    protected String adminUserPwd;
+    protected String assetName;
+    protected String providerName;
+
+    protected String resourcePath;
+    protected String smtpPropertyLocation;
+    protected ResourceAdminServiceClient resourceAdminServiceClient;
 
     /**
      * This method check whether the given element is present in the current driver instance
@@ -80,4 +96,20 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
             acceptNextAlert = true;
         }
     }
+
+    /**
+     * This method helps to use alerts even if the earlier asserts in the same test case fails
+     * @param verificationErrors
+     * @return new verificationErrors buffer
+     */
+    protected StringBuffer failOnError(StringBuffer verificationErrors) {
+        String verificationErrorString = verificationErrors.toString();
+        StringBuffer errorBuffer = verificationErrors;
+        if (!"".equals(verificationErrorString)) {
+            errorBuffer = new StringBuffer();
+            fail(verificationErrorString);
+        }
+        return errorBuffer;
+    }
+
 }

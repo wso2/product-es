@@ -18,17 +18,13 @@ package org.wso2.es.ui.integration.util;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
-
-import static org.testng.Assert.assertEquals;
 
 public class AssetUtil extends ESIntegrationUITest {
 
-    public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String provider,
+    public static void addNewAsset(WebDriver driver, String baseUrl, String assetType,
+                                   String provider,
                                    String assetName, String version,
                                    String createdTime) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
@@ -44,7 +40,8 @@ public class AssetUtil extends ESIntegrationUITest {
         driver.findElement(By.id("btn-create-asset")).click();
     }
 
-    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
+    public static String updateAsset(WebDriver driver, String baseUrl, String assetType,
+                                     String assetName,
                                      String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
@@ -55,16 +52,16 @@ public class AssetUtil extends ESIntegrationUITest {
         return closeAlertAndGetItsText(driver, true);
     }
 
-    public static void changeLCState(WebDriver driver, WebDriverWait wait, String toState, String comment) {
+    public static void changeLCState(WebDriver driver, String toState,
+                                     String comment) {
         driver.findElement(By.id(toState)).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"), "Add a comment"));
 
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys(comment);
         driver.findElement(By.id("commentModalSave")).click();
     }
 
-    public static void addRatingsAndReviews(ESWebDriver driver, String review, String starCount){
+    public static void addRatingsAndReviews(ESWebDriver driver, String review, String starCount) {
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
         driver.findElement(By.id("com-body")).clear();
@@ -74,9 +71,12 @@ public class AssetUtil extends ESIntegrationUITest {
         driver.switchTo().defaultContent();
     }
 
-    public static void publishAssetToStore(WebDriver driver, WebDriverWait wait){
-        changeLCState(driver, wait, "In-Review", "to review");
-        changeLCState(driver, wait, "Published", "published");
+    public static void publishAssetToStore(WebDriver driver, String assetName) {
+        driver.findElement(By.linkText(assetName)).click();
+        driver.findElement(By.linkText("Life Cycle")).click();
+        changeLCState(driver, "In-Review", "to review");
+        driver.get(driver.getCurrentUrl());
+        changeLCState(driver, "Published", "published");
     }
 
     private static String closeAlertAndGetItsText(WebDriver driver, boolean acceptNextAlert) {

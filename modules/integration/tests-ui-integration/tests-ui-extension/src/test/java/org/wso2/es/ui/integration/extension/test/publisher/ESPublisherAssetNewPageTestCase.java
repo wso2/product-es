@@ -19,9 +19,12 @@
 package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.Alert;
+
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
+
 import static org.testng.Assert.*;
+
 import org.openqa.selenium.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -39,26 +42,26 @@ public class ESPublisherAssetNewPageTestCase extends ESIntegrationUITest {
     private String webApp = "publisher";
     private boolean acceptNextAlert = true;
 
-  @BeforeClass(alwaysRun = true)
-  public void setUp() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setUp() throws Exception {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, webApp);
-  }
+        ESUtil.login(driver, baseUrl, webApp, userInfo.getUserName(), userInfo.getPassword());
+    }
 
-  @Test(groups = "wso2.es", description = "")
-  public void testESPublisherAssetNewPageTestCase() throws Exception {
-      driver.get(baseUrl + "/publisher/asts/gadget/list");
-      driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
-      driver.findElement(By.linkText("Service")).click();
-      driver.get(baseUrl + "/publisher/asts/servicex/new_page");
-      assertTrue(isElementPresent(By.id("assetNewPageH1")));
- }
+    @Test(groups = "wso2.es", description = "")
+    public void testESPublisherAssetNewPageTestCase() throws Exception {
+        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+        driver.findElement(By.linkText("Service")).click();
+        driver.get(baseUrl + "/publisher/asts/servicex/new_page");
+        assertTrue(isElementPresent(By.id("assetNewPageH1")));
+    }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ESUtil.logout(driver, baseUrl,webApp);
+        driver.get("/publisher/logout");
         driver.quit();
     }
 
