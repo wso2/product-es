@@ -45,11 +45,7 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
             String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar
                     .getInstance().getTime());
             String snapshotName = timeStamp
-                    + " : " + throwable.getCause()
-                    .getMessage()
-                    .toString()
-                    .split
-                            ("\n")[0];
+                    + " : " + throwable.getCause().getMessage().toString().split("\n")[0];
             captureScreenShot(snapshotName);
         }
     };
@@ -72,8 +68,7 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
                     "surefire-reports" + File.separator + "screen-shot";
             log.error("OnException - Saving Screen-shot : " + filename + " to location " + pathName);
             File screenShot = this.driver.getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(screenShot, new File(pathName  + File.separator +
-                            filename));
+            FileUtils.copyFile(screenShot, new File(pathName  + File.separator + filename));
         } catch (Exception e) {
             log.error(e);
         }
