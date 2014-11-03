@@ -17,21 +17,17 @@
 package org.wso2.es.ui.integration.test.store;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-import static org.testng.Assert.*;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 
-public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
-
-    private String currentUserName;
-    private String currentUserPwd;
+public class ESStoreLoginLogoutTestCase extends BaseUITestCase {
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -69,15 +65,6 @@ public class ESStoreLoginLogoutTestCase extends ESIntegrationUITest {
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.quit();
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
 }

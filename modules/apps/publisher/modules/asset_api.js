@@ -78,34 +78,6 @@ var result;
     };
 
     /**
-     *
-     * @param exception The exception body
-     * @param type      The type of exception that how it should be handled
-     * @param code      Exception status code
-     */
-    var handleError = function (exception, type, code) {
-        var e;
-        if (type == constants.THROW_EXCEPTION_TO_CLIENT) {
-            log.debug(exception);
-            e = exceptionModule.buildExceptionObject(exception, code);
-            throw e;
-        } else if (type == constants.LOG_AND_THROW_EXCEPTION) {
-            log.error(exception);
-            throw exception;
-        } else if (type == constants.LOG_EXCEPTION_AND_TERMINATE) {
-            log.error(exception);
-            var msg = 'An error occurred while serving the request!';
-            e = exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
-            throw e;
-        } else if (type == constants.LOG_EXCEPTION_AND_CONTINUE) {
-            log.debug(exception);
-        } else {
-            log.error(exception);
-            throw exception;
-        }
-    };
-
-    /**
      * This function put asset to the storage
      * @param am    The asset manager instance
      * @param asset The asset to be saved
@@ -130,7 +102,9 @@ var result;
         //Get all of the files that have been sent in the request
         var files = request.getAllFiles();
         if (!files) {
-            log.debug('User has not provided any resources such any new images or files when updating the asset with id ' + asset.id);
+            if (log.isDebugEnabled()) {
+                log.debug('User has not provided any resources such any new images or files when updating the asset with id ' + asset.id);
+            }
             return;
         }
         for (var index in resourceFields) {
@@ -159,7 +133,14 @@ var result;
             //If the asset attribute value is null then use the old resource
 //            if ((!asset.attributes[resourceField]) || (asset.attributes[resourceField] == '')) {
             if (!asset.attributes[resourceField]) {
-                log.debug('Copying old resource attribute value for ' + resourceField);
+                if (log.isDebugEnabled()) {
+                    log.debug('Copying old resource attribute value for ' + resourceField);
+                }
+                asset.attributes[resourceField] = original.attributes[resourceField];
+            }if (!asset.attributes[resourceField]) {
+                if (log.isDebugEnabled()) {
+                    log.debug('Copying old resource attribute value for ' + resourceField);
+                }
                 asset.attributes[resourceField] = original.attributes[resourceField];
             }
         }
@@ -182,11 +163,15 @@ var result;
 
     var putInUnchangedValues = function (original, asset, sentData) {
         for (var key in original.attributes) {
-            //We need to add the original values if the attribute was not present in the data object sent from the client
+            //We need to add the original values if the attribute was not present in the data object
+            // sent from the client
             //and it was not deleted by the user (the sent data has an empty value)
             if (original.attributes.hasOwnProperty(key)) {
                 if (((!asset.attributes[key]) || (asset.attributes[key].length == 0)) && (!isPresent(key, sentData))) {
-                    log.debug('Copying old attribute value for ' + key);
+
+                    if (log.isDebugEnabled()) {
+                        log.debug('Copying old attribute value for ' + key);
+                    }
                     asset.attributes[key] = original.attributes[key];
                 }
             }
@@ -202,10 +187,6 @@ var result;
      * @return The created asset or null if failed to create the asset
      */
     api.create = function (options, req, res, session) {
-
-        var asset = require('rxt').asset;
-        var am = asset.createUserAssetManager(session, options.type);
-        var assetReq = req.getAllParameters('UTF-8');
 
         var assetModule = rxtModule.asset;
         var am = assetModule.createUserAssetManager(session, options.type);
@@ -263,10 +244,13 @@ var result;
         try {
             original = am.get(options.id);
         } catch (e) {
-            log.error(e);
             asset = null;
             var msg = 'Unable to locate the asset with id: ' + options.id;
-            handleError(msg, constants.THROW_EXCEPTION_TO_CLIENT, constants.STATUS_CODES.NOT_FOUND);
+            log.error(msg);
+            if (log.isDebugEnabled()) {
+                log.debug(e);
+            }
+            throw exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.NOT_FOUND);
         }
         if (original) {
             putInStorage(asset, am);
@@ -285,7 +269,7 @@ var result;
                 if (log.isDebugEnabled()) {
                     log.debug('Failed to update the asset ' + stringify(asset));
                 }
-                handleError(errMassage, constants.LOG_EXCEPTION_AND_TERMINATE, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
+                throw exceptionModule.buildExceptionObject(errMassage, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
 
             }
         }
@@ -370,6 +354,9 @@ var result;
         } catch (e) {
             result = null;
             log.error(e);
+            if (log.isDebugEnabled()) {
+                log.debug("Error while searching assets as for the request : " + req.getQueryString());
+            }
         }
         return result;
     };
@@ -403,8 +390,11 @@ var result;
                 }
             }
         } catch (e) {
-            log.error(e);
             result = null;
+            log.error(e);
+            if (log.isDebugEnabled()) {
+                log.debug("Error while retrieving asset as for the request : " + req.getQueryString());
+            }
         }
         return result;
     };
@@ -430,7 +420,7 @@ var result;
             return true;
         } catch (e) {
             log.error('Asset with id: ' + asset.id + ' was not deleted due to ' + e);
-            success = false;
+            return false;
         }
     };
 

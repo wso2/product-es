@@ -17,26 +17,26 @@
 package org.wso2.es.ui.integration.test.common;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
 import static org.testng.Assert.assertTrue;
 
 /**
  * Register a new user for ES
  * check login for store and publisher
  */
-public class ESRegisterUserTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
+public class ESRegisterUserTestCase extends BaseUITestCase {
+
     private UserManagementClient userManagementClient;
-    private String backendURL;
+    private String newUserName = "testusernew";
+    private String newUserPwd = "testusernew";
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -56,35 +56,26 @@ public class ESRegisterUserTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/store");
         driver.findElement(By.id("btn-register")).click();
         driver.findElement(By.id("reg-username")).clear();
-        driver.findElement(By.id("reg-username")).sendKeys("testusernew");
+        driver.findElement(By.id("reg-username")).sendKeys(newUserName);
         driver.findElement(By.id("reg-password")).clear();
-        driver.findElement(By.id("reg-password")).sendKeys("testusernew");
+        driver.findElement(By.id("reg-password")).sendKeys(newUserPwd);
         driver.findElement(By.id("reg-password2")).clear();
-        driver.findElement(By.id("reg-password2")).sendKeys("testusernew");
+        driver.findElement(By.id("reg-password2")).sendKeys(newUserPwd);
         driver.findElement(By.id("registrationSubmit")).click();
         //check login for store
         assertTrue(isElementPresent(By.linkText("My Items")), "Login failed for Store");
-        assertTrue(isElementPresent(By.linkText("testusernew")), "Login failed for Store");
+        assertTrue(isElementPresent(By.linkText(newUserName)), "Login failed for Store");
         //check login for publisher
         driver.get(baseUrl + "/publisher");
-        assertTrue(isElementPresent(By.linkText("testusernew")), "Login failed for Publisher");
+        assertTrue(isElementPresent(By.linkText(newUserName)), "Login failed for Publisher");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         //logout and delete new user
         driver.get(baseUrl + "/publisher/logout");
-        userManagementClient.deleteUser("testusernew");
+        userManagementClient.deleteUser(newUserName);
         driver.quit();
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
 }

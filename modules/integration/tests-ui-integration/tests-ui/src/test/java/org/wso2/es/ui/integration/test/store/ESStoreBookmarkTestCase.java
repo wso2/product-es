@@ -17,31 +17,22 @@
 package org.wso2.es.ui.integration.test.store;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-import java.util.concurrent.TimeUnit;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
  * Bookmark functionality test
  */
-public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private WebDriverWait wait;
-    private String baseUrl;
-    private String webApp = "store";
-
-    private String currentUserName;
-    private String currentUserPwd;
-
+public class ESStoreBookmarkTestCase extends BaseUITestCase {
     private String bookmarkedAsset;
 
     @BeforeClass(alwaysRun = true)
@@ -52,8 +43,7 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
+        ESUtil.login(driver, baseUrl, storeApp, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.store", description = "Test Bookmarking")
@@ -105,15 +95,6 @@ public class ESStoreBookmarkTestCase extends ESIntegrationUITest {
     public void tearDown() throws Exception {
         driver.get(baseUrl + "/store/logout");
         driver.quit();
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
 }

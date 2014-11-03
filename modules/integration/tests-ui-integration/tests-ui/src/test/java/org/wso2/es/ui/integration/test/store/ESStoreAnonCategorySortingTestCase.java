@@ -25,8 +25,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import static org.testng.Assert.assertEquals;
@@ -35,36 +35,39 @@ import static org.testng.Assert.fail;
 /**
  * Category and sorting test for Anonymous store
  */
-public class ESStoreAnonCategorySortingTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private WebDriverWait wait;
-    private String baseUrl;
+public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
     private String popularAsset1;
     private String popularAsset2;
+    private String review1 = "cool!";
+    private String review2 = "awesome!";
+    private String rating1 = "4";
+    private String rating2 = "2";
+    private String assetVersion = "1.0.0";
+    private String assetCreatedTime = "12";
+    private String assetType = "gadget";
 
-    private String assetName = "Asset Recent";
-    private String resourcePath;
-    private String userName;
-    private String password;
+    private static final String BAR_CHART = "Bar Chart";
+    private static final String BUBBLE_CHART = "Bubble Chart";
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
+        assetName = "Asset Recent";
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        userName = userInfo.getUserName();
-        password = userInfo.getPassword();
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
 
-        resourcePath = "/_system/governance/gadgets/" + userName + "/" + this
-                .assetName + "/1.0.0";
+        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + this
+                .assetName + "/" + assetVersion;
         AutomationContext automationContext = new AutomationContext("ES",
                 TestUserMode.SUPER_TENANT_ADMIN);
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, userName,
-                password);
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, currentUserName,
+                currentUserPwd);
 
         //Rating two assets to check sorting on popularity
         driver.get(baseUrl + "/store/asts/gadget/list");
@@ -74,23 +77,23 @@ public class ESStoreAnonCategorySortingTestCase extends ESIntegrationUITest {
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
         driver.switchTo().defaultContent();
-        ESUtil.login(driver, baseUrl, "store", userName, password);
+        ESUtil.login(driver, baseUrl, storeApp, currentUserName, currentUserPwd);
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.xpath("//div[@id='assets-container']/div/div[4]/div/div/a/h4"))
                 .click();
-        AssetUtil.addRatingsAndReviews(driver, "cool!", "4");
+        AssetUtil.addRatingsAndReviews(driver, review1, rating1);
         driver.get(baseUrl + "/store/asts/gadget/list");
         popularAsset2 = driver.findElement(By.xpath
                 ("//div[@id='assets-container']/div[2]/div[3]/div/div/a/h4"))
                 .getText();
         driver.findElement(By.xpath("//div[@id='assets-container']/div[2]/div[3]/div/div/a/h4"))
                 .click();
-        AssetUtil.addRatingsAndReviews(driver, "awesome!", "2");
+        AssetUtil.addRatingsAndReviews(driver, review2, rating2);
 
         //navigate to publisher and add and publish a new gadget to support sort by created time
         driver.get(baseUrl + "/publisher");
-        AssetUtil.addNewAsset(driver, baseUrl, "gadget", userName, assetName,
-                "1.0.0", "12");
+        AssetUtil.addNewAsset(driver, baseUrl, assetType, currentUserName, assetName,
+                assetVersion, assetCreatedTime);
         driver.findElementPoll(By.linkText(assetName), 30);
         AssetUtil.publishAssetToStore(driver, assetName);
         driver.get(baseUrl + "/publisher/logout");
@@ -120,10 +123,10 @@ public class ESStoreAnonCategorySortingTestCase extends ESIntegrationUITest {
         //sort by alphabetical order
         driver.findElement(By.cssSelector("i.icon-sort-alphabetical")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
-                ("//div[@id='assets-container']/div/div[3]/div/div/a/h4"), "Bubble Chart"));
+                ("//div[@id='assets-container']/div/div[3]/div/div/a/h4"), BUBBLE_CHART));
         assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText(),
                 "Alphabetical Sort failed");
-        assertEquals("Bar Chart", driver.findElement(By.xpath
+        assertEquals(BAR_CHART, driver.findElement(By.xpath
                 ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(),
                 "Alphabetical Sort failed");
     }

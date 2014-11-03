@@ -21,8 +21,8 @@ import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import java.io.File;
@@ -34,30 +34,22 @@ import static org.testng.Assert.assertTrue;
  * Update it & check for notifications
  * Do an LC transition on it & check for notifications
  */
-public class ESPublisherTenantNotificationTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
-    private StringBuffer verificationErrors = new StringBuffer();
-    private String publisherApp = "publisher";
+public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
     private String resourceLocation;
-    private String backendURL;
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    private String assetName;
     private TestUserMode userMode;
     private String email = "esmailsample@gmail.com";
     private String emailPwd = "esMailTest";
+    private String firstName = "name 1";
+    private String lastName = "name 2";
+    private String version = "1.0.0";
+    private String createdTime = "12";
+    private String assetType = "gadget";
+    private String assetDescription = "Test Description";
 
-    private String currentUserName;
-    private String currentUserPwd;
-    private String adminUserName;
-    private String adminUserPwd;
-    private String providerName;
-
-    private String resourcePath;
-
-    private String LCNotificationSubject;
-    private String updateNotificationSubject;
+    private String LCNotificationSubject = "[StoreLifecycleStateChange] at path: ";
+    private String updateNotificationSubject = "[StoreAssetUpdate] at path: ";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherTenantNotificationTestCase(TestUserMode testUserMode, String assetName) {
@@ -81,18 +73,19 @@ public class ESPublisherTenantNotificationTestCase extends ESIntegrationUITest {
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
                 adminUserPwd);
         providerName = currentUserName.split("@")[0];
-        resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName
-                + "/1.0.0";
-        LCNotificationSubject = "[StoreLifecycleStateChange] at path: " + this.resourcePath;
-        updateNotificationSubject = "[StoreAssetUpdate] at path: " + this.resourcePath;
+        resourcePath = "/_system/governance/gadgets/" + providerName + "/" + assetName + "/" +
+                version;
+        LCNotificationSubject += resourcePath;
+        updateNotificationSubject += resourcePath;
+        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
+                .separator + "smtp.properties";
 
         //Update user profiles through Admin console
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
-        ESUtil.setupUserProfile(driver, baseUrl, currentUserName, "firstName", "lastName",
-                "esmailsample@gmail.com");
+        ESUtil.setupUserProfile(driver, baseUrl, currentUserName, firstName, lastName, email);
         //login to publisher & add a new gadget
         ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
-        AssetUtil.addNewAsset(driver, baseUrl, "gadget", providerName, assetName, "1.0.0", "12");
+        AssetUtil.addNewAsset(driver, baseUrl, assetType, providerName, assetName, version, createdTime);
     }
 
 
@@ -102,8 +95,7 @@ public class ESPublisherTenantNotificationTestCase extends ESIntegrationUITest {
         //check notification for initial LC state change
         driver.findElementPoll(By.linkText(assetName), 30);
         //read email using smtp
-        boolean hasMail = ESUtil.containsEmail(resourceLocation + File.separator +
-                "notifications" + File.separator + "smtp.properties", emailPwd, email,
+        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, emailPwd, email,
                 LCNotificationSubject);
         assertTrue(hasMail, "LC Notification failed for user:" + currentUserName);
     }
@@ -113,11 +105,10 @@ public class ESPublisherTenantNotificationTestCase extends ESIntegrationUITest {
     public void testUpdateNotification() throws Exception {
         //Update gadget and check lC state change notification
         driver.get(baseUrl + "/publisher/asts/gadget/list");
-        AssetUtil.updateAsset(driver, baseUrl, "gadget", assetName, "Test Description");
+        AssetUtil.updateAsset(driver, baseUrl, assetType, assetName, assetDescription);
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         //read email using smtp
-        boolean hasMail = ESUtil.containsEmail(resourceLocation + File.separator +
-                "notifications" + File.separator + "smtp.properties", emailPwd, email,
+        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, emailPwd, email,
                 updateNotificationSubject);
         assertTrue(hasMail, "Asset Update Notification failed for user:" + currentUserName);
     }
@@ -128,8 +119,9 @@ public class ESPublisherTenantNotificationTestCase extends ESIntegrationUITest {
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
         driver.get(baseUrl + "/publisher/logout");
-        ESUtil.deleteAllEmail(resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp" + ".properties", emailPwd, email);
+        if(!currentUserName.equals(adminUserName)){
+            ESUtil.deleteAllEmail(smtpPropertyLocation, emailPwd, email);
+        }
         driver.quit();
     }
 

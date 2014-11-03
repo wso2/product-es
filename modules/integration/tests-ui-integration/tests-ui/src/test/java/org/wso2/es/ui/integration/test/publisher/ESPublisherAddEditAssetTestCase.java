@@ -16,15 +16,13 @@
 
 package org.wso2.es.ui.integration.test.publisher;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import java.io.File;
@@ -33,28 +31,24 @@ import static org.testng.Assert.*;
 /**
  * Add and Edit asset test for Super tenant:Super Admin & Super User
  */
-public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
+public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
 
-    private ESWebDriver driver;
-    private String baseUrl;
-    private String webApp = "publisher";
-    private boolean acceptNextAlert = true;
-
-    private String assetName;
     private TestUserMode userMode;
-    private String adminUserName;
-    private String adminUserPwd;
 
-    private String currentUserName;
-    private String currentUserPwd;
-    private String resourcePath;
-
-    private String backendURL;
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private String resourceLocation;
 
     private String email = "esmailsample@gmail.com";
     private String emailPwd = "esMailTest";
+
+    private String assetVersion = "1.0.0";
+    private String assetCreatedTime = "12";
+    private String assetUrl1 = "http://test";
+    private String assetUrl2 = "http://wso2.com/";
+    private String assetDescription1= "for store";
+    private String assetDescription2 = "Edited Test description";
+    private String assetCategory1 = "Google";
+    private String assetCategory2 = "WSO2";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherAddEditAssetTestCase(TestUserMode userMode, String assetName) {
@@ -67,8 +61,8 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         super.init(userMode);
         currentUserName = userInfo.getUserName().split("@")[0];
         currentUserPwd = userInfo.getPassword();
-        resourcePath = "/_system/governance/gadgets/" + this.currentUserName + "/" + this
-                .assetName + "/1.0.0";
+        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/"
+                + assetVersion;
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         AutomationContext automationContext = new AutomationContext("ES",
@@ -79,8 +73,10 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
                 adminUserPwd);
+        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
+                .separator + "smtp.properties";
 
-        ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
+        ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.publisher", description = "Testing adding a new asset")
@@ -92,14 +88,15 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
-        driver.findElement(By.name("overview_version")).sendKeys("1.0.0");
+        driver.findElement(By.name("overview_version")).sendKeys(assetVersion);
         driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys("12");
-        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText("Google");
+        driver.findElement(By.name("overview_createdtime")).sendKeys(assetCreatedTime);
+        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText
+                (assetCategory1);
         driver.findElement(By.name("overview_url")).clear();
-        driver.findElement(By.name("overview_url")).sendKeys("https://www.google.com");
+        driver.findElement(By.name("overview_url")).sendKeys(assetUrl1);
         driver.findElement(By.name("overview_description")).clear();
-        driver.findElement(By.name("overview_description")).sendKeys("Test description");
+        driver.findElement(By.name("overview_description")).sendKeys(assetDescription1);
         driver.findElement(By.id("btn-create-asset")).click();
 
         driver.findElementPoll(By.linkText(assetName), 30);
@@ -114,11 +111,12 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
-        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText("WSO2");
+        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText
+                (assetCategory2);
         driver.findElement(By.name("overview_url")).clear();
-        driver.findElement(By.name("overview_url")).sendKeys("http://wso2.com/");
+        driver.findElement(By.name("overview_url")).sendKeys(assetUrl2);
         driver.findElement(By.name("overview_description")).clear();
-        driver.findElement(By.name("overview_description")).sendKeys("Edited Test description");
+        driver.findElement(By.name("overview_description")).sendKeys(assetDescription2);
         driver.findElement(By.id("editAssetButton")).click();
         closeAlertAndGetItsText();
 
@@ -131,16 +129,16 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         assertEquals(assetName, driver.findElement(By.xpath
                 ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[2]/td[2]"))
                 .getText(), "Incorrect asset name");
-        assertEquals("1.0.0", driver.findElement(By.xpath
+        assertEquals(assetVersion, driver.findElement(By.xpath
                 ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[3]/td[2]"))
                 .getText(), "Incorrect version");
-        assertEquals("WSO2", driver.findElement(By.xpath
+        assertEquals(assetCategory2, driver.findElement(By.xpath
                 ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[5]/td[2]"))
                 .getText(), "Incorrect Category");
-        assertEquals("http://wso2.com/", driver.findElement(By.xpath
+        assertEquals(assetUrl2, driver.findElement(By.xpath
                 ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[6]/td[2]"))
                 .getText(), "Incorrect URL");
-        assertEquals("Edited Test description", driver.findElement(By.xpath
+        assertEquals(assetDescription2, driver.findElement(By.xpath
                 ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[7]/td[2]"))
                 .getText(), "Incorrect description");
     }
@@ -150,8 +148,7 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
         //delete resources and logout
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.get(baseUrl + "/publisher/logout");
-        ESUtil.deleteAllEmail(resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties", emailPwd, email);
+        ESUtil.deleteAllEmail(smtpPropertyLocation, emailPwd, email);
         driver.quit();
     }
 
@@ -161,27 +158,4 @@ public class ESPublisherAddEditAssetTestCase extends ESIntegrationUITest {
                 {TestUserMode.SUPER_TENANT_USER, "Add Edit asset - SuperUser"}};
     }
 
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
-        }
-    }
 }

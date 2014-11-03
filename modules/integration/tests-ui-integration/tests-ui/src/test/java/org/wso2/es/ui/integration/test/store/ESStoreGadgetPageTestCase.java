@@ -17,11 +17,10 @@
 package org.wso2.es.ui.integration.test.store;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import static org.testng.Assert.*;
@@ -29,14 +28,8 @@ import static org.testng.Assert.*;
 /**
  * Test appearance and behaviour of Gadget page
  */
-public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
+public class ESStoreGadgetPageTestCase extends BaseUITestCase {
     private StringBuffer verificationErrors = new StringBuffer();
-    private String webApp = "store";
-
-    private String currentUserName;
-    private String currentUserPwd;
     private String firstAsset;
 
     @BeforeClass(alwaysRun = true)
@@ -46,7 +39,7 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
+        ESUtil.login(driver, baseUrl, storeApp, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.store", description = "Test Gadgets Page")
@@ -82,7 +75,7 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
         } catch (Error e) {
             verificationErrors.append(e.toString());
         }
-        failOnError();
+        verificationErrors = failOnError(verificationErrors);
     }
 
     @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links",
@@ -108,30 +101,13 @@ public class ESStoreGadgetPageTestCase extends ESIntegrationUITest {
         } catch (Error e) {
             verificationErrors.append(e.toString());
         }
-        failOnError();
+        verificationErrors = failOnError(verificationErrors);
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.get(baseUrl + "/store/logout");
         driver.quit();
-    }
-
-    private void failOnError() {
-        String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
-            verificationErrors = new StringBuffer();
-            fail(verificationErrorString);
-        }
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
 }

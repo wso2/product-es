@@ -17,22 +17,24 @@
 package org.wso2.es.ui.integration.test.store;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test appearance and behavior of Store Home page
  */
-public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
+public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
     private StringBuffer verificationErrors = new StringBuffer();
+    private static final String LINE_CHART = "Line Chart";
+    private static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
+    private static final String AMAZON = "Amazon";
+
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -68,7 +70,7 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
         } catch (Error e) {
             verificationErrors.append(e.toString());
         }
-        failOnError();
+        verificationErrors = failOnError(verificationErrors);
     }
 
     @Test(groups = "wso2.es.store", description = "Test Anonymous User Recent sliding",
@@ -83,11 +85,11 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/store");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
                 .click();
-        assertEquals("Line Plus Bar Chart", driver.findElement(By.cssSelector("h4")).getText(),
+        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.cssSelector("h4")).getText(),
                 "Gadgets Menu not working");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
                 .click();
-        assertEquals("Amazon", driver.findElement(By.xpath
+        assertEquals(AMAZON, driver.findElement(By.xpath
                 ("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).getText(),
                 "Sites Menu not working");
         driver.findElement(By.cssSelector("a.brand")).click();
@@ -99,12 +101,12 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/store");
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Gadgets")).click();
-        assertEquals("Line Chart", driver.findElement(By
-                .xpath("//h4[contains(.,'Line Chart')]")).getText(),
+        assertEquals(LINE_CHART, driver.findElement(By
+                .xpath("//h4[contains(.,'" + LINE_CHART + "')]")).getText(),
                 "Recent Gadgets link not working");
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Sites")).click();
-        assertEquals("Amazon", driver.findElement(By.xpath("//h4[contains(.,'Amazon')]"))
+        assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.,'" + AMAZON + "')]"))
                 .getText(), "Recent Sites link not working");
     }
 
@@ -113,21 +115,5 @@ public class ESStoreAnonHomePageTestCase extends ESIntegrationUITest {
         driver.quit();
     }
 
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
-    private void failOnError() {
-        String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
-            verificationErrors = new StringBuffer();
-            fail(verificationErrorString);
-        }
-    }
 
 }

@@ -16,50 +16,48 @@
 
 package org.wso2.es.ui.integration.test.common;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
 import static org.testng.Assert.assertEquals;
 
 /**
  * Create a new asset in publisher and publish it to store
  * Check if it can be seen store side and verify details
  */
-public class ESPublishToStore extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String baseUrl;
-    private boolean acceptNextAlert = true;
-    private String webApp = "publisher";
-    private String providerName;
-    private String assetName = "Publishing Asset";
-    private String resourcePath;
+public class ESPublishToStore extends BaseUITestCase {
+
     private ResourceAdminServiceClient resourceAdminServiceClient;
-    private String backendURL;
+    private String assetVersion = "1.0.0";
+    private String assetCreatedTime = "12";
+    private String assetUrl = "http://test";
+    private String assetDescription = "for store";
+    private String lcComment = "done";
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
+        assetName = "Publishing Asset";
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         providerName = userInfo.getUserName();
-        resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName
-                + "/1.0.0";
+        resourcePath = "/_system/governance/gadgets/" + providerName + "/" + assetName + "/" +
+                assetVersion;
         AutomationContext automationContext = new AutomationContext("ES",
                 TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL,
                 userInfo.getUserName(), userInfo.getPassword());
-        ESUtil.login(driver, baseUrl, webApp, userInfo.getUserName(), userInfo.getPassword());
+        ESUtil.login(driver, baseUrl, publisherApp, userInfo.getUserName(), userInfo.getPassword());
     }
 
     @Test(groups = "wso2.es.common", description = "Testing Publishing an asset to store")
@@ -71,13 +69,13 @@ public class ESPublishToStore extends ESIntegrationUITest {
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
-        driver.findElement(By.name("overview_version")).sendKeys("1.0.0");
+        driver.findElement(By.name("overview_version")).sendKeys(assetVersion);
         driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys("12");
+        driver.findElement(By.name("overview_createdtime")).sendKeys(assetCreatedTime);
         driver.findElement(By.name("overview_url")).clear();
-        driver.findElement(By.name("overview_url")).sendKeys("http://test");
+        driver.findElement(By.name("overview_url")).sendKeys(assetUrl);
         driver.findElement(By.name("overview_description")).clear();
-        driver.findElement(By.name("overview_description")).sendKeys("to store");
+        driver.findElement(By.name("overview_description")).sendKeys(assetDescription);
         driver.findElement(By.id("btn-create-asset")).click();
         if (isAlertPresent()) {
             closeAlertAndGetItsText();
@@ -90,21 +88,21 @@ public class ESPublishToStore extends ESIntegrationUITest {
 
         driver.findElement(By.id("In-Review")).click();
         driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys("ok");
+        driver.findElement(By.id("commentModalText")).sendKeys(lcComment);
         driver.findElement(By.id("commentModalSave")).click();
 
         driver.get(driver.getCurrentUrl());
         driver.findElement(By.id("Published")).click();
         driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys("ok");
+        driver.findElement(By.id("commentModalText")).sendKeys(lcComment);
         driver.findElement(By.id("commentModalSave")).click();
         //navigate to store to check the published gadget
         driver.get(baseUrl + "/store");
-        driver.findElementPoll(By.xpath("//a[contains(.,'Publishing Asset')]"), 5);
+        driver.findElementPoll(By.xpath("//a[contains(.,'" + assetName + "')]"), 5);
         assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
         driver.findElement(By.cssSelector("div.asset-author-category > ul > li")).click();
         assertEquals(assetName, driver.findElement(By.cssSelector("h3")).getText());
-        assertEquals("to store", driver.findElement(By.cssSelector("p")).getText());
+        assertEquals(assetDescription, driver.findElement(By.cssSelector("p")).getText());
     }
 
     @AfterClass(alwaysRun = true)
@@ -113,30 +111,6 @@ public class ESPublishToStore extends ESIntegrationUITest {
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.get(baseUrl + "/publisher/logout");
         driver.quit();
-    }
-
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
-        }
     }
 
 }

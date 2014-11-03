@@ -18,9 +18,7 @@ package org.wso2.es.ui.integration.test.publisher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
@@ -29,8 +27,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 import org.wso2.es.ui.integration.util.AssetUtil;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import static org.testng.Assert.assertEquals;
@@ -39,28 +37,19 @@ import static org.testng.Assert.assertEquals;
  * LC state transition test
  * check state changes based on transitions
  */
-public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
-    private static final Log log = LogFactory.getLog(ESPublisherLCTransitionTestCase.class);
-    private ESWebDriver driver;
-    private WebDriverWait wait;
-    private String baseUrl;
-    private boolean acceptNextAlert = true;
-    private StringBuffer verificationErrors = new StringBuffer();
-    private String webApp = "publisher";
-    private String currentUserName;
-    private String currentUserPwd;
-    private String assetName = "LC Test Asset";
-    private String assetVersion = "1.2.3";
-    private String resourcePath;
-    private ResourceAdminServiceClient resourceAdminServiceClient;
-    private String backendURL;
+public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
 
-    private String adminUserName;
-    private String adminUserPwd;
+    private static final Log log = LogFactory.getLog(ESPublisherLCTransitionTestCase.class);
+    private String assetVersion = "1.2.3";
+    private String assetType = "gadget";
+    private String createdTime = "12";
+    private String lcComment = "test";
+    private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
+        assetName = "LC Test Asset";
         this.currentUserName = userInfo.getUserName();
         this.currentUserPwd = userInfo.getPassword();
         resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/" +
@@ -68,11 +57,11 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, webApp, currentUserName, currentUserPwd);
+        ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         //add new gadget
-        AssetUtil.addNewAsset(driver, baseUrl, "gadget", currentUserName, assetName,
-                assetVersion, "12");
+        AssetUtil.addNewAsset(driver, baseUrl, assetType, currentUserName, assetName,
+                assetVersion, createdTime);
         if (isAlertPresent()) {
             String modalText = closeAlertAndGetItsText();
             log.warn("modal dialog appeared" + modalText);
@@ -95,7 +84,7 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
         driver.findElement(By.id("In-Review")).click();
 
         driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys("test");
+        driver.findElement(By.id("commentModalText")).sendKeys(lcComment);
         driver.findElement(By.id("commentModalSave")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
                 ("//table[@id='lc-history']/tbody/tr/td[2]"),
@@ -110,30 +99,6 @@ public class ESPublisherLCTransitionTestCase extends ESIntegrationUITest {
         driver.get(baseUrl + "/publisher/logout");
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.quit();
-    }
-
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
-        }
     }
 
 }

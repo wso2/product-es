@@ -21,8 +21,7 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 
 import java.io.File;
 
@@ -31,7 +30,7 @@ import java.io.File;
  * Add a new role for publisher in tenant domain
  * Assign publisher role to test users
  */
-public class TestConfig extends ESIntegrationUITest {
+public class TestConfig extends BaseUITestCase {
 
     private ServerConfigurationManager serverManager;
     private String resourceLocation;

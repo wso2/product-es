@@ -17,12 +17,12 @@
 package org.wso2.es.ui.integration.test.publisher;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -30,37 +30,33 @@ import static org.testng.Assert.assertTrue;
  * Login Logout test for publisher
  * check if the logged in user is shown properly
  */
-public class ESPublisherLoginLogoutTestCase extends ESIntegrationUITest {
-    private ESWebDriver driver;
-    private String webAppURL;
-    private String userName;
-    private String password;
+public class ESPublisherLoginLogoutTestCase extends BaseUITestCase {
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        userName = userInfo.getUserName();
-        password = userInfo.getPassword();
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
-        webAppURL = getWebAppURL();
+        publisherApp = getWebAppURL();
     }
 
     @Test(groups = "wso2.es.publisher", description = "verify login to ES Publisher")
     public void testLoginToPublisher() throws Exception {
-        driver.get(webAppURL + "/publisher/asts/gadget");
+        driver.get(publisherApp + "/publisher/asts/gadget");
         driver.findElement(By.id("username")).clear();
-        driver.findElement(By.id("username")).sendKeys(userName);
+        driver.findElement(By.id("username")).sendKeys(currentUserName);
         driver.findElement(By.id("password")).clear();
-        driver.findElement(By.id("password")).sendKeys(password);
+        driver.findElement(By.id("password")).sendKeys(currentUserPwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         assertEquals("Asset | WSO2 Enterprise Store back-office", driver.getTitle());
-        assertTrue(isElementPresent(By.linkText(userName)), "Logged in user not shown");
+        assertTrue(isElementPresent(By.linkText(currentUserName)), "Logged in user not shown");
     }
 
     @Test(groups = "wso2.es.publisher", description = "verify login to ES Publisher",
             dependsOnMethods = "testLoginToPublisher")
     public void testLogoutFromPublisher() throws Exception {
-        driver.findElement(By.linkText(userName)).click();
+        driver.findElement(By.linkText(currentUserName)).click();
         driver.findElement(By.linkText("Sign out")).click();
         assertTrue(isElementPresent(By.id("username")), "Not redirected to login view");
     }
@@ -68,15 +64,6 @@ public class ESPublisherLoginLogoutTestCase extends ESIntegrationUITest {
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.quit();
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
 }
