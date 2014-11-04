@@ -1,5 +1,5 @@
 /*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
+/**
+ * This class contains test related to posting and viewing rating from ES-front office
+ */
 public class ESStoreRatingsTestCase extends BaseUITestCase {
-    //private ESWebDriver driver;
-//    private String baseUrl;
     private String webApp = "store";
-
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -57,19 +57,6 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
         driver.switchTo().defaultContent();
     }
 
-//    @Test(groups = "wso2.es.store.ratings", description = "Test Login to Add Rating", dependsOnMethods = "testStoreBeforeAddRatings")
-//    public void testESloginToAddRating() throws Exception {
-//        driver.findElement(By.linkText("User Reviews")).click();
-//
-//        driver.findElement(By.linkText("Sign in")).click();
-//        driver.findElement(By.id("username")).clear();
-//        driver.findElement(By.id("username")).sendKeys("admin");
-//        driver.findElement(By.id("password")).clear();
-//        driver.findElement(By.id("password")).sendKeys("admin");
-//        driver.findElement(By.xpath("//button[@type='submit']")).click();
-//        driver.findElement(By.linkText("User Reviews")).click();
-//    }
-
     @Test(groups = "wso2.es.store.ratings", description = "Test Submit Rating",
             dependsOnMethods = "testStoreBeforeAddRatings")
     public void testESAddRating() throws Exception {
@@ -94,12 +81,6 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.store.ratings", description = "Test Submit Second Rating",
             dependsOnMethods = "testESAddRating")
     public void testESTryingToAddReviewWithoutRating() throws Exception {
-//            driver.findElement(By.linkText("User Reviews")).click();
-//            // ERROR: Caught exception [ERROR: Unsupported command [selectFrame | socialIfr | ]]
-//            driver.findElement(By.id("com-body")).clear();
-//            driver.findElement(By.id("com-body")).sendKeys("cool!");
-//            driver.findElement(By.linkText("2")).click();
-//            driver.findElement(By.id("btn-post")).click();
         driver.findElement(By.id("com-body")).clear();
         driver.findElement(By.id("com-body")).sendKeys("Nice!");
         driver.findElement(By.id("btn-post")).click();
@@ -107,8 +88,7 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
         ).getText(), "Alert Doesn't appear");
         driver.findElement(By.linkText("4")).click();
         driver.findElement(By.id("btn-post")).click();
-        // ERROR: Caught exception [ERROR: Unsupported command [selectWindow | name=socialIfr | ]]
-        // driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
+
     }
 
     @Test(groups = "wso2.es.store.ratings", description = "Test View My Rating",
@@ -173,15 +153,5 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
     public void tearDown() throws Exception {
         driver.quit();
     }
-
-//
-//    private boolean isElementPresent(By by) {
-//        try {
-//            driver.findElement(by);
-//            return true;
-//        } catch (NoSuchElementException e) {
-//            return false;
-//        }
-//    }
 
 }

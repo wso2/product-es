@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import org.openqa.selenium.WebDriver;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 import javax.xml.xpath.XPathExpressionException;
-import java.util.concurrent.TimeUnit;
 
 public class ESUtil extends ESIntegrationUITest {
     private static String publisherSuffix = "/publisher";

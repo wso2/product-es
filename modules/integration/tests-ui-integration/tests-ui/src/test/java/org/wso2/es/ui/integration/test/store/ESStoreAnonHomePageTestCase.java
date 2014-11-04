@@ -85,12 +85,13 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         driver.get(baseUrl + "/store");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
                 .click();
-        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.cssSelector("h4")).getText(),
+        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//h4[contains(.," +
+                "'" + LINE_PLUS_BAR_CHART + "')]")).getText(),
                 "Gadgets Menu not working");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
                 .click();
-        assertEquals(AMAZON, driver.findElement(By.xpath
-                ("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).getText(),
+        assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.," +
+                "'" + AMAZON + "')]")).getText(),
                 "Sites Menu not working");
         driver.findElement(By.cssSelector("a.brand")).click();
     }
