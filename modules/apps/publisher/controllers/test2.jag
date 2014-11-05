@@ -1,24 +1,33 @@
-<html>
-	<head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="https://localhost:9443/publisher/themes/default/js/libs/jquery.form.min.js"></script> 
- 
-    <script> 
-        // wait for the DOM to be loaded 
-        $(document).ready(function() { 
-            // bind 'myForm' and provide a simple callback function 
-            $('#myForm').ajaxForm(function() { 
-                alert("Thank you for your comment!"); 
-            }); 
-        }); 
-    </script> 
-	</head>
-	<body>
-		<form id="myForm" action="/publisher/test" method="post"> 
-		    Name: <input type="text" name="name" /> 
-		    Comment: <textarea name="comment"></textarea> 
-		    <input type='file' name='img' />
-		    <input type="submit" value="Submit Comment" /> 
-		</form>
-	</body>
-</html>
+<%
+var artifacts = require('rxt').artifacts;
+var workflows = require('rxt').workflows;
+var log = new Log();
+//artifacts.loadDirectory('/extensions/assets/gadget', -1234);
+//var afm = artifacts.artifactMap();
+//log.info(afm);
+
+var workflow = workflows.get('self_signup',-1234);
+workflow.execute();
+workflow.process();
+
+// var set = ['a','b','c'];
+// log.info(set.indexOf('d',0));
+
+// var systemProcess = require('process');
+// var parent = 'file:///' + (systemProcess.getProperty('jaggery.home') || systemProcess.getProperty('carbon.home')).replace(/[\\]/g, '/').replace(/^[\/]/g, '');
+// log.info('Parent: ' + parent);
+
+// var path ='file:///home/sameeramwso2com/Work/src/gitrepos/es-greg/product-es/modules/apps/publisher/extensions/assets/gadget/pages/configuration.jag';
+// var extensionPathIndex = path.indexOf('/extensions',0);
+// var relativePath = path.substring(extensionPathIndex);
+// log.info(relativePath);
+
+// var testFile = new File('/extensions/assets/gadget/pages/configuration.jag');
+// log.info(testFile.isExists());
+
+// var dir = new File('/extensions/assets/gadget');
+// var subDirs = dir.listFiles();
+// for(var index =0; index<subDirs.length;index++){
+// 	log.info(subDirs[index].getName());
+// }
+%>
