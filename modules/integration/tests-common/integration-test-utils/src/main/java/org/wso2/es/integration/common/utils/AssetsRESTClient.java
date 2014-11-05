@@ -25,18 +25,19 @@ import java.io.*;
 import java.net.*;
 
 public class AssetsRESTClient extends ESIntegrationTest {
-    String username = "admin";
-    String password = "admin";
-    URLConnection urlConn;
-    DataOutputStream printout;
-    DataInputStream input;
-    String baseURL = "https://localhost:9443";
-    protected static final Logger log = Logger.getLogger(AssetsRESTClient.class);
-    StringBuilder response = null;
-    String endpoint;
-    URL endpointUrl;
-    JsonParser parser;
-    JsonElement elem;
+    private String username = "admin";
+    private String password = "admin";
+    private URLConnection urlConn;
+    private DataOutputStream printout;
+    private DataInputStream input;
+    private String baseURL = "https://localhost:9443";
+    private static final Logger log = Logger.getLogger(AssetsRESTClient.class);
+    private StringBuilder response = null;
+    private String endpoint;
+    private URL endpointUrl;
+    private JsonParser parser;
+    private JsonElement elem;
+    private static int defaultPageSize = 12;
 
     /**
      * This methods make a call to ES-Publisher REST API and obtain a sessionID
@@ -85,6 +86,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
 
     private JsonArray getData(String sessionId) {
         try {
+            log.info("###### Get Assets via rest endpoint ######");
             endpoint = baseURL + "/publisher/apis/assets?type=gadget";//endpoint list assets
             endpointUrl = new URL(endpoint);
             urlConn = endpointUrl.openConnection();
@@ -115,12 +117,42 @@ public class AssetsRESTClient extends ESIntegrationTest {
         return null;
     }
 
+    private void logOut(String sessionId) {
+        try {
+            endpoint = baseURL + "/publisher/apis/logout"; //authenticate endpoint
+            endpointUrl = new URL(endpoint);
+            urlConn = endpointUrl.openConnection();
+            urlConn.setDoInput(true);
+            urlConn.setDoOutput(true);
+            urlConn.setUseCaches(false);
+            // Specify the content type.
+            urlConn.setRequestProperty("Cookie", "JSESSIONID=" + sessionId + ";");
+            //send SessionId Cookie
+            // Send POST output.
+            printout = new DataOutputStream(urlConn.getOutputStream());
+//            String content =
+//                    "username=" + URLEncoder.encode(username) +
+//                            "&password=" + URLEncoder.encode(password);
+//            printout.writeBytes(content);
+            printout.flush();
+            printout.close();
+            // Get response data.
+            input = new DataInputStream(urlConn.getInputStream());
+            String str;
+            input.close();
+        } catch (MalformedURLException e) {
+            log.error(e);
+        } catch (IOException e) {
+            log.error(e);
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+
     public boolean isIndexCompleted() {
         String sessionId = getSessionID();
         JsonArray assets = getData(sessionId);
-        if (assets.size() > 0) {
-            return true;
-        }
-        return false;
+        logOut(sessionId);
+        return assets.size() == defaultPageSize;
     }
 }
