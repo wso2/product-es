@@ -19,7 +19,7 @@
 /**
  * The resource namespace contains methods that are used to load the asset extensions by reading the asset.js
  * @namespace
- * @example 
+ * @example
  *          var resources=require('resources').resources;
  *          resources.init();
  * @requires event
@@ -27,7 +27,7 @@
  * @requires store
  */
 var resources = {};
-(function(core, resources) {
+(function(core, resources, artifacts) {
     var log = new Log();
     var getRxtExtensionPath = function(type, options) {
         return options.CONFIG_BASE_PATH + options.EXTENSION_PATH + type;
@@ -40,6 +40,9 @@ var resources = {};
     };
     var getDefaultAssetTypeScriptPath = function(options, type) {
         return '/extensions/assets/' + type + '/asset.js';
+    };
+    var getAssetExtensionPath = function(type){
+        return constants.ASSET_EXTENSION_ROOT+'/'+type;
     };
     var addToConfigs = function(tenantId, type, assetResource) {
         var configs = core.configs(tenantId);
@@ -136,6 +139,28 @@ var resources = {};
         assetResource.server = asset.server;
         assetResource.configure = asset.configure;
     };
+    /**
+     * Loads the artifacts found within an asset
+     * @param  String type     The asset type
+     * @param  Number tenantId The tenant ID
+     */
+    var loadAssetArtifacts = function(type, tenantId) {
+        var path = getAssetExtensionPath(type);
+        log.info('Loading artifacts of asset: ' + type);
+        log.info('Looking for artifacts in '+path);
+        artifacts.loadDirectory(path, tenantId, type);
+        log.info('Finished loading artifacts');
+    };
+    /**
+     * Loads the artifacts defined for the default asset type
+     * @param  {[type]} options  [description]
+     * @param  {[type]} type     [description]
+     * @param  {[type]} tenantId [description]
+     * @return {[type]}          [description]
+     */
+    var loadDefaultAssetArtifacts = function(type,tenantId){
+        loadAssetArtifacts('default',tenantId);
+    };
     var loadResources = function(options, tenantId, sysRegistry) {
         var manager = core.rxtManager(tenantId);
         var rxts = manager.listRxtTypes();
@@ -155,7 +180,10 @@ var resources = {};
                 manager.applyMutator(type, asset.configure());
             }
             addToConfigs(tenantId, type, asset);
+            //Load any artifacts
+            loadAssetArtifacts(type,tenantId);
         }
+        loadDefaultAssetArtifacts(type, tenantId);
     };
     var init = function(tenantId) {
         var server = require('store').server;
@@ -182,4 +210,4 @@ var resources = {};
             init(tenantId);
         });
     };
-}(core, resources));
+}(core, resources, artifacts));
