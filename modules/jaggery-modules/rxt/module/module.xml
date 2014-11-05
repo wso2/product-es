@@ -31,4 +31,8 @@
         <name>ui</name>
         <path>scripts/ui/ui.js</path>
     </script>
+    <script>
+        <name>workflows</name>
+        <path>scripts/workflows/workflows.js</path>
+    </script>
 </module>

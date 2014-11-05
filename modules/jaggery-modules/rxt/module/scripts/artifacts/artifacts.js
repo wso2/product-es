@@ -23,7 +23,7 @@
  *  var artifacts = require('rxt').artifacts;
  */
 var artifacts = {};
-(function(artifacts) {
+(function(artifacts, constants) {
     var ARTIFACT_MAP = 'artifact.map';
     var DEFAULT_ASSET_ARTIFACTS = 'default.asset.artifacts';
     var VALID_ARTIFACTS = ['workflows', 'mail_templates'];
@@ -122,21 +122,32 @@ var artifacts = {};
         if (!tenantArtifactMap) {
             throw 'Unable to locate the artifact map for the tenant: ' + tenantId + ' to return the service: ' + artifactName;
         }
+        assetMap = tenantArtifactMap.assets ? tenantArtifactMap.assets : {};
+        log.info(assetMap);
         //Check if the user specified an asset type
         if (assetType) {
-            assetMap = tenantArtifactMap.assets ? tenantArtifactMap.assets : {};
+            log.info('Asset specific artifact');
             typeMap = assetMap[assetType] ? assetMap[assetType] : {};
             groupMap = typeMap[group] ? typeMap[group] : {};
-            artifact = typeMap[artifactName];
+            artifact = groupMap[artifactName];
         }
         //If an artifact was found at the asset scope,return it
         if (artifact) {
             return artifact;
         }
+        log.info('Look under default asset');
+        //If not check the default asset extension
+        typeMap = assetMap[constants.DEFAULT_ASSET_EXTENSION] ? assetMap[constants.DEFAULT_ASSET_EXTENSION] : {};
+        groupMap = typeMap[group] ? typeMap[group] : {};
+        artifact = groupMap[artifactName];
+        if (artifact) {
+            return artifact;
+        }
+        log.info('Non asset specific artifact');
         //Try to locate the service at the global scope
         globalMap = tenantArtifactMap.globals ? tenantArtifactMap.globals : {};
         groupMap = globalMap[group] ? globalMap[group] : {};
-        artifact = globalMap[artifactName];
+        artifact = groupMap[artifactName];
         return artifact;
     };
     /**
@@ -213,9 +224,16 @@ var artifacts = {};
                     extension: artifactFileExtension
                 });
                 artifactMap.register(artifact, rootDir.getName(), tenantId, assetType);
+                log.info('Registered artifact '+artifactName+' group: '+dirName);
             }
         }
     };
+    /**
+     * Loads artifacts found in the path provided
+     * @param  String path      The path to a location containing artifacts
+     * @param  Number tenantId  The ID of the tenant
+     * @param  String assetType The asset type under which the artifacts should be loaded
+     */
     artifacts.loadDirectory = function(path, tenantId, assetType) {
         //Obtain the tenant artifact map
         var afm = this.artifactMap();
@@ -224,7 +242,7 @@ var artifacts = {};
         //Do not process the directory further  if the directory does not exist
         //or not a directory
         if ((!dir.isExists()) || (!dir.isDirectory())) {
-            log.info('Location ' + path + 'does not exist.Stopped loading artifacts for type: ' + assetType);
+            log.warn('Location ' + path + 'does not exist.Stopped loading artifacts for type: ' + assetType);
             return;
         }
         //Go through each sub directory
@@ -234,4 +252,4 @@ var artifacts = {};
             processArtifactGroup(subDir, afm, tenantId, assetType);
         }
     };
-}(artifacts));
+}(artifacts, constants));

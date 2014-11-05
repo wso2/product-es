@@ -146,10 +146,7 @@ var resources = {};
      */
     var loadAssetArtifacts = function(type, tenantId) {
         var path = getAssetExtensionPath(type);
-        log.info('Loading artifacts of asset: ' + type);
-        log.info('Looking for artifacts in '+path);
         artifacts.loadDirectory(path, tenantId, type);
-        log.info('Finished loading artifacts');
     };
     /**
      * Loads the artifacts defined for the default asset type
@@ -158,7 +155,7 @@ var resources = {};
      * @param  {[type]} tenantId [description]
      * @return {[type]}          [description]
      */
-    var loadDefaultAssetArtifacts = function(type,tenantId){
+    var loadDefaultAssetArtifacts = function(tenantId){
         loadAssetArtifacts('default',tenantId);
     };
     var loadResources = function(options, tenantId, sysRegistry) {
@@ -183,7 +180,7 @@ var resources = {};
             //Load any artifacts
             loadAssetArtifacts(type,tenantId);
         }
-        loadDefaultAssetArtifacts(type, tenantId);
+        loadDefaultAssetArtifacts(tenantId);
     };
     var init = function(tenantId) {
         var server = require('store').server;
