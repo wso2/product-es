@@ -64,7 +64,7 @@ public class StoreSubscriptionManager {
         try {
             userRegistry = registryService.getRegistry(userName);
         } catch (RegistryException e) {
-            throw new RegistryException("Getting user registry for " + userName + " failed");
+            throw new RegistryException("Getting user registry for " + userName + " failed", e);
         }
         createSubscription(userRegistry, resourcePath, endpoint, eventName);
     }

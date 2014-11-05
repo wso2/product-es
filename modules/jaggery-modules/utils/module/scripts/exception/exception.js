@@ -48,7 +48,7 @@ var log = new Log('exception_module');
         } else if (type == constants.LOG_EXCEPTION_AND_TERMINATE) {
             log.error(exception);
             var msg = 'An error occurred while serving the request!';
-            var e = exceptionModule.buildExceptionObject(msg, constants.ERROR_STATUS_CODES.INTERNAL_SERVER_ERROR);
+            var e = exceptionModule.buildExceptionObject(msg, constants.STATUS_CODES.INTERNAL_SERVER_ERROR);
             throw e;
         } else if (type == constants.LOG_EXCEPTION_AND_CONTINUE) {
             log.debug(exception);

@@ -52,6 +52,17 @@
             <groupId>org.apache.httpcomponents.wso2</groupId>
             <artifactId>httpcore</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.store</groupId>
+            <artifactId>org.wso2.store.bamclient</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.store</groupId>
+            <artifactId>org.wso2.store.util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -80,6 +91,9 @@
                                 <bundleDef>slf4j.wso2:slf4j:${slf4j.wso2.version}</bundleDef>
                                 <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso</bundleDef>-->
                                 <bundleDef>org.wso2.store:org.wso2.store.sso.common</bundleDef>
+
+                                <bundleDef>org.wso2.store:org.wso2.store.bamclient</bundleDef>
+
                                 <bundleDef>org.wso2.store:org.wso2.store.admin.styles</bundleDef>
                                 <!--bundleDef>org.wso2.store:org.wso2.carbon.social:${project.version}</bundleDef-->
                                 <!--bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra:${carbon.platform.version}</bundleDef-->
@@ -107,9 +121,9 @@
                                 <importFeatureDef>
                                     org.jaggeryjs.modules.markdown:${markdown.feature.version}
                                 </importFeatureDef>
-                                <importFeatureDef>
-                                    org.jaggeryjs.modules.jaggery-test:${jaggery-test.feature.version}
-                                </importFeatureDef>
+                                <!--<importFeatureDef>-->
+                                    <!--org.jaggeryjs.modules.jaggery-test:${jaggery-test.feature.version}-->
+                                <!--</importFeatureDef>-->
                                 <importFeatureDef>
                                     org.wso2.store.modules.event:${project.version}
                                 </importFeatureDef>
@@ -272,6 +286,18 @@
                                 <importFeatureDef>
                                     org.wso2.carbon.social:${carbon.social.version}
                                 </importFeatureDef>
+
+                                <!--
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.agent.thrift.server.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.commons.server.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.commons.thrift.server.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                -->
                             </importFeatures>
                         </configuration>
                     </execution>

@@ -26,15 +26,15 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.ui.page.LoginPage;
 import org.wso2.es.integration.common.ui.page.main.HomePage;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
-
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 public class ESLoginTestCase extends ESIntegrationUITest {
-    private WebDriver driver;
+    private ESWebDriver driver;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = BrowserManager.getWebDriver();
+        driver = new ESWebDriver();
         driver.get(getLoginURL());
     }
 

@@ -40,10 +40,10 @@ var notificationManager = {};
         var emailContent = generateEmail(assetType, assetName, message, eventName);
         try {
             storeNotifier.notifyEvent(eventName, emailContent, path, user);
-            isSuccessful=true;
+            isSuccessful = true;
         } catch (e) {
-            log.error('Notifying the event '+eventName+'failed for '+eventName);
-            isSuccessful=false;
+            log.error('Notifying the event ' + eventName + 'failed for ' + eventName);
+            isSuccessful = false;
         }
         return isSuccessful;
     };
@@ -59,10 +59,10 @@ var notificationManager = {};
         var isSuccessful;
         try {
             storeNotifier.subscribeToEvent(tenantId, resourcePath, endpoint, eventName);
-            isSuccessful=true;
+            isSuccessful = true;
         } catch (e) {
-            log.error('Subscribing to asset on '+resourcePath+' failed for '+eventName);
-            isSuccessful=false;
+            log.error('Subscribing to asset on ' + resourcePath + ' failed for ' + eventName);
+            isSuccessful = false;
         }
         return isSuccessful;
     };
@@ -90,9 +90,9 @@ var notificationManager = {};
      * @returns list of subscriptions
      */
     notificationManager.getAllSubscriptions = function () {
-        try{
-           return storeNotifier.getAllSubscriptions();
-        }catch (e){
+        try {
+            return storeNotifier.getAllSubscriptions();
+        } catch (e) {
             log.error("Retrieving subscription list failed");
             return null;
         }
@@ -119,7 +119,7 @@ var notificationManager = {};
             email_temp = storeConstants.EMAIL_TEMPLATE_UPDATE;
         } else if (eventName == storeConstants.VERSION_CREATED_EVENT) {
             email_temp = storeConstants.EMAIL_TEMPLATE_VERSION;
-        }else{
+        } else {
             email_temp = storeConstants.EMAIL_TEMPLATE_DEFAULT;
         }
 

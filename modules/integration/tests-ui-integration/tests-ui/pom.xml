@@ -11,9 +11,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.store</groupId>
-    <artifactId>org.wso2.es.ui.integration.test</artifactId>
+    <artifactId>test-ui</artifactId>
     <packaging>jar</packaging>
-    <name>org.wso2.es.ui.integration.test</name>
+    <name>WSO2 ES UI Integration Test - Default Pages</name>
 
     <build>
         <plugins>

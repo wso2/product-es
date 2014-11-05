@@ -107,6 +107,10 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.store.modules:sso.feature:${project.version}
                                 </featureArtifactDef>
+
+                                <featureArtifactDef>org.wso2.store.modules:bampublisher.feature:${project.version}
+                                </featureArtifactDef>
+
                                 <featureArtifactDef>org.wso2.store.modules:store.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.store.modules:ues.feature:${project.version}
@@ -280,6 +284,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.tenant.deployment.feature:${carbon.platform.version}
                                 </featureArtifactDef>
+
                                 <!--<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.user.profile.server.feature:${carbon.platform.version}
                                 </featureArtifactDef>-->
@@ -290,9 +295,15 @@
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.event.stream.manager.feature:${cep.component.version}
                                 </featureArtifactDef-->
+
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.social.feature:${carbon.social.version}
                                 </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -371,6 +382,12 @@
                                     <id>org.wso2.store.modules.sso.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.store.modules.bampublisher.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>org.wso2.store.modules.store.feature.group</id>
                                     <version>${project.version}</version>
@@ -433,6 +450,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <!-- sso -->
@@ -584,6 +606,7 @@
                                     <id>org.wso2.carbon.social.feature.group</id>
                                     <version>${carbon.social.version}</version>
                                 </feature>
+
                             </features>
                         </configuration>
                     </execution>

@@ -1,0 +1,9 @@
+{
+	"baseUrl":{
+		"https":"https://localhost:9443/store"
+	},
+	"authConfiguration":{
+		"username":"admin",
+		"password":"admin"
+	}	
+}

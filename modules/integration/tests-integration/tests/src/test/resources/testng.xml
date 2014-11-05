@@ -20,19 +20,21 @@
     <parameter name="useDefaultListeners" value="false"/>
 
     <listeners>
-        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
+        <listener
+                class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
-        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
+        <listener
+                class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <test name="Test - ES JaggeryApps" preserve-order="true" parallel="false">
+
+    <test name="Test - ES Platform Test" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.carbon.integration.common.tests.JaggeryServerTest"/>
+            <class name="org.wso2.es.integration.ArtifactUploadClientTestCase"/>
         </classes>
     </test>
-
-
 
 </suite>
