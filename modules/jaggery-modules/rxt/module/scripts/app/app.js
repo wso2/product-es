@@ -28,7 +28,7 @@
  * @requires utils
  */
 var app = {};
-(function(app, core) {
+(function(app, core,artifacts) {
     var log = new Log('app-core');
     /**
      * Represents a set of endpoints
@@ -249,7 +249,14 @@ var app = {};
         for (var index in items) {
             items[index].owner = extName;
         }
-    }
+    };
+    var getAppExtensionPath = function(extName){
+        return getAppExtensionBasePath()+'/'+extName;
+    };
+    var loadAppExtensionArtifacts = function(extName){
+        var path = getAppExtensionPath(extName);
+        artifacts.loadDirectory(path,-1234);//TODO:We only support loading artifacts for super tenant
+    };
     var processExtension = function(extName, map, app) {
         if (!map[extName]) {
             log.warn('The app extension ' + extName + ' does not exist.Aborting loading of extensions');
@@ -277,6 +284,8 @@ var app = {};
         app.addApiEndpoints(apiEndpoints);
         app.addPageEndpoints(pageEndpoints);
         map[extName].loaded = true;
+        //Load artifacts
+        loadAppExtensionArtifacts(extName);
         log.info('Finished processing app extension: ' + extName);
     };
     var processAppExtensions = function(appExtensions) {
@@ -922,4 +931,4 @@ var app = {};
         var themeContextPath = themeResolver.call(themeObj, extensionPath);
         return themeContextPath;
     };
-}(app, core));
+}(app, core,artifacts));
