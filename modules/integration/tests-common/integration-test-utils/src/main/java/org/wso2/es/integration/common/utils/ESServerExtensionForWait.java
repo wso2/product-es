@@ -69,7 +69,6 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
         int count = 0;
         Thread.sleep(3000);
         while (count < 10 && !client.isIndexCompleted()){
-            log.info("###### Get Assets via rest endpoint #####");
             count++;
             Thread.sleep(3000);
         }
