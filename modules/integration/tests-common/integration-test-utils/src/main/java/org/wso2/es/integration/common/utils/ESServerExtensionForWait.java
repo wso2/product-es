@@ -21,14 +21,14 @@ import org.apache.commons.logging.LogFactory;
 
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 
-public class ESServerExtension1 extends ExecutionListenerExtension {
+public class ESServerExtensionForWait extends ExecutionListenerExtension {
 
-    private static final Log log = LogFactory.getLog(ESServerExtension1.class);
+    private static final Log log = LogFactory.getLog(ESServerExtensionForWait.class);
 
     public void initiate() {
         try {
-            log.info("Initializing Testing Enterprise Store Jaggery-APPs =============================");
-            //TODO
+            log.info("============================= Initializing Testing Enterprise Store " +
+                    "Jaggery-APPs =============================");
         } catch (Exception e) {
             handleException("Error while initiating test environment", e);
         }
@@ -36,10 +36,13 @@ public class ESServerExtension1 extends ExecutionListenerExtension {
 
     public void onExecutionStart() {
         try {
-            log.info("Waiting till Jaggey-Apps get initialized =============================");
-            Thread.sleep(20000);
+            log.info("============================= Waiting till Jaggey-Apps get initialized " +
+                    "=============================");
+            waitTillIndexingCompletes();
+            //Thread.sleep(20000);
             //TODO implement a logic to confirm that web apps are fully deployed instead of thread sleep
-            log.info("Start Test execution =============================");
+            log.info("============================= Start Test execution " +
+                    "=============================");
 
         } catch (Exception e) {
             handleException("Fail to wait till Jaggey-Apps get initialized ", e);
@@ -48,7 +51,8 @@ public class ESServerExtension1 extends ExecutionListenerExtension {
 
     public void onExecutionFinish() {
         try {
-            log.info("Completed excecuting test cases for testing Jaggery-Apps =============================");
+            log.info("============================= Completed executing test cases for testing " +
+                    "Jaggery-Apps =============================");
 
         } catch (Exception e) {
             handleException("Fail to stop complete testing Jaggery-Apps ", e);
@@ -58,5 +62,16 @@ public class ESServerExtension1 extends ExecutionListenerExtension {
     private static void handleException(String msg, Exception e) {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
+    }
+    
+    private static void waitTillIndexingCompletes() throws InterruptedException {
+        AssetsRESTClient client = new AssetsRESTClient();
+        int count = 0;
+        Thread.sleep(3000);
+        while (count < 10 && !client.isIndexCompleted()){
+            log.info("###### Get Assets via rest endpoint #####");
+            count++;
+            Thread.sleep(3000);
+        }
     }
 }

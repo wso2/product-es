@@ -1,5 +1,5 @@
 /*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,9 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.*;
 
+/**
+ * This class contains tests relates to search functionality of assets list page
+ */
 public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
 
     private static final Log log = LogFactory.getLog(ESStoreSearchGadgetListTestCase.class);
@@ -52,11 +55,11 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     public void setUp() throws Exception {
         super.init();
         driver = new ESWebDriver();
-        wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();
         adminUserName = userInfo.getUserName();
         adminUserPwd = userInfo.getPassword();
         acceptNextAlert = true;
+        wait = new WebDriverWait(driver, 30);
         AutomationContext automationContext = new AutomationContext("ES",
                 TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
@@ -67,7 +70,8 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         driver.get(baseUrl + "/" + storeApp);
     }
 
-    @Test(groups = "wso2.es.store", description = "Search By Category Template")
+    @Test(groups = "wso2.es.store", description = "Search By Category Template",
+            dependsOnMethods = "testESStoreSearchNewlyAddedAssetsName")
     public void testStoreSearchByCategoryTemplate() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets");
         driver.findElement(By.cssSelector("i.icon-cog")).click();
@@ -75,15 +79,15 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         driver.findElement(By.id("search")).click();
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText("Templates");
         driver.findElement(By.id("search-button2")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"),
-                "Line Plus Bar Chart"));
+        wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElementLocated(By
+                .cssSelector("h4"), assetName)));
         assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size(),
                 "Number of Template gadgets are incorrect");
 
     }
 
     @Test(groups = "wso2.es.store", description = "Search By Category-Google and Provider-Admin",
-            dependsOnMethods = "testStoreSearchByCategoryTemplate")
+            dependsOnMethods = "testESStoreSearchNewlyAddedAssetsName")
     public void testESStoreSearchGadgetByProviderAndCategory() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets?null");
         driver.findElement(By.cssSelector("i.icon-cog")).click();
@@ -92,15 +96,17 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys(adminUserName);
         driver.findElement(By.id("search-button2")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"),
-                "Bar Chart"));
+//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"),
+//                "Bar Chart"));
+        wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElementLocated(By
+                .cssSelector("h4"), assetName)));
         assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size(),
                 "Seach result count does not match");
 
     }
 
     @Test(groups = "wso2.es.store", description = "Search By Name- Bar Chart",
-            dependsOnMethods = "testESStoreSearchGadgetByProviderAndCategory")
+            dependsOnMethods = "testESStoreSearchNewlyAddedAssetsName")
     public void testESStoreSearchAssetsByName() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets?null");
         driver.findElement(By.cssSelector("a.brand")).click();
@@ -116,7 +122,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.store", description = "Search Unavailable Name",
-            dependsOnMethods = "testESStoreSearchAssetsByName")
+            dependsOnMethods = "testESStoreSearchNewlyAddedAssetsName")
     public void testESStoreSearchUnAvailableAssetsName() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets?null");
         driver.findElement(By.cssSelector("a.brand")).click();
@@ -132,7 +138,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.store", description = "Search Unavailable Version",
-            dependsOnMethods = "testESStoreSearchUnAvailableAssetsName")
+            dependsOnMethods = "testESStoreSearchNewlyAddedAssetsName")
     public void testStoreSearchUnAvailableVersion() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets");
         driver.findElement(By.cssSelector("i.icon-cog")).click();
@@ -147,7 +153,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.store", description = "Search Unavailable Author",
-            dependsOnMethods = "testStoreSearchUnAvailableVersion")
+            dependsOnMethods = "testESStoreSearchNewlyAddedAssetsName")
     public void testStoreSearchUnAvailableAuthor() throws Exception {
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
         driver.findElement(By.cssSelector("i.icon-sort-down")).click();
@@ -160,8 +166,8 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
                 driver.findElement(By.cssSelector("div.empty-assert")).getText());
     }
 
-    @Test(groups = "wso2.es.store", description = "Add asset",
-            dependsOnMethods = "testESStoreSearchAssetsByName")
+    @Test(groups = "wso2.es.store", description = "Add asset")//,
+            //dependsOnMethods = "testESStoreSearchAssetsByName")
     public void testAddAsset() throws Exception {
         ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(),
                 userInfo.getPassword());
@@ -264,29 +270,5 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.quit();
     }
-
-//    private boolean isAlertPresent() {
-//        try {
-//            driver.switchTo().alert();
-//            return true;
-//        } catch (NoAlertPresentException e) {
-//            return false;
-//        }
-//    }
-//
-//    private String closeAlertAndGetItsText() {
-//        try {
-//            Alert alert = driver.switchTo().alert();
-//            String alertText = alert.getText();
-//            if (acceptNextAlert) {
-//                alert.accept();
-//            } else {
-//                alert.dismiss();
-//            }
-//            return alertText;
-//        } finally {
-//            acceptNextAlert = true;
-//        }
-//    }
 
 }

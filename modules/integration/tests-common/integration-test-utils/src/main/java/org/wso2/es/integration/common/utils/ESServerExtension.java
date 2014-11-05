@@ -54,8 +54,8 @@ public class ESServerExtension extends ExecutionListenerExtension {
             if (executionEnvironment.equalsIgnoreCase(ExecutionEnvironment.STANDALONE.name())) {
                 String carbonHome = serverManager.startServer();
                 System.setProperty(ServerConstants.CARBON_HOME, carbonHome);
-                log.info("#### Delaying test startup for 20s in order to allow assets to be indexed #### ");
-                Thread.sleep(20000);
+//                log.info("#### Delaying test startup for 20s in order to allow assets to be indexed #### ");
+//                Thread.sleep(20000);
             }
         } catch (Exception e) {
             handleException("Fail to start carbon server ", e);

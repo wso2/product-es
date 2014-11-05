@@ -243,7 +243,7 @@
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
-                    <name>org.wso2.es.integration.common.utils.ESServerExtension1</name>
+                    <name>org.wso2.es.integration.common.utils.ESServerExtensionForWait</name>
                     <!--<parameter name="-DportOffset" value="0" />-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>

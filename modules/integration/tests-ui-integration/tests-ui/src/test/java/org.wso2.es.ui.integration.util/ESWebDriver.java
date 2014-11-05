@@ -1,18 +1,18 @@
 /*
-* Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.wso2.es.ui.integration.util;
 
@@ -34,7 +34,6 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 public class ESWebDriver implements org.openqa.selenium.WebDriver {
-    // private org.openqa.selenium.WebDriver driver;
     protected static final Logger log = Logger.getLogger(ESWebDriver.class);
     private int maxWaitTime;
     private EventFiringWebDriver driver;
@@ -45,17 +44,12 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
             String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar
                     .getInstance().getTime());
             String snapshotName = timeStamp
-                    + " : " + throwable.getCause()
-                    .getMessage()
-                    .toString()
-                    .split
-                            ("\n")[0];
+                    + " : " + throwable.getCause().getMessage().toString().split("\n")[0];
             captureScreenShot(snapshotName);
         }
     };
 
     public ESWebDriver() throws Exception {
-        // driver = BrowserManager.getWebDriver(); // get the default webdriver to the class
         driver = new EventFiringWebDriver(BrowserManager.getWebDriver());
         maxWaitTime = 30;
         driver.register(errorListener);
@@ -72,8 +66,7 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
                     "surefire-reports" + File.separator + "screen-shot";
             log.error("OnException - Saving Screen-shot : " + filename + " to location " + pathName);
             File screenShot = this.driver.getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(screenShot, new File(pathName  + File.separator +
-                            filename));
+            FileUtils.copyFile(screenShot, new File(pathName  + File.separator + filename));
         } catch (Exception e) {
             log.error(e);
         }
