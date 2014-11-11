@@ -8,6 +8,8 @@ var USER_SPACE = 'server.user.space';
 
 var USER_ROLE_PREFIX = 'Internal/private_';
 
+var DEFAULT_USER_PROFILE = 'default';
+
 /**
  * Initializes the user environment for the specified tenant. If it is already initialized, then will be skipped.
  */
@@ -245,7 +247,7 @@ var register = function (username, password, claims) {
         claimsMap.put(claims[i].claimURI, claims[i].value);
     };
     
-    um.addUser(usr.username, password, opts.userRoles, claimsMap);
+    um.addUser(usr.username, password, opts.userRoles, claimsMap, DEFAULT_USER_PROFILE);
     user = um.getUser(usr.username);
     role = privateRole(usr.username);
     id = userSpace(usr.username);
