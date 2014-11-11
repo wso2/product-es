@@ -494,8 +494,9 @@ var app = {};
         return new AppManager(appResources, ctx);
     };
     /**
-     * Returns an array of all asset types that are activated in the ES.This method works by checking the assets property of the
-     * tenant-x.json file.If no asset types have been activated an empty array is returned
+     * Returns an array of all asset types that are activated in the ES.This method first obtains the set of
+     * all available asset types and then intersects them with assets which are disabled in the 
+     * x-tenant.json file.
      * @param  {Number} tenantId The tenant ID for which the activated assets must be returned
      * @return {Array}          An array of strings indicating the asset types
      *                          (The values returned reflect the shortName property in the rxt files)
@@ -508,12 +509,18 @@ var app = {};
             log.warn('Unable to locate tenant configurations in order to retrieve activated assets');
             throw 'Unable to locate tenant configurations in order to retrieve activated assets';
         }
-        var assets = configs.assets;
-        if (!assets) {
-            log.warn('No activated assets');
-            return [];
+        //var assets = configs.assets;
+        var disabledAssets = configs.disabledAssets||[];
+        var rxtManager = core.rxtManager(tenantId);
+        var availableAssets = rxtManager.listRxtTypes();
+        var enabledAssets = availableAssets;
+        if (disabledAssets.length>0) {
+            //The enabled assets are an intersection of the disabledAssets with the available assets
+            enabledAssets = availableAssets.filter(function(item){
+                return (disabledAssets.indexOf(item)<0);
+            });
         }
-        return assets;
+        return enabledAssets;
     };
     /**
      * Returns the landing page for the application for a given tenant.The method will check the application.landingPage property in the

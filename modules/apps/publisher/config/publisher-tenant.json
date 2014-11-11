@@ -15,6 +15,7 @@
         "landingPage": "/asts/gadget/list"
     },
     "assets":["gadget","site"],
+    "diabledAssets":[],
     "authentication": {
         "activeMethod": "sso",
         "methods": {
