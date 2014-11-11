@@ -24,6 +24,10 @@ app.server = function(ctx) {
                 url: 'splash',
                 path: 'splash.jag'
             }]
+        },
+        configs: {
+            landingPage: '/asts/gadget/list',
+            disabledAssets: ['ebook', 'api', 'wsdl', 'service','policy','proxy']
         }
     }
 };
