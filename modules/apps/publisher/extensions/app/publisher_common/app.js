@@ -28,6 +28,8 @@ app.server = function(ctx) {
         configs: {
             landingPage: '/asts/gadget/list',
             disabledAssets: ['ebook', 'api', 'wsdl', 'service','policy','proxy']
+        },
+        onLoadedServerConfigs:function(configs){
         }
     }
 };

@@ -257,7 +257,7 @@ var app = {};
         var path = getAppExtensionPath(extName);
         artifacts.loadDirectory(path, -1234); //TODO:We only support loading artifacts for super tenant
     };
-    var loadServerConfigs = function(tenantId, serverConfigs) {
+    var loadServerConfigs = function(tenantId, serverConfigs,serverCb) {
         var userMod = require('store').user; //Obtain the configurations for the tenant
         var configs = userMod.configs(tenantId)||{};
         var landingPage = configs.landingPage || '/';
@@ -269,6 +269,10 @@ var app = {};
         if ((serverConfigs.disabledAssets) && (serverConfigs.disabledAssets.length > 0)) {
             configs.disabledAssets = disabledAssets.concat(serverConfigs.disabledAssets);
             log.info('Disabled assets: ' + stringify(configs.disabledAssets));
+        }
+        //Invoke the server configs loaded
+        if(serverCb.onLoadedServerConfigs){
+            serverCb.onLoadedServerConfigs(configs);
         }
     };
     var processExtension = function(extName, map, app, tenantId) {
@@ -301,7 +305,7 @@ var app = {};
         map[extName].loaded = true;
         //Load artifacts
         loadAppExtensionArtifacts(extName);
-        loadServerConfigs(tenantId, serverCbResult.configs || {});
+        loadServerConfigs(tenantId, serverCbResult.configs || {},serverCbResult);
         log.info('Finished processing app extension: ' + extName);
     };
     var processAppExtensions = function(appExtensions, tenantId) {
