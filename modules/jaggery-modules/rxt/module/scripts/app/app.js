@@ -28,7 +28,7 @@
  * @requires utils
  */
 var app = {};
-(function(app, core,artifacts) {
+(function(app, core, artifacts) {
     var log = new Log('app-core');
     /**
      * Represents a set of endpoints
@@ -164,7 +164,7 @@ var app = {};
      * method will determine form which the application extension it is exposed.AFter which the page decorators
      * for that extension will be applied to the page object
      * @param  {Array} assets [description] //TODO: Fill description !
-     * @param  {Object} page   A page object 
+     * @param  {Object} page   A page object
      * @return Object A page object
      */
     AppManager.prototype.render = function(assets, page) {
@@ -239,7 +239,7 @@ var app = {};
             var appExtensionFilePath = getCurrentAppExtensionFileName(files[index]);
             evalAppScript(appExtensionName, appExtensionFilePath, appResources);
         }
-        var app = processAppExtensions(appResources);
+        var app = processAppExtensions(appResources, tenantId);
         //Save the app object and appResources 
         var configs = core.configs(tenantId);
         configs.appResources = appResources;
@@ -250,14 +250,32 @@ var app = {};
             items[index].owner = extName;
         }
     };
-    var getAppExtensionPath = function(extName){
-        return getAppExtensionBasePath()+'/'+extName;
+    var getAppExtensionPath = function(extName) {
+        return getAppExtensionBasePath() + '/' + extName;
     };
-    var loadAppExtensionArtifacts = function(extName){
+    var loadAppExtensionArtifacts = function(extName) {
         var path = getAppExtensionPath(extName);
-        artifacts.loadDirectory(path,-1234);//TODO:We only support loading artifacts for super tenant
+        artifacts.loadDirectory(path, -1234); //TODO:We only support loading artifacts for super tenant
     };
-    var processExtension = function(extName, map, app) {
+    var loadServerConfigs = function(tenantId, serverConfigs,serverCb) {
+        var userMod = require('store').user; //Obtain the configurations for the tenant
+        var configs = userMod.configs(tenantId)||{};
+        var landingPage = configs.landingPage || '/';
+        var disabledAssets = configs.disabledAssets || [];
+        if (serverConfigs.landingPage) {
+            configs.application.landingPage = serverConfigs.landingPage;
+            log.info('Landing page changed to : ' + configs.application.landingPage);
+        }
+        if ((serverConfigs.disabledAssets) && (serverConfigs.disabledAssets.length > 0)) {
+            configs.disabledAssets = disabledAssets.concat(serverConfigs.disabledAssets);
+            log.info('Disabled assets: ' + stringify(configs.disabledAssets));
+        }
+        //Invoke the server configs loaded
+        if(serverCb.onLoadedServerConfigs){
+            serverCb.onLoadedServerConfigs(configs);
+        }
+    };
+    var processExtension = function(extName, map, app, tenantId) {
         if (!map[extName]) {
             log.warn('The app extension ' + extName + ' does not exist.Aborting loading of extensions');
             throw 'The app extension ' + extName + ' does not exist.Aborting loading of extensions';
@@ -272,7 +290,8 @@ var app = {};
             log.warn('The app extension ' + extName + ' does not have a server callback');
             return;
         }
-        var endpoints = serverCb().endpoints;
+        var serverCbResult = serverCb();
+        var endpoints = serverCbResult.endpoints;
         if (!endpoints) {
             log.warn('The app extension ' + extName + ' has not defined any endpoints.');
             return;
@@ -286,9 +305,10 @@ var app = {};
         map[extName].loaded = true;
         //Load artifacts
         loadAppExtensionArtifacts(extName);
+        loadServerConfigs(tenantId, serverCbResult.configs || {},serverCbResult);
         log.info('Finished processing app extension: ' + extName);
     };
-    var processAppExtensions = function(appExtensions) {
+    var processAppExtensions = function(appExtensions, tenantId) {
         var appExtension;
         var extensionsCb;
         var stack;
@@ -301,14 +321,14 @@ var app = {};
             appExtension = appExtensions[key];
             if (!appExtension.dependencies) {
                 //Get all of the endpoints
-                processExtension(key, appExtensions, app);
+                processExtension(key, appExtensions, app,tenantId);
             } else {
                 //Determine the load order
                 stack = [];
                 stack = recursiveProcess(key, appExtensions, stack);
                 log.info('Loading dependencies: ' + stack);
                 for (var index in stack) {
-                    processExtension(stack[index], appExtensions, app);
+                    processExtension(stack[index], appExtensions, app, tenantId);
                 }
             }
         }
@@ -494,8 +514,9 @@ var app = {};
         return new AppManager(appResources, ctx);
     };
     /**
-     * Returns an array of all asset types that are activated in the ES.This method works by checking the assets property of the
-     * tenant-x.json file.If no asset types have been activated an empty array is returned
+     * Returns an array of all asset types that are activated in the ES.This method first obtains the set of
+     * all available asset types and then intersects them with assets which are disabled in the
+     * x-tenant.json file.
      * @param  {Number} tenantId The tenant ID for which the activated assets must be returned
      * @return {Array}          An array of strings indicating the asset types
      *                          (The values returned reflect the shortName property in the rxt files)
@@ -508,12 +529,18 @@ var app = {};
             log.warn('Unable to locate tenant configurations in order to retrieve activated assets');
             throw 'Unable to locate tenant configurations in order to retrieve activated assets';
         }
-        var assets = configs.assets;
-        if (!assets) {
-            log.warn('No activated assets');
-            return [];
+        //var assets = configs.assets;
+        var disabledAssets = configs.disabledAssets || [];
+        var rxtManager = core.rxtManager(tenantId);
+        var availableAssets = rxtManager.listRxtTypes();
+        var enabledAssets = availableAssets;
+        if (disabledAssets.length > 0) {
+            //The enabled assets are an intersection of the disabledAssets with the available assets
+            enabledAssets = availableAssets.filter(function(item) {
+                return (disabledAssets.indexOf(item) < 0);
+            });
         }
-        return assets;
+        return enabledAssets;
     };
     /**
      * Returns the landing page for the application for a given tenant.The method will check the application.landingPage property in the
@@ -931,4 +958,4 @@ var app = {};
         var themeContextPath = themeResolver.call(themeObj, extensionPath);
         return themeContextPath;
     };
-}(app, core,artifacts));
+}(app, core, artifacts));
