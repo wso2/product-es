@@ -29,6 +29,10 @@ app.server = function(ctx) {
                 url: 'splash',
                 path: 'servicex_splash.jag'
             }]
+        },
+        configs:{
+            landingPage:'/asts/servicex/list',
+            disabledAssets:['gadget']
         }
     }
 };
