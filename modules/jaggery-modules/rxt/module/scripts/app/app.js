@@ -291,11 +291,11 @@ var app = {};
             return;
         }
         var serverCbResult = serverCb();
-        var endpoints = serverCbResult.endpoints;
-        if (!endpoints) {
-            log.warn('The app extension ' + extName + ' has not defined any endpoints.');
-            return;
-        }
+        var endpoints = serverCbResult.endpoints||{};
+        // if (!endpoints) {
+        //     log.warn('The app extension ' + extName + ' has not defined any endpoints.');
+        //     return;
+        // }
         var apiEndpoints = endpoints.apis || [];
         var pageEndpoints = endpoints.pages || [];
         setExtensionName(apiEndpoints, extName);
@@ -305,6 +305,7 @@ var app = {};
         map[extName].loaded = true;
         //Load artifacts
         loadAppExtensionArtifacts(extName);
+        //Load the server configurations
         loadServerConfigs(tenantId, serverCbResult.configs || {},serverCbResult);
         log.info('Finished processing app extension: ' + extName);
     };
