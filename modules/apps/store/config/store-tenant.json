@@ -32,6 +32,7 @@
         }
     },
     "assets": ["gadget", "site"],
+    "disabledAssets":[],
     "assetsPageSize": 12,
     "commentsPageSize": 10,
     "userSpace": "/_system/governance/users",

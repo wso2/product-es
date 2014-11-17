@@ -8,6 +8,10 @@
         <path>scripts/core/core.js</path>
     </script>
     <script>
+        <name>artifacts</name>
+        <path>scripts/artifacts/artifacts.js</path>
+    </script>
+    <script>
     	<name>resources</name>
     	<path>scripts/resources/resources.js</path>
     </script>
@@ -26,5 +30,9 @@
     <script>
         <name>ui</name>
         <path>scripts/ui/ui.js</path>
+    </script>
+    <script>
+        <name>workflows</name>
+        <path>scripts/workflows/workflows.js</path>
     </script>
 </module>

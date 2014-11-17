@@ -71,6 +71,7 @@
                     </systemProperties>
 
                     <workingDirectory>${basedir}/target</workingDirectory>
+<testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 

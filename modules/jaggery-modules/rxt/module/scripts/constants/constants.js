@@ -31,6 +31,8 @@ var constants = {};
     constants.POPULAR_ASSET_COUNT = 1;
     constants.DEFAULT_TIME_STAMP_FIELD = 'overview_createdtime';
     constants.SUBSCRIPTIONS_PATH = '/subscriptions';
+    constants.ASSET_EXTENSION_ROOT='/extensions/assets';
+    constants.DEFAULT_ASSET_EXTENSION='default';
     constants.APP_CONTEXT = 'rxt.app.context';
     constants.TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
     /***
