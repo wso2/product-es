@@ -29,6 +29,9 @@ app.server = function(ctx) {
                 path:'my_items.jag',
                 secured:true
             }]
+        },
+        configs: {
+            disabledAssets: ['ebook', 'api', 'wsdl', 'service','policy','proxy','schema','sequence','servicex','uri','wadl','endpoint']
         }
     }
 };
