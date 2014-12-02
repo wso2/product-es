@@ -27,29 +27,30 @@ import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
 import java.io.File;
+
 import static org.testng.Assert.assertEquals;
 
-
+/**
+ * ES publisher list page sort test
+ * check sorting on different parameters
+ */
 public class ESPublisherListPageSortTestCase extends BaseUITestCase {
-    private static final Log log = LogFactory.getLog(ESPublisherListPageSortTestCase.class);
+    private static final Log LOG = LogFactory.getLog(ESPublisherListPageSortTestCase.class);
 
     private TestUserMode userMode;
-
     private String normalUserName;
-    private String normalUserPwd;
-
     private ResourceAdminServiceClient resourceAdminServiceClient;
-    private String resourceLocation;
 
-    private String email = "esmailsample@gmail.com";
-    private String emailPwd = "esMailTest";
-    private String nameSortAsset1 = "Bar Chart";
-    private String nameSortAsset2 = "WSO2 Jira";
-    private String version1 = "1.0.0";
-    private String version2 = "2.0.0";
-    private String assetType = "gadget";
-    private String createdTime = "12";
+    private static final String EMAIL = "esmailsample@gmail.com";
+    private static final String EMAIL_PWD = "esMailTest";
+    private static final String NAME_SORT_ASSET_1 = "Bar Chart";
+    private static final String NAME_SORT_ASSET_2 = "WSO2 Jira";
+    private static final String VERSION_1 = "1.0.0";
+    private static final String VERSION_2 = "2.0.0";
+    private static final String ASSET_TYPE = "gadget";
+    private static final String CREATED_TIME = "12";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherListPageSortTestCase(TestUserMode userMode) {
@@ -64,79 +65,66 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        AutomationContext automationContext = new AutomationContext("ES",
-                TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
-        normalUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName()
-                .split("@")[0];
-        normalUserPwd = automationContext.getSuperTenant().getTenantUser("user1").getPassword();
-        resourcePath = "/_system/governance/gadgets/" + normalUserName + "/" + assetName + "/" +
-                version2;
+        normalUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName().split("@")[0];
+        String normalUserPwd = automationContext.getSuperTenant().getTenantUser("user1").getPassword();
+        resourcePath = "/_system/governance/gadgets/" + normalUserName + "/" + assetName + "/" + VERSION_2;
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
-        resourceLocation = getResourceLocation();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
-                adminUserPwd);
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties";
+        String resourceLocation = getResourceLocation();
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
+        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
         if (currentUserName.equals(adminUserName)) {
-            ESUtil.login(driver, baseUrl, publisherApp, normalUserName, normalUserPwd);
-            AssetUtil.addNewAsset(driver, baseUrl, assetType, normalUserName, assetName, version2,
-                    createdTime);
+            ESUtil.login(driver, baseUrl, PUBLISHER_APP, normalUserName, normalUserPwd);
+            AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, normalUserName, assetName, VERSION_2, CREATED_TIME);
             if (isAlertPresent()) {
                 String alert = closeAlertAndGetItsText();
-                log.warn(alert + ": modal box appeared");
+                LOG.warn(alert + ": modal box appeared");
             }
-            driver.get(baseUrl + "/publisher/logout");
+            driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
             driver.get(driver.getCurrentUrl());
         }
-        ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by name")
     public void testListPageSortByName() throws Exception {
-        driver.get(baseUrl + "/publisher");
+        driver.get(baseUrl + PUBLISHER_URL);
         driver.findElementPoll(By.linkText(assetName), 30);
         driver.findElement(By.partialLinkText("NAME")).click();
-        assertEquals(nameSortAsset1, driver.findElement(By.xpath
-                ("//tbody[@id='list-asset-table-body']/tr[1]/td[2]")).getText(),
-                "Sort on name failed");
-        assertEquals(nameSortAsset2, driver.findElement(By.xpath
-                ("//tbody[@id='list-asset-table-body']/tr[14]/td[2]")).getText(),
-                "Sort on name failed");
+        assertEquals(NAME_SORT_ASSET_1, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
+                .getText(), "Sort on name failed");
+        assertEquals(NAME_SORT_ASSET_2, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[14]/td[2]"))
+                .getText(), "Sort on name failed");
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by version",
             dependsOnMethods = "testListPageSortByName")
     public void testListPageSortByVersion() throws Exception {
         driver.findElement(By.linkText("VERSION")).click();
-        assertEquals(version1, driver.findElement(By.xpath
-                ("//tbody[@id='list-asset-table-body']/tr[1]/td[3]")).getText(),
-                "Sort on version failed");
-        assertEquals(version2, driver.findElement(By.xpath
-                ("//tbody[@id='list-asset-table-body']/tr[14]/td[3]")).getText(),
-                "Sort on version failed");
+        assertEquals(VERSION_1, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[3]"))
+                .getText(), "Sort on version failed");
+        assertEquals(VERSION_2, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[14]/td[3]"))
+                .getText(), "Sort on version failed");
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by owner",
             dependsOnMethods = "testListPageSortByName")
     public void testListPageSortByOwner() throws Exception {
         driver.findElement(By.linkText("OWNER")).click();
-        assertEquals(adminUserName, driver.findElement(By.xpath
-                ("//tbody[@id='list-asset-table-body']/tr[1]/td[4]")).getText(),
-                "Sort on owner failed");
-        assertEquals(normalUserName, driver.findElement(By.xpath
-                ("//tbody[@id='list-asset-table-body']/tr[14]/td[4]")).getText(),
-                "Sort on owner failed");
+        assertEquals(adminUserName, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[4]"))
+                .getText(), "Sort on owner failed");
+        assertEquals(normalUserName, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[14]/td[4]"))
+                .getText(), "Sort on owner failed");
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by created time",
             dependsOnMethods = "testListPageSortByName")
     public void testListPageSortByCreatedTime() throws Exception {
         driver.findElement(By.linkText("CREATED")).click();
-        assertEquals(assetName, driver.findElement(By.xpath
-                ("//tbody[@id='list-asset-table-body']/tr[1]/td[2]")).getText(),
-                "Sort on created time failed");
+        assertEquals(assetName, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
+                .getText(), "Sort on created time failed");
     }
 
     @AfterClass(alwaysRun = true)
@@ -144,9 +132,9 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         if (currentUserName.equals(normalUserName)) {
             resourceAdminServiceClient.deleteResource(resourcePath);
         }
-        driver.get(baseUrl + "/publisher/logout");
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         driver.get(driver.getCurrentUrl());
-        ESUtil.deleteAllEmail(smtpPropertyLocation, emailPwd, email);
+        ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
         driver.quit();
     }
 

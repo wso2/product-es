@@ -25,7 +25,9 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
 import java.io.File;
+
 import static org.testng.Assert.*;
 
 /**
@@ -34,21 +36,19 @@ import static org.testng.Assert.*;
 public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
 
     private TestUserMode userMode;
-
     private ResourceAdminServiceClient resourceAdminServiceClient;
-    private String resourceLocation;
 
-    private String email = "esmailsample@gmail.com";
-    private String emailPwd = "esMailTest";
+    private static final String EMAIL = "esmailsample@gmail.com";
+    private static final String EMAIL_PWD = "esMailTest";
 
-    private String assetVersion = "1.0.0";
-    private String assetCreatedTime = "12";
-    private String assetUrl1 = "http://test";
-    private String assetUrl2 = "http://wso2.com/";
-    private String assetDescription1= "for store";
-    private String assetDescription2 = "Edited Test description";
-    private String assetCategory1 = "Google";
-    private String assetCategory2 = "WSO2";
+    private static final String ASSET_VERSION = "1.0.0";
+    private static final String ASSET_CREATED_TIME = "12";
+    private static final String ASSET_URL_1 = "http://test";
+    private static final String ASSET_URL_2 = "http://wso2.com/";
+    private static final String ASSET_DESCRIPTION_1 = "for store";
+    private static final String ASSET_DESCRIPTION_2 = "Edited Test description";
+    private static final String ASSET_CATEGORY_1 = "Google";
+    private static final String ASSET_CATEGORY_2 = "WSO2";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherAddEditAssetTestCase(TestUserMode userMode, String assetName) {
@@ -61,22 +61,18 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         super.init(userMode);
         currentUserName = userInfo.getUserName().split("@")[0];
         currentUserPwd = userInfo.getPassword();
-        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/"
-                + assetVersion;
+        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        AutomationContext automationContext = new AutomationContext("ES",
-                TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        resourceLocation = getResourceLocation();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
-                adminUserPwd);
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties";
+        String resourceLocation = getResourceLocation();
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
+        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
 
-        ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.publisher", description = "Testing adding a new asset")
@@ -88,35 +84,31 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
-        driver.findElement(By.name("overview_version")).sendKeys(assetVersion);
+        driver.findElement(By.name("overview_version")).sendKeys(ASSET_VERSION);
         driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys(assetCreatedTime);
-        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText
-                (assetCategory1);
+        driver.findElement(By.name("overview_createdtime")).sendKeys(ASSET_CREATED_TIME);
+        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(ASSET_CATEGORY_1);
         driver.findElement(By.name("overview_url")).clear();
-        driver.findElement(By.name("overview_url")).sendKeys(assetUrl1);
+        driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL_1);
         driver.findElement(By.name("overview_description")).clear();
-        driver.findElement(By.name("overview_description")).sendKeys(assetDescription1);
+        driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_1);
         driver.findElement(By.id("btn-create-asset")).click();
 
         driver.findElementPoll(By.linkText(assetName), 30);
         //check if the created gadget is shown
-        assertTrue(isElementPresent(By.linkText(assetName)), "Adding an asset failed for user:" +
-                currentUserName);
+        assertTrue(isElementPresent(By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
     }
 
-    @Test(groups = "wso2.es.publisher", description = "Testing editing an asset",
-            dependsOnMethods = "testAddAsset")
+    @Test(groups = "wso2.es.publisher", description = "Testing editing an asset", dependsOnMethods = "testAddAsset")
     public void testEditAsset() throws Exception {
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
-        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText
-                (assetCategory2);
+        new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(ASSET_CATEGORY_2);
         driver.findElement(By.name("overview_url")).clear();
-        driver.findElement(By.name("overview_url")).sendKeys(assetUrl2);
+        driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL_2);
         driver.findElement(By.name("overview_description")).clear();
-        driver.findElement(By.name("overview_description")).sendKeys(assetDescription2);
+        driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_2);
         driver.findElement(By.id("editAssetButton")).click();
         closeAlertAndGetItsText();
 
@@ -127,28 +119,28 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
                 ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr/td[2]")).getText(),
                 "Incorrect provider");
         assertEquals(assetName, driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[2]/td[2]"))
-                .getText(), "Incorrect asset name");
-        assertEquals(assetVersion, driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[3]/td[2]"))
-                .getText(), "Incorrect version");
-        assertEquals(assetCategory2, driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[5]/td[2]"))
-                .getText(), "Incorrect Category");
-        assertEquals(assetUrl2, driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[6]/td[2]"))
-                .getText(), "Incorrect URL");
-        assertEquals(assetDescription2, driver.findElement(By.xpath
-                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[7]/td[2]"))
-                .getText(), "Incorrect description");
+                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[2]/td[2]")).getText(),
+                "Incorrect asset name");
+        assertEquals(ASSET_VERSION, driver.findElement(By.xpath
+                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[3]/td[2]")).getText(),
+                "Incorrect version");
+        assertEquals(ASSET_CATEGORY_2, driver.findElement(By.xpath
+                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[5]/td[2]")).getText(),
+                "Incorrect Category");
+        assertEquals(ASSET_URL_2, driver.findElement(By.xpath
+                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[6]/td[2]")).getText(),
+                "Incorrect URL");
+        assertEquals(ASSET_DESCRIPTION_2, driver.findElement(By.xpath
+                ("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[7]/td[2]")).getText(),
+                "Incorrect description");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         //delete resources and logout
         resourceAdminServiceClient.deleteResource(resourcePath);
-        driver.get(baseUrl + "/publisher/logout");
-        ESUtil.deleteAllEmail(smtpPropertyLocation, emailPwd, email);
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
+        ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
         driver.quit();
     }
 

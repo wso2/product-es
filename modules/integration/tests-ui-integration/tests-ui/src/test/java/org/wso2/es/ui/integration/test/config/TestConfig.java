@@ -32,44 +32,32 @@ import java.io.File;
  */
 public class TestConfig extends BaseUITestCase {
 
-    private ServerConfigurationManager serverManager;
-    private String resourceLocation;
-    private String backendURL;
-    private String superAdminName;
-    private String superAdminPwd;
-    private String superUserName;
-
-    private String tenantAdminName;
-    private String tenantAdminPwd;
-    private String tenantUserName;
-
-    private UserManagementClient userManagementClient;
+    private static final String USER_1 = "user1";
+    private static final String PUBLISHER_ROLE = "publisher";
+    private static final String INTERNAL_PUBLISHER_ROLE = "Internal/publisher";
 
     @BeforeSuite
     public void configureESTestSuite() throws Exception {
-        AutomationContext automationContext = new AutomationContext("ES",
-                TestUserMode.SUPER_TENANT_ADMIN);
-        superAdminName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
-        superAdminPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
-        superUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName();
-        serverManager = new ServerConfigurationManager(automationContext);
-        resourceLocation = getResourceLocation();
-        backendURL = automationContext.getContextUrls().getBackEndUrl();
+        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        String superAdminName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        String superAdminPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
+        String superUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName();
+        ServerConfigurationManager serverManager = new ServerConfigurationManager(automationContext);
+        String resourceLocation = getResourceLocation();
+        String backendURL = automationContext.getContextUrls().getBackEndUrl();
         //restart server with mailto config added in axis2.xml
         serverManager.applyConfiguration(new File(resourceLocation + File.separator +
                 "notifications" + File.separator + "axis2.xml"));
         //assign publisher role to the normal user
-        userManagementClient = new UserManagementClient(backendURL, superAdminName, superAdminPwd);
-        userManagementClient.updateUserListOfRole("Internal/publisher",
-                new String[]{superUserName}, null);
+        UserManagementClient userManagementClient = new UserManagementClient(backendURL, superAdminName, superAdminPwd);
+        userManagementClient.updateUserListOfRole(INTERNAL_PUBLISHER_ROLE, new String[]{superUserName}, null);
 
-        automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
-        tenantAdminName = automationContext.getContextTenant().getTenantAdmin().getUserName();
-        tenantAdminPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
-        tenantUserName = automationContext.getContextTenant().getTenantUser("user1").getUserName();
-        userManagementClient = new UserManagementClient(backendURL, tenantAdminName,
-                tenantAdminPwd);
+        automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.TENANT_ADMIN);
+        String tenantAdminName = automationContext.getContextTenant().getTenantAdmin().getUserName();
+        String tenantAdminPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
+        String tenantUserName = automationContext.getContextTenant().getTenantUser(USER_1).getUserName();
+        userManagementClient = new UserManagementClient(backendURL, tenantAdminName, tenantAdminPwd);
         //create a publisher role and assign it to tenant user in the tenant domain
-        userManagementClient.addInternalRole("publisher", new String[]{tenantUserName}, null);
+        userManagementClient.addInternalRole(PUBLISHER_ROLE, new String[]{tenantUserName}, null);
     }
 }

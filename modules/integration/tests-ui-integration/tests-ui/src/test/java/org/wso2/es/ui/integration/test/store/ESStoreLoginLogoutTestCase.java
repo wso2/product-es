@@ -27,6 +27,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 
+/**
+ * Login Logout test for store
+ * check if the logged in user is shown properly
+ */
 public class ESStoreLoginLogoutTestCase extends BaseUITestCase {
 
     @BeforeClass(alwaysRun = true)
@@ -40,7 +44,7 @@ public class ESStoreLoginLogoutTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.store", description = "Test Store Login")
     public void testESStoreLogin() throws Exception {
-        driver.get(baseUrl + "/store");
+        driver.get(baseUrl + STORE_URL);
         driver.findElement(By.linkText("Sign in")).click();
         driver.findElement(By.id("username")).clear();
         driver.findElement(By.id("username")).sendKeys(currentUserName);
@@ -54,12 +58,11 @@ public class ESStoreLoginLogoutTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.store", description = "Test Store Logout",
             dependsOnMethods = "testESStoreLogin")
     public void testESStoreLogout() throws Exception {
-        driver.get(baseUrl + "/store");
+        driver.get(baseUrl + STORE_URL);
         driver.findElement(By.linkText(currentUserName)).click();
         driver.findElement(By.linkText("Sign out")).click();
         assertTrue(isElementPresent(By.linkText("Sign in")), "Sign in link missing");
-        assertEquals("Register", driver.findElement(By.id("btn-register")).getText(),
-                "Register button missing");
+        assertEquals("Register", driver.findElement(By.id("btn-register")).getText(), "Register button missing");
     }
 
     @AfterClass(alwaysRun = true)

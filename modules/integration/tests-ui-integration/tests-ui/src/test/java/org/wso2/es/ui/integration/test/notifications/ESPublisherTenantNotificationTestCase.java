@@ -35,21 +35,21 @@ import static org.testng.Assert.assertTrue;
  * Do an LC transition on it & check for notifications
  */
 public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
-    private String resourceLocation;
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
     private TestUserMode userMode;
-    private String email = "esmailsample@gmail.com";
-    private String emailPwd = "esMailTest";
-    private String firstName = "name 1";
-    private String lastName = "name 2";
-    private String version = "1.0.0";
-    private String createdTime = "12";
-    private String assetType = "gadget";
-    private String assetDescription = "Test Description";
+    private static final String EMAIL = "esmailsample@gmail.com";
+    private static final String EMAIL_PWD = "esMailTest";
+    private static final String FIRST_NAME = "name 1";
+    private static final String LAST_NAME = "name 2";
+    private static final String VERSION = "1.0.0";
+    private static final String CREATED_TIME = "12";
+    private static final String ASSET_TYPE = "gadget";
+    private static final String ASSET_DESCRIPTION = "Test Description";
 
     private String LCNotificationSubject = "[StoreLifecycleStateChange] at path: ";
     private String updateNotificationSubject = "[StoreAssetUpdate] at path: ";
+    private static final int POLL_COUNT = 30;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherTenantNotificationTestCase(TestUserMode testUserMode, String assetName) {
@@ -64,28 +64,24 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         baseUrl = getStorePublisherUrl();
-        AutomationContext automationContext = new AutomationContext("ES",
-                TestUserMode.TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
-        resourceLocation = getResourceLocation();
+        String resourceLocation = getResourceLocation();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
-                adminUserPwd);
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         providerName = currentUserName.split("@")[0];
-        resourcePath = "/_system/governance/gadgets/" + providerName + "/" + assetName + "/" +
-                version;
+        resourcePath = "/_system/governance/gadgets/" + providerName + "/" + assetName + "/" + VERSION;
         LCNotificationSubject += resourcePath;
         updateNotificationSubject += resourcePath;
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties";
+        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
 
         //Update user profiles through Admin console
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
-        ESUtil.setupUserProfile(driver, baseUrl, currentUserName, firstName, lastName, email);
+        ESUtil.setupUserProfile(driver, baseUrl, currentUserName, FIRST_NAME, LAST_NAME, EMAIL);
         //login to publisher & add a new gadget
-        ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
-        AssetUtil.addNewAsset(driver, baseUrl, assetType, providerName, assetName, version, createdTime);
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, providerName, assetName, VERSION, CREATED_TIME);
     }
 
 
@@ -93,23 +89,21 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
             "change event")
     public void testLCNotification() throws Exception {
         //check notification for initial LC state change
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(assetName), POLL_COUNT);
         //read email using smtp
-        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, emailPwd, email,
-                LCNotificationSubject);
+        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, LCNotificationSubject);
         assertTrue(hasMail, "LC Notification failed for user:" + currentUserName);
     }
 
-    @Test(groups = "wso2.es.notification", description = "Testing mails for asset update " +
-            "event", dependsOnMethods = "testLCNotification")
+    @Test(groups = "wso2.es.notification", description = "Testing mails for asset update event",
+            dependsOnMethods = "testLCNotification")
     public void testUpdateNotification() throws Exception {
         //Update gadget and check lC state change notification
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
-        AssetUtil.updateAsset(driver, baseUrl, assetType, assetName, assetDescription);
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
+        AssetUtil.updateAsset(driver, baseUrl, ASSET_TYPE, assetName, ASSET_DESCRIPTION);
+        driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         //read email using smtp
-        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, emailPwd, email,
-                updateNotificationSubject);
+        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, updateNotificationSubject);
         assertTrue(hasMail, "Asset Update Notification failed for user:" + currentUserName);
     }
 
@@ -118,9 +112,9 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         //delete gadget and email, logout from admin console and publisher
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
-        driver.get(baseUrl + "/publisher/logout");
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         if(!currentUserName.equals(adminUserName)){
-            ESUtil.deleteAllEmail(smtpPropertyLocation, emailPwd, email);
+            ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
         }
         driver.quit();
     }

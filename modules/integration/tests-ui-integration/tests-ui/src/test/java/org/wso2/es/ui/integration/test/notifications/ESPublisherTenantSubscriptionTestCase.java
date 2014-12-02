@@ -25,7 +25,9 @@ import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
 import java.io.File;
+
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -35,17 +37,16 @@ import static org.testng.Assert.assertEquals;
  */
 public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
 
-    private String LC_SUBSCRIPTION = "Store LC State Change Event via Role Profile";
-    private String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
+    private static final String LC_SUBSCRIPTION = "Store LC State Change Event via Role Profile";
+    private static final String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
-    private String resourceLocation;
 
-    private String email = "esmailsample@gmail.com";
-    private String emailPwd = "esMailTest";
-    private String assetVersion = "1.0.0";
-    private String createdTime = "12";
-    private String assetType = "gadget";
+    private static final String EMAIL = "esmailsample@gmail.com";
+    private static final String EMAIL_PWD = "esMailTest";
+    private static final String ASSET_VERSION = "1.0.0";
+    private static final String CREATED_TIME = "12";
+    private static final String ASSET_TYPE = "gadget";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherTenantSubscriptionTestCase(TestUserMode testUserMode, String assetName) {
@@ -60,29 +61,24 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         baseUrl = getStorePublisherUrl();
-        AutomationContext automationContext = new AutomationContext("ES",
-                TestUserMode.TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
         providerName = currentUserName.split("@")[0];
-        resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName
-                + "/" + assetVersion;
+        resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName + "/" + ASSET_VERSION;
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        resourceLocation = getResourceLocation();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
-                adminUserPwd);
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties";
+        String resourceLocation = getResourceLocation();
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
+        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
 
-        ESUtil.login(driver, baseUrl, publisherApp, currentUserName, currentUserPwd);
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
     }
 
     @Test(groups = "wso2.es.notification", description = "Check if subscriptions are created")
     public void testSubscriptionCreation() throws Exception {
         //add new gadget
-        AssetUtil.addNewAsset(driver, baseUrl, assetType, providerName, assetName, assetVersion,
-                createdTime);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, providerName, assetName, ASSET_VERSION, CREATED_TIME);
         if (isAlertPresent()) {
             closeAlertAndGetItsText();
         }
@@ -92,10 +88,10 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
         driver.findElementPoll(By.linkText(assetName), 30);
         driver.findElement(By.linkText(assetName)).click();
         //check two subscriptions
-        String subscription1 = driver.findElement(By.cssSelector("#subscriptionsTable > tbody > " +
-                "tr.tableOddRow > td")).getText();
-        String subscription2 = driver.findElement(By.xpath
-                ("//table[@id='subscriptionsTable']/tbody/tr[3]/td")).getText();
+        String subscription1 = driver.findElement(By.cssSelector("#subscriptionsTable > tbody > tr.tableOddRow > td"))
+                .getText();
+        String subscription2 = driver.findElement(By.xpath("//table[@id='subscriptionsTable']/tbody/tr[3]/td"))
+                .getText();
         String subscription1Name;
         String subscription2Name;
         //used to make the test independent of the subscription creation order
@@ -115,9 +111,9 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
         //logout, delete gadget and emails
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
-        driver.get(baseUrl + "/publisher/logout");
-        if(!currentUserName.equals(adminUserName)){
-            ESUtil.deleteAllEmail(smtpPropertyLocation, emailPwd, email);
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
+        if (!currentUserName.equals(adminUserName)) {
+            ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
         }
         driver.quit();
     }

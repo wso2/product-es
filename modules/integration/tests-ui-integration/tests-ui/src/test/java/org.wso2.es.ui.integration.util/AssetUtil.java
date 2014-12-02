@@ -21,12 +21,24 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
+/**
+ * Utility operations related to assets
+ */
 public class AssetUtil extends ESIntegrationUITest {
 
-    public static void addNewAsset(WebDriver driver, String baseUrl, String assetType,
-                                   String provider,
-                                   String assetName, String version,
-                                   String createdTime) {
+    /**
+     * Add a new asset
+     *
+     * @param driver      WebDriver instance
+     * @param baseUrl     base url of the server
+     * @param assetType   asset type
+     * @param provider    provider name
+     * @param assetName   asset name
+     * @param version     version
+     * @param createdTime created time
+     */
+    public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String provider,
+                                   String assetName, String version, String createdTime) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText("Add")).click();
         driver.findElement(By.name("overview_provider")).clear();
@@ -40,9 +52,17 @@ public class AssetUtil extends ESIntegrationUITest {
         driver.findElement(By.id("btn-create-asset")).click();
     }
 
-    public static String updateAsset(WebDriver driver, String baseUrl, String assetType,
-                                     String assetName,
-                                     String description) {
+    /**
+     * Edit an asset
+     *
+     * @param driver      WebDriver instance
+     * @param baseUrl     base url of the server
+     * @param assetType   asset type
+     * @param assetName   asset name
+     * @param description asset description
+     * @return the edit response
+     */
+    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
@@ -52,8 +72,14 @@ public class AssetUtil extends ESIntegrationUITest {
         return closeAlertAndGetItsText(driver, true);
     }
 
-    public static void changeLCState(WebDriver driver, String toState,
-                                     String comment) {
+    /**
+     * Change LC state
+     *
+     * @param driver  WebDriver instance
+     * @param toState the new state
+     * @param comment comment
+     */
+    public static void changeLCState(WebDriver driver, String toState, String comment) {
         driver.findElement(By.id(toState)).click();
 
         driver.findElement(By.id("commentModalText")).clear();
@@ -61,6 +87,13 @@ public class AssetUtil extends ESIntegrationUITest {
         driver.findElement(By.id("commentModalSave")).click();
     }
 
+    /**
+     * Add ratings and reviews
+     *
+     * @param driver    WebDriver instance
+     * @param review    review comment
+     * @param starCount rating
+     */
     public static void addRatingsAndReviews(ESWebDriver driver, String review, String starCount) {
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
@@ -71,6 +104,12 @@ public class AssetUtil extends ESIntegrationUITest {
         driver.switchTo().defaultContent();
     }
 
+    /**
+     * Publish a new asset to store
+     *
+     * @param driver    WebDriver instance
+     * @param assetName asset name
+     */
     public static void publishAssetToStore(WebDriver driver, String assetName) {
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Life Cycle")).click();
@@ -79,18 +118,21 @@ public class AssetUtil extends ESIntegrationUITest {
         changeLCState(driver, "Published", "published");
     }
 
-    private static String closeAlertAndGetItsText(WebDriver driver, boolean acceptNextAlert) {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
+    /**
+     * Close the alert and return the text
+     *
+     * @param driver      WebDriver instance
+     * @param acceptAlert whether to accept the alert
+     * @return alert text
+     */
+    private static String closeAlertAndGetItsText(WebDriver driver, boolean acceptAlert) {
+        Alert alert = driver.switchTo().alert();
+        String alertText = alert.getText();
+        if (acceptAlert) {
+            alert.accept();
+        } else {
+            alert.dismiss();
         }
+        return alertText;
     }
 }

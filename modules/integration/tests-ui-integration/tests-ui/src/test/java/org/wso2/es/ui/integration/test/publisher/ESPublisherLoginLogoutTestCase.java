@@ -38,12 +38,12 @@ public class ESPublisherLoginLogoutTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
-        publisherApp = getWebAppURL();
+        baseUrl = getWebAppURL();
     }
 
     @Test(groups = "wso2.es.publisher", description = "verify login to ES Publisher")
     public void testLoginToPublisher() throws Exception {
-        driver.get(publisherApp + "/publisher/asts/gadget");
+        driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         driver.findElement(By.id("username")).clear();
         driver.findElement(By.id("username")).sendKeys(currentUserName);
         driver.findElement(By.id("password")).clear();

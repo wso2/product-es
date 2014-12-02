@@ -30,7 +30,6 @@ import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
 
 /**
  * Category and sorting test for Anonymous store
@@ -40,13 +39,13 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
 
     private String popularAsset1;
     private String popularAsset2;
-    private String review1 = "cool!";
-    private String review2 = "awesome!";
-    private String rating1 = "4";
-    private String rating2 = "2";
-    private String assetVersion = "1.0.0";
-    private String assetCreatedTime = "12";
-    private String assetType = "gadget";
+    private static final String REVIEW_1 = "cool!";
+    private static final String REVIEW_2 = "awesome!";
+    private static final String RATING_1 = "4";
+    private static final String RATING_2 = "2";
+    private static final String ASSET_VERSION = "1.0.0";
+    private static final String ASSET_CREATED_TIME = "12";
+    private static final String ASSET_TYPE = "gadget";
 
     private static final String BAR_CHART = "Bar Chart";
     private static final String BUBBLE_CHART = "Bubble Chart";
@@ -61,109 +60,97 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
 
-        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + this
-                .assetName + "/" + assetVersion;
-        AutomationContext automationContext = new AutomationContext("ES",
+        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + this.assetName + "/" + ASSET_VERSION;
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME,
                 TestUserMode.SUPER_TENANT_ADMIN);
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, currentUserName,
                 currentUserPwd);
 
         //Rating two assets to check sorting on popularity
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         popularAsset1 = driver.findElement(By.xpath
                 ("//div[@id='assets-container']/div/div[4]/div/div/a/h4")).getText();
         driver.findElement(By.cssSelector("h4")).click();
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
         driver.switchTo().defaultContent();
-        ESUtil.login(driver, baseUrl, storeApp, currentUserName, currentUserPwd);
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//div[@id='assets-container']/div/div[4]/div/div/a/h4"))
-                .click();
-        AssetUtil.addRatingsAndReviews(driver, review1, rating1);
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
+        driver.findElement(By.xpath("//div[@id='assets-container']/div/div[4]/div/div/a/h4")).click();
+        AssetUtil.addRatingsAndReviews(driver, REVIEW_1, RATING_1);
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         popularAsset2 = driver.findElement(By.xpath
-                ("//div[@id='assets-container']/div[2]/div[3]/div/div/a/h4"))
-                .getText();
-        driver.findElement(By.xpath("//div[@id='assets-container']/div[2]/div[3]/div/div/a/h4"))
-                .click();
-        AssetUtil.addRatingsAndReviews(driver, review2, rating2);
+                ("//div[@id='assets-container']/div[2]/div[3]/div/div/a/h4")).getText();
+        driver.findElement(By.xpath("//div[@id='assets-container']/div[2]/div[3]/div/div/a/h4")).click();
+        AssetUtil.addRatingsAndReviews(driver, REVIEW_2, RATING_2);
 
         //navigate to publisher and add and publish a new gadget to support sort by created time
-        driver.get(baseUrl + "/publisher");
-        AssetUtil.addNewAsset(driver, baseUrl, assetType, currentUserName, assetName,
-                assetVersion, assetCreatedTime);
+        driver.get(baseUrl + PUBLISHER_URL);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, currentUserName, assetName,
+                ASSET_VERSION, ASSET_CREATED_TIME);
         driver.findElementPoll(By.linkText(assetName), 30);
         AssetUtil.publishAssetToStore(driver, assetName);
-        driver.get(baseUrl + "/publisher/logout");
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         //navigate to store and wait for the new gadget to be visible in store
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         driver.findElementPoll(By.xpath("//a[contains(.,'Asset Recent')]"), 5);
     }
 
     //TODO-disabled bug
     @Test(groups = "wso2.es.store", description = "Testing sorting on popularity", enabled = false)
     public void testStoreSortOnPopularity() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         //sort by popularity
         driver.findElement(By.cssSelector("i.icon-star")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"),
-                popularAsset1));
-        assertEquals(driver.findElement(By.cssSelector("h4")).getText(), popularAsset1,
-                "Popularity Sort failed");
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), popularAsset1));
+        assertEquals(driver.findElement(By.cssSelector("h4")).getText(), popularAsset1, "Popularity Sort failed");
         assertEquals(driver.findElement(By.xpath
-                ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(),
-                popularAsset2, "Popularity Sort failed");
+                ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(), popularAsset2,
+                "Popularity Sort failed");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing sorting on alphabetical order")
     public void testStoreSortOnAlphabeticalOrder() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         //sort by alphabetical order
         driver.findElement(By.cssSelector("i.icon-sort-alphabetical")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
                 ("//div[@id='assets-container']/div/div[3]/div/div/a/h4"), BUBBLE_CHART));
-        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText(),
-                "Alphabetical Sort failed");
+        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText(), "Alphabetical Sort failed");
         assertEquals(BAR_CHART, driver.findElement(By.xpath
-                ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(),
-                "Alphabetical Sort failed");
+                ("//div[@id='assets-container']/div/div[2]/div/div/a/h4")).getText(), "Alphabetical Sort failed");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing sorting on created time")
     public void testStoreSortOnCreatedTime() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         //sort by created time
         driver.findElement(By.cssSelector("i.icon-calendar")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"),
-                assetName));
-        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText()
-                , "Recent Sort failed");
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
+        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText(), "Recent Sort failed");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category Google")
     public void testCategoryGoogle() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         //google category
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("Google")).click();
-        assertEquals(3, driver.findElements(By.cssSelector("div.asset-details")).size(),
-                "Google Category wrong");
+        assertEquals(3, driver.findElements(By.cssSelector("div.asset-details")).size(), "Google Category wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category WSO2")
     public void testCategoryWSO2() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("WSO2")).click();
-        assertEquals(5, driver.findElements(By.cssSelector("div.asset-details")).size(),
-                "WSO2 Category wrong");
+        assertEquals(5, driver.findElements(By.cssSelector("div.asset-details")).size(), "WSO2 Category wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category template")
     public void testCategoryTemplate() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("Templates")).click();
         assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size(),
@@ -173,11 +160,11 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
     //TODO-BUG
     @Test(groups = "wso2.es.store", description = "Testing category drop down", enabled = false)
     public void testCategoryMenu() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("Templates")).click();
-        assertEquals("Templates", driver.findElement(By.cssSelector("div.breadcrumb-head"))
-                .getText(), "Category drop down not showing selected category ");
+        assertEquals("Templates", driver.findElement(By.cssSelector("div.breadcrumb-head")).getText(),
+                "Category drop down not showing selected category ");
     }
 
     @AfterClass(alwaysRun = true)
