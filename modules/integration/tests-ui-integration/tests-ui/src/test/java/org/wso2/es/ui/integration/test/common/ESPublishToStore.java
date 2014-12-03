@@ -50,7 +50,7 @@ public class ESPublishToStore extends BaseUITestCase {
         baseUrl = getWebAppURL();
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         providerName = userInfo.getUserName();
-        resourcePath = "/_system/governance/gadgets/" + providerName + "/" + ASSET_NAME + "/" + ASSET_VERSION;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + providerName + "/" + ASSET_NAME + "/" + ASSET_VERSION;
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL,userInfo.getUserName(),

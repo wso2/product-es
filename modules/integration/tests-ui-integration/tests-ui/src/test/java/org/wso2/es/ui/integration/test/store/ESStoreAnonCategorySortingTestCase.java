@@ -35,8 +35,8 @@ import static org.testng.Assert.assertEquals;
  * Category and sorting test for Anonymous store
  */
 public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
-    private ResourceAdminServiceClient resourceAdminServiceClient;
 
+    private ResourceAdminServiceClient resourceAdminServiceClient;
     private String popularAsset1;
     private String popularAsset2;
     private static final String REVIEW_1 = "cool!";
@@ -46,7 +46,6 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
     private static final String ASSET_VERSION = "1.0.0";
     private static final String ASSET_CREATED_TIME = "12";
     private static final String ASSET_TYPE = "gadget";
-
     private static final String BAR_CHART = "Bar Chart";
     private static final String BUBBLE_CHART = "Bubble Chart";
 
@@ -60,7 +59,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
 
-        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + this.assetName + "/" + ASSET_VERSION;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + this.assetName + "/" + ASSET_VERSION;
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME,
                 TestUserMode.SUPER_TENANT_ADMIN);
         String backendURL = automationContext.getContextUrls().getBackEndUrl();

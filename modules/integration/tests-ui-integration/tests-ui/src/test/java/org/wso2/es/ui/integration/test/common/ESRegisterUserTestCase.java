@@ -43,7 +43,7 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         userManagementClient = new UserManagementClient(backendURL, userInfo.getUserName(), userInfo.getPassword());
     }

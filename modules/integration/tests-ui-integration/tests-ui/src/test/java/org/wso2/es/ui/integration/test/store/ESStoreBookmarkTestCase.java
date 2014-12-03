@@ -34,13 +34,15 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESStoreBookmarkTestCase extends BaseUITestCase {
 
+    private static final int WAIT_TIME = 30;
+
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
-        wait = new WebDriverWait(driver, 30);
+        wait = new WebDriverWait(driver, WAIT_TIME);
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
     }
@@ -77,14 +79,6 @@ public class ESStoreBookmarkTestCase extends BaseUITestCase {
         driver.findElement(By.linkText("View all")).click();
         assertEquals("My Assets", driver.findElement(By.cssSelector("h3.asset-title-separator.asset-type-gadget"))
                 .getText(), "View all not directing to My Items page");
-
-        //TODO error in tests while removing an asset from my items, working manually. check reason
-//        driver.findElement(By.xpath("//div[@id='asset-in-gadget']/div/div/div/div/a[3]/i")).click();
-//        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li/span")).click();
-//        // close pop up manually if it appears
-//        driver.findElement(By.xpath("//div[@id='assets-container']/div/div[3]/a/div/img")).click();
-//        assertEquals("Bookmark", driver.findElement(By.id("btn-add-gadget")).getText(),
-//                "Bookmark removing failed");
     }
 
     @AfterClass(alwaysRun = true)

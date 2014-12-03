@@ -30,9 +30,9 @@ import static org.testng.Assert.*;
  * Test appearance and behaviour of Gadget page
  */
 public class ESStoreGadgetPageTestCase extends BaseUITestCase {
+
     private StringBuilder verificationErrors = new StringBuilder();
     private String firstAsset;
-
     private static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
     private static final String LINE_CHART = "Line Chart";
 
@@ -89,12 +89,11 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
             assertEquals(LINE_CHART, driver.findElement(By.cssSelector("h3")).getText(),
                     "Cannot view selected Gadget's page through Recently added list");
 
-            //TODO disabled - bug
-//            driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
-//                    .click();
-//            driver.findElement(By.linkText("pie")).click();
-//            assertEquals(1, driver.findElements(By.cssSelector("div.span3.asset")).size(),
-//                    "Tags not working");
+            driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
+                    .click();
+            driver.findElement(By.linkText("pie")).click();
+            assertEquals(1, driver.findElements(By.cssSelector("div.span3.asset")).size(),
+                    "Tags not working");
         } catch (Error e) {
             verificationErrors.append(e.toString());
         }

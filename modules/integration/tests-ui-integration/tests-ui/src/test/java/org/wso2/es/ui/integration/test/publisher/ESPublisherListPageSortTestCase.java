@@ -28,8 +28,6 @@ import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
-import java.io.File;
-
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -37,44 +35,41 @@ import static org.testng.Assert.assertEquals;
  * check sorting on different parameters
  */
 public class ESPublisherListPageSortTestCase extends BaseUITestCase {
-    private static final Log LOG = LogFactory.getLog(ESPublisherListPageSortTestCase.class);
 
+    private static final Log LOG = LogFactory.getLog(ESPublisherListPageSortTestCase.class);
     private TestUserMode userMode;
     private String normalUserName;
     private ResourceAdminServiceClient resourceAdminServiceClient;
-
-    private static final String EMAIL = "esmailsample@gmail.com";
-    private static final String EMAIL_PWD = "esMailTest";
     private static final String NAME_SORT_ASSET_1 = "Bar Chart";
     private static final String NAME_SORT_ASSET_2 = "WSO2 Jira";
     private static final String VERSION_1 = "1.0.0";
     private static final String VERSION_2 = "2.0.0";
     private static final String ASSET_TYPE = "gadget";
     private static final String CREATED_TIME = "12";
+    private static final String USER1 = "user1";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherListPageSortTestCase(TestUserMode userMode) {
         this.userMode = userMode;
+        this.assetName = "Sort Asset";
     }
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init(userMode);
-        assetName = "Sort Asset";
         currentUserName = userInfo.getUserName().split("@")[0];
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
-        normalUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName().split("@")[0];
-        String normalUserPwd = automationContext.getSuperTenant().getTenantUser("user1").getPassword();
-        resourcePath = "/_system/governance/gadgets/" + normalUserName + "/" + assetName + "/" + VERSION_2;
+        normalUserName = automationContext.getSuperTenant().getTenantUser(USER1).getUserName().split("@")[0];
+        String normalUserPwd = automationContext.getSuperTenant().getTenantUser(USER1).getPassword();
+        resourcePath = GADGET_REGISTRY_BASE_PATH + normalUserName + "/" + assetName + "/" + VERSION_2;
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
         String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
         if (currentUserName.equals(adminUserName)) {
             ESUtil.login(driver, baseUrl, PUBLISHER_APP, normalUserName, normalUserPwd);
             AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, normalUserName, assetName, VERSION_2, CREATED_TIME);
@@ -134,16 +129,13 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         }
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         driver.get(driver.getCurrentUrl());
-        ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
         driver.quit();
     }
 
     @DataProvider(name = "userMode")
-    private static TestUserMode[][] userModeProvider() {
-        return new TestUserMode[][]{
-                new TestUserMode[]{TestUserMode.SUPER_TENANT_ADMIN},
-                new TestUserMode[]{TestUserMode.SUPER_TENANT_USER},
-        };
+    private static Object[][] userModeProvider() {
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN, "Sort asset - SuperAdmin"},
+                {TestUserMode.SUPER_TENANT_USER, "Sort asset - SuperUser"}};
     }
 
 }

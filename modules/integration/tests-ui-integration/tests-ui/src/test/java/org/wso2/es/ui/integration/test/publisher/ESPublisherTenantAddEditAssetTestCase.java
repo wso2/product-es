@@ -25,7 +25,7 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-import java.io.File;
+
 import static org.testng.Assert.*;
 
 /**
@@ -34,11 +34,7 @@ import static org.testng.Assert.*;
 public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
-
     private TestUserMode userMode;
-    private static final String EMAIL = "esmailsample@gmail.com";
-    private static final String EMAIL_PWD = "esMailTest";
-
     private static final String ASSET_VERSION = "1.0.0";
     private static final String ASSET_CREATED_TIME = "12";
     private static final String ASSET_URL_1 = "http://test";
@@ -68,9 +64,7 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
         String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         this.providerName = currentUserName.split("@")[0];
-        this.resourcePath = "/_system/governance/gadgets/" + providerName + "/" + assetName + "/" + ASSET_VERSION;
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
-
+        this.resourcePath = GADGET_REGISTRY_BASE_PATH + providerName + "/" + assetName + "/" + ASSET_VERSION;
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
     }
 
@@ -134,7 +128,6 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
         //delete resources and logout
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
-        ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
         driver.quit();
     }
 

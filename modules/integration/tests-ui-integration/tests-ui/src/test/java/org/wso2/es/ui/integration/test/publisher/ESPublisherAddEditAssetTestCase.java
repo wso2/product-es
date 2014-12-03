@@ -18,16 +18,17 @@ package org.wso2.es.ui.integration.test.publisher;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
-
-import java.io.File;
-
 import static org.testng.Assert.*;
 
 /**
@@ -37,10 +38,6 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
 
     private TestUserMode userMode;
     private ResourceAdminServiceClient resourceAdminServiceClient;
-
-    private static final String EMAIL = "esmailsample@gmail.com";
-    private static final String EMAIL_PWD = "esMailTest";
-
     private static final String ASSET_VERSION = "1.0.0";
     private static final String ASSET_CREATED_TIME = "12";
     private static final String ASSET_URL_1 = "http://test";
@@ -61,7 +58,7 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         super.init(userMode);
         currentUserName = userInfo.getUserName().split("@")[0];
         currentUserPwd = userInfo.getPassword();
-        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
         AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
@@ -70,14 +67,12 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
-
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.publisher", description = "Testing adding a new asset")
     public void testAddAsset() throws Exception {
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         driver.findElement(By.linkText("Add")).click();
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys(currentUserName);
@@ -140,7 +135,6 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         //delete resources and logout
         resourceAdminServiceClient.deleteResource(resourcePath);
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
-        ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
         driver.quit();
     }
 

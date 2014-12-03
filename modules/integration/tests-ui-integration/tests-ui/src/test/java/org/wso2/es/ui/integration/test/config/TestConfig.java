@@ -35,19 +35,19 @@ public class TestConfig extends BaseUITestCase {
     private static final String USER_1 = "user1";
     private static final String PUBLISHER_ROLE = "publisher";
     private static final String INTERNAL_PUBLISHER_ROLE = "Internal/publisher";
+    private static final String AXIS2_CONFIG = File.separator + "notifications" + File.separator + "axis2.xml";
 
     @BeforeSuite
     public void configureESTestSuite() throws Exception {
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         String superAdminName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
         String superAdminPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
-        String superUserName = automationContext.getSuperTenant().getTenantUser("user1").getUserName();
+        String superUserName = automationContext.getSuperTenant().getTenantUser(USER_1).getUserName();
         ServerConfigurationManager serverManager = new ServerConfigurationManager(automationContext);
         String resourceLocation = getResourceLocation();
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
         //restart server with mailto config added in axis2.xml
-        serverManager.applyConfiguration(new File(resourceLocation + File.separator +
-                "notifications" + File.separator + "axis2.xml"));
+        serverManager.applyConfiguration(new File(resourceLocation + AXIS2_CONFIG));
         //assign publisher role to the normal user
         UserManagementClient userManagementClient = new UserManagementClient(backendURL, superAdminName, superAdminPwd);
         userManagementClient.updateUserListOfRole(INTERNAL_PUBLISHER_ROLE, new String[]{superUserName}, null);

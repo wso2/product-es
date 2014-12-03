@@ -53,7 +53,7 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
         assetName = "LC Test Asset";
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
-        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
         driver = new ESWebDriver();
         wait = new WebDriverWait(driver, 30);
         baseUrl = getWebAppURL();

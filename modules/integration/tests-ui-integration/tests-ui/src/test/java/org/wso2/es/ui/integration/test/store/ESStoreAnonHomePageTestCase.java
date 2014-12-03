@@ -30,11 +30,11 @@ import static org.testng.Assert.assertTrue;
  * Test appearance and behavior of Store Home page
  */
 public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
+
     private StringBuilder verificationErrors = new StringBuilder();
     private static final String LINE_CHART = "Line Chart";
     private static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
     private static final String AMAZON = "Amazon";
-
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {

@@ -39,14 +39,13 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
 
     private static final String LC_SUBSCRIPTION = "Store LC State Change Event via Role Profile";
     private static final String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
-
-    private ResourceAdminServiceClient resourceAdminServiceClient;
-
+    private static final String SMTP_PROPERTY_FILE = File.separator + "notifications" + File.separator + "smtp.properties";
     private static final String EMAIL = "esmailsample@gmail.com";
     private static final String EMAIL_PWD = "esMailTest";
     private static final String ASSET_VERSION = "1.0.0";
     private static final String CREATED_TIME = "12";
     private static final String ASSET_TYPE = "gadget";
+    private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherTenantSubscriptionTestCase(TestUserMode testUserMode, String assetName) {
@@ -65,11 +64,11 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
         providerName = currentUserName.split("@")[0];
-        resourcePath = "/_system/governance/gadgets/" + this.providerName + "/" + this.assetName + "/" + ASSET_VERSION;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + this.providerName + "/" + this.assetName + "/" + ASSET_VERSION;
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
+        smtpPropertyLocation = resourceLocation + SMTP_PROPERTY_FILE;
 
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
@@ -83,7 +82,7 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
             closeAlertAndGetItsText();
         }
         //navigate to admin console
-        driver.get(baseUrl + "/carbon/");
+        driver.get(baseUrl + MANAGEMENT_CONSOLE_URL);
         driver.findElement(By.linkText("Gadgets")).click();
         driver.findElementPoll(By.linkText(assetName), 30);
         driver.findElement(By.linkText(assetName)).click();
@@ -112,9 +111,6 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
-        if (!currentUserName.equals(adminUserName)) {
-            ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
-        }
         driver.quit();
     }
 

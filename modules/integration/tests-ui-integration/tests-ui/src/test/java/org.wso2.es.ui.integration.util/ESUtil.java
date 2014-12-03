@@ -16,13 +16,15 @@
 
 package org.wso2.es.ui.integration.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
-
 import javax.mail.*;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -30,14 +32,17 @@ import java.util.Properties;
  * Contains utility methods for ES operations
  */
 public class ESUtil extends ESIntegrationUITest {
+
+    private static final Log LOG = LogFactory.getLog(ESUtil.class);
     private static final String PUBLISHER_SUFFIX = "/publisher";
     private static final String STORE_SUFFIX = "/store";
     private static final String ADMIN_CONSOLE_SUFFIX = "/carbon/admin/index.jsp";
-
     private static final int MAIL_WAIT_TIME = 2000;
     private static final int MAX_POLL_COUNT = 30;
     private static final int MAX_MAIL_POLL = 20;
-
+    private static final String IMAPS = "imaps";
+    public static final String SMTP_GMAIL_COM = "smtp.gmail.com";
+    public static final String INBOX = "inbox";
 
     /**
      * To login to store or publisher
@@ -168,62 +173,57 @@ public class ESUtil extends ESIntegrationUITest {
      * @throws InterruptedException
      */
     public static boolean containsEmail(String smtpPropertyFile, String password, String email,
-                                        String subject) throws IOException, MessagingException, InterruptedException {
+                                        String subject) throws MessagingException, InterruptedException, IOException {
         Properties props = new Properties();
         boolean hasEmail = false;
         int pollCount = 0;
-        props.load(new FileInputStream(new File(smtpPropertyFile)));
-        Session session = Session.getDefaultInstance(props, null);
-        Store store = session.getStore("imaps");
-        store.connect("smtp.gmail.com", email, password);
-        Folder inbox = store.getFolder("inbox");
-        inbox.open(Folder.READ_ONLY);
+        Folder inbox = null;
+        Store store = null;
+        String errorMessage = "Retrieving mails for: " + email + "failed";
+        try {
+            props.load(new FileInputStream(new File(smtpPropertyFile)));
+            Session session = Session.getDefaultInstance(props, null);
+            store = session.getStore(IMAPS);
+            store.connect(SMTP_GMAIL_COM, email, password);
+            inbox = store.getFolder(INBOX);
+            inbox.open(Folder.READ_ONLY);
 
-        while ((pollCount <= MAX_MAIL_POLL) && !hasEmail) {
-            Message[] messages = inbox.getMessages();
-            for (Message msg : messages) {
-                if (subject.equals(msg.getSubject())) {
-                    hasEmail = true;
-                    break;
+            while ((pollCount <= MAX_MAIL_POLL) && !hasEmail) {
+                Message[] messages = inbox.getMessages();
+                for (Message msg : messages) {
+                    if (subject.equals(msg.getSubject())) {
+                        hasEmail = true;
+                        break;
+                    }
+                }
+                Thread.sleep(MAIL_WAIT_TIME);
+            }
+        } catch (MessagingException e) {
+            LOG.error(errorMessage, e);
+            throw e;
+        } catch (InterruptedException e) {
+            LOG.error(errorMessage, e);
+            throw e;
+        } catch (FileNotFoundException e) {
+            LOG.error(errorMessage, e);
+            throw e;
+        } catch (IOException e) {
+            LOG.error(errorMessage, e);
+            throw e;
+        } finally {
+            if (inbox != null) {
+                try {
+                    inbox.close(true);
+                } catch (MessagingException e) {
                 }
             }
-            Thread.sleep(MAIL_WAIT_TIME);
+            if (store != null) {
+                try {
+                    store.close();
+                } catch (MessagingException e) {
+                }
+            }
         }
-        inbox.close(true);
-        store.close();
         return hasEmail;
     }
-
-    /**
-     * To delete all mail
-     *
-     * @param smtpPropertyFile smtp property file path
-     * @param password         password
-     * @param email            email address
-     * @throws IOException
-     * @throws MessagingException
-     */
-    public static void deleteAllEmail(String smtpPropertyFile, String password,
-                                      String email) throws IOException, MessagingException {
-        Properties props = new Properties();
-        props.load(new FileInputStream(new File(smtpPropertyFile)));
-        Session session = Session.getDefaultInstance(props, null);
-
-        Store store = session.getStore("imaps");
-        store.connect("smtp.gmail.com", email, password);
-
-        Folder inbox = store.getFolder("inbox");
-        inbox.open(Folder.READ_WRITE);
-        int messageCount = inbox.getMessageCount();
-
-        Message[] messages = inbox.getMessages();
-
-        for (int i = 0; i < messageCount; i++) {
-            messages[i].setFlag(Flags.Flag.DELETED, true);
-        }
-        inbox.close(true);
-        store.close();
-    }
-
-
 }

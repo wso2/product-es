@@ -37,15 +37,14 @@ public class ESPublisherSubscriptionTestCase extends BaseUITestCase {
 
     private static final String LC_SUBSCRIPTION = "Store LC State Change Event via Role Profile";
     private static final String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
-    private TestUserMode userMode;
-
-    private ResourceAdminServiceClient resourceAdminServiceClient;
-
     private static final String EMAIL = "esmailsample@gmail.com";
     private static final String EMAIL_PWD = "esMailTest";
     private static final String ASSET_VERSION = "1.0.0";
     private static final String CREATED_TIME = "12";
     private static final String ASSET_TYPE = "gadget";
+    private static final String SMTP_PROPERTY_FILE = File.separator + "notifications" + File.separator + "smtp.properties";
+    private TestUserMode userMode;
+    private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherSubscriptionTestCase(TestUserMode testUserMode, String assetName) {
@@ -60,19 +59,16 @@ public class ESPublisherSubscriptionTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName().split("@")[0];
         currentUserPwd = userInfo.getPassword();
         baseUrl = getWebAppURL();
-        AutomationContext automationContext = new AutomationContext("ES",
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME,
                 TestUserMode.SUPER_TENANT_ADMIN);
-        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName().split
-                ("@")[0];
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName().split("@")[0];
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
                 adminUserPwd);
-        resourcePath = "/_system/governance/gadgets/" + currentUserName + "/" + assetName + "/" +
-                ASSET_VERSION;
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File
-                .separator + "smtp.properties";
+        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
+        smtpPropertyLocation = resourceLocation + SMTP_PROPERTY_FILE;
 
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
@@ -116,9 +112,6 @@ public class ESPublisherSubscriptionTestCase extends BaseUITestCase {
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
-        if(!currentUserName.equals(adminUserName)){
-            ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
-        }
         driver.quit();
     }
 

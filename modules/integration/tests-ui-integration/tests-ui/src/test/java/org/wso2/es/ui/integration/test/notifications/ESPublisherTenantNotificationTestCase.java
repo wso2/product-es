@@ -35,8 +35,8 @@ import static org.testng.Assert.assertTrue;
  * Do an LC transition on it & check for notifications
  */
 public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
-    private ResourceAdminServiceClient resourceAdminServiceClient;
 
+    private ResourceAdminServiceClient resourceAdminServiceClient;
     private TestUserMode userMode;
     private static final String EMAIL = "esmailsample@gmail.com";
     private static final String EMAIL_PWD = "esMailTest";
@@ -46,7 +46,7 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
     private static final String CREATED_TIME = "12";
     private static final String ASSET_TYPE = "gadget";
     private static final String ASSET_DESCRIPTION = "Test Description";
-
+    private static final String SMTP_PROPERTY_FILE = File.separator + "notifications" + File.separator + "smtp.properties";
     private String LCNotificationSubject = "[StoreLifecycleStateChange] at path: ";
     private String updateNotificationSubject = "[StoreAssetUpdate] at path: ";
     private static final int POLL_COUNT = 30;
@@ -71,10 +71,10 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         providerName = currentUserName.split("@")[0];
-        resourcePath = "/_system/governance/gadgets/" + providerName + "/" + assetName + "/" + VERSION;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + providerName + "/" + assetName + "/" + VERSION;
         LCNotificationSubject += resourcePath;
         updateNotificationSubject += resourcePath;
-        smtpPropertyLocation = resourceLocation + File.separator + "notifications" + File.separator + "smtp.properties";
+        smtpPropertyLocation = resourceLocation + SMTP_PROPERTY_FILE;
 
         //Update user profiles through Admin console
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
@@ -113,9 +113,6 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         resourceAdminServiceClient.deleteResource(resourcePath);
         ESUtil.logoutFromAdminConsole(driver, baseUrl);
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
-        if(!currentUserName.equals(adminUserName)){
-            ESUtil.deleteAllEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL);
-        }
         driver.quit();
     }
 
