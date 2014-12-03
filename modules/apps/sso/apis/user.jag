@@ -1,0 +1,80 @@
+<%
+/*
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+var action = request.getParameter('action'),
+        username = request.getParameter('username'),
+        captchaKey = request.getParameter('captcha-key'),
+        captchaPath = request.getParameter('captcha-path'),
+        captchaAnswer = request.getParameter('captcha-answer'),
+        recoveryOption = request.getParameter('recovery-option'),
+        log = new Log('user_api'),
+        res = {};
+
+var EMAIL_RECOVERY = 'email';
+
+(function () {
+    var recoveryModule = require('account-management').recovery;
+
+    var verifyUser = function (username, captchaPath, captchaKey, captchaAnswer) {
+        if (!username || !captchaAnswer) {
+            res.error = 'true';
+            res.msg = 'Username or captcha answer is invalid';
+            print(res);
+        } else {
+            var captchaBean = recoveryModule.createCaptchaInfoBean(captchaPath, captchaKey, captchaAnswer);
+            var verificationBean = recoveryModule.verifyUser(username, captchaBean);
+            var key = verificationBean.getKey();
+            var isVerified = verificationBean.isVerified();
+            if (isVerified) {
+                recover(username, key, res);
+            } else {
+                res.error = 'true';
+                res.msg = 'User validation failed';
+                print(res);
+            }
+        }
+    }
+
+
+    var recover = function (username, key, res) {
+        var result;
+        if (recoveryOption == 'email') {
+            result = recoveryModule.sendRecoveryNotification(username, key, EMAIL_RECOVERY);
+            if (result) {
+                res.error = 'false';
+                res.msg = 'User successfully verified';
+                print(res);
+            } else {
+                res.error = 'true';
+                res.msg = 'User validation failed';
+                print(res);
+            }
+        } else if (recoveryOption == 'challenge') {
+            res.error = 'false';
+            res.msg = 'User successfully verified';
+            res.verificationKey = key;
+            print(res);
+        }
+    }
+
+    verifyUser(username, captchaPath, captchaKey, captchaAnswer);
+
+}());
+
+%>

@@ -1,0 +1,80 @@
+<%
+/*
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+var action = request.getParameter('reg-action'),
+        confirmationCode = request.getParameter('confirmationCode'),
+        userName = request.getParameter('userName'),
+        captchaKey = request.getParameter('captcha-key'),
+        captchaPath = request.getParameter('captcha-path'),
+        captchaAnswer = request.getParameter('captcha-answer'),
+        log = new Log('captcha_api'),
+        res = {};
+
+(function () {
+    var recoveryModule = require('account-management').recovery;
+
+    var getCaptcha = function () {
+        var captchaBean = recoveryModule.getCaptcha();
+        var captchaPath = captchaBean.getImagePath();
+        var captchaKey = captchaBean.getSecretKey();
+        if (captchaBean) {
+            res.error = 'false';
+            res.msg = 'Captcha generated';
+            res.captchaPath = captchaPath;
+            res.captchaKey = captchaKey;
+            print(res);
+        } else {
+            res.error = 'true';
+            res.msg = 'Captcha generation failed';
+            print(res);
+        }
+
+    }
+
+    var verifyConfirmationCode = function (captchaPath, captchaKey, captchaAnswer, userName, confirmationCode) {
+        if (!userName || !captchaAnswer || !confirmationCode) {
+            res.error = 'true';
+            res.msg = 'Captcha answer is invalid';
+            print(res);
+        } else {
+            var captchaBean = recoveryModule.createCaptchaInfoBean(captchaPath, captchaKey, captchaAnswer);
+            var key = recoveryModule.verifyConfirmationCode(userName, confirmationCode, captchaBean).getKey();
+            if (key) {
+                res.error = 'false';
+                res.msg = 'Verification successful';
+                res.verificationKey = key;
+                print(res);
+            } else {
+                res.error = 'true';
+                res.msg = 'Verification failed';
+                print(res);
+            }
+        }
+    }
+
+    if (action == 'verifyCode') {
+        verifyConfirmationCode(captchaPath, captchaKey, captchaAnswer, userName, confirmationCode);
+    } else if (action == 'getCaptcha') {
+        getCaptcha();
+    } else {
+        log.error('Endpoint does not exist');
+    }
+
+}());
+%>

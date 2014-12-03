@@ -115,7 +115,7 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.store.modules:ues.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store.modules:claims.feature:${project.version}
+                                <featureArtifactDef>org.wso2.store.modules:account-management.feature:${project.version}
                                 </featureArtifactDef>
                                  <featureArtifactDef>org.wso2.store.modules:rxt.feature:${project.version}
                                 </featureArtifactDef>
@@ -135,6 +135,9 @@
                                 <featureArtifactDef>org.jaggeryjs.modules:uuid.feature:${uuid.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:jaggery-test.feature:${jaggery-test.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.transport.commons.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.platform.version}
@@ -200,6 +203,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.idp.mgt.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.mgt.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <!-- End of SSO Fixes -->
                                 <feaureArtifactDef>
@@ -397,7 +403,7 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.store.modules.claims.feature.group</id>
+                                    <id>org.wso2.store.modules.account-management.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
@@ -411,6 +417,10 @@
                                 <feature>
                                     <id>org.wso2.store.modules.lifecycle.feature.group</id>
                                     <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.transport.commons.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
@@ -493,6 +503,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.idp.mgt.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
                                 <!-- End of SSO Fix -->

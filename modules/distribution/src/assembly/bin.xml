@@ -44,6 +44,8 @@
                 <exclude>**/org.wso2.carbon.identity.relyingparty.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/org.wso2.carbon.identity.user.registration.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/log4j.properties</exclude>
+                <exclude>**/email/email-admin-config.xml</exclude>
+                <exclude>**/claim-config.xml</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -422,6 +424,30 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties
+            </source>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/conf/security</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/email/email-admin-config.xml
+            </source>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/conf/email</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/claim-config.xml
+            </source>
+            <outputDirectory>${project.artifactId}-${project.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>src/repository/database/WSO2IDENTITY_DB.h2.db</source>
             <outputDirectory>${project.artifactId}-${project.version}/repository/database</outputDirectory>
             <fileMode>644</fileMode>
@@ -448,7 +474,7 @@
 
        </files>
   
-  <!-- 
+  <!--
       <moduleSets>
       
     <moduleSet>
