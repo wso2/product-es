@@ -146,6 +146,9 @@
                                     org.wso2.carbon:org.wso2.carbon.registry.extensions.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.transport.commons.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -411,6 +414,10 @@
                                 <feature>
                                     <id>org.wso2.store.modules.lifecycle.feature.group</id>
                                     <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.transport.commons.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
