@@ -154,7 +154,7 @@
                                 <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/email/email-admin-config.xml"
                                         token="https://localhost:8443/InfoRecoverySample/infoRecover/verify?confirmation={confirmation-code}"
-                                        value="https://localhost:9443/sso/reset_link?confirmation={confirmation-code}&amp;amp;userName={user-name}"/>
+                                        value="https://localhost:9443/sso/reset_link?confirmation={confirmation-code}&amp;amp;username={user-name}"/>
                                 
                                 <!--
                                 <copy todir="target/wso2carbon-core-${carbon.kernel.version}/samples"

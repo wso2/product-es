@@ -17,6 +17,10 @@
  *  under the License.
  *
  */
+
+/**
+ *  Page to select password recovery method: notification or secret questions
+ */
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,8 +74,8 @@
                                     <p>Select the preferred method to recover your password</p>
                                 </div>
                                 <div class="span6" style="float:left; width:30%">
-                                    <form action="forgot_password">
-                                        <input type="hidden" id="recovery-option" name="recovery-option"
+                                    <form action="confirm_recovery">
+                                        <input type="hidden" id="recovery-option-email" name="recovery-option"
                                                value="email">
                                         <button id="email" class="btn btn-large"
                                                 type="submit">Recover via email
@@ -79,8 +83,8 @@
                                     </form>
                                 </div>
                                 <div class="span6" style="float:right; width:30%">
-                                    <form action="forgot_password?recovery=challenge">
-                                        <input type="hidden" id="recovery-option" name="recovery-option"
+                                    <form action="confirm_recovery">
+                                        <input type="hidden" id="recovery-option-qna" name="recovery-option"
                                                value="challenge">
                                         <button id="challenge" class="btn btn-large"
                                                 type="submit">Recover via challenges

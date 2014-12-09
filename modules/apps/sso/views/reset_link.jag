@@ -18,12 +18,21 @@
  *
  */
 
+/**
+ *  User is directed to this page after clicking the url sent in the email
+ */
+
 var confirmationCode = request.getParameter('confirmation'),
         recovery = require('account-management').recovery,
+        username = request.getParameter('username'),
         captchaBean = recovery.getCaptcha(),
         captchaPath = captchaBean.getImagePath(),
         captchaKey = captchaBean.getSecretKey(),
         log = new Log('reset_link_view');
+
+session.put('confirmation', confirmationCode);
+session.put('username', username);
+
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +80,7 @@ var confirmationCode = request.getParameter('confirmation'),
                     <div class="form-forgot-password row-fluid">
                         <div class="span12">
                             <div class="row-fluid">
-                                <form id="verificationForm" action="reset_password" method="POST">
+                                <form id="verificationForm">
                                     <h2 class="form-forgot-password-heading">Confirm password
                                         reset</h2>
 
@@ -95,10 +104,6 @@ var confirmationCode = request.getParameter('confirmation'),
                                     <input type="hidden" id="captcha-path" name="captcha-path"
                                     value="<%=captchaPath%>">
                                     <input type="hidden" id="captcha-key" name="captcha-key" value="<%=captchaKey%>">
-                                    <input type="hidden" id="userName" name="userName"
-                                           value="<%=request.getParameter("userName")%>">
-                                    <input type="hidden" id="confirmationCode" name="confirmationCode"
-                                           value="<%=request.getParameter("confirmation")%>">
                                     <input id="reg-action" name="reg-action" type="hidden" value="verifyCode">
                                     <button id="validationSubmit" class="btn btn-large" type="button">Continue
                                     </button>
@@ -157,33 +162,27 @@ var confirmationCode = request.getParameter('confirmation'),
 
             var formData = $('#verificationForm').serialize()
 
+            // validate captcha using captcha endpoint
             $.post('captcha', formData, function (data) {
                 if (JSON.parse(data).error == 'false') {
                     $('#verificationFormError').hide();
                     var result = JSON.parse(data);
-                    window.location = 'reset_password?username=' + $('#userName').val() + '&verification_key=' +
-                    result.verificationKey;
+                    window.location = 'update_password';
 
                 } else {
                     $('#verificationFormError').show();
                     $('#verificationFormError').text(JSON.parse(data).msg);
-                    $('#reg-action').val('');
-                    formData = $('#verificationForm').serialize()
-                    $.post('captcha', formData, function (data) {
-                        $('#captcha-div').html('');
-                        $('#captcha-div').html('<img src="../' + JSON.parse(data).captchaPath +
-                        '" class="captcha-img">');
-                        $('#captcha-answer').val('');
-                        $('#captcha-path').val(JSON.parse(data).captchaPath);
-                        $('#captcha-key').val(JSON.parse(data).captchaKey);
-                        $('#reg-action').val('verifyCode');
-                    });
+                    //Regenerate captcha if validation fails
+                    getNewCaptcha();
                 }
             });
         }
 
+        // get a new captcha using captcha endpoint
         function getNewCaptcha() {
-            $.post('captcha', function (data) {
+            $('#reg-action').val('getCaptcha');
+            var formData = $('#verificationForm').serialize();
+            $.post('captcha', formData, function (data) {
                 $('#captcha-div').html('');
                 $('#captcha-div').html('<img src="../' + JSON.parse(data).captchaPath + '" class="captcha-img">');
                 $('#captcha-answer').val('');

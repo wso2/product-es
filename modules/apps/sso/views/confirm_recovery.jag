@@ -18,6 +18,10 @@
  *
  */
 
+/**
+ *  User confirmation page for password recovery
+ */
+
 var recovery = require('account-management').recovery,
         captchaBean = recovery.getCaptcha(),
         captchaPath = captchaBean.getImagePath(),
@@ -70,12 +74,10 @@ var recovery = require('account-management').recovery,
                     <div class="form-forgot-password row-fluid">
                         <div class="span12">
                             <div class="row-fluid">
-                                <form id="resetForm" action="recover" method="POST">
-                                    <h2 class="form-forgot-password-heading">Reset your
-                                        password</h2>
-                                    <p>Enter your e-mail address below. We'll send you an e-mail with a link to reset
-                                        your password.</br>
-                                        Please follow the instructions in the e-mail.</p>
+                                <form id="resetForm">
+                                    <h2 class="form-forgot-password-heading">Reset your password</h2>
+                                    <p>Enter your username below. Follow the instructions given in the subsequent
+                                    steps.</p>
                                     <div id="resetFormError" class="alert alert-error" style="display:none"></div>
                                     <div class="control"><label>Username</label><input
                                             id="username" name="username" type="text"
@@ -86,9 +88,8 @@ var recovery = require('account-management').recovery,
                                             <img src="../<%=captchaPath%>" class="captcha-img">
                                         </div>
                                     </div>
-                                    <div class="control"><label>Text in the
-                                        box</label><input
-                                            id="captcha-answer" name="captcha-answer" type="text"
+                                    <div class="control"><label>Text in the box</label>
+                                    <input id="captcha-answer" name="captcha-answer" type="text"
                                             class="input-block-level required"></div>
                                     <input type="hidden" id="captcha-path"
                                            name="captcha-path" value="<%=captchaPath%>">
@@ -165,37 +166,31 @@ var recovery = require('account-management').recovery,
 
             var formData = $('#resetForm').serialize()
 
+            // user verification using user endpoint
             $.post('user', formData, function (data) {
                 if (JSON.parse(data).error == 'false') {
                     $('#resetFormError').hide();
                     if ($('#recovery-option').val() == 'email') {
-                        window.location = "recover";
+                        window.location = 'recover';
                     } else {
                         var verificationKey = JSON.parse(data).verificationKey;
-                        window.location = "view_challenges?username=" + $("#username").val() + "&verificationKey=" +
-                         verificationKey;
+                        window.location = 'view_challenges';
                     }
                 } else {
                     $('#resetFormError').show();
                     $('#resetFormError').text(JSON.parse(data).msg);
-                    $('#reg-action').val('getCaptcha');
-                    formData = $("#resetForm").serialize();
-                    $.post('captcha', formData, function (data) {
-                        $('#captcha-div').html('');
-                        $('#captcha-div').html('<img src="../' + JSON.parse(data).captchaPath +
-                         '" class="captcha-img">');
-                        $('#captcha-answer').val('');
-                        $('#username').val('');
-                        $('#captcha-path').val(JSON.parse(data).captchaPath);
-                        $('#captcha-key').val(JSON.parse(data).captchaKey);
-                        formData = $('#resetForm').serialize();
-                    });
+                    $('#username').val('');
+                    // Regenerating a captcha if validation fails
+                    getNewCaptcha();
                 }
             });
         }
 
+        // get a new captcha using captcha endpoint
         function getNewCaptcha() {
-            $.post('captcha', function (data) {
+            $('#reg-action').val('getCaptcha');
+            var formData = $("#resetForm").serialize();
+            $.post('captcha', formData, function (data) {
                 $('#captcha-div').html('');
                 $('#captcha-div').html('<img src="../' + JSON.parse(data).captchaPath + '" class="captcha-img">');
                 $('#captcha-answer').val('');

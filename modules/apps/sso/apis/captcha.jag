@@ -17,18 +17,30 @@
  *  under the License.
  *
  */
+
+/**
+ *  Contains endpoints related to captcha
+ */
+
 var action = request.getParameter('reg-action'),
-        confirmationCode = request.getParameter('confirmationCode'),
-        userName = request.getParameter('userName'),
+        confirmationCode = session.get('confirmation'),
+        userName = session.get('username'),
         captchaKey = request.getParameter('captcha-key'),
         captchaPath = request.getParameter('captcha-path'),
         captchaAnswer = request.getParameter('captcha-answer'),
         log = new Log('captcha_api'),
         res = {};
 
+var errorProcessor = require('/modules/error_api.js');
+
 (function () {
     var recoveryModule = require('account-management').recovery;
 
+    /**
+     * Get the key and path related to a new captcha
+     *
+     * @return captcha key and path
+     */
     var getCaptcha = function () {
         var captchaBean = recoveryModule.getCaptcha();
         var captchaPath = captchaBean.getImagePath();
@@ -44,29 +56,47 @@ var action = request.getParameter('reg-action'),
             res.msg = 'Captcha generation failed';
             print(res);
         }
+    };
 
-    }
-
+    /**
+     * Verify confirmation code
+     *
+     * @param captchaPath path of the captcha image
+     * @param captchaKey key related to the captcha
+     * @param captchaAnswer user answer
+     * @param userName user name
+     * @param confirmationCode
+     * @return success status
+     */
     var verifyConfirmationCode = function (captchaPath, captchaKey, captchaAnswer, userName, confirmationCode) {
         if (!userName || !captchaAnswer || !confirmationCode) {
             res.error = 'true';
-            res.msg = 'Captcha answer is invalid';
+            res.msg = 'Recovery failed. Information is not provided';
             print(res);
         } else {
             var captchaBean = recoveryModule.createCaptchaInfoBean(captchaPath, captchaKey, captchaAnswer);
-            var key = recoveryModule.verifyConfirmationCode(userName, confirmationCode, captchaBean).getKey();
-            if (key) {
-                res.error = 'false';
-                res.msg = 'Verification successful';
-                res.verificationKey = key;
-                print(res);
+            var verificationBean = recoveryModule.verifyConfirmationCode(userName, confirmationCode, captchaBean);
+            if (verificationBean) {
+                var key = verificationBean.getKey();
+                if (key) {
+                    res.error = 'false';
+                    res.msg = 'Verification successful';
+                    session.put('confirmation', key);
+                    print(res);
+                } else {
+                    var error = verificationBean.getError();
+                    var errorMsg = errorProcessor.getErrorMessage(error);
+                    res.error = 'true';
+                    res.msg = errorMsg;
+                    print(res);
+                }
             } else {
                 res.error = 'true';
-                res.msg = 'Verification failed';
+                res.msg = 'Recovery failed';
                 print(res);
             }
         }
-    }
+    };
 
     if (action == 'verifyCode') {
         verifyConfirmationCode(captchaPath, captchaKey, captchaAnswer, userName, confirmationCode);

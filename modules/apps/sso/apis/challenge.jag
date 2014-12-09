@@ -18,32 +18,53 @@
  *
  */
 
+/**
+ *  Contains endpoints related to challenge question
+ */
+
 var action = request.getParameter('action'),
-        username = request.getParameter('username'),
-        verifyConfirmation = request.getParameter('verify-confirmation'),
-        questionId = request.getParameter('question-id'),
+        username = session.get('username'),
+        confirmationKey = session.get('confirmation'),
+        questionId = session.get('question-id'),
         answer = request.getParameter('answer'),
         log = new Log('challenge_api'),
         res = {};
 
+var errorProcessor = require('/modules/error_api.js');
+
 (function () {
     var recoveryModule = require('account-management').recovery;
 
+    /**
+     * Verify the answer to the challenge
+     *
+     * @param username user name
+     * @param confirmation confirmation code from previous step
+     * @param questionId challenge question id
+     * @param answer user answer
+     * @return success status
+     */
     var verifyChallenge = function (username, confirmation, questionId, answer) {
-        var key = recoveryModule.verifyChallenge(username, confirmation, questionId, answer);
-        if (key.isVerified()) {
-            res.verificationKey = key.getKey();
-            res.error = 'false';
-            res.msg = 'Challenge answer verified';
+        var verificationBean = recoveryModule.verifyChallenge(username, confirmation, questionId, answer);
+        if (verificationBean) {
+            if (verificationBean.isVerified()) {
+                session.put('confirmation', verificationBean.getKey());
+                res.error = 'false';
+                res.msg = 'Challenge answer verified';
+            } else {
+                res.error = 'true';
+                var error = verificationBean.getError();
+                res.msg = errorProcessor.getErrorMessage(error);
+            }
         } else {
             res.error = 'true';
-            res.msg = 'Challenge answer mismatched';
+            res.msg = 'Recovery failed';
         }
         print(res);
-    }
+    };
 
     if (action == 'verifyChallenge') {
-        verifyChallenge(username, verifyConfirmation, questionId, answer);
+        verifyChallenge(username, confirmationKey, questionId, answer);
     } else {
         log.error('Endpoint does not exist');
     }
