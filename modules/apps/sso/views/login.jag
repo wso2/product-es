@@ -241,18 +241,21 @@ var challengeSet = recoveryModule.getChallengeQuestionSet();
 <script src="views/js/jquery.validate.js"></script>
 <script type="text/javascript">
     $(function () {
+        var ENTER_KEY = 13;
         function register() {
             if (!$('#registerForm').valid()) {
                 return;
             }
 
-            var formData = $("#registerForm").serialize()
+            var formData = $("#registerForm").serialize();
 
             $.post('/sso/register', formData, function (data) {
+                var regFormError = $('#regFormError');
+                var regFromSuccess = $('#regFormSuc');
                 if (JSON.parse(data).error == 'false') {
-                    $('#regFormError').hide();
-                    $('#regFormSuc').show();
-                    $('#regFormSuc').text(JSON.parse(data).msg);
+                    regFormError.hide();
+                    regFromSuccess.show();
+                    regFromSuccess.text(JSON.parse(data).msg);
 
                     //submitting the login form
                     $('#username').val($('#reg-username').val());
@@ -260,9 +263,9 @@ var challengeSet = recoveryModule.getChallengeQuestionSet();
                     $('#loginForm').submit();
 
                 } else {
-                    $('#regFormSuc').hide();
-                    $('#regFormError').show();
-                    $('#regFormError').text(JSON.parse(data).msg);
+                    regFromSuccess.hide();
+                    regFormError.show();
+                    regFormError.text(JSON.parse(data).msg);
                 }
             });
         }
@@ -270,7 +273,7 @@ var challengeSet = recoveryModule.getChallengeQuestionSet();
         $("#registrationSubmit").bind('click', register);
 
         $('#registerForm input').bind('keypress', function (e) {
-            if (e.which == 13) {
+            if (e.which == ENTER_KEY) {
                 register();
             }
         });

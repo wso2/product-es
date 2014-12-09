@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  */
 
 var recovery = {};
@@ -20,8 +22,7 @@ var recovery = {};
        var userInformationRecoveryService = new Packages.org.wso2.carbon.identity.mgt.services.UserInformationRecoveryService();
        var userIdentityManagementAdminService = new Packages.org.wso2.carbon.identity.mgt.services.UserIdentityManagementAdminService();
        var EMAIL_NOTIFICATION = "email";
-       var log = new Log("recovery module");
-       //TODO add comments
+       var log = new Log("jaggery-modules.account-management.recovery");
 
        /**
         * Get new captcha info
@@ -34,7 +35,7 @@ var recovery = {};
                      log.error("Retrieving captcha failed", e);
                      return null;
               }
-       }
+       };
 
        /**
         * Verify user
@@ -49,7 +50,7 @@ var recovery = {};
                      log.error("User verification failed for user:" + username, e);
                      return null;
               }
-       }
+       };
 
        /**
         * Send recovery notification to user
@@ -65,34 +66,7 @@ var recovery = {};
                      log.error("Recovery notification sending failed for user:" + username, e);
                      return null;
               }
-       }
-
-       /**
-        * Request password recovery
-        * @param username user name
-        * @param captcha captcha info
-        * @return recovery status
-        */
-       recovery.requestRecovery = function (username, captcha) {
-              var isSuccessful = false;
-              var verificationBean;
-              try {
-                     verificationBean = userInformationRecoveryService.verifyUser(username, captcha);
-              } catch (e) {
-                     log.error("Recovery notification sending failed for user:" + username, e);
-                     return isSuccessful;
-              }
-              var key = verificationBean.getKey();
-              if (verificationBean.isVerified()) {
-                     try {
-                            userInformationRecoveryService.sendRecoveryNotification(username, key, EMAIL_NOTIFICATION);
-                            isSuccessful = true;
-                     } catch (e) {
-                            log.error("Recovery failed for user:" + username, e);
-                     }
-              }
-              return isSuccessful;
-       }
+       };
 
        /**
         * Verify confirmation code
@@ -108,7 +82,7 @@ var recovery = {};
                      log.error("Code verification failed for user:" + username + " code:" + code, e);
                      return null;
               }
-       }
+       };
 
        /**
         * Update password of user
@@ -124,7 +98,7 @@ var recovery = {};
                      log.error("Password updating failed for user:" + username + " password:" + newPassword, e);
                      return null;
               }
-       }
+       };
 
        /**
         * Create captcha information bean
@@ -150,13 +124,13 @@ var recovery = {};
         * @return {Packages.org.wso2.carbon.identity.mgt.dto.ChallengeQuestionDTO}
         */
        recovery.createChallengeQuestionDTO = function (question, promoteQuestion, order, questionSetId) {
-              var dto = new Packages.org.wso2.carbon.identity.mgt.dto.ChallengeQuestionDTO();
-              dto.setQuestion(question);
-              dto.setPromoteQuestion(promoteQuestion);
-              dto.setOrder(order);
-              dto.setQuestionSetId(questionSetId);
-              return dto;
-       }
+              var challengeQuestion = new Packages.org.wso2.carbon.identity.mgt.dto.ChallengeQuestionDTO();
+              challengeQuestion.setQuestion(question);
+              challengeQuestion.setPromoteQuestion(promoteQuestion);
+              challengeQuestion.setOrder(order);
+              challengeQuestion.setQuestionSetId(questionSetId);
+              return challengeQuestion;
+       };
 
        /**
         * Create user challenge dto
@@ -167,13 +141,13 @@ var recovery = {};
         * @return {Packages.org.wso2.carbon.identity.mgt.dto.UserChallengesDTO}
         */
        recovery.createUserChallengesDTO = function (id, question, answer, order) {
-              var dto = new Packages.org.wso2.carbon.identity.mgt.dto.UserChallengesDTO();
-              dto.setId(id);
-              dto.setQuestion(question);
-              dto.setAnswer(answer);
-              dto.setOrder(order);
-              return dto;
-       }
+              var userChallenge = new Packages.org.wso2.carbon.identity.mgt.dto.UserChallengesDTO();
+              userChallenge.setId(id);
+              userChallenge.setQuestion(question);
+              userChallenge.setAnswer(answer);
+              userChallenge.setOrder(order);
+              return userChallenge;
+       };
 
        /**
         * Set challenge question of user
@@ -182,26 +156,23 @@ var recovery = {};
         * @return success status
         */
        recovery.setChallengeQuestionForUser = function (username, questionArray) {
-              //var questionArray = JSON.parse(question);
-              var dtoArray = java.lang.reflect.Array.newInstance(Packages.org.wso2.carbon.identity.mgt.dto.UserChallengesDTO, questionArray.length);
+              var userChallengesArray = java.lang.reflect.Array.newInstance(Packages.org.wso2.carbon.identity.mgt.dto.UserChallengesDTO, questionArray.length);
               for (var index = 0; index < questionArray.length; index++) {
-                     var dto = new Packages.org.wso2.carbon.identity.mgt.dto.UserChallengesDTO();
-                     var data = questionArray[index];
-                     for (attribute in data) {
-                            if (data.hasOwnProperty(attribute)) {
-                                   dto[attribute] = data[attribute];
-                            }
-                     }
-                     dtoArray[index] = dto;
+                     var userChallenge = new Packages.org.wso2.carbon.identity.mgt.dto.UserChallengesDTO();
+                     var questionData = questionArray[index];
+                     userChallenge.setQuestion(questionData.question);
+                     userChallenge.setAnswer(questionData.answer);
+                     userChallenge.setId(questionData.id);
+                     userChallengesArray[index] = userChallenge;
               }
               try {
-                     userIdentityManagementAdminService.setChallengeQuestionsOfUser(username, dtoArray);
+                     userIdentityManagementAdminService.setChallengeQuestionsOfUser(username, userChallengesArray);
                      return true;
               } catch (e) {
                      log.error("Failed to set challenge question set for ES", e);
                      return false;
               }
-       }
+       };
 
        /**
         * Get challenge question set
@@ -214,7 +185,7 @@ var recovery = {};
                      log.error('Failed to retreive challenge questions', e);
                      return null;
               }
-       }
+       };
 
        /**
         * Get challenge question ids
@@ -229,7 +200,7 @@ var recovery = {};
                      log.error('Failed to retreive user challenge question id for user: ' + username, e);
                      return null;
               }
-       }
+       };
 
        /**
         * Get challenge question of user
@@ -242,10 +213,7 @@ var recovery = {};
               try {
                      return userInformationRecoveryService.getUserChallengeQuestion(username, confirmation, questionId);
               } catch (e) {
-                     log.error('Failed to retrive user challenge question: ' + questionId + ' for user: ' + username, e);
-                     if (log.isDebugEnabled()) {
-                            log.debug('Challenge question retrieving failure details: user:' + username + ', questionId:' + questionId + ', confirmation key:' + confirmation);
-                     }
+                     log.error('Failed to retrive user challenge question: ' + questionId + ' for user: ' + username + ', questionId:' + questionId + ', confirmation key:' + confirmation, e);
                      return null;
               }
        }
@@ -262,13 +230,10 @@ var recovery = {};
               try {
                      return userInformationRecoveryService.verifyUserChallengeAnswer(username, confirmation, questionId, answer);
               } catch (e) {
-                     log.error('Challenge verification failed for user: ' + username, 'for question:' + questionId);
-                     if (log.isDebugEnabled()) {
-                            log.debug('Challenge verification failure details: user:' + username + ', questionId:' + questionId + ', answer:' + answer + ', confirmation key:' + confirmation);
-                     }
+                     log.error('Challenge verification failed for user: ' + username + 'for question:' + questionId + ', answer:' + answer + ', confirmation key:' + confirmation, e);
                      return null;
               }
-       }
+       };
 })(recovery);
 
 

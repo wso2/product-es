@@ -23,10 +23,16 @@
  */
 
 var recovery = require('account-management').recovery,
-        captchaBean = recovery.getCaptcha(),
-        captchaPath = captchaBean.getImagePath(),
-        captchaKey = captchaBean.getSecretKey(),
-        log = new Log('forgot_password_api');
+    captchaBean = recovery.getCaptcha(),
+    captchaPath = captchaBean.getImagePath(),
+    captchaKey = captchaBean.getSecretKey(),
+    recoveryOption = request.getParameter('recovery-option');
+
+var isChallengeRecovery = false;
+if(recoveryOption === 'challenge'){
+    isChallengeRecovery = true;
+}
+
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,8 +101,8 @@ var recovery = require('account-management').recovery,
                                            name="captcha-path" value="<%=captchaPath%>">
                                     <input type="hidden" id="captcha-key" name="captcha-key" value="<%=captchaKey%>">
                                     <input type="hidden" id="recovery-option" name="recovery-option"
-                                           value="<%=request.getParameter('recovery-option')%>">
-                                    <input id="reg-action" name="reg-action" type="hidden" value="verifyUser">
+                                           value="<%=isChallengeRecovery ? 'challenge' : 'email'%>">
+                                    <input id="action" name="action" type="hidden" value="verifyUser">
                                     <button id="validationSubmit" class="btn btn-large" type="button">Continue
                                     </button>
                                 </form>
@@ -158,27 +164,31 @@ var recovery = require('account-management').recovery,
 <script src="views/js/jquery.validate.js"></script>
 <script type="text/javascript">
     $(function () {
-        function validateUser() {
+        var ENTER_KEY = 13;
 
-            if (!$('#resetForm').valid()) {
+        function validateUser() {
+            var resetForm = $('#resetForm');
+
+            if (!resetForm.valid()) {
                 return;
             }
 
-            var formData = $('#resetForm').serialize()
+            var formData = resetForm.serialize();
 
             // user verification using user endpoint
             $.post('user', formData, function (data) {
-                if (JSON.parse(data).error == 'false') {
+                var dataJson = JSON.parse(data);
+                if (dataJson.error == 'false') {
                     $('#resetFormError').hide();
                     if ($('#recovery-option').val() == 'email') {
                         window.location = 'recover';
                     } else {
-                        var verificationKey = JSON.parse(data).verificationKey;
                         window.location = 'view_challenges';
                     }
                 } else {
-                    $('#resetFormError').show();
-                    $('#resetFormError').text(JSON.parse(data).msg);
+                    var resetFormError = $('#resetFormError');
+                    resetFormError.show();
+                    resetFormError.text(dataJson.msg);
                     $('#username').val('');
                     // Regenerating a captcha if validation fails
                     getNewCaptcha();
@@ -188,23 +198,23 @@ var recovery = require('account-management').recovery,
 
         // get a new captcha using captcha endpoint
         function getNewCaptcha() {
-            $('#reg-action').val('getCaptcha');
+            $('#action').val('getCaptcha');
             var formData = $("#resetForm").serialize();
             $.post('captcha', formData, function (data) {
-                $('#captcha-div').html('');
+                var dataJson = JSON.parse(data);
                 $('#captcha-div').html('<img src="../' + JSON.parse(data).captchaPath + '" class="captcha-img">');
                 $('#captcha-answer').val('');
                 $('#captcha-path').val(JSON.parse(data).captchaPath);
                 $('#captcha-key').val(JSON.parse(data).captchaKey);
-                $('#reg-action').val('verifyCode');
+                $('#action').val('verifyCode');
             });
         }
 
         $('#newCaptcha').bind('click', getNewCaptcha);
         $('#validationSubmit').bind('click', validateUser);
 
-        $('#resetForm input').bind('keypress', function (e) {
-            if (e.which == 13) {
+        $('#resetForm').find('input').bind('keypress', function (e) {
+            if (e.which == ENTER_KEY) {
                 validateUser();
             }
         });

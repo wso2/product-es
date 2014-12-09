@@ -23,12 +23,12 @@
  */
 
 var action = request.getParameter('action'),
-        username = session.get('username'),
-        confirmationKey = session.get('confirmation'),
-        questionId = session.get('question-id'),
-        answer = request.getParameter('answer'),
-        log = new Log('challenge_api'),
-        res = {};
+    username = session.get('username'),
+    confirmationKey = session.get('confirmation'),
+    questionId = session.get('question-id'),
+    answer = request.getParameter('answer'),
+    log = new Log('challenge_api'),
+    res = {};
 
 var errorProcessor = require('/modules/error_api.js');
 
@@ -51,16 +51,18 @@ var errorProcessor = require('/modules/error_api.js');
                 session.put('confirmation', verificationBean.getKey());
                 res.error = 'false';
                 res.msg = 'Challenge answer verified';
+                print(res);
             } else {
                 res.error = 'true';
                 var error = verificationBean.getError();
                 res.msg = errorProcessor.getErrorMessage(error);
+                print(res);
             }
         } else {
             res.error = 'true';
             res.msg = 'Recovery failed';
+            print(res);
         }
-        print(res);
     };
 
     if (action == 'verifyChallenge') {

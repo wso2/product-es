@@ -23,13 +23,13 @@
  */
 
 var action = request.getParameter('action'),
-        username = request.getParameter('username'),
-        captchaKey = request.getParameter('captcha-key'),
-        captchaPath = request.getParameter('captcha-path'),
-        captchaAnswer = request.getParameter('captcha-answer'),
-        recoveryOption = request.getParameter('recovery-option'),
-        log = new Log('user_api'),
-        res = {};
+    username = request.getParameter('username'),
+    captchaKey = request.getParameter('captcha-key'),
+    captchaPath = request.getParameter('captcha-path'),
+    captchaAnswer = request.getParameter('captcha-answer'),
+    recoveryOption = request.getParameter('recovery-option'),
+    log = new Log('user_api'),
+    res = {};
 
 var EMAIL_RECOVERY = 'email';
 var errorProcessor = require('/modules/error_api.js');
@@ -58,12 +58,10 @@ var errorProcessor = require('/modules/error_api.js');
                 var key = verificationBean.getKey();
                 var isVerified = verificationBean.isVerified();
                 if (isVerified) {
-                    recover(username, key, res);
+                    recover(username, key);
                 } else {
                     var error = verificationBean.getError();
                     var errorMsg = errorProcessor.getErrorMessage(error);
-                    log.info(error);
-                    log.info('==========================');
                     res.error = 'true';
                     res.msg = errorMsg;
                     print(res);
@@ -91,23 +89,24 @@ var errorProcessor = require('/modules/error_api.js');
                 session.put('username', username);
                 res.error = 'false';
                 res.msg = 'User successfully verified';
-                print(res);
             } else {
                 res.error = 'true';
-                res.msg = 'User validation failed';
-                print(res);
+                res.msg = 'Recovery failed';
             }
         } else if (recoveryOption == 'challenge') {
             res.error = 'false';
             res.msg = 'User successfully verified';
             session.put('confirmation', confirmation);
             session.put('username', username);
-            print(res);
         }
+        print(res);
     };
 
-    verifyUser(username, captchaPath, captchaKey, captchaAnswer);
-
+    if(action == 'verifyUser') {
+        verifyUser(username, captchaPath, captchaKey, captchaAnswer);
+    } else {
+        log.error('Endpoint does not exist');
+    }
 }());
 
 %>

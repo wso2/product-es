@@ -19,25 +19,18 @@
  */
 
 /**
- *  User is directed to this page after clicking the url sent in the email
+ *  Page to notify recovery failure
  */
 
-var confirmationCode = request.getParameter('confirmation'),
-    recovery = require('account-management').recovery,
-    username = request.getParameter('username'),
-    captchaBean = recovery.getCaptcha(),
-    captchaPath = captchaBean.getImagePath(),
-    captchaKey = captchaBean.getSecretKey();
-
-session.put('confirmation', confirmationCode);
-session.put('username', username);
-
+var appsConfig = require('/config/sso.json');
+var publisherUrl = appsConfig.urls['publisher'];
 %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Forgot password | WSO2 Enterprise Store</title>
+    <title>Password recovery failed | WSO2 Enterprise Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -79,33 +72,9 @@ session.put('username', username);
                     <div class="form-forgot-password row-fluid">
                         <div class="span12">
                             <div class="row-fluid">
-                                <form id="verificationForm">
-                                    <h2 class="form-forgot-password-heading">Confirm password
-                                        reset</h2>
-
-                                    <p>Enter the captcha to confirm password reset.</p>
-
-                                    <div id="verificationFormError" class="alert alert-error"
-                                         style="display:none"></div>
-                                    <div id="captcha" class="control">
-                                        <label id='newCaptcha'>Can't read this? <a href="#">Try another.</a></label>
-
-                                        <div id="captcha-div" class="control">
-                                            <img src="../<%=captchaPath%>"
-                                                 class="captcha-img">
-                                        </div>
-                                    </div>
-                                    <div class="control">
-                                        <label>Text in the box</label>
-                                        <input id="captcha-answer" name="captcha-answer" type="text"
-                                               class="input-block-level required">
-                                    </div>
-                                    <input type="hidden" id="captcha-path" name="captcha-path"
-                                    value="<%=captchaPath%>">
-                                    <input type="hidden" id="captcha-key" name="captcha-key" value="<%=captchaKey%>">
-                                    <input id="action" name="action" type="hidden" value="verifyCode">
-                                    <button id="validationSubmit" class="btn btn-large" type="button">Continue
-                                    </button>
+                                <form id="resetForm" action="login" method="POST">
+                                    <h2 class="form-forgot-password-heading">Password Recovery failed</h2>
+                                    <p>Password recovery has failed. Please follow the process again from <a href="<%=publisherUrl%>">here</a></p>
                                 </form>
                             </div>
                         </div>
@@ -151,62 +120,6 @@ session.put('username', username);
 <script src="views/js/jquery-1.8.3.min.js"></script>
 <script src="views/js/bootstrap.min.js"></script>
 <script src="views/js/jquery.validate.js"></script>
-<script type="text/javascript">
-    $(function () {
-        var ENTER_KEY = 13;
 
-        function validateCode() {
-            var verificationForm = $('#verificationForm');
-
-            if (!verificationForm.valid()) {
-                return;
-            }
-
-            var formData = verificationForm.serialize();
-
-            // validate captcha using captcha endpoint
-            $.post('captcha', formData, function (data) {
-                var dataJson = JSON.parse(data);
-                if (dataJson.error == 'false') {
-                    $('#verificationFormError').hide();
-                    var result = dataJson;
-                    window.location = 'update_password';
-
-                } else {
-                    var verificationFormError = $('#verificationFormError');
-                    verificationFormError.show();
-                    verificationFormError.text(dataJson.msg);
-                    //Regenerate captcha if validation fails
-                    getNewCaptcha();
-                }
-            });
-        }
-
-        // get a new captcha using captcha endpoint
-        function getNewCaptcha() {
-            $('#action').val('getCaptcha');
-            var formData = $('#verificationForm').serialize();
-            $.post('captcha', formData, function (data) {
-                var dataJson = JSON.parse(data);
-                $('#captcha-div').html('<img src="../' + dataJson.captchaPath + '" class="captcha-img">');
-                $('#captcha-answer').val('');
-                $('#captcha-path').val(dataJson.captchaPath);
-                $('#captcha-key').val(dataJson.captchaKey);
-                $('#action').val('verifyCode');
-            });
-        }
-
-        $('#validationSubmit').bind('click', validateCode);
-
-        $('#newCaptcha').bind('click', getNewCaptcha);
-
-        $('#resetForm').find('input').bind('keypress', function (e) {
-            if (e.which == ENTER_KEY) {
-                validateCode();
-            }
-        });
-
-    });
-</script>
 </body>
 </html>

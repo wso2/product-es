@@ -22,14 +22,14 @@
  *  Contains endpoints related to captcha
  */
 
-var action = request.getParameter('reg-action'),
-        confirmationCode = session.get('confirmation'),
-        userName = session.get('username'),
-        captchaKey = request.getParameter('captcha-key'),
-        captchaPath = request.getParameter('captcha-path'),
-        captchaAnswer = request.getParameter('captcha-answer'),
-        log = new Log('captcha_api'),
-        res = {};
+var action = request.getParameter('action'),
+    confirmationCode = session.get('confirmation'),
+    userName = session.get('username'),
+    captchaKey = request.getParameter('captcha-key'),
+    captchaPath = request.getParameter('captcha-path'),
+    captchaAnswer = request.getParameter('captcha-answer'),
+    log = new Log('captcha_api'),
+    res = {};
 
 var errorProcessor = require('/modules/error_api.js');
 
@@ -43,9 +43,9 @@ var errorProcessor = require('/modules/error_api.js');
      */
     var getCaptcha = function () {
         var captchaBean = recoveryModule.getCaptcha();
-        var captchaPath = captchaBean.getImagePath();
-        var captchaKey = captchaBean.getSecretKey();
         if (captchaBean) {
+            var captchaPath = captchaBean.getImagePath();
+            var captchaKey = captchaBean.getSecretKey();
             res.error = 'false';
             res.msg = 'Captcha generated';
             res.captchaPath = captchaPath;

@@ -40,7 +40,6 @@ var QUESTION_SET_ID = "http://wso2.org/claims/challengeQuestion1";
                 });
             }
         }
-
         return claimValues;
     };
 
@@ -51,7 +50,6 @@ var QUESTION_SET_ID = "http://wso2.org/claims/challengeQuestion1";
             res.error = 'false';
             res.msg = 'User successfully added';
             print(res);
-
         } catch (e) {
             log.debug(e);
             res.error = 'true';
@@ -61,15 +59,9 @@ var QUESTION_SET_ID = "http://wso2.org/claims/challengeQuestion1";
     };
 
     var setChallenge = function(username) {
-
         var recovery = require('account-management').recovery;
-        //var qList = '[{"question":"qs1", "answer":"abc", "order":1,
-        //"id":"http://wso2.org/claims/challengeQuestion1"}]';
         var qList = [{question:question, answer:answer, id:QUESTION_SET_ID}];
         recovery.setChallengeQuestionForUser(username, qList);
-        //var data = JSON.parse(qList);
-        log.info(qList[0].question + ' iii');
-
     }
 
     if (action == 'register') {

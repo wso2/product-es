@@ -24,9 +24,8 @@
  */
 
 var appsConfig = require('/config/sso.json');
-var storeUrl = appsConfig.urls['store'];
-var appsConfig = require('/config/sso.json');
-var publisherUrl = appsConfig.urls['publisher'];
+var storeUrl = appsConfig.urls['store'],
+    publisherUrl = appsConfig.urls['publisher'];
 
 %>
 
