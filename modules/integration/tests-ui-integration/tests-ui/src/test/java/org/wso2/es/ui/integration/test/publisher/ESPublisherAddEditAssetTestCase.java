@@ -46,6 +46,8 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
     private static final String ASSET_DESCRIPTION_2 = "Edited Test description";
     private static final String ASSET_CATEGORY_1 = "Google";
     private static final String ASSET_CATEGORY_2 = "WSO2";
+    private static final int MAX_POLL_COUNT = 30;
+    private String assetName;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherAddEditAssetTestCase(TestUserMode userMode, String assetName) {
@@ -61,11 +63,10 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
     }
@@ -89,7 +90,7 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_1);
         driver.findElement(By.id("btn-create-asset")).click();
 
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         //check if the created gadget is shown
         assertTrue(isElementPresent(By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
     }

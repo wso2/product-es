@@ -37,14 +37,13 @@ public class ESPublisherSubscriptionTestCase extends BaseUITestCase {
 
     private static final String LC_SUBSCRIPTION = "Store LC State Change Event via Role Profile";
     private static final String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
-    private static final String EMAIL = "esmailsample@gmail.com";
-    private static final String EMAIL_PWD = "esMailTest";
     private static final String ASSET_VERSION = "1.0.0";
     private static final String CREATED_TIME = "12";
     private static final String ASSET_TYPE = "gadget";
-    private static final String SMTP_PROPERTY_FILE = File.separator + "notifications" + File.separator + "smtp.properties";
+    private static final int MAX_POLL_COUNT = 30;
     private TestUserMode userMode;
     private ResourceAdminServiceClient resourceAdminServiceClient;
+    private String assetName;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherSubscriptionTestCase(TestUserMode testUserMode, String assetName) {
@@ -64,11 +63,9 @@ public class ESPublisherSubscriptionTestCase extends BaseUITestCase {
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName().split("@")[0];
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
                 adminUserPwd);
         resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
-        smtpPropertyLocation = resourceLocation + SMTP_PROPERTY_FILE;
 
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
         ESUtil.loginToAdminConsole(driver, baseUrl, adminUserName, adminUserPwd);
@@ -85,7 +82,7 @@ public class ESPublisherSubscriptionTestCase extends BaseUITestCase {
         //navigate to admin console
         driver.get(baseUrl + "/carbon/");
         driver.findElement(By.linkText("Gadgets")).click();
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         driver.findElement(By.linkText(assetName)).click();
         //check two subscriptions
         String subscription1 = driver.findElement(By.cssSelector("#subscriptionsTable > tbody > " +

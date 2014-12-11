@@ -59,7 +59,6 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
     protected String currentUserPwd;
     protected String adminUserName;
     protected String adminUserPwd;
-    protected String assetName;
     protected String providerName;
 
     protected String resourcePath;

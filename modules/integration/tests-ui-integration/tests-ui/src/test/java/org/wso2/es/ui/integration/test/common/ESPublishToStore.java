@@ -42,6 +42,7 @@ public class ESPublishToStore extends BaseUITestCase {
     private static final String ASSET_URL = "http://test";
     private static final String ASSET_DESCRIPTION = "for store";
     private static final String LC_COMMENT = "done";
+    private static final int MAX_POLL_COUNT = 30;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -80,7 +81,7 @@ public class ESPublishToStore extends BaseUITestCase {
         }
         //publish the gadget to store
         driver.findElement(By.cssSelector("a.btn")).click();
-        driver.findElementPoll(By.linkText(ASSET_NAME), 30);
+        driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
         driver.findElement(By.linkText(ASSET_NAME)).click();
         driver.findElement(By.linkText("Life Cycle")).click();
 

@@ -47,11 +47,12 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     private static final String ASSET_TYPE = "gadget";
     private static final String CREATED_TIME = "12";
     private static final String USER1 = "user1";
+    private static final int MAX_POLL_COUNT = 30;
+    private static final String ASSET_NAME = "Sort Asset";
 
     @Factory(dataProvider = "userMode")
     public ESPublisherListPageSortTestCase(TestUserMode userMode) {
         this.userMode = userMode;
-        this.assetName = "Sort Asset";
     }
 
     @BeforeClass(alwaysRun = true)
@@ -66,13 +67,12 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         normalUserName = automationContext.getSuperTenant().getTenantUser(USER1).getUserName().split("@")[0];
         String normalUserPwd = automationContext.getSuperTenant().getTenantUser(USER1).getPassword();
-        resourcePath = GADGET_REGISTRY_BASE_PATH + normalUserName + "/" + assetName + "/" + VERSION_2;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + normalUserName + "/" + ASSET_NAME + "/" + VERSION_2;
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
-        String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         if (currentUserName.equals(adminUserName)) {
             ESUtil.login(driver, baseUrl, PUBLISHER_APP, normalUserName, normalUserPwd);
-            AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, normalUserName, assetName, VERSION_2, CREATED_TIME);
+            AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, normalUserName, ASSET_NAME, VERSION_2, CREATED_TIME);
             if (isAlertPresent()) {
                 String alert = closeAlertAndGetItsText();
                 LOG.warn(alert + ": modal box appeared");
@@ -86,7 +86,7 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.publisher", description = "Test sort by name")
     public void testListPageSortByName() throws Exception {
         driver.get(baseUrl + PUBLISHER_URL);
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
         driver.findElement(By.partialLinkText("NAME")).click();
         assertEquals(NAME_SORT_ASSET_1, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
                 .getText(), "Sort on name failed");
@@ -118,7 +118,7 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
             dependsOnMethods = "testListPageSortByName")
     public void testListPageSortByCreatedTime() throws Exception {
         driver.findElement(By.linkText("CREATED")).click();
-        assertEquals(assetName, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
+        assertEquals(ASSET_NAME, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
                 .getText(), "Sort on created time failed");
     }
 
@@ -133,9 +133,9 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     }
 
     @DataProvider(name = "userMode")
-    private static Object[][] userModeProvider() {
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN, "Sort asset - SuperAdmin"},
-                {TestUserMode.SUPER_TENANT_USER, "Sort asset - SuperUser"}};
+    private static TestUserMode[][] userModeProvider() {
+        return new TestUserMode[][]{{TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.SUPER_TENANT_USER}};
     }
 
 }

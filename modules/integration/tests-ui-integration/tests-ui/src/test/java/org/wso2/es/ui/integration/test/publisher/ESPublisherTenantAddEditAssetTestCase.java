@@ -43,6 +43,8 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
     private static final String ASSET_DESCRIPTION_2 = "Edited Test description";
     private static final String ASSET_CATEGORY_1 = "Google";
     private static final String ASSET_CATEGORY_2 = "WSO2";
+    private static final int MAX_POLL_COUNT = 30;
+    private String assetName;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherTenantAddEditAssetTestCase(TestUserMode userMode, String assetName) {
@@ -57,11 +59,10 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver();
         baseUrl = getStorePublisherUrl();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.TENANT_ADMIN);
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        String resourceLocation = getResourceLocation();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         this.providerName = currentUserName.split("@")[0];
         this.resourcePath = GADGET_REGISTRY_BASE_PATH + providerName + "/" + assetName + "/" + ASSET_VERSION;
@@ -87,7 +88,7 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_1);
         driver.findElement(By.id("btn-create-asset")).click();
 
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         //check if the created gadget is shown
         assertTrue(isElementPresent(By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
     }

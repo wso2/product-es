@@ -48,18 +48,25 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
     private static final String ASSET_TYPE = "gadget";
     private static final String BAR_CHART = "Bar Chart";
     private static final String BUBBLE_CHART = "Bubble Chart";
+    private static final int MAX_POLL_COUNT = 30;
+    private static final int MAX_WAIT_TIME = 30;
+    private static final int TEMPLATE_COUNT = 6;
+    private static final int WSO2_COUNT = 5;
+    private static final int GOOGLE_COUNT = 3;
+
+    private String assetName;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
         assetName = "Asset Recent";
         driver = new ESWebDriver();
-        wait = new WebDriverWait(driver, 30);
+        wait = new WebDriverWait(driver, MAX_WAIT_TIME);
         baseUrl = getWebAppURL();
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
 
-        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + this.assetName + "/" + ASSET_VERSION;
+        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME,
                 TestUserMode.SUPER_TENANT_ADMIN);
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
@@ -88,16 +95,15 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         driver.get(baseUrl + PUBLISHER_URL);
         AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, currentUserName, assetName,
                 ASSET_VERSION, ASSET_CREATED_TIME);
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         AssetUtil.publishAssetToStore(driver, assetName);
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         //navigate to store and wait for the new gadget to be visible in store
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
-        driver.findElementPoll(By.xpath("//a[contains(.,'Asset Recent')]"), 5);
+        driver.findElementPoll(By.xpath("//a[contains(.,'Asset Recent')]"), MAX_POLL_COUNT);
     }
 
-    //TODO-disabled bug
-    @Test(groups = "wso2.es.store", description = "Testing sorting on popularity", enabled = false)
+    @Test(groups = "wso2.es.store", description = "Testing sorting on popularity")
     public void testStoreSortOnPopularity() throws Exception {
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         //sort by popularity
@@ -136,7 +142,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         //google category
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("Google")).click();
-        assertEquals(3, driver.findElements(By.cssSelector("div.asset-details")).size(), "Google Category wrong");
+        assertEquals(GOOGLE_COUNT, driver.findElements(By.cssSelector("div.asset-details")).size(), "Google Category wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category WSO2")
@@ -144,7 +150,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("WSO2")).click();
-        assertEquals(5, driver.findElements(By.cssSelector("div.asset-details")).size(), "WSO2 Category wrong");
+        assertEquals(WSO2_COUNT, driver.findElements(By.cssSelector("div.asset-details")).size(), "WSO2 Category wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category template")
@@ -152,12 +158,11 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();
         driver.findElement(By.linkText("Templates")).click();
-        assertEquals(6, driver.findElements(By.cssSelector("div.span3.asset")).size(),
+        assertEquals(TEMPLATE_COUNT, driver.findElements(By.cssSelector("div.span3.asset")).size(),
                 "Templates Category wrong");
     }
 
-    //TODO-BUG
-    @Test(groups = "wso2.es.store", description = "Testing category drop down", enabled = false)
+    @Test(groups = "wso2.es.store", description = "Testing category drop down")
     public void testCategoryMenu() throws Exception {
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("i.icon-caret-down")).click();

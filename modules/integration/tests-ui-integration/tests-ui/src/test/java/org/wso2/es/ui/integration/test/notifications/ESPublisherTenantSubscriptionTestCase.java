@@ -40,12 +40,12 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
     private static final String LC_SUBSCRIPTION = "Store LC State Change Event via Role Profile";
     private static final String UPDATE_SUBSCRIPTION = "Store Asset Update Event via Role Profile";
     private static final String SMTP_PROPERTY_FILE = File.separator + "notifications" + File.separator + "smtp.properties";
-    private static final String EMAIL = "esmailsample@gmail.com";
-    private static final String EMAIL_PWD = "esMailTest";
     private static final String ASSET_VERSION = "1.0.0";
     private static final String CREATED_TIME = "12";
     private static final String ASSET_TYPE = "gadget";
+    private static final int MAX_POLL_COUNT = 30;
     private ResourceAdminServiceClient resourceAdminServiceClient;
+    private String assetName;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherTenantSubscriptionTestCase(TestUserMode testUserMode, String assetName) {
@@ -60,7 +60,7 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         baseUrl = getStorePublisherUrl();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.TENANT_ADMIN);
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
         providerName = currentUserName.split("@")[0];
@@ -84,7 +84,7 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
         //navigate to admin console
         driver.get(baseUrl + MANAGEMENT_CONSOLE_URL);
         driver.findElement(By.linkText("Gadgets")).click();
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         driver.findElement(By.linkText(assetName)).click();
         //check two subscriptions
         String subscription1 = driver.findElement(By.cssSelector("#subscriptionsTable > tbody > tr.tableOddRow > td"))

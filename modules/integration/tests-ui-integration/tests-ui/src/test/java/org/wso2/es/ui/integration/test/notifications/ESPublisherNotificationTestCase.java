@@ -46,9 +46,10 @@ public class ESPublisherNotificationTestCase extends BaseUITestCase {
     private static final String ASSET_TYPE = "gadget";
     private static final String ASSET_DESCRIPTION = "Test Description";
     private static final String SMTP_PROPERTY_FILE = File.separator + "notifications" + File.separator + "smtp.properties";
-    private static final int POLL_COUNT = 30;
+    private static final int MAX_POLL_COUNT = 30;
     private String LCNotificationSubject = "[StoreLifecycleStateChange] at path: ";
     private String updateNotificationSubject = "[StoreAssetUpdate] at path: ";
+    private String assetName;
 
     @Factory(dataProvider = "userMode")
     public ESPublisherNotificationTestCase(TestUserMode testUserMode, String assetName) {
@@ -85,7 +86,7 @@ public class ESPublisherNotificationTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.notification", description = "Testing mails for LC state change event")
     public void testLCNotification() throws Exception {
         //check notification for initial LC state change
-        driver.findElementPoll(By.linkText(assetName), POLL_COUNT);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         //read email using smtp
         boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, LCNotificationSubject);
         assertTrue(hasMail, "LC Notification failed for user:" + currentUserName);

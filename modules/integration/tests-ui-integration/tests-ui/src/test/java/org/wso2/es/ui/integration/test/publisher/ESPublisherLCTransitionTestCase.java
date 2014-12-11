@@ -45,7 +45,9 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
     private static final String ASSET_TYPE = "gadget";
     private static final String CREATED_TIME = "12";
     private static final String LC_COMMENT = "test";
+    private static final int MAX_POLL_COUNT = 30;
     private ResourceAdminServiceClient resourceAdminServiceClient;
+    private String assetName;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -55,7 +57,7 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
         currentUserPwd = userInfo.getPassword();
         resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
         driver = new ESWebDriver();
-        wait = new WebDriverWait(driver, 30);
+        wait = new WebDriverWait(driver, MAX_POLL_COUNT);
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
@@ -75,7 +77,7 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.publisher", description = "Testing LC transition")
     public void testLc() throws Exception {
         //do a lc transition and check states
-        driver.findElementPoll(By.linkText(assetName), 30);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Life Cycle")).click();
         driver.findElement(By.id("In-Review")).click();
