@@ -33,42 +33,69 @@ import java.util.Set;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
-public class ESWebDriver implements org.openqa.selenium.WebDriver {
-    protected static final Logger log = Logger.getLogger(ESWebDriver.class);
-    private int maxWaitTime;
+/**
+ * This class wraps the WebDriver given by the framework to achieve following concerns
+ * - Slow down the web driver by overriding findElementBy method
+ * - Introduce findElementByPoll to refresh page until an element if present for a given number of times
+ *
+ * This class uses Proxy pattern.
+ */
+
+public class ESWebDriver implements WebDriver {
+    private static final Logger LOG = Logger.getLogger(ESWebDriver.class);
     private EventFiringWebDriver driver;
+    private static final int MAX_WAIT_TIME = 30;
+    private static final long POLL_SLEEP_INTERVAL = 2000;
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String REPLACE_NON_ALPHANUMERIC_REGEX = "[^A-Za-z0-9]";
+    private static final String SCREEN_SHOT_EXTENSION = ".png";
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String SUREFIRE_REPORTS = "surefire-reports";
+    private static final String SCREEN_SHOT = "screen-shot";
 
-    private WebDriverEventListener errorListener = new AbstractWebDriverEventListener() {
-        @Override
-        public void onException(Throwable throwable, WebDriver driver) {
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar
-                    .getInstance().getTime());
-            String snapshotName = timeStamp
-                    + " : " + throwable.getCause().getMessage().toString().split("\n")[0];
-            captureScreenShot(snapshotName);
-        }
-    };
-
+    /**
+     * Throwing an exception in the constructor since EventFiringWebDriver constructor throws exception
+     */
     public ESWebDriver() throws Exception {
         driver = new EventFiringWebDriver(BrowserManager.getWebDriver());
-        maxWaitTime = 30;
+
+        /**
+         * This event-listener is to listen exceptions throws from the web driver and take screenshots of the
+         * webdriver-instance
+         */
+
+        WebDriverEventListener errorListener = new AbstractWebDriverEventListener() {
+            @Override
+            public void onException(Throwable throwable, WebDriver driver) {
+                String timeStamp = new SimpleDateFormat(DATE_TIME_FORMAT).format(Calendar.getInstance().getTime());
+                //current time in order to construct a unique name for the screenshot
+                String msg = "";
+                if (throwable != null) {
+                    msg = throwable.getCause().getMessage().split(LINE_SEPARATOR)[0].replaceAll(REPLACE_NON_ALPHANUMERIC_REGEX, "_");
+                    /*get the fist-line of the throwable message and replace non-alphanumeric characters for the screenshot name */
+                }
+                String snapshotName = timeStamp + " : " + msg;
+                captureScreenShot(snapshotName);
+            }
+        };
         driver.register(errorListener);
     }
 
     /**
-     * This method takes a screen-shot of current web-driver instance     *
+     * This method takes a screen-shot of current web-driver instance
+     *
      * @param snapShotName String indicating name of the screen-shot
      */
     public void captureScreenShot(String snapShotName) {
         try {
-            String filename = snapShotName + ".png";
-            String pathName = FrameworkPathUtil.getReportLocation() + File.separator +
-                    "surefire-reports" + File.separator + "screen-shot";
-            log.error("OnException - Saving Screen-shot : " + filename + " to location " + pathName);
+            String filename = snapShotName + SCREEN_SHOT_EXTENSION;
+            String pathName = FrameworkPathUtil.getReportLocation() + File.separator + SUREFIRE_REPORTS +
+                    File.separator + SCREEN_SHOT;
+            LOG.info("OnException - Saving Screen-shot : " + filename + " to location " + pathName);
             File screenShot = this.driver.getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(screenShot, new File(pathName  + File.separator + filename));
+            FileUtils.moveFile(screenShot, new File(pathName + File.separator + filename));
         } catch (Exception e) {
-            log.error(e);
+            LOG.error(e);
         }
     }
 
@@ -77,11 +104,12 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
      * until a given element is available
      *
      * @param by        Element that is expected to be present
-     * @param pollCount Number of time page need to be reloaded into webdriver
+     * @param pollCount Number of time page need to be reloaded into webDriver
      */
-    public void findElementPoll(By by, int pollCount) {
+    public void findElementPoll(By by, int pollCount) throws InterruptedException {
         int count = 0;
         while (!isElementPresent(by) && count < pollCount) {
+            Thread.sleep(POLL_SLEEP_INTERVAL);
             String url = driver.getCurrentUrl();
             driver.get(url);
             count++;
@@ -98,13 +126,14 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
         try {
             driver.findElement(by);
             return true;
+            //coding by exception since driver doesn't support a check
         } catch (NoSuchElementException e) {
             return false;
         }
     }
 
     /**
-     * This method will wait untill a given element is present in the page for a given amount of time
+     * This method will wait until a given element is present in the page for a given amount of time
      *
      * @param by          Element to be present in the current page
      * @param waitTimeSec Time to wait in seconds
@@ -143,7 +172,7 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
      */
     @Override
     public WebElement findElement(By by) {
-        waitTillElementPresent(by, this.maxWaitTime);
+        waitTillElementPresent(by, MAX_WAIT_TIME);
         return driver.findElement(by);
     }
 
@@ -186,4 +215,5 @@ public class ESWebDriver implements org.openqa.selenium.WebDriver {
     public Options manage() {
         return driver.manage();
     }
+
 }

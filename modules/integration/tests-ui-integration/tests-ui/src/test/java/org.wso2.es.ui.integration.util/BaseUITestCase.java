@@ -55,6 +55,8 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
     protected static final String STORE_TOP_ASSETS_PAGE = "/store/pages/top-assets";
     protected static final String GADGET_REGISTRY_BASE_PATH = "/_system/governance/gadgets/";
 
+    protected static final int MAX_DRIVER_WAIT_TIME_SEC = 30;
+
     protected String currentUserName;
     protected String currentUserPwd;
     protected String adminUserName;

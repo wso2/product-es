@@ -54,7 +54,8 @@ public class ESUtil extends ESIntegrationUITest {
      * @param pwd      password
      * @throws XPathExpressionException
      */
-    public static void login(ESWebDriver driver, String url, String webApp, String userName, String pwd) throws XPathExpressionException {
+    public static void login(ESWebDriver driver, String url, String webApp, String userName, String pwd)
+            throws InterruptedException, XPathExpressionException  {
         String fullUrl = "";
         if ("store".equalsIgnoreCase(webApp)) {
             fullUrl = url + STORE_SUFFIX;
