@@ -18,6 +18,7 @@ package org.wso2.es.ui.integration.util;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.events.AbstractWebDriverEventListener;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.events.WebDriverEventListener;
@@ -25,19 +26,19 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
-import org.openqa.selenium.*;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
-import java.util.Calendar;
-import java.text.SimpleDateFormat;
 
 /**
  * This class wraps the WebDriver given by the framework to achieve following concerns
  * - Slow down the web driver by overriding findElementBy method
- * - Introduce findElementByPoll to refresh page until an element if present for a given number of times
- *
+ * - Introduce findElementByPoll to refresh page until an element if present for a given number
+ * of times
+ * <p/>
  * This class uses Proxy pattern.
  */
 
@@ -63,7 +64,6 @@ public class ESWebDriver implements WebDriver {
          * This event-listener is to listen exceptions throws from the web driver and take screenshots of the
          * webdriver-instance
          */
-
         WebDriverEventListener errorListener = new AbstractWebDriverEventListener() {
             @Override
             public void onException(Throwable throwable, WebDriver driver) {
@@ -83,7 +83,6 @@ public class ESWebDriver implements WebDriver {
 
     /**
      * This method takes a screen-shot of current web-driver instance
-     *
      * @param snapShotName String indicating name of the screen-shot
      */
     public void captureScreenShot(String snapShotName) {

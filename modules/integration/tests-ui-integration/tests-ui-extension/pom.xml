@@ -284,6 +284,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.wso2.store</groupId>
+            <artifactId>ui-test-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <exclusions>

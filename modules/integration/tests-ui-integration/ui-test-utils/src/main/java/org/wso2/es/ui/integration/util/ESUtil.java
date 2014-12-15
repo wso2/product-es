@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.wso2.es.ui.integration.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+
 import javax.mail.*;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
@@ -52,7 +52,7 @@ public class ESUtil extends ESIntegrationUITest {
      * @param webApp   store or publisher
      * @param userName user name
      * @param pwd      password
-     * @throws XPathExpressionException
+     * @throws javax.xml.xpath.XPathExpressionException
      */
     public static void login(ESWebDriver driver, String url, String webApp, String userName, String pwd)
             throws InterruptedException, XPathExpressionException  {
@@ -82,7 +82,7 @@ public class ESUtil extends ESIntegrationUITest {
      * @param url      base url of the server
      * @param webApp   store or publisher
      * @param userName user name
-     * @throws XPathExpressionException
+     * @throws javax.xml.xpath.XPathExpressionException
      */
     public static void logout(ESWebDriver driver, String url, String webApp, String userName) throws XPathExpressionException {
         String fullUrl = "";
@@ -103,7 +103,7 @@ public class ESUtil extends ESIntegrationUITest {
      * @param url      base url of the server
      * @param userName user name
      * @param pwd      password
-     * @throws XPathExpressionException
+     * @throws javax.xml.xpath.XPathExpressionException
      */
     public static void loginToAdminConsole(ESWebDriver driver, String url, String userName, String pwd) throws XPathExpressionException {
         driver.get(url + ADMIN_CONSOLE_SUFFIX);
@@ -169,7 +169,7 @@ public class ESUtil extends ESIntegrationUITest {
      * @param email            email address
      * @param subject          email subject
      * @return if the mail exist
-     * @throws IOException
+     * @throws java.io.IOException
      * @throws MessagingException
      * @throws InterruptedException
      */
