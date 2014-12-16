@@ -22,12 +22,15 @@ import org.openqa.selenium.By;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.ui.integration.extension.util.BaseUITestCase;
-import org.wso2.es.ui.integration.extension.util.ESUtil;
-import org.wso2.es.ui.integration.extension.util.ESWebDriver;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * Overriding an existing page under extension model
+ */
 public class ESPublisherAssetOverrideExistingPageTestCase extends BaseUITestCase {
 
     @BeforeClass(alwaysRun = true)
@@ -35,24 +38,21 @@ public class ESPublisherAssetOverrideExistingPageTestCase extends BaseUITestCase
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, publisherApp, userInfo.getUserName(), userInfo.getPassword());
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, userInfo.getUserName(), userInfo.getPassword());
     }
 
-    @Test(groups = "wso2.es", description = "")
+    @Test(groups = "wso2.es.extensions", description = "Test overriding existing page in extensions")
     public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
-        // driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.get(baseUrl + "/publisher/asts/gadget/list");
         driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
         driver.findElement(By.linkText("Service")).click();
         driver.get(baseUrl + "/publisher/asts/servicex/details");
-//      driver.findElementPoll(By.id("assetOveriddenDetailsPageH1"),30);
         assertTrue(isElementPresent(By.id("assetOveriddenDetailsPageH1")));
-//      assertTrue(isElementPresent(By.cssSelector("h1")));
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        driver.get("/publisher/logout");
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         driver.quit();
     }
 
