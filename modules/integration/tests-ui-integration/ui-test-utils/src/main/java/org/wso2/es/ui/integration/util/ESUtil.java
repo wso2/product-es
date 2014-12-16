@@ -53,9 +53,10 @@ public class ESUtil extends ESIntegrationUITest {
      * @param userName user name
      * @param pwd      password
      * @throws javax.xml.xpath.XPathExpressionException
+     *
      */
     public static void login(ESWebDriver driver, String url, String webApp, String userName, String pwd)
-            throws InterruptedException, XPathExpressionException  {
+            throws InterruptedException, XPathExpressionException {
         String fullUrl = "";
         if ("store".equalsIgnoreCase(webApp)) {
             fullUrl = url + STORE_SUFFIX;
@@ -83,6 +84,7 @@ public class ESUtil extends ESIntegrationUITest {
      * @param webApp   store or publisher
      * @param userName user name
      * @throws javax.xml.xpath.XPathExpressionException
+     *
      */
     public static void logout(ESWebDriver driver, String url, String webApp, String userName) throws XPathExpressionException {
         String fullUrl = "";
@@ -104,6 +106,7 @@ public class ESUtil extends ESIntegrationUITest {
      * @param userName user name
      * @param pwd      password
      * @throws javax.xml.xpath.XPathExpressionException
+     *
      */
     public static void loginToAdminConsole(ESWebDriver driver, String url, String userName, String pwd) throws XPathExpressionException {
         driver.get(url + ADMIN_CONSOLE_SUFFIX);
@@ -177,28 +180,20 @@ public class ESUtil extends ESIntegrationUITest {
                                         String subject) throws MessagingException, InterruptedException, IOException {
         Properties props = new Properties();
         boolean hasEmail = false;
-        int pollCount = 0;
         Folder inbox = null;
         Store store = null;
+        FileInputStream inputStream = null;
         String errorMessage = "Retrieving mails for: " + email + "failed";
         try {
-            props.load(new FileInputStream(new File(smtpPropertyFile)));
+            inputStream = new FileInputStream(new File(smtpPropertyFile));
+            props.load(inputStream);
             Session session = Session.getDefaultInstance(props, null);
             store = session.getStore(IMAPS);
             store.connect(SMTP_GMAIL_COM, email, password);
             inbox = store.getFolder(INBOX);
             inbox.open(Folder.READ_ONLY);
+            hasEmail = hasMailWithSubject(inbox, subject);
 
-            while ((pollCount <= MAX_MAIL_POLL) && !hasEmail) {
-                Message[] messages = inbox.getMessages();
-                for (Message msg : messages) {
-                    if (subject.equals(msg.getSubject())) {
-                        hasEmail = true;
-                        break;
-                    }
-                }
-                Thread.sleep(MAIL_WAIT_TIME);
-            }
         } catch (MessagingException e) {
             LOG.error(errorMessage, e);
             throw e;
@@ -212,18 +207,25 @@ public class ESUtil extends ESIntegrationUITest {
             LOG.error(errorMessage, e);
             throw e;
         } finally {
-            if (inbox != null) {
-                try {
-                    inbox.close(true);
-                } catch (MessagingException e) {
+            inputStream.close();
+            inbox.close(true);
+            store.close();
+        }
+        return hasEmail;
+    }
+
+    private static boolean hasMailWithSubject(Folder inbox, String subject) throws MessagingException, InterruptedException {
+        int pollCount = 0;
+        boolean hasEmail = false;
+        while ((pollCount <= MAX_MAIL_POLL) && !hasEmail) {
+            Message[] messages = inbox.getMessages();
+            for (Message msg : messages) {
+                if (subject.equals(msg.getSubject())) {
+                    hasEmail = true;
+                    break;
                 }
             }
-            if (store != null) {
-                try {
-                    store.close();
-                } catch (MessagingException e) {
-                }
-            }
+            Thread.sleep(MAIL_WAIT_TIME);
         }
         return hasEmail;
     }

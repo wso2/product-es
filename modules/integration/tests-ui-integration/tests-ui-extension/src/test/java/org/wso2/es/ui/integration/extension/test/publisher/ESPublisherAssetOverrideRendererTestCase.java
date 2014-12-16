@@ -18,31 +18,45 @@
 
 package org.wso2.es.ui.integration.extension.test.publisher;
 
+import org.openqa.selenium.By;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.ui.integration.extension.util.BaseUITestCase;
-import org.wso2.es.ui.integration.extension.util.ESUtil;
-import org.wso2.es.ui.integration.extension.util.ESWebDriver;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
+/**
+ * Overriding a renderer under extension model
+ */
 public class ESPublisherAssetOverrideRendererTestCase extends BaseUITestCase {
+
+    private static final String ASSET_NAME = "Servicex 1";
+    private String lifecycleUrl = null;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, publisherApp, userInfo.getUserName(), userInfo.getPassword());
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, userInfo.getUserName(), userInfo.getPassword());
+        driver.findElement(By.linkText(ASSET_NAME)).click();
+        lifecycleUrl = driver.getCurrentUrl().replace("details", "lifecycle");
     }
 
-    @Test(groups = "wso2.es", description = "")
+    @Test(groups = "wso2.es.extensions", description = "Test overriding a renderer in extensions")
     public void testESPublisherAssetOverrideRendererTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/asts/servicex/lifecycle");
+        driver.get(lifecycleUrl);
+        assertTrue(isElementPresent(By.id("assetLifecyclePartial")));
+        assertEquals(driver.findElement(By.id("assetLifecyclePartial")).getText(), "Asset Overridden Lifecycle through renderer");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        driver.get("/publisher/logout");
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         driver.quit();
     }
 

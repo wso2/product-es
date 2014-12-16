@@ -24,10 +24,13 @@ import org.openqa.selenium.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.es.ui.integration.extension.util.BaseUITestCase;
-import org.wso2.es.ui.integration.extension.util.ESUtil;
-import org.wso2.es.ui.integration.extension.util.ESWebDriver;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
 
+/**
+ * Add a new asset type under extension model
+ */
 public class ESPublisherAddedAssetTestCase extends BaseUITestCase {
 
     @BeforeClass(alwaysRun = true)
@@ -35,12 +38,12 @@ public class ESPublisherAddedAssetTestCase extends BaseUITestCase {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, publisherApp, userInfo.getUserName(), userInfo.getPassword());
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, userInfo.getUserName(), userInfo.getPassword());
     }
 
-    @Test(groups = "wso2.es", description = "")
+    @Test(groups = "wso2.es.extensions", description = "Testing adding a new asset type in extensions")
     public void testESPublisherAddedAssetTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/");
+        driver.get(baseUrl + PUBLISHER_URL);
         assertTrue(isElementPresent(By.cssSelector("button.btn.dropdown-toggle")));
         driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
         driver.findElement(By.linkText("Service")).click();
@@ -49,7 +52,7 @@ public class ESPublisherAddedAssetTestCase extends BaseUITestCase {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        driver.get("/publisher/logout");
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         driver.quit();
     }
 
