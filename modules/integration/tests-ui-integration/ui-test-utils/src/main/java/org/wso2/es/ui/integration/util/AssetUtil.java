@@ -26,11 +26,6 @@ import org.wso2.es.integration.common.utils.ESIntegrationUITest;
  */
 public class AssetUtil extends ESIntegrationUITest {
 
-    public static final String IN_REVIEW = "In-Review";
-    public static final String PUBLISHED = "Published";
-    public static final String REVIEW_COMMENT = "to review";
-    public static final String PUBLISHED_COMMENT = "published";
-
     /**
      * Add a new asset
      *
@@ -44,7 +39,7 @@ public class AssetUtil extends ESIntegrationUITest {
      */
     public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String provider,
                                    String assetName, String version, String createdTime) {
-        driver.get(createListUrl(baseUrl, assetType));
+        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText("Add")).click();
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys(provider);
@@ -68,7 +63,7 @@ public class AssetUtil extends ESIntegrationUITest {
      * @return the edit response
      */
     public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String description) {
-        driver.get(createListUrl(baseUrl, assetType));
+        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
         driver.findElement(By.name("overview_description")).clear();
@@ -86,6 +81,7 @@ public class AssetUtil extends ESIntegrationUITest {
      */
     public static void changeLCState(WebDriver driver, String toState, String comment) {
         driver.findElement(By.id(toState)).click();
+
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys(comment);
         driver.findElement(By.id("commentModalSave")).click();
@@ -93,7 +89,6 @@ public class AssetUtil extends ESIntegrationUITest {
 
     /**
      * Add ratings and reviews
-     *
      * @param driver    WebDriver instance
      * @param review    review comment
      * @param starCount rating
@@ -110,16 +105,15 @@ public class AssetUtil extends ESIntegrationUITest {
 
     /**
      * Publish a new asset to store
-     *
      * @param driver    WebDriver instance
      * @param assetName asset name
      */
     public static void publishAssetToStore(WebDriver driver, String assetName) {
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Life Cycle")).click();
-        changeLCState(driver, IN_REVIEW, REVIEW_COMMENT);
+        changeLCState(driver, "In-Review", "to review");
         driver.get(driver.getCurrentUrl());
-        changeLCState(driver, PUBLISHED, PUBLISHED_COMMENT);
+        changeLCState(driver, "Published", "published");
     }
 
     /**
@@ -138,16 +132,5 @@ public class AssetUtil extends ESIntegrationUITest {
             alert.dismiss();
         }
         return alertText;
-    }
-
-    /**
-     * Create the list url of an asset type in store
-     *
-     * @param baseUrl   base url of server
-     * @param assetType asset type
-     * @return list url
-     */
-    private static String createListUrl(String baseUrl, String assetType) {
-        return baseUrl + "/publisher/asts/" + assetType + "/list";
     }
 }

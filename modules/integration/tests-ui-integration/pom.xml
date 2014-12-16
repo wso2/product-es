@@ -27,6 +27,7 @@
     <modules>
         <module>tests-ui-extension</module>
         <module>tests-ui</module>
+        <module>ui-test-utils</module>
     </modules>
 
 </project>

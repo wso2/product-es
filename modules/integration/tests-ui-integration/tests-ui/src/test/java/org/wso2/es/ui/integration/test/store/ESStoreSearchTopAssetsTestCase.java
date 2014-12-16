@@ -16,14 +16,13 @@
 
 package org.wso2.es.ui.integration.test.store;
 
-import static org.testng.Assert.*;
-
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+import static org.testng.Assert.assertEquals;
 
 public class ESStoreSearchTopAssetsTestCase extends BaseUITestCase {
 
@@ -39,7 +38,7 @@ public class ESStoreSearchTopAssetsTestCase extends BaseUITestCase {
         super.init();
         driver = new ESWebDriver();
         baseUrl = getWebAppURL();
-        driver.get(baseUrl + "/" + storeApp);
+        driver.get(baseUrl + "/" + STORE_APP);
     }
 
     @Test(groups = "wso2.es.store.anon", description = "Test Recent Gadgets")

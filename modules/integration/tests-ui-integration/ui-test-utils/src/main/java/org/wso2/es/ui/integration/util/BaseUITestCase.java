@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.wso2.es.ui.integration.util;
 
 import org.apache.commons.logging.Log;
@@ -54,6 +53,8 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
     protected static final String STORE_GADGET_LIST_PAGE = "/store/asts/gadget/list";
     protected static final String STORE_TOP_ASSETS_PAGE = "/store/pages/top-assets";
     protected static final String GADGET_REGISTRY_BASE_PATH = "/_system/governance/gadgets/";
+
+    protected static final int MAX_DRIVER_WAIT_TIME_SEC = 30;
 
     protected String currentUserName;
     protected String currentUserPwd;
