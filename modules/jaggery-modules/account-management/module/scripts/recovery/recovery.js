@@ -33,7 +33,7 @@ var recovery = {};
                      return userInformationRecoveryService.getCaptcha();
               } catch (e) {
                      log.error("Retrieving captcha failed", e);
-                     return null;
+                     throw(e);
               }
        };
 
@@ -48,7 +48,7 @@ var recovery = {};
                      return userInformationRecoveryService.verifyUser(username, captcha);
               } catch (e) {
                      log.error("User verification failed for user:" + username, e);
-                     return null;
+                     throw(e);
               }
        };
 
@@ -64,7 +64,7 @@ var recovery = {};
                      return userInformationRecoveryService.sendRecoveryNotification(username, key, notificationType);
               } catch (e) {
                      log.error("Recovery notification sending failed for user:" + username, e);
-                     return null;
+                     throw(e);
               }
        };
 
@@ -80,7 +80,7 @@ var recovery = {};
                      return userInformationRecoveryService.verifyConfirmationCode(username, code, captcha);
               } catch (e) {
                      log.error("Code verification failed for user:" + username + " code:" + code, e);
-                     return null;
+                     throw(e);
               }
        };
 
@@ -96,7 +96,7 @@ var recovery = {};
                      return userInformationRecoveryService.updatePassword(username, confirmationCode, newPassword);
               } catch (e) {
                      log.error("Password updating failed for user:" + username + " password:" + newPassword, e);
-                     return null;
+                     throw(e);
               }
        };
 
@@ -170,7 +170,7 @@ var recovery = {};
                      return true;
               } catch (e) {
                      log.error("Failed to set challenge question set for ES", e);
-                     return false;
+                     throw(e);
               }
        };
 
@@ -183,7 +183,7 @@ var recovery = {};
                      return userIdentityManagementAdminService.getAllChallengeQuestions();
               } catch (e) {
                      log.error('Failed to retreive challenge questions', e);
-                     return null;
+                     throw(e);
               }
        };
 
@@ -198,7 +198,7 @@ var recovery = {};
                      return userInformationRecoveryService.getUserChallengeQuestionIds(username, confirmation);
               } catch (e) {
                      log.error('Failed to retreive user challenge question id for user: ' + username, e);
-                     return null;
+                     throw(e);
               }
        };
 
@@ -214,7 +214,7 @@ var recovery = {};
                      return userInformationRecoveryService.getUserChallengeQuestion(username, confirmation, questionId);
               } catch (e) {
                      log.error('Failed to retrive user challenge question: ' + questionId + ' for user: ' + username + ', questionId:' + questionId + ', confirmation key:' + confirmation, e);
-                     return null;
+                     throw(e);
               }
        }
 
@@ -231,7 +231,7 @@ var recovery = {};
                      return userInformationRecoveryService.verifyUserChallengeAnswer(username, confirmation, questionId, answer);
               } catch (e) {
                      log.error('Challenge verification failed for user: ' + username + 'for question:' + questionId + ', answer:' + answer + ', confirmation key:' + confirmation, e);
-                     return null;
+                     throw(e);
               }
        };
 })(recovery);

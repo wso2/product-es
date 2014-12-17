@@ -28,6 +28,8 @@ var action = request.getParameter('action'),
     captchaPath = request.getParameter('captcha-path'),
     captchaAnswer = request.getParameter('captcha-answer'),
     recoveryOption = request.getParameter('recovery-option'),
+    responseProcessor = require('utils').response,
+    constants = require("rxt").constants,
     log = new Log('user_api'),
     res = {};
 
@@ -50,10 +52,20 @@ var errorProcessor = require('/modules/error_api.js');
         if (!username || !captchaAnswer) {
             res.error = 'true';
             res.msg = 'Username or captcha answer is invalid';
-            print(res);
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                    res);
         } else {
             var captchaBean = recoveryModule.createCaptchaInfoBean(captchaPath, captchaKey, captchaAnswer);
-            var verificationBean = recoveryModule.verifyUser(username, captchaBean);
+            try {
+                var verificationBean = recoveryModule.verifyUser(username, captchaBean);
+            } catch (e) {
+                var errorMsg = 'Failed to verify user';
+                log.error(errorMsg, e);
+                res.error = 'true';
+                res.msg = errorMsg;
+                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                        res);
+            }
             if(verificationBean){
                 var key = verificationBean.getKey();
                 var isVerified = verificationBean.isVerified();
@@ -64,12 +76,13 @@ var errorProcessor = require('/modules/error_api.js');
                     var errorMsg = errorProcessor.getErrorMessage(error);
                     res.error = 'true';
                     res.msg = errorMsg;
-                    print(res);
+                    response = responseProcessor.buildErrorResponse(response,
+                            constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
                 }
             }else{
                 res.error = 'true';
                 res.msg = 'Recovery failed';
-                print(res);
+                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
             }
         }
     };
@@ -82,30 +95,42 @@ var errorProcessor = require('/modules/error_api.js');
      * @return success status
      */
     var recover = function (username, confirmation) {
-        var result;
+        var result = null;
         if (recoveryOption == 'email') {
-            result = recoveryModule.sendRecoveryNotification(username, confirmation, EMAIL_RECOVERY);
+            try {
+                result = recoveryModule.sendRecoveryNotification(username, confirmation, EMAIL_RECOVERY);
+            } catch (e) {
+                var errorMsg = 'Failed to send recovery notification';
+                log.error(errorMsg, e);
+                res.error = 'true';
+                res.msg = errorMsg;
+                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                        res);
+            }
             if (result) {
                 session.put('username', username);
                 res.error = 'false';
                 res.msg = 'User successfully verified';
+                response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
             } else {
                 res.error = 'true';
                 res.msg = 'Recovery failed';
+                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                        res);
             }
         } else if (recoveryOption == 'challenge') {
             res.error = 'false';
             res.msg = 'User successfully verified';
             session.put('confirmation', confirmation);
             session.put('username', username);
+            response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
         }
-        print(res);
     };
 
     if(action == 'verifyUser') {
         verifyUser(username, captchaPath, captchaKey, captchaAnswer);
     } else {
-        log.error('Endpoint does not exist');
+        response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.NOT_FOUND, null);
     }
 }());
 

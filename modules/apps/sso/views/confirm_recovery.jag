@@ -115,12 +115,9 @@ if(recoveryOption === 'challenge'){
                     </div>
                 </div>
             </div>
-
-
         </div>
 
         <div class="row row-footer span8 offset2 sso-footer">
-
             <div class="footer row-fluid">
                 <div class="span12">
                     <div class="row-fluid">
@@ -147,12 +144,8 @@ if(recoveryOption === 'challenge'){
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
-
-
 </div>
 <!-- /container -->
 
@@ -177,8 +170,8 @@ if(recoveryOption === 'challenge'){
 
             // user verification using user endpoint
             $.post('user', formData, function (data) {
-                var dataJson = JSON.parse(data);
-                if (dataJson.error == 'false') {
+                var responseData = data.data;
+                if (responseData.error == 'false') {
                     $('#resetFormError').hide();
                     if ($('#recovery-option').val() == 'email') {
                         window.location = 'recover';
@@ -188,7 +181,7 @@ if(recoveryOption === 'challenge'){
                 } else {
                     var resetFormError = $('#resetFormError');
                     resetFormError.show();
-                    resetFormError.text(dataJson.msg);
+                    resetFormError.text(responseData.msg);
                     $('#username').val('');
                     // Regenerating a captcha if validation fails
                     getNewCaptcha();
@@ -201,11 +194,11 @@ if(recoveryOption === 'challenge'){
             $('#action').val('getCaptcha');
             var formData = $("#resetForm").serialize();
             $.post('captcha', formData, function (data) {
-                var dataJson = JSON.parse(data);
-                $('#captcha-div').html('<img src="../' + JSON.parse(data).captchaPath + '" class="captcha-img">');
+                var responseData = data.data;
+                $('#captcha-div').html('<img src="../' + responseData.captchaPath + '" class="captcha-img">');
                 $('#captcha-answer').val('');
-                $('#captcha-path').val(JSON.parse(data).captchaPath);
-                $('#captcha-key').val(JSON.parse(data).captchaKey);
+                $('#captcha-path').val(responseData.captchaPath);
+                $('#captcha-key').val(responseData.captchaKey);
                 $('#action').val('verifyCode');
             });
         }

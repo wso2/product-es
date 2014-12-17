@@ -166,16 +166,16 @@ session.put('username', username);
 
             // validate captcha using captcha endpoint
             $.post('captcha', formData, function (data) {
-                var dataJson = JSON.parse(data);
-                if (dataJson.error == 'false') {
+                var responseData = data.data;
+                if (responseData.error == 'false') {
                     $('#verificationFormError').hide();
-                    var result = dataJson;
+                    var result = responseData;
                     window.location = 'update_password';
 
                 } else {
                     var verificationFormError = $('#verificationFormError');
                     verificationFormError.show();
-                    verificationFormError.text(dataJson.msg);
+                    verificationFormError.text(responseData.msg);
                     //Regenerate captcha if validation fails
                     getNewCaptcha();
                 }
@@ -187,11 +187,11 @@ session.put('username', username);
             $('#action').val('getCaptcha');
             var formData = $('#verificationForm').serialize();
             $.post('captcha', formData, function (data) {
-                var dataJson = JSON.parse(data);
-                $('#captcha-div').html('<img src="../' + dataJson.captchaPath + '" class="captcha-img">');
+                var responseData = data.data;
+                $('#captcha-div').html('<img src="../' + responseData.captchaPath + '" class="captcha-img">');
                 $('#captcha-answer').val('');
-                $('#captcha-path').val(dataJson.captchaPath);
-                $('#captcha-key').val(dataJson.captchaKey);
+                $('#captcha-path').val(responseData.captchaPath);
+                $('#captcha-key').val(responseData.captchaKey);
                 $('#action').val('verifyCode');
             });
         }
@@ -205,7 +205,6 @@ session.put('username', username);
                 validateCode();
             }
         });
-
     });
 </script>
 </body>

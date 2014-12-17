@@ -29,9 +29,14 @@ var captchaVerificationKey = session.get('confirmation'),
     error = null;
 
 var backendMessage = 'Could not retrieve challenges for user:';
-var userMessage = 'Error occurred. Recovery failed';
 //get the question ids related to the user
-var idDTO = recoveryModule.getChallengeQuestionIds(userName, captchaVerificationKey);
+var idDTO = null;
+try {
+    idDTO = recoveryModule.getChallengeQuestionIds(userName, captchaVerificationKey);
+} catch (e) {
+    log.error(backendMessage, e);
+    response.sendRedirect('recovery_failed');
+}
 
 if (idDTO) {
     var questionIDKey = idDTO.getKey();
@@ -40,23 +45,27 @@ if (idDTO) {
         session.put('question-id', questionId);
 
         //get the question with the given id
-        var questionDTO = recoveryModule.getChallengeQuestionOfUser(userName, questionIDKey, questionId);
+        var questionDTO = null;
+        try {
+            questionDTO = recoveryModule.getChallengeQuestionOfUser(userName, questionIDKey, questionId);
+        } catch (e) {
+            log.error(backendMessage, e);
+            response.sendRedirect('recovery_failed');
+        }
         if (questionDTO) {
             var question = questionDTO.getQuestion();
             var questionKey = questionDTO.getKey();
             session.put('confirmation', questionKey);
         } else {
-            error = userMessage;
             log.error(backendMessage + userName);
+            response.sendRedirect('recovery_failed');
         }
     } else {
         var errorProcessor = require('/modules/error_api.js');
         error = errorProcessor.getErrorMessage(idDTO.getError());
         log.error(backendMessage + userName);
+        response.sendRedirect('recovery_failed');
     }
-} else {
-    error = userMessage;
-    log.error(backendMessage + userName);
 }
 
 %>
@@ -106,14 +115,8 @@ if (idDTO) {
                 <div class="form-forgot-password row-fluid">
                     <div class="span12">
                         <div class="row-fluid">
-                                
-                                     <form id="challengeForm">
+                                <form id="challengeForm">
                                     <h2 class="form-forgot-password-heading">Challenges</h2>
-                                    <% if(error){ %>
-                                        <div class="alert alert-error"><%=error%></div>
-                                    <%
-
-                                    } else {%>
                                     <p>Answer the following question to verify that you own your account</p>
                                     <div id="challengeFormError" class="alert alert-error" style="display:none"></div>
                                     <div class="control">
@@ -121,8 +124,6 @@ if (idDTO) {
                                         <input id="answer" name="answer" type="text" class="input-block-level required">
                                     </div>
                                     <input id="action" name="action" type="hidden" value="verifyChallenge">
-                                    <%
-                                    } %>
                                     <button id="resetPassword"  class="btn btn-large"
                                             type="button">Continue</button>
                                 </form>
@@ -137,37 +138,33 @@ if (idDTO) {
 
     		<div class="row row-footer span8 offset2 sso-footer">
 
-						<div class="footer row-fluid">
-							<div class="span12">
-								<div class="row-fluid">
-									<div class="span6">
-										<span> &copy; 2013 WSO2 Inc. All Rights Reserved. </span>
-									</div>
-									<div class="span6 pull-right">
-										<ul>
-											<li>
-												<a href="/publisher"><i class="icon-check-sign"></i> Publisher</a>
-											</li>
-											<li>
-												<a href="/store"><i class="icon-th-large"></i> Store</a>
-											</li>
-											<li>
-												<a href="http://docs.wso2.org/display/ES100/WSO2+Enterprise+Store" target="_blank"><i class="icon-book"></i> Docs</a>
-											</li>
-											<li>
-												<a target="_blank" href="http://www.wso2.com" id="logo-wso2"></a>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-				</div>
+                <div class="footer row-fluid">
+                    <div class="span12">
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <span> &copy; 2013 WSO2 Inc. All Rights Reserved. </span>
+                            </div>
+                            <div class="span6 pull-right">
+                                <ul>
+                                    <li>
+                                        <a href="/publisher"><i class="icon-check-sign"></i> Publisher</a>
+                                    </li>
+                                    <li>
+                                        <a href="/store"><i class="icon-th-large"></i> Store</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://docs.wso2.org/display/ES100/WSO2+Enterprise+Store" target="_blank"><i class="icon-book"></i> Docs</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="http://www.wso2.com" id="logo-wso2"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
     	</div>
-
-
-
-
     </div> <!-- /container -->
 
     <!-- Le javascript
@@ -191,15 +188,12 @@ if (idDTO) {
 
                 // verify challenge answer using challenge endpoint
                 $.post('challenge', formData, function (data) {
-                    var dataJson = JSON.parse(data);
-                    if (dataJson.error == 'false') {
+                    var responseData = data.data;
+                    if (responseData.error == 'false') {
                         $('#challengeFormError').hide();
                         window.location = 'update_password';
                     } else {
                         window.location = 'recovery_failed';
-                        //var challengeFormError = $('#challengeFormError');
-                        //challengeFormError.show();
-                        //challengeFormError.text(dataJson.msg);
                     }
                 });
             }

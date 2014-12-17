@@ -28,6 +28,8 @@ var action = request.getParameter('action'),
     captchaKey = request.getParameter('captcha-key'),
     captchaPath = request.getParameter('captcha-path'),
     captchaAnswer = request.getParameter('captcha-answer'),
+    responseProcessor = require('utils').response,
+    constants = require("rxt").constants,
     log = new Log('captcha_api'),
     res = {};
 
@@ -42,7 +44,17 @@ var errorProcessor = require('/modules/error_api.js');
      * @return captcha key and path
      */
     var getCaptcha = function () {
-        var captchaBean = recoveryModule.getCaptcha();
+        var captchaBean = null;
+        try{
+            captchaBean = recoveryModule.getCaptcha();
+        }catch (e) {
+            var errorMsg = 'Failed to retrieve captcha';
+            log.error(errorMsg, e);
+            res.error = 'true';
+            res.msg = errorMsg;
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                    res);
+        }
         if (captchaBean) {
             var captchaPath = captchaBean.getImagePath();
             var captchaKey = captchaBean.getSecretKey();
@@ -50,11 +62,12 @@ var errorProcessor = require('/modules/error_api.js');
             res.msg = 'Captcha generated';
             res.captchaPath = captchaPath;
             res.captchaKey = captchaKey;
-            print(res);
+            response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
         } else {
             res.error = 'true';
             res.msg = 'Captcha generation failed';
-            print(res);
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                    res);
         }
     };
 
@@ -72,28 +85,41 @@ var errorProcessor = require('/modules/error_api.js');
         if (!userName || !captchaAnswer || !confirmationCode) {
             res.error = 'true';
             res.msg = 'Recovery failed. Information is not provided';
-            print(res);
+            response = responseProcessor.buildErrorResponse(response,
+                    constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
         } else {
             var captchaBean = recoveryModule.createCaptchaInfoBean(captchaPath, captchaKey, captchaAnswer);
-            var verificationBean = recoveryModule.verifyConfirmationCode(userName, confirmationCode, captchaBean);
+            var verificationBean = null;
+            try {
+                verificationBean = recoveryModule.verifyConfirmationCode(userName, confirmationCode, captchaBean);
+            } catch (e) {
+                var errorText = 'Failed confirmation code verification';
+                log.error(errorText, e);
+                res.error = 'true';
+                res.msg = errorText;
+                response = responseProcessor.buildErrorResponse(response,
+                        constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
+            }
             if (verificationBean) {
                 var key = verificationBean.getKey();
                 if (key) {
                     res.error = 'false';
                     res.msg = 'Verification successful';
                     session.put('confirmation', key);
-                    print(res);
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
                 } else {
                     var error = verificationBean.getError();
                     var errorMsg = errorProcessor.getErrorMessage(error);
                     res.error = 'true';
                     res.msg = errorMsg;
-                    print(res);
+                    response = responseProcessor.buildErrorResponse(response,
+                            constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
                 }
             } else {
                 res.error = 'true';
                 res.msg = 'Recovery failed';
-                print(res);
+                response = responseProcessor.buildErrorResponse(response,
+                        constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
             }
         }
     };
@@ -103,7 +129,7 @@ var errorProcessor = require('/modules/error_api.js');
     } else if (action == 'getCaptcha') {
         getCaptcha();
     } else {
-        log.error('Endpoint does not exist');
+        response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.NOT_FOUND, null);
     }
 
 }());

@@ -27,6 +27,8 @@ var action = request.getParameter('action'),
     confirmationKey = session.get('confirmation'),
     questionId = session.get('question-id'),
     answer = request.getParameter('answer'),
+    responseProcessor = require('utils').response,
+    constants = require("rxt").constants,
     log = new Log('challenge_api'),
     res = {};
 
@@ -45,30 +47,42 @@ var errorProcessor = require('/modules/error_api.js');
      * @return success status
      */
     var verifyChallenge = function (username, confirmation, questionId, answer) {
-        var verificationBean = recoveryModule.verifyChallenge(username, confirmation, questionId, answer);
+        var verificationBean = null;
+        try {
+            verificationBean = recoveryModule.verifyChallenge(username, confirmation, questionId, answer);
+        } catch (e) {
+            var errorMsg = 'Failed to verify challenge';
+            log.error(errorMsg, e);
+            res.error = 'true';
+            res.msg = errorMsg;
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                    res);
+        }
         if (verificationBean) {
             if (verificationBean.isVerified()) {
                 session.put('confirmation', verificationBean.getKey());
                 res.error = 'false';
                 res.msg = 'Challenge answer verified';
-                print(res);
+                response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
             } else {
                 res.error = 'true';
                 var error = verificationBean.getError();
                 res.msg = errorProcessor.getErrorMessage(error);
-                print(res);
+                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                        res);
             }
         } else {
             res.error = 'true';
             res.msg = 'Recovery failed';
-            print(res);
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
+                    res);
         }
     };
 
     if (action == 'verifyChallenge') {
         verifyChallenge(username, confirmationKey, questionId, answer);
     } else {
-        log.error('Endpoint does not exist');
+        response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.NOT_FOUND, null);
     }
 
 }());
