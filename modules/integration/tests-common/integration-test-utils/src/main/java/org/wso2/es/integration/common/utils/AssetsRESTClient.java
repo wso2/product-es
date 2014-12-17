@@ -142,7 +142,6 @@ public class AssetsRESTClient extends ESIntegrationTest {
             urlConn.connect();
             //GET response data
             input = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-            parser = new JsonParser();
             JsonElement elem = parser.parse(input);
 
             // parse response to a JasonArray

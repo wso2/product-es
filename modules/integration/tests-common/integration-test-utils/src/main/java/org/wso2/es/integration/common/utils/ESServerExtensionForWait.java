@@ -27,6 +27,7 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
 
     private static final Log LOG = LogFactory.getLog(ESServerExtensionForWait.class);
     private static final long WAIT_TIME = 3000;
+    private static final int MAX_ATTEMPT_COUNT = 10;
 
     /**
      * Initialize
@@ -66,7 +67,7 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
         AssetsRESTClient client = new AssetsRESTClient();
         int count = 0;
         Thread.sleep(WAIT_TIME);
-        while (count < 10 && !client.isIndexCompleted()) {
+        while (count < MAX_ATTEMPT_COUNT && !client.isIndexCompleted()) {
             count++;
             Thread.sleep(WAIT_TIME);
         }
