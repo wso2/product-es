@@ -77,7 +77,9 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
             driver.findElement(by);
             return true;
         } catch (NoSuchElementException e) {
-            LOG.error("Requested element is not present", e);
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Requested element is not present", e);
+            }
             return false;
         }
     }
@@ -92,7 +94,9 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
             driver.switchTo().alert();
             return true;
         } catch (NoAlertPresentException e) {
-            LOG.error("No alert found", e);
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("No alert found", e);
+            }
             return false;
         }
     }
@@ -117,20 +121,5 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
         }
     }
 
-    /**
-     * This method helps to use alerts even if the earlier asserts in the same test case fails
-     *
-     * @param verificationErrors error string
-     * @return new verificationErrors buffer
-     */
-    protected StringBuilder failOnError(StringBuilder verificationErrors) {
-        String verificationErrorString = verificationErrors.toString();
-        StringBuilder errorBuffer = verificationErrors;
-        if (!"".equals(verificationErrorString)) {
-            errorBuffer = new StringBuilder();
-            fail(verificationErrorString);
-        }
-        return errorBuffer;
-    }
 
 }

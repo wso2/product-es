@@ -22,9 +22,8 @@ import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -32,26 +31,32 @@ import java.net.URLEncoder;
 
 public class AssetsRESTClient extends ESIntegrationTest {
     private static final String BASE_URL = "https://localhost:9443";
-    private static final String PUBLISHER_APIS_AUTHENTICATE = "/publisher/apis/authenticate?";
+    private static final String PUBLISHER_APIS_AUTHENTICATE_ENDPOINT = "/publisher/apis/authenticate?";
     private static final String PUBLISHER_APIS_LIST_GADGETS_ENDPOINT = "/publisher/apis/assets?type=gadget&count=12";
     private static final String PUBLISHER_APIS_LOGOUT_ENDPOINT = "/publisher/apis/logout";
+
+    private static final String LOGOUT_ENDPOINT = BASE_URL + PUBLISHER_APIS_LOGOUT_ENDPOINT;
+    private static final String LIST_ASSETS_ENDPOINT = BASE_URL + PUBLISHER_APIS_LIST_GADGETS_ENDPOINT;
+    private static final String AUTHENTICATE_ENDPOINT = BASE_URL + PUBLISHER_APIS_AUTHENTICATE_ENDPOINT;
 
     private static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String COOKIE = "Cookie";
+
     private static final String JSESSIONID = "JSESSIONID";
 
+    private static final String UTF_8 = "UTF-8";
     private static final String DATA = "data";
+
     private static final String SESSIONID = "sessionId";
-
     private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
 
+    private static final String PASSWORD = "password";
     private static final String USERNAME_VAL = "admin";
+
     private static final String PASSWORD_VAl = "admin";
 
     private static final int DEFAULT_PAGE_SIZE = 12;
-
     private JsonParser parser = new JsonParser();
     private static final Log LOG = LogFactory.getLog(AssetsRESTClient.class);
 
@@ -60,14 +65,14 @@ public class AssetsRESTClient extends ESIntegrationTest {
      *
      * @return SessionId for the authenticated user
      */
-    private String login() {
+    private String login() throws IOException {
         String sessionID = null;
-        DataInputStream input = null;
-        String authenticateEndpoint = BASE_URL + PUBLISHER_APIS_AUTHENTICATE;
+        Reader input = null;
+        BufferedWriter writer = null;
         //construct full authenticate endpoint
         try {
             //authenticate endpoint URL
-            URL endpointUrl = new URL(authenticateEndpoint);
+            URL endpointUrl = new URL(AUTHENTICATE_ENDPOINT);
             URLConnection urlConn = endpointUrl.openConnection();
             urlConn.setDoInput(true);
             urlConn.setDoOutput(true);
@@ -75,32 +80,42 @@ public class AssetsRESTClient extends ESIntegrationTest {
             // Specify the content type.
             urlConn.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE);
             // Send POST output.
-            DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
-            String content = USERNAME + "=" + URLEncoder.encode(USERNAME_VAL) + "&" + PASSWORD + "=" +
-                    URLEncoder.encode(PASSWORD_VAl);
-            printout.writeBytes(content);
-            printout.flush();
-            printout.close();
-            // Get response data.
-            input = new DataInputStream(urlConn.getInputStream());
-            String str;
-            StringBuilder response = new StringBuilder();
-            while ((str = input.readLine()) != null) {
-                response.append(str);
+            writer = new BufferedWriter(new OutputStreamWriter(urlConn.getOutputStream()));
+            String content = USERNAME + "=" + URLEncoder.encode(USERNAME_VAL, UTF_8) + "&" + PASSWORD + "=" +
+                    URLEncoder.encode(PASSWORD_VAl, UTF_8);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Send Login Information : " + content);
             }
-            JsonElement elem = parser.parse(response.toString());
+            writer.write(content);
+            writer.flush();
+
+            // Get response data.
+            input = new InputStreamReader(urlConn.getInputStream());
+            JsonElement elem = parser.parse(input);
             sessionID = elem.getAsJsonObject().getAsJsonObject(DATA).get(SESSIONID).toString();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Received SessionID : " + sessionID);
+            }
 
         } catch (MalformedURLException e) {
-            LOG.error(getLoginErrorMassage(authenticateEndpoint), e);
+            LOG.error(getLoginErrorMassage(), e);
+            //ignoring, URL is a constant, will not be malformed
         } catch (IOException e) {
-            LOG.error(getLoginErrorMassage(authenticateEndpoint), e);
+            LOG.error(getLoginErrorMassage(), e);
+            throw e;
         } finally {
             if (input != null) {
                 try {
-                    input.close();
+                    input.close();// will close the URL connection as well
                 } catch (IOException e) {
-                    LOG.error(e.getMessage(), e);
+                    LOG.error("Failed to close input stream ", e);
+                }
+            }
+            if (writer != null) {
+                try {
+                    writer.close();// will close the URL connection as well
+                } catch (IOException e) {
+                    LOG.error("Failed to close output stream ", e);
                 }
             }
         }
@@ -113,42 +128,37 @@ public class AssetsRESTClient extends ESIntegrationTest {
      * @param sessionId String of valid session ID
      * @return JSON ARRAY of gadgets
      */
-    private JsonArray getData(String sessionId) {
-        DataInputStream input = null;
-        String listAssetsEndpoint = BASE_URL + PUBLISHER_APIS_LIST_GADGETS_ENDPOINT;
+    private JsonArray getAssets(String sessionId) throws IOException {
+        BufferedReader input = null;
         //endpoint which retrieves list of gadgets
         try {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("###### Get Assets via REST endpoint ######");
+                LOG.debug("Get Assets via REST endpoint using sessionID: " + sessionId);
             }
-            URL endpointUrl = new URL(listAssetsEndpoint);
+            URL endpointUrl = new URL(LIST_ASSETS_ENDPOINT);
             URLConnection urlConn = endpointUrl.openConnection();
             urlConn.setRequestProperty(COOKIE, JSESSIONID + "=" + sessionId + ";");
             // SessionId Cookie
             urlConn.connect();
             //GET response data
-            input = new DataInputStream(urlConn.getInputStream());
-            StringBuilder response = new StringBuilder();
-            String str;
-            while ((str = input.readLine()) != null) {
-                response.append(str);
-            }
-            input.close();
+            input = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
             parser = new JsonParser();
-            JsonElement elem = parser.parse(response.toString());
+            JsonElement elem = parser.parse(input);
+
             // parse response to a JasonArray
             return elem.getAsJsonObject().getAsJsonArray(DATA);
-
         } catch (MalformedURLException e) {
-            LOG.error(getAssetRetrievingErrorMassage(listAssetsEndpoint), e);
+            LOG.error(getAssetRetrievingErrorMassage(), e);
+            //ignoring, URL is a constant, will not be malformed
         } catch (IOException e) {
-            LOG.error(getAssetRetrievingErrorMassage(listAssetsEndpoint), e);
+            LOG.error(getAssetRetrievingErrorMassage(), e);
+            throw e;
         } finally {
             if (input != null) {
                 try {
-                    input.close();
+                    input.close();// will close the URL connection as well
                 } catch (IOException e) {
-                    LOG.error(e.getMessage(), e);
+                    LOG.error("Failed to close the connection", e);
                 }
             }
         }
@@ -160,32 +170,35 @@ public class AssetsRESTClient extends ESIntegrationTest {
      *
      * @param sessionId String of valid session ID
      */
-    private void logOut(String sessionId) {
-        DataOutputStream printout = null;
-        String logoutEndpoint = BASE_URL + PUBLISHER_APIS_LOGOUT_ENDPOINT;
+    private void logOut(String sessionId) throws IOException {
+        URLConnection urlConn = null;
         try {
             //authenticate endpoint
-            URL endpointUrl = new URL(logoutEndpoint);
-            URLConnection urlConn = endpointUrl.openConnection();
+            URL endpointUrl = new URL(LOGOUT_ENDPOINT);
+            urlConn = endpointUrl.openConnection();
             urlConn.setDoInput(true);
             urlConn.setDoOutput(true);
             urlConn.setUseCaches(false);
-            // Specify the content type.
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Invalidating session: " + sessionId);
+            }
             urlConn.setRequestProperty(COOKIE, JSESSIONID + "=" + sessionId + ";");
             //send SessionId Cookie
             //send POST output.
-            printout = new DataOutputStream(urlConn.getOutputStream());
-            printout.flush();
+            urlConn.getOutputStream().flush();
         } catch (MalformedURLException e) {
-            LOG.error(getLogoutErrorMassage(logoutEndpoint), e);
+            LOG.error(getLogoutErrorMassage(), e);
+            //ignoring, URL is a constant, will not be malformed
         } catch (IOException e) {
-            LOG.error(getLogoutErrorMassage(logoutEndpoint), e);
+            LOG.error(getLogoutErrorMassage(), e);
+            throw e;
         } finally {
-            if (printout != null) {
+            if (urlConn != null) {
                 try {
-                    printout.close();
+                    urlConn.getOutputStream().close();//will close the connection as well
                 } catch (IOException e) {
-                    LOG.error(e.getMessage(), e);
+                    LOG.error("Failed to close OutPutStream", e);
                 }
             }
         }
@@ -196,60 +209,48 @@ public class AssetsRESTClient extends ESIntegrationTest {
      *
      * @return true if completed false otherwise
      */
-    public boolean isIndexCompleted() {
-        String sessionId = null;
-        JsonArray assets;
-        try {
-            sessionId = login();
-            assets = getData(sessionId);
+    public boolean isIndexCompleted() throws IOException {
+        boolean completed = false;
+        String sessionId = login();
+
+        if (sessionId != null) {
+            JsonArray assets = getAssets(sessionId);
             if (assets.size() == DEFAULT_PAGE_SIZE) {
-                LOG.info("###### Completed Indexing ######");
-                return true;
+                LOG.info("Completed Indexing");
+                completed = true;
             } else {
-                LOG.info("###### Indexing is not yet completed ######");
-                return false;
+                LOG.info("Indexing is not completed yet");
+                completed = false;
             }
-        } catch (Exception e) {
-            //ignoring since code will re-attempt
-        } finally {
-            if (sessionId != null) {
-                try {
-                    logOut(sessionId);
-                } catch (Exception e) {
-                    //ignoring since code will re-attempt
-                }
-            }
+            logOut(sessionId);
         }
-        return false;
+        return completed;
     }
 
     /**
      * Error massage when asset retrieval fails
      *
-     * @param endpoint is the endpoint URL exposed for Asset Listing
      * @return Error massage as a String
      */
-    private String getAssetRetrievingErrorMassage(String endpoint) {
-        return "Error while retrieving gadgets via  " + endpoint;
+    private String getAssetRetrievingErrorMassage() {
+        return "Error while retrieving gadgets via  " + AUTHENTICATE_ENDPOINT;
     }
 
     /**
      * Error massage when login fails
      *
-     * @param endpoint is the endpoint URL exposed for authenticating to access publisher apis
      * @return Error massage as a String
      */
-    private String getLoginErrorMassage(String endpoint) {
-        return "Error while authenticating to publisher apis via " + endpoint;
+    private String getLoginErrorMassage() {
+        return "Error while authenticating to publisher apis via " + LIST_ASSETS_ENDPOINT;
     }
 
     /**
      * Error massage when logout fails
      *
-     * @param endpoint is the endpoint URL exposed for logout from apis
      * @return Error massage as a String
      */
-    private String getLogoutErrorMassage(String endpoint) {
-        return "Error while log-out via " + endpoint;
+    private String getLogoutErrorMassage() {
+        return "Error while log-out via " + LOGOUT_ENDPOINT;
     }
 }

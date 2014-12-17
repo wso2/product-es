@@ -16,20 +16,13 @@
 
 package org.wso2.es.ui.integration.util;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.events.AbstractWebDriverEventListener;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import javax.xml.xpath.XPathExpressionException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
 
@@ -38,64 +31,19 @@ import java.util.Set;
  * - Slow down the web driver by overriding findElementBy method
  * - Introduce findElementByPoll to refresh page until an element if present for a given number
  * of times
- * <p/>
- * This class uses Proxy pattern.
+ * This class uses decorator pattern.
  */
 
 public class ESWebDriver implements WebDriver {
-    private static final Logger LOG = Logger.getLogger(ESWebDriver.class);
-    private EventFiringWebDriver driver;
+    private WebDriver driver = null;
     private static final int MAX_WAIT_TIME = 30;
     private static final long POLL_SLEEP_INTERVAL = 2000;
-    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private static final String REPLACE_NON_ALPHANUMERIC_REGEX = "[^A-Za-z0-9]";
-    private static final String SCREEN_SHOT_EXTENSION = ".png";
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    private static final String SUREFIRE_REPORTS = "surefire-reports";
-    private static final String SCREEN_SHOT = "screen-shot";
 
     /**
-     * Throwing an exception in the constructor since EventFiringWebDriver constructor throws exception
+     * Throwing an exception in the constructor since BrowserManager.getWebDriver() throws exception
      */
-    public ESWebDriver() throws Exception {
-        driver = new EventFiringWebDriver(BrowserManager.getWebDriver());
-
-        /**
-         * This event-listener is to listen exceptions throws from the web driver and take screenshots of the
-         * webdriver-instance
-         */
-        WebDriverEventListener errorListener = new AbstractWebDriverEventListener() {
-            @Override
-            public void onException(Throwable throwable, WebDriver driver) {
-                String timeStamp = new SimpleDateFormat(DATE_TIME_FORMAT).format(Calendar.getInstance().getTime());
-                //current time in order to construct a unique name for the screenshot
-                String msg = "";
-                if (throwable != null) {
-                    msg = throwable.getCause().getMessage().split(LINE_SEPARATOR)[0].replaceAll(REPLACE_NON_ALPHANUMERIC_REGEX, "_");
-                    /*get the fist-line of the throwable message and replace non-alphanumeric characters for the screenshot name */
-                }
-                String snapshotName = timeStamp + " : " + msg;
-                captureScreenShot(snapshotName);
-            }
-        };
-        driver.register(errorListener);
-    }
-
-    /**
-     * This method takes a screen-shot of current web-driver instance
-     * @param snapShotName String indicating name of the screen-shot
-     */
-    public void captureScreenShot(String snapShotName) {
-        try {
-            String filename = snapShotName + SCREEN_SHOT_EXTENSION;
-            String pathName = FrameworkPathUtil.getReportLocation() + File.separator + SUREFIRE_REPORTS +
-                    File.separator + SCREEN_SHOT;
-            LOG.info("OnException - Saving Screen-shot : " + filename + " to location " + pathName);
-            File screenShot = this.driver.getScreenshotAs(OutputType.FILE);
-            FileUtils.moveFile(screenShot, new File(pathName + File.separator + filename));
-        } catch (Exception e) {
-            LOG.error(e);
-        }
+    public ESWebDriver(WebDriver webDriver){
+        this.driver = webDriver ;
     }
 
     /**
@@ -138,11 +86,23 @@ public class ESWebDriver implements WebDriver {
      * @param waitTimeSec Time to wait in seconds
      */
     private void waitTillElementPresent(By by, int waitTimeSec) {
-        WebDriverWait wait;
-        wait = new WebDriverWait(driver, waitTimeSec);
+        WebDriverWait wait = new WebDriverWait(driver, waitTimeSec);
         wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
+    /**
+     * This method has override the findElement method in a way it will wait for maximum of 30 seconds
+     *
+     * @param by By element for findElement method
+     * @return return the result of default WebDriver.findElement(By by) subjected to 30sec of max wait time
+     */
+    @Override
+    public WebElement findElement(By by) {
+        waitTillElementPresent(by, MAX_WAIT_TIME);
+        return driver.findElement(by);
+    }
+
+    // proxying to the WebDriver
     @Override
     public void get(String s) {
         driver.get(s);
@@ -161,18 +121,6 @@ public class ESWebDriver implements WebDriver {
     @Override
     public List<WebElement> findElements(By by) {
         return driver.findElements(by);
-    }
-
-    /**
-     * This method has override the findElement method in a way it will wait for maximum of 30 seconds
-     *
-     * @param by By element for findElement method
-     * @return return the result of default WebDriver.findElement(By by) subjected to 30sec of max wait time
-     */
-    @Override
-    public WebElement findElement(By by) {
-        waitTillElementPresent(by, MAX_WAIT_TIME);
-        return driver.findElement(by);
     }
 
     @Override

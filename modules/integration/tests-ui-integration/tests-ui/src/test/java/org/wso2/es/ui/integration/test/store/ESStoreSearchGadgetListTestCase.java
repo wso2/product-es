@@ -27,6 +27,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
@@ -55,7 +56,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
         adminUserName = userInfo.getUserName();
         adminUserPwd = userInfo.getPassword();

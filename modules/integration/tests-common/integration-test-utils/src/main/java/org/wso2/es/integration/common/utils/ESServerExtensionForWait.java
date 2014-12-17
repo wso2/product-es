@@ -21,34 +21,32 @@ import org.apache.commons.logging.LogFactory;
 
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 
+import java.io.IOException;
+
 public class ESServerExtensionForWait extends ExecutionListenerExtension {
 
     private static final Log LOG = LogFactory.getLog(ESServerExtensionForWait.class);
-    private static final long WAIT_TIME = 3000 ;
+    private static final long WAIT_TIME = 3000;
 
     /**
      * Initialize
      */
     public void initiate() {
-        try {
-            LOG.info("============================= Initializing Testing Enterprise Store " +
-                    "Jaggery-APPs =============================");
-        } catch (Exception e) {
-            handleException("Error while initiating test environment", e);
-        }
+        LOG.info("Initializing Testing Enterprise Store Jaggery-APPs");
     }
 
     /**
      * This method calls waitTillIndexingCompletes which holds test execution until indexing completes
      * or timeout while waiting to complete indexing
      */
-    public void onExecutionStart() {
-        LOG.info("============================= Waiting till Jaggery-Apps get initialized =============================");
+    public void onExecutionStart() throws IOException, InterruptedException {
+        LOG.info("Waiting till Jaggery-Apps get initialized");
         try {
             waitTillIndexingCompletes();
-            LOG.info("============================= Done Waiting till Jaggery-Apps get initialized =============================");
-        } catch (Exception e) {
-            handleException("Fail to wait till Jaggery-Apps get initialized ", e);
+            LOG.info("Done Waiting till Jaggery-Apps get initialized");
+        } catch (InterruptedException e) {
+            LOG.error("Fail to wait till Jaggery-Apps get initialized ", e);
+            throw e;
         }
     }
 
@@ -56,29 +54,19 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
      * Once test execution is completed
      */
     public void onExecutionFinish() {
-        LOG.info("============================= Completed executing test cases for testing " +
-                "Jaggery-Apps =============================");
-    }
-
-    /**
-     * To handle exceptions
-     * @param msg is a String describing the exception
-     * @param e Exception object
-     */
-    private static void handleException(String msg, Exception e) {
-        LOG.error(msg, e);
-        throw new IllegalStateException(msg, e);
+        LOG.info("Completed executing test cases for testing Jaggery-Apps");
     }
 
     /**
      * This method is used to hold test execution until indexing completes or timeout
+     *
      * @throws InterruptedException
      */
-    private static void waitTillIndexingCompletes() throws InterruptedException {
+    private static void waitTillIndexingCompletes() throws IOException, InterruptedException {
         AssetsRESTClient client = new AssetsRESTClient();
         int count = 0;
         Thread.sleep(WAIT_TIME);
-        while (count < 10 && !client.isIndexCompleted()){
+        while (count < 10 && !client.isIndexCompleted()) {
             count++;
             Thread.sleep(WAIT_TIME);
         }
