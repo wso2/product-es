@@ -165,7 +165,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
     }
 
     /**
-     * This method send a request to publisher logout api to invalidate the given sessionID
+     * This method sends a request to publisher logout api to invalidate the given sessionID
      *
      * @param sessionId String of valid session ID
      */
@@ -204,8 +204,8 @@ public class AssetsRESTClient extends ESIntegrationTest {
     }
 
     /**
-     * Public method to check whether the indexing is completed
-     *
+     * Public method to check whether the registry indexing is completed
+     * this checks if ES publisher assets are completely indexed by the registry
      * @return true if completed false otherwise
      */
     public boolean isIndexCompleted() throws IOException {
@@ -232,7 +232,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
      * @return Error massage as a String
      */
     private String getAssetRetrievingErrorMassage() {
-        return "Error while retrieving gadgets via  " + AUTHENTICATE_ENDPOINT;
+        return "Error while retrieving assets via  " + AUTHENTICATE_ENDPOINT;
     }
 
     /**
