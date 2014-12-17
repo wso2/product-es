@@ -31,7 +31,6 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
 
-    private StringBuilder verificationErrors = new StringBuilder();
     private static final String LINE_CHART = "Line Chart";
     private static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
     private static final String AMAZON = "Amazon";
@@ -47,26 +46,21 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
     public void testAnonHomePage() throws Exception {
         //test appearance
         driver.get(baseUrl + STORE_URL);
-        try {
-            assertTrue(isElementPresent(By.cssSelector("a.brand")), "Home Page error: Logo missing");
-            assertEquals("Sign in", driver.findElement(By.linkText("Sign in")).getText(),
-                    "Home Page error: Sign in button missing");
-            assertTrue(isElementPresent(By.id("btn-register")), "Home Page error: Register button missing");
-            assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
-                    .getText(), "Home Page error: Gadget menu missing");
-            assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
-                    .getText(), "Home Page error: Site menu missing");
-            assertEquals("Recent Gadgets", driver.findElement(By.linkText("Recent Gadgets")).getText(),
-                    "Home Page error: Recent Gadgets links missing");
-            assertEquals("Recent Sites", driver.findElement(By.linkText("Recent Sites")).getText(),
-                    "Home Page error: Recent Sites links missing");
-            assertTrue(isElementPresent(By.id("search")), "Home Page error: Search missing");
-            assertTrue(isElementPresent(By.cssSelector("div.span3.store-right > div.row > div.span3")),
-                    "Home Page error: Recent Added side list missing");
-        } catch (Error e) {
-            verificationErrors.append(e.toString());
-        }
-        verificationErrors = failOnError(verificationErrors);
+        assertTrue(isElementPresent(By.cssSelector("a.brand")), "Home Page error: Logo missing");
+        assertEquals("Sign in", driver.findElement(By.linkText("Sign in")).getText(),
+                "Home Page error: Sign in button missing");
+        assertTrue(isElementPresent(By.id("btn-register")), "Home Page error: Register button missing");
+        assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
+                .getText(), "Home Page error: Gadget menu missing");
+        assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
+                .getText(), "Home Page error: Site menu missing");
+        assertEquals("Recent Gadgets", driver.findElement(By.linkText("Recent Gadgets")).getText(),
+                "Home Page error: Recent Gadgets links missing");
+        assertEquals("Recent Sites", driver.findElement(By.linkText("Recent Sites")).getText(),
+                "Home Page error: Recent Sites links missing");
+        assertTrue(isElementPresent(By.id("search")), "Home Page error: Search missing");
+        assertTrue(isElementPresent(By.cssSelector("div.span3.store-right > div.row > div.span3")),
+                "Home Page error: Recent Added side list missing");
     }
 
     @Test(groups = "wso2.es.store", description = "Test Anonymous User Recent sliding",
