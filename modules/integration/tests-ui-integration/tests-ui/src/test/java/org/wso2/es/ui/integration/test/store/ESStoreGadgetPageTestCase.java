@@ -31,7 +31,6 @@ import static org.testng.Assert.*;
  */
 public class ESStoreGadgetPageTestCase extends BaseUITestCase {
 
-    private StringBuilder verificationErrors = new StringBuilder();
     private String firstAsset;
     private static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
     private static final String LINE_CHART = "Line Chart";
@@ -50,30 +49,25 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
     public void testGadgetPage() throws Exception {
         //test appearance of gadget page
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
-        try {
-            assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
-                    .getText(), "Gadget Menu missing");
-            assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//a[contains(text()," +
-                    "'Line Plus Bar Chart')]")).getText(), "Gadgets missing");
-            firstAsset = driver.findElement(By.cssSelector("h4")).getText();
-            assertEquals("Recently Added", driver.findElement(By.xpath
-                    ("//div[@id='container-assets']/div/div[2]/div[1]/div/h4")).getText(),
-                    "Recently Added section missing");
-            assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]"))
-                    .getText(), "Recently added Gadgets missing");
-            assertEquals("Tags", driver.findElement(By.xpath("//div[@id='container-assets']/div/div[2]/div[2]/div/h4"))
-                    .getText(), "Tags section missing");
-            assertTrue(isElementPresent(By.linkText("charts")), "Tags missing (charts tag)");
-            assertEquals("All Categories", driver.findElement(By.cssSelector("div.breadcrumb-head")).getText(),
-                    "Category drop down missing");
-            assertTrue(isElementPresent(By.cssSelector("i.icon-star")), "Popularity sort missing");
-            assertTrue(isElementPresent(By.cssSelector("i.icon-sort-alphabetical")), "Alphabetical sort missing");
-            assertTrue(isElementPresent(By.cssSelector("i.icon-calendar")), "Recent sort missing");
-            assertTrue(isElementPresent(By.id("search")), "Search tray missing");
-        } catch (Error e) {
-            verificationErrors.append(e.toString());
-        }
-        verificationErrors = failOnError(verificationErrors);
+        assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
+                .getText(), "Gadget Menu missing");
+        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//a[contains(text()," +
+                "'Line Plus Bar Chart')]")).getText(), "Gadgets missing");
+        firstAsset = driver.findElement(By.cssSelector("h4")).getText();
+        assertEquals("Recently Added", driver.findElement(By.xpath
+                ("//div[@id='container-assets']/div/div[2]/div[1]/div/h4")).getText(),
+                "Recently Added section missing");
+        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]"))
+                .getText(), "Recently added Gadgets missing");
+        assertEquals("Tags", driver.findElement(By.xpath("//div[@id='container-assets']/div/div[2]/div[2]/div/h4"))
+                .getText(), "Tags section missing");
+        assertTrue(isElementPresent(By.linkText("charts")), "Tags missing (charts tag)");
+        assertEquals("All Categories", driver.findElement(By.cssSelector("div.breadcrumb-head")).getText(),
+                "Category drop down missing");
+        assertTrue(isElementPresent(By.cssSelector("i.icon-star")), "Popularity sort missing");
+        assertTrue(isElementPresent(By.cssSelector("i.icon-sort-alphabetical")), "Alphabetical sort missing");
+        assertTrue(isElementPresent(By.cssSelector("i.icon-calendar")), "Recent sort missing");
+        assertTrue(isElementPresent(By.id("search")), "Search tray missing");
     }
 
     @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links",
@@ -81,23 +75,18 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
     public void testLinksFromPage() throws Exception {
         //test links
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
-        try {
-            assertEquals(firstAsset, driver.findElement(By.cssSelector("h4")).getText(),
-                    "Cannot view selected Gadget's page through Gadget list");
-            driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
-            driver.findElement(By.xpath("//a[contains(text(),'Line Chart')]")).click();
-            assertEquals(LINE_CHART, driver.findElement(By.cssSelector("h3")).getText(),
-                    "Cannot view selected Gadget's page through Recently added list");
+        assertEquals(firstAsset, driver.findElement(By.cssSelector("h4")).getText(),
+                "Cannot view selected Gadget's page through Gadget list");
+        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
+        driver.findElement(By.xpath("//a[contains(text(),'Line Chart')]")).click();
+        assertEquals(LINE_CHART, driver.findElement(By.cssSelector("h3")).getText(),
+                "Cannot view selected Gadget's page through Recently added list");
 
-            driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
-                    .click();
-            driver.findElement(By.linkText("pie")).click();
-            assertEquals(1, driver.findElements(By.cssSelector("div.span3.asset")).size(),
-                    "Tags not working");
-        } catch (Error e) {
-            verificationErrors.append(e.toString());
-        }
-        verificationErrors = failOnError(verificationErrors);
+        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
+                .click();
+        driver.findElement(By.linkText("pie")).click();
+        assertEquals(1, driver.findElements(By.cssSelector("div.span3.asset")).size(),
+                "Tags not working");
     }
 
     @AfterClass(alwaysRun = true)

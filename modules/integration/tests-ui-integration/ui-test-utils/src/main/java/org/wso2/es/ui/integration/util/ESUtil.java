@@ -207,26 +207,42 @@ public class ESUtil extends ESIntegrationUITest {
             LOG.error(errorMessage, e);
             throw e;
         } finally {
-            inputStream.close();
-            inbox.close(true);
-            store.close();
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    LOG.error("Input stream closing failed");
+                }
+            }
+            if (inbox != null) {
+                try {
+                    inbox.close(true);
+                } catch (MessagingException e) {
+                    LOG.error("Inbox closing failed");
+                }
+            }
+            if (store != null) {
+                try {
+                    store.close();
+                } catch (MessagingException e) {
+                    LOG.error("Message store closing failed");
+                }
+            }
         }
         return hasEmail;
     }
 
     private static boolean hasMailWithSubject(Folder inbox, String subject) throws MessagingException, InterruptedException {
         int pollCount = 0;
-        boolean hasEmail = false;
-        while ((pollCount <= MAX_MAIL_POLL) && !hasEmail) {
+        while ((pollCount <= MAX_MAIL_POLL)) {
             Message[] messages = inbox.getMessages();
             for (Message msg : messages) {
                 if (subject.equals(msg.getSubject())) {
-                    hasEmail = true;
-                    break;
+                    return true;
                 }
             }
             Thread.sleep(MAIL_WAIT_TIME);
         }
-        return hasEmail;
+        return false;
     }
 }
