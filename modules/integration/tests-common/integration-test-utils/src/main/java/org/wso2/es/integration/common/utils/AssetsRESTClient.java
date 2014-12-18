@@ -99,7 +99,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
 
         } catch (MalformedURLException e) {
             LOG.error(getLoginErrorMassage(), e);
-            //ignoring, URL is a constant, will not be malformed
+            throw e;
         } catch (IOException e) {
             LOG.error(getLoginErrorMassage(), e);
             throw e;
@@ -148,7 +148,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
             return elem.getAsJsonObject().getAsJsonArray(DATA);
         } catch (MalformedURLException e) {
             LOG.error(getAssetRetrievingErrorMassage(), e);
-            //ignoring, URL is a constant, will not be malformed
+            throw e;
         } catch (IOException e) {
             LOG.error(getAssetRetrievingErrorMassage(), e);
             throw e;
@@ -161,7 +161,6 @@ public class AssetsRESTClient extends ESIntegrationTest {
                 }
             }
         }
-        return null;
     }
 
     /**
@@ -188,7 +187,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
             urlConn.getOutputStream().flush();
         } catch (MalformedURLException e) {
             LOG.error(getLogoutErrorMassage(), e);
-            //ignoring, URL is a constant, will not be malformed
+            throw e;
         } catch (IOException e) {
             LOG.error(getLogoutErrorMassage(), e);
             throw e;

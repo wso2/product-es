@@ -19,9 +19,11 @@ package org.wso2.es.integration.common.utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.testng.TestNGException;
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class ESServerExtensionForWait extends ExecutionListenerExtension {
 
@@ -40,15 +42,24 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
      * This method calls waitTillIndexingCompletes which holds test execution until indexing completes
      * or timeout while waiting to complete indexing
      */
-    public void onExecutionStart() throws IOException, InterruptedException {
+    public void onExecutionStart() {
         LOG.info("Waiting till Jaggery-Apps get initialized");
         try {
             waitTillIndexingCompletes();
             LOG.info("Done Waiting till Jaggery-Apps get initialized");
         } catch (InterruptedException e) {
-            LOG.error("Fail to wait till Jaggery-Apps get initialized ", e);
-            throw e;
+            handleError(e);
+        } catch (MalformedURLException e){
+            handleError(e);
+        } catch (IOException e){
+            handleError(e);
         }
+    }
+
+    private void handleError(Exception e){
+        LOG.error("Fail to wait till Jaggery-Apps get initialized ", e);
+        throw new TestNGException("An error occured while wating for registry indexing completes before test " +
+                "execution", e);
     }
 
     /**
