@@ -58,7 +58,7 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
 
     private void handleError(Exception e){
         LOG.error("Fail to wait till Jaggery-Apps get initialized ", e);
-        throw new TestNGException("An error occured while wating for registry indexing completes before test " +
+        throw new TestNGException("An error occurred while waiting for registry indexing completes before test " +
                 "execution", e);
     }
 
