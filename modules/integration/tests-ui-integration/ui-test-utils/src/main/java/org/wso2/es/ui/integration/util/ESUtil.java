@@ -185,7 +185,7 @@ public class ESUtil extends ESIntegrationUITest {
         Folder inbox = null;
         Store store = null;
         FileInputStream inputStream = null;
-        String errorMessage = "Retrieving mails for: " + email + "failed";
+
         try {
             inputStream = new FileInputStream(new File(smtpPropertyFile));
             props.load(inputStream);
@@ -195,18 +195,17 @@ public class ESUtil extends ESIntegrationUITest {
             inbox = store.getFolder(INBOX);
             inbox.open(Folder.READ_ONLY);
             hasEmail = hasMailWithSubject(inbox, subject);
-
         } catch (MessagingException e) {
-            LOG.error(errorMessage, e);
+            LOG.error(getErrorMessage(email), e);
             throw e;
         } catch (InterruptedException e) {
-            LOG.error(errorMessage, e);
+            LOG.error(getErrorMessage(email), e);
             throw e;
         } catch (FileNotFoundException e) {
-            LOG.error(errorMessage, e);
+            LOG.error(getErrorMessage(email), e);
             throw e;
         } catch (IOException e) {
-            LOG.error(errorMessage, e);
+            LOG.error(getErrorMessage(email), e);
             throw e;
         } finally {
             if (inputStream != null) {
@@ -247,5 +246,9 @@ public class ESUtil extends ESIntegrationUITest {
             Thread.sleep(MAIL_WAIT_TIME);
         }
         return false;
+    }
+
+    private static String getErrorMessage(String emailAddress) {
+        return "Retrieving mails for: " + emailAddress + "failed";
     }
 }
