@@ -62,7 +62,8 @@ public class AssetUtil extends ESIntegrationUITest {
      * @param description asset description
      * @return the edit response
      */
-    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String description) {
+    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
+                                     String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
@@ -89,6 +90,7 @@ public class AssetUtil extends ESIntegrationUITest {
 
     /**
      * Add ratings and reviews
+     *
      * @param driver    WebDriver instance
      * @param review    review comment
      * @param starCount rating
@@ -105,6 +107,7 @@ public class AssetUtil extends ESIntegrationUITest {
 
     /**
      * Publish a new asset to store
+     *
      * @param driver    WebDriver instance
      * @param assetName asset name
      */

@@ -86,7 +86,8 @@ public class ESUtil extends ESIntegrationUITest {
      * @throws javax.xml.xpath.XPathExpressionException
      *
      */
-    public static void logout(ESWebDriver driver, String url, String webApp, String userName) throws XPathExpressionException {
+    public static void logout(ESWebDriver driver, String url, String webApp, String userName) throws
+            XPathExpressionException {
         String fullUrl = "";
         if ("store".equalsIgnoreCase(webApp)) {
             fullUrl = url + STORE_SUFFIX;
@@ -108,7 +109,8 @@ public class ESUtil extends ESIntegrationUITest {
      * @throws javax.xml.xpath.XPathExpressionException
      *
      */
-    public static void loginToAdminConsole(ESWebDriver driver, String url, String userName, String pwd) throws XPathExpressionException {
+    public static void loginToAdminConsole(ESWebDriver driver, String url, String userName, String pwd) throws
+            XPathExpressionException {
         driver.get(url + ADMIN_CONSOLE_SUFFIX);
         driver.findElement(By.id("txtUserName")).clear();
         driver.findElement(By.id("txtUserName")).sendKeys(userName);
@@ -232,7 +234,8 @@ public class ESUtil extends ESIntegrationUITest {
         return hasEmail;
     }
 
-    private static boolean hasMailWithSubject(Folder inbox, String subject) throws MessagingException, InterruptedException {
+    private static boolean hasMailWithSubject(Folder inbox, String subject) throws MessagingException,
+            InterruptedException {
         int pollCount = 0;
         while ((pollCount <= MAX_MAIL_POLL)) {
             Message[] messages = inbox.getMessages();

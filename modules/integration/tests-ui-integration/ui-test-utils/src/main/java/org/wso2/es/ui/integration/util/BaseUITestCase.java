@@ -120,6 +120,4 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
             acceptNextAlert = true;
         }
     }
-
-
 }
