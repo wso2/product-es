@@ -167,10 +167,10 @@ session.put('username', username);
             // validate captcha using captcha endpoint
             $.post('captcha', formData, function (data) {
                 var responseData = data.data;
-                if (responseData.error == 'false') {
+                if (!responseData.error) {
                     $('#verificationFormError').hide();
                     var result = responseData;
-                    window.location = 'update_password';
+                    window.location = 'update-password';
 
                 } else {
                     var verificationFormError = $('#verificationFormError');

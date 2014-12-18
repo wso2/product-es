@@ -171,12 +171,12 @@ if(recoveryOption === 'challenge'){
             // user verification using user endpoint
             $.post('user', formData, function (data) {
                 var responseData = data.data;
-                if (responseData.error == 'false') {
+                if (!responseData.error) {
                     $('#resetFormError').hide();
                     if ($('#recovery-option').val() == 'email') {
                         window.location = 'recover';
                     } else {
-                        window.location = 'view_challenges';
+                        window.location = 'view-challenges';
                     }
                 } else {
                     var resetFormError = $('#resetFormError');
@@ -199,7 +199,7 @@ if(recoveryOption === 'challenge'){
                 $('#captcha-answer').val('');
                 $('#captcha-path').val(responseData.captchaPath);
                 $('#captcha-key').val(responseData.captchaKey);
-                $('#action').val('verifyCode');
+                $('#action').val('verifyUser');
             });
         }
 

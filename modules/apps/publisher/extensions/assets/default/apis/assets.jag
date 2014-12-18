@@ -66,7 +66,6 @@ require('/modules/publisher.js').exec(function (ctx) {
     switch (method) {
         case 'POST':// POST endpoints
             var newAsset;
-                log.info(newAsset);
             if (uriMatcher.match(CREATE_URL)) {//to create asset
                 try {
                     newAsset = assetApi.create(options, req, res, session);

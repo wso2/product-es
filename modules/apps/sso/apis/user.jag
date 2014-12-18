@@ -29,12 +29,12 @@ var action = request.getParameter('action'),
     captchaAnswer = request.getParameter('captcha-answer'),
     recoveryOption = request.getParameter('recovery-option'),
     responseProcessor = require('utils').response,
-    constants = require("rxt").constants,
-    log = new Log('user_api'),
+    constants = require('rxt').constants,
+    log = new Log(),
     res = {};
 
 var EMAIL_RECOVERY = 'email';
-var errorProcessor = require('/modules/error_api.js');
+var errorProcessor = require('/modules/error.js');
 
 (function () {
     var recoveryModule = require('account-management').recovery;
@@ -50,23 +50,26 @@ var errorProcessor = require('/modules/error_api.js');
      */
     var verifyUser = function (username, captchaPath, captchaKey, captchaAnswer) {
         if (!username || !captchaAnswer) {
-            res.error = 'true';
+            res.error = true;
             res.msg = 'Username or captcha answer is invalid';
-            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
-                    res);
+            if (log.isDebugEnabled()) {
+                log.debug(res.msg + ' user:' + username + ' captcha answer:' + captchaAnswer + ' captcha key: ' +
+                        captchaKey);
+            }
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.BAD_REQUEST, res);
         } else {
             var captchaBean = recoveryModule.createCaptchaInfoBean(captchaPath, captchaKey, captchaAnswer);
             try {
                 var verificationBean = recoveryModule.verifyUser(username, captchaBean);
             } catch (e) {
-                var errorMsg = 'Failed to verify user';
-                log.error(errorMsg, e);
-                res.error = 'true';
-                res.msg = errorMsg;
+                var errorText = 'Failed to verify user';
+                log.error(errorText, e);
+                res.error = true;
+                res.msg = errorText;
                 response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
                         res);
             }
-            if(verificationBean){
+            if (verificationBean){
                 var key = verificationBean.getKey();
                 var isVerified = verificationBean.isVerified();
                 if (isVerified) {
@@ -74,15 +77,13 @@ var errorProcessor = require('/modules/error_api.js');
                 } else {
                     var error = verificationBean.getError();
                     var errorMsg = errorProcessor.getErrorMessage(error);
-                    res.error = 'true';
+                    res.error = true;
                     res.msg = errorMsg;
-                    response = responseProcessor.buildErrorResponse(response,
-                            constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
+                    if (log.isDebugEnabled()) {
+                        log.debug(res.msg + ' -for user:' + username);
+                    }
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
                 }
-            }else{
-                res.error = 'true';
-                res.msg = 'Recovery failed';
-                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
             }
         }
     };
@@ -102,24 +103,28 @@ var errorProcessor = require('/modules/error_api.js');
             } catch (e) {
                 var errorMsg = 'Failed to send recovery notification';
                 log.error(errorMsg, e);
-                res.error = 'true';
+                res.error = true;
                 res.msg = errorMsg;
                 response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
                         res);
             }
             if (result) {
-                session.put('username', username);
-                res.error = 'false';
-                res.msg = 'User successfully verified';
-                response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
-            } else {
-                res.error = 'true';
-                res.msg = 'Recovery failed';
-                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
-                        res);
+                if (result.isVerified()) {
+                    session.put('username', username);
+                    res.error = false;
+                    res.msg = 'User successfully verified';
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
+                } else {
+                    res.error = true;
+                    res.msg = 'Failed send recovery notification.';
+                    if (log.isDebugEnabled()) {
+                        log.debug(res.msg + ' -for user:' + username);
+                    }
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
+                }
             }
         } else if (recoveryOption == 'challenge') {
-            res.error = 'false';
+            res.error = false;
             res.msg = 'User successfully verified';
             session.put('confirmation', confirmation);
             session.put('username', username);

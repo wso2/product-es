@@ -74,7 +74,7 @@
                                     <p>Select the preferred method to recover your password</p>
                                 </div>
                                 <div class="span6" style="float:left; width:30%">
-                                    <form action="confirm_recovery">
+                                    <form action="confirm-recovery">
                                         <input type="hidden" id="recovery-option-email" name="recovery-option"
                                                value="email">
                                         <button id="email" class="btn btn-large"
@@ -83,7 +83,7 @@
                                     </form>
                                 </div>
                                 <div class="span6" style="float:right; width:30%">
-                                    <form action="confirm_recovery">
+                                    <form action="confirm-recovery">
                                         <input type="hidden" id="recovery-option-qna" name="recovery-option"
                                                value="challenge">
                                         <button id="challenge" class="btn btn-large"

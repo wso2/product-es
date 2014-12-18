@@ -25,7 +25,7 @@
 var captchaVerificationKey = session.get('confirmation'),
     recoveryModule = require('account-management').recovery,
     userName = session.get('username'),
-    log = new Log('challenges_view'),
+    log = new Log(),
     error = null;
 
 var backendMessage = 'Could not retrieve challenges for user:';
@@ -35,7 +35,7 @@ try {
     idDTO = recoveryModule.getChallengeQuestionIds(userName, captchaVerificationKey);
 } catch (e) {
     log.error(backendMessage, e);
-    response.sendRedirect('recovery_failed');
+    response.sendRedirect('recovery-failed');
 }
 
 if (idDTO) {
@@ -50,21 +50,23 @@ if (idDTO) {
             questionDTO = recoveryModule.getChallengeQuestionOfUser(userName, questionIDKey, questionId);
         } catch (e) {
             log.error(backendMessage, e);
-            response.sendRedirect('recovery_failed');
+            response.sendRedirect('recovery-failed');
         }
         if (questionDTO) {
             var question = questionDTO.getQuestion();
             var questionKey = questionDTO.getKey();
             session.put('confirmation', questionKey);
         } else {
-            log.error(backendMessage + userName);
-            response.sendRedirect('recovery_failed');
+            if(log.isDebugEnabeld()) {
+                log.debug(backendMessage + userName);
+            }
+            response.sendRedirect('recovery-failed');
         }
     } else {
-        var errorProcessor = require('/modules/error_api.js');
-        error = errorProcessor.getErrorMessage(idDTO.getError());
-        log.error(backendMessage + userName);
-        response.sendRedirect('recovery_failed');
+        if(log.isDebugEnabeld()) {
+            log.debug(backendMessage + userName);
+        }
+        response.sendRedirect('recovery-failed');
     }
 }
 
@@ -189,11 +191,11 @@ if (idDTO) {
                 // verify challenge answer using challenge endpoint
                 $.post('challenge', formData, function (data) {
                     var responseData = data.data;
-                    if (responseData.error == 'false') {
+                    if (!responseData.error) {
                         $('#challengeFormError').hide();
-                        window.location = 'update_password';
+                        window.location = 'update-password';
                     } else {
-                        window.location = 'recovery_failed';
+                        window.location = 'recovery-failed';
                     }
                 });
             }

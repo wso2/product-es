@@ -91,7 +91,7 @@ var challengeSet = recoveryModule.getChallengeQuestionSet();
                                         </label>
                                         <input type="hidden" name="sessionDataKey"
                                                value="<%=request.getParameter("sessionDataKey")%>">
-                                        <a href="recovery_option">Forgot your password?</a>
+                                        <a href="recovery-option">Forgot your password?</a>
                                         <button class="btn btn-large pull-right" type="submit">Sign in</button>
                                     </form>
                                 </div>

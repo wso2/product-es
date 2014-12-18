@@ -72,7 +72,7 @@ var publisherUrl = appsConfig.urls['publisher'];
                     <div class="form-forgot-password row-fluid">
                         <div class="span12">
                             <div class="row-fluid">
-                                <form id="resetForm" action="login" method="POST">
+                                <form id="resetForm">
                                     <h2 class="form-forgot-password-heading">Password Recovery failed</h2>
                                     <p>Password recovery has failed. Please follow the process again from <a href="<%=publisherUrl%>">here</a></p>
                                 </form>

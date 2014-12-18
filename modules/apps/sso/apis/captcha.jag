@@ -29,11 +29,11 @@ var action = request.getParameter('action'),
     captchaPath = request.getParameter('captcha-path'),
     captchaAnswer = request.getParameter('captcha-answer'),
     responseProcessor = require('utils').response,
-    constants = require("rxt").constants,
-    log = new Log('captcha_api'),
+    constants = require('rxt').constants,
+    log = new Log(),
     res = {};
 
-var errorProcessor = require('/modules/error_api.js');
+var errorProcessor = require('/modules/error.js');
 
 (function () {
     var recoveryModule = require('account-management').recovery;
@@ -50,7 +50,7 @@ var errorProcessor = require('/modules/error_api.js');
         }catch (e) {
             var errorMsg = 'Failed to retrieve captcha';
             log.error(errorMsg, e);
-            res.error = 'true';
+            res.error = true;
             res.msg = errorMsg;
             response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
                     res);
@@ -58,13 +58,13 @@ var errorProcessor = require('/modules/error_api.js');
         if (captchaBean) {
             var captchaPath = captchaBean.getImagePath();
             var captchaKey = captchaBean.getSecretKey();
-            res.error = 'false';
+            res.error = false;
             res.msg = 'Captcha generated';
             res.captchaPath = captchaPath;
             res.captchaKey = captchaKey;
             response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
         } else {
-            res.error = 'true';
+            res.error = true;
             res.msg = 'Captcha generation failed';
             response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
                     res);
@@ -83,10 +83,13 @@ var errorProcessor = require('/modules/error_api.js');
      */
     var verifyConfirmationCode = function (captchaPath, captchaKey, captchaAnswer, userName, confirmationCode) {
         if (!userName || !captchaAnswer || !confirmationCode) {
-            res.error = 'true';
-            res.msg = 'Recovery failed. Information is not provided';
-            response = responseProcessor.buildErrorResponse(response,
-                    constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
+            res.error = true;
+            res.msg = 'Recovery failed. Username or Captcha Answer or Confirmation code is not provided';
+            if (log.isDebugEnabled()) {
+                log.debug(res.msg + ' user:' + userName + ' captcha answer:' + captchaAnswer + ' captcha key: ' +
+                        captchaKey);
+            }
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.BAD_REQUEST, res);
         } else {
             var captchaBean = recoveryModule.createCaptchaInfoBean(captchaPath, captchaKey, captchaAnswer);
             var verificationBean = null;
@@ -95,31 +98,29 @@ var errorProcessor = require('/modules/error_api.js');
             } catch (e) {
                 var errorText = 'Failed confirmation code verification';
                 log.error(errorText, e);
-                res.error = 'true';
+                res.error = true;
                 res.msg = errorText;
                 response = responseProcessor.buildErrorResponse(response,
                         constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
             }
             if (verificationBean) {
-                var key = verificationBean.getKey();
-                if (key) {
-                    res.error = 'false';
+                var isVerified = verificationBean.isVerified();
+                if (isVerified) {
+                    var key = verificationBean.getKey();
+                    res.error = false;
                     res.msg = 'Verification successful';
                     session.put('confirmation', key);
                     response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
                 } else {
                     var error = verificationBean.getError();
                     var errorMsg = errorProcessor.getErrorMessage(error);
-                    res.error = 'true';
+                    if (log.isDebugEnabled()) {
+                        log.debug(errorMsg + ' -for user:' + userName);
+                    }
+                    res.error = true;
                     res.msg = errorMsg;
-                    response = responseProcessor.buildErrorResponse(response,
-                            constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
+                    response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
                 }
-            } else {
-                res.error = 'true';
-                res.msg = 'Recovery failed';
-                response = responseProcessor.buildErrorResponse(response,
-                        constants.STATUS_CODES.INTERNAL_SERVER_ERROR, res);
             }
         }
     };

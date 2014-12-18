@@ -28,11 +28,11 @@ var action = request.getParameter('action'),
     questionId = session.get('question-id'),
     answer = request.getParameter('answer'),
     responseProcessor = require('utils').response,
-    constants = require("rxt").constants,
-    log = new Log('challenge_api'),
+    constants = require('rxt').constants,
+    log = new Log(),
     res = {};
 
-var errorProcessor = require('/modules/error_api.js');
+var errorProcessor = require('/modules/error.js');
 
 (function () {
     var recoveryModule = require('account-management').recovery;
@@ -53,7 +53,7 @@ var errorProcessor = require('/modules/error_api.js');
         } catch (e) {
             var errorMsg = 'Failed to verify challenge';
             log.error(errorMsg, e);
-            res.error = 'true';
+            res.error = true;
             res.msg = errorMsg;
             response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
                     res);
@@ -61,21 +61,18 @@ var errorProcessor = require('/modules/error_api.js');
         if (verificationBean) {
             if (verificationBean.isVerified()) {
                 session.put('confirmation', verificationBean.getKey());
-                res.error = 'false';
+                res.error = false;
                 res.msg = 'Challenge answer verified';
                 response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
             } else {
-                res.error = 'true';
+                res.error = true;
                 var error = verificationBean.getError();
                 res.msg = errorProcessor.getErrorMessage(error);
-                response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
-                        res);
+                if (log.isDebugEnabled()) {
+                    log.debug(res.msg + ' -for user:' + username);
+                }
+                response = responseProcessor.buildSuccessResponse(response, constants.STATUS_CODES.OK, res);
             }
-        } else {
-            res.error = 'true';
-            res.msg = 'Recovery failed';
-            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.INTERNAL_SERVER_ERROR,
-                    res);
         }
     };
 
