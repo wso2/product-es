@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  */
 
 package org.wso2.es.ui.integration.util;
@@ -62,7 +64,8 @@ public class AssetUtil extends ESIntegrationUITest {
      * @param description asset description
      * @return the edit response
      */
-    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String description) {
+    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
+                                     String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
@@ -89,6 +92,7 @@ public class AssetUtil extends ESIntegrationUITest {
 
     /**
      * Add ratings and reviews
+     *
      * @param driver    WebDriver instance
      * @param review    review comment
      * @param starCount rating
@@ -105,6 +109,7 @@ public class AssetUtil extends ESIntegrationUITest {
 
     /**
      * Publish a new asset to store
+     *
      * @param driver    WebDriver instance
      * @param assetName asset name
      */
