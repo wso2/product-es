@@ -18,10 +18,7 @@ package org.wso2.es.integration.common.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.testng.TestNGException;
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -58,7 +55,7 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
 
     private void handleError(Exception e){
         LOG.error("Fail to wait till Jaggery-Apps get initialized ", e);
-        throw new TestNGException("An error occurred while waiting for registry indexing completes before test " +
+        throw new RuntimeException("An error occurred while waiting for registry indexing completes before test " +
                 "execution", e);
     }
 
