@@ -205,6 +205,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
     /**
      * Public method to check whether the registry indexing is completed
      * this checks if ES publisher assets are completely indexed by the registry
+     *
      * @return true if completed false otherwise
      */
     public boolean isIndexCompleted() throws IOException {
@@ -213,7 +214,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
 
         if (sessionId != null) {
             JsonArray assets = getAssets(sessionId);
-            if (assets.size() == DEFAULT_PAGE_SIZE) {
+            if (assets != null && assets.size() == DEFAULT_PAGE_SIZE) {
                 LOG.info("Completed Indexing");
                 completed = true;
             } else {
