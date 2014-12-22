@@ -75,9 +75,11 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
         AssetsRESTClient client = new AssetsRESTClient();
         int count = 0;
         Thread.sleep(WAIT_TIME);
+        //initial wait before the first check for the registry index completion
         while (count < MAX_ATTEMPT_COUNT && !client.isIndexCompleted()) {
             count++;
             Thread.sleep(WAIT_TIME);
+            //Waiting before the next check for the registry index completion...
         }
     }
 }
