@@ -73,6 +73,12 @@ public class ESServerExtensionForWait extends ExecutionListenerExtension {
      */
     private static void waitTillIndexingCompletes() throws IOException, InterruptedException {
         AssetsRESTClient client = new AssetsRESTClient();
+        try {
+            client.init();
+        } catch (Exception e) {
+            LOG.error("Failed to execute init() method", e);
+            throw new RuntimeException("Error at initializing AssetTestClient instance", e);
+        }
         int count = 0;
         Thread.sleep(WAIT_TIME);
         //initial wait before the first check for the registry index completion
