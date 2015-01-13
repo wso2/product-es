@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -58,7 +59,7 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         wait = new WebDriverWait(driver, MAX_POLL_COUNT);
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);

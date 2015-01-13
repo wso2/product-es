@@ -34,7 +34,7 @@ public class ESLoginTestCase extends ESIntegrationUITest {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         driver.get(getLoginURL());
     }
 

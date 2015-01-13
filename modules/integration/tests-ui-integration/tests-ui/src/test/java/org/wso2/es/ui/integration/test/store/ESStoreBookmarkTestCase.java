@@ -24,6 +24,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
@@ -43,7 +44,7 @@ public class ESStoreBookmarkTestCase extends BaseUITestCase {
         super.init();
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         wait = new WebDriverWait(driver, WAIT_TIME);
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);

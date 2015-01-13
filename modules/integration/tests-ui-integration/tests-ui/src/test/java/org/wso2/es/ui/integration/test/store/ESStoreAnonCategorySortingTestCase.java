@@ -26,6 +26,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -62,7 +63,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
     public void setUp() throws Exception {
         super.init();
         assetName = "Asset Recent";
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         wait = new WebDriverWait(driver, MAX_WAIT_TIME);
         baseUrl = getWebAppURL();
         currentUserName = userInfo.getUserName();
