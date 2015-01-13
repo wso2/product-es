@@ -53,5 +53,9 @@
         "identityAlias" : "wso2carbon",
         "responseSigningEnabled" : "true",
         "keyStoreName" : "/repository/resources/security/wso2carbon.jks"
+    },
+    "urls" : {
+        "publisher" : "https://localhost:9443/publisher",
+        "store" : "https://localhost:9443/store"
     }
 }
