@@ -22,7 +22,7 @@ import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
+import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,14 +30,10 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 public class AssetsRESTClient extends ESIntegrationTest {
-    private static final String BASE_URL = "https://localhost:9443";
+
     private static final String PUBLISHER_APIS_AUTHENTICATE_ENDPOINT = "/publisher/apis/authenticate?";
     private static final String PUBLISHER_APIS_LIST_GADGETS_ENDPOINT = "/publisher/apis/assets?type=gadget&count=12";
     private static final String PUBLISHER_APIS_LOGOUT_ENDPOINT = "/publisher/apis/logout";
-
-    private static final String LOGOUT_ENDPOINT = BASE_URL + PUBLISHER_APIS_LOGOUT_ENDPOINT;
-    private static final String LIST_ASSETS_ENDPOINT = BASE_URL + PUBLISHER_APIS_LIST_GADGETS_ENDPOINT;
-    private static final String AUTHENTICATE_ENDPOINT = BASE_URL + PUBLISHER_APIS_AUTHENTICATE_ENDPOINT;
 
     private static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
@@ -69,10 +65,11 @@ public class AssetsRESTClient extends ESIntegrationTest {
         String sessionID = null;
         Reader input = null;
         BufferedWriter writer = null;
+        String authenticationEndpoint = getBaseUrl() + PUBLISHER_APIS_AUTHENTICATE_ENDPOINT;
         //construct full authenticate endpoint
         try {
             //authenticate endpoint URL
-            URL endpointUrl = new URL(AUTHENTICATE_ENDPOINT);
+            URL endpointUrl = new URL(authenticationEndpoint);
             URLConnection urlConn = endpointUrl.openConnection();
             urlConn.setDoInput(true);
             urlConn.setDoOutput(true);
@@ -98,10 +95,10 @@ public class AssetsRESTClient extends ESIntegrationTest {
             }
 
         } catch (MalformedURLException e) {
-            LOG.error(getLoginErrorMassage(), e);
+            LOG.error(getLoginErrorMassage(authenticationEndpoint), e);
             throw e;
         } catch (IOException e) {
-            LOG.error(getLoginErrorMassage(), e);
+            LOG.error(getLoginErrorMassage(authenticationEndpoint), e);
             throw e;
         } finally {
             if (input != null) {
@@ -130,12 +127,13 @@ public class AssetsRESTClient extends ESIntegrationTest {
      */
     private JsonArray getAssets(String sessionId) throws IOException {
         BufferedReader input = null;
-        //endpoint which retrieves list of gadgets
+        String listAssetsEndpoint = getBaseUrl() + PUBLISHER_APIS_LIST_GADGETS_ENDPOINT;
+        //construct endpoint which retrieves list of gadgets
         try {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Get Assets via REST endpoint using sessionID: " + sessionId);
             }
-            URL endpointUrl = new URL(LIST_ASSETS_ENDPOINT);
+            URL endpointUrl = new URL(listAssetsEndpoint);
             URLConnection urlConn = endpointUrl.openConnection();
             urlConn.setRequestProperty(COOKIE, JSESSIONID + "=" + sessionId + ";");
             // SessionId Cookie
@@ -147,10 +145,10 @@ public class AssetsRESTClient extends ESIntegrationTest {
             // parse response to a JasonArray
             return elem.getAsJsonObject().getAsJsonArray(DATA);
         } catch (MalformedURLException e) {
-            LOG.error(getAssetRetrievingErrorMassage(), e);
+            LOG.error(getAssetRetrievingErrorMassage(listAssetsEndpoint), e);
             throw e;
         } catch (IOException e) {
-            LOG.error(getAssetRetrievingErrorMassage(), e);
+            LOG.error(getAssetRetrievingErrorMassage(listAssetsEndpoint), e);
             throw e;
         } finally {
             if (input != null) {
@@ -170,9 +168,10 @@ public class AssetsRESTClient extends ESIntegrationTest {
      */
     private void logOut(String sessionId) throws IOException {
         URLConnection urlConn = null;
+        String logoutEndpoint = getBaseUrl() + PUBLISHER_APIS_LOGOUT_ENDPOINT;
+        //construct APIs session invalidate endpoint
         try {
-            //authenticate endpoint
-            URL endpointUrl = new URL(LOGOUT_ENDPOINT);
+            URL endpointUrl = new URL(logoutEndpoint);
             urlConn = endpointUrl.openConnection();
             urlConn.setDoInput(true);
             urlConn.setDoOutput(true);
@@ -186,10 +185,10 @@ public class AssetsRESTClient extends ESIntegrationTest {
             //send POST output.
             urlConn.getOutputStream().flush();
         } catch (MalformedURLException e) {
-            LOG.error(getLogoutErrorMassage(), e);
+            LOG.error(getLogoutErrorMassage(logoutEndpoint), e);
             throw e;
         } catch (IOException e) {
-            LOG.error(getLogoutErrorMassage(), e);
+            LOG.error(getLogoutErrorMassage(logoutEndpoint), e);
             throw e;
         } finally {
             if (urlConn != null) {
@@ -205,6 +204,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
     /**
      * Public method to check whether the registry indexing is completed
      * this checks if ES publisher assets are completely indexed by the registry
+     *
      * @return true if completed false otherwise
      */
     public boolean isIndexCompleted() throws IOException {
@@ -213,7 +213,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
 
         if (sessionId != null) {
             JsonArray assets = getAssets(sessionId);
-            if (assets.size() == DEFAULT_PAGE_SIZE) {
+            if (assets != null && assets.size() == DEFAULT_PAGE_SIZE) {
                 LOG.info("Completed Indexing");
                 completed = true;
             } else {
@@ -226,12 +226,29 @@ public class AssetsRESTClient extends ESIntegrationTest {
     }
 
     /**
+     * This method obtains base URl (ex: https://localhost:9443) required for the full endpoint creation
+     *
+     * @return String as a context URL
+     */
+    private String getBaseUrl() {
+        if (esContext == null) {
+            throw new IllegalStateException("init() has not been successfully called");
+        }
+        try {
+            return esContext.getContextUrls().getWebAppURL();
+        } catch (XPathExpressionException e) {
+            LOG.error("Couldn't obtain WebAppUrl", e);
+            throw new RuntimeException("Error while obtaining WebAppUrl ", e);
+        }
+    }
+
+    /**
      * Error massage when asset retrieval fails
      *
      * @return Error massage as a String
      */
-    private String getAssetRetrievingErrorMassage() {
-        return "Error while retrieving assets via  " + AUTHENTICATE_ENDPOINT;
+    private String getAssetRetrievingErrorMassage(String listAssetsEndpoint) {
+        return "Error while retrieving assets via  " + listAssetsEndpoint;
     }
 
     /**
@@ -239,8 +256,8 @@ public class AssetsRESTClient extends ESIntegrationTest {
      *
      * @return Error massage as a String
      */
-    private String getLoginErrorMassage() {
-        return "Error while authenticating to publisher apis via " + LIST_ASSETS_ENDPOINT;
+    private String getLoginErrorMassage(String authenticationEndpoint) {
+        return "Error while authenticating to publisher apis via " + authenticationEndpoint;
     }
 
     /**
@@ -248,7 +265,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
      *
      * @return Error massage as a String
      */
-    private String getLogoutErrorMassage() {
-        return "Error while log-out via " + LOGOUT_ENDPOINT;
+    private String getLogoutErrorMassage(String logoutEndpoint) {
+        return "Error while log-out via " + logoutEndpoint;
     }
 }
