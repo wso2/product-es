@@ -67,7 +67,7 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         baseUrl = getStorePublisherUrl();
-        AutomationContext automationContext = new AutomationContext("ES", TestUserMode.TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.TENANT_ADMIN);
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getContextTenant().getTenantAdmin().getPassword();
         String resourceLocation = getResourceLocation();
