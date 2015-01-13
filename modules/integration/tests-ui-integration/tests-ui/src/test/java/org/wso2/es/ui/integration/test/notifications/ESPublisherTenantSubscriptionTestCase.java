@@ -22,6 +22,7 @@ import org.openqa.selenium.By;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -58,7 +59,7 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init(userMode);
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         baseUrl = getStorePublisherUrl();

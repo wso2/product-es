@@ -23,6 +23,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
@@ -59,7 +60,7 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
         super.init(userMode);
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getStorePublisherUrl();
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.TENANT_ADMIN);
         adminUserName = automationContext.getContextTenant().getTenantAdmin().getUserName();

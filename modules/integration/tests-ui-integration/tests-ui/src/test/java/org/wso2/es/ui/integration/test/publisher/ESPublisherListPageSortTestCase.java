@@ -24,6 +24,7 @@ import org.openqa.selenium.By;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -62,7 +63,7 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         super.init(userMode);
         currentUserName = userInfo.getUserName().split("@")[0];
         currentUserPwd = userInfo.getPassword();
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
