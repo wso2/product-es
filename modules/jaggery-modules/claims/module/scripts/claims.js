@@ -19,7 +19,7 @@
 (function() {
 	'use strict';
 
-	var DEFAULT_CLAIM_DIALECT;
+	var DEFAULT_CLAIM_DIALECT = Packages.org.wso2.carbon.user.core.UserCoreConstants.DEFAULT_CARBON_DIALECT;
 
 	var getClaims = function(dialect) {
 		var claims = [];
