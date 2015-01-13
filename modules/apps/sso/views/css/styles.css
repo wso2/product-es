@@ -32,7 +32,7 @@ body {
 .form-signin .form-signin-heading, .form-signin .checkbox {
     margin-bottom: 10px;
 }
-.form-signin input[type="text"], .form-signin input[type="password"] {
+.form-signin input[type="text"], .form-signin input[type="password"] .form-signin select{
     font-size: 16px;
     height: auto;
     margin-bottom: 0;
@@ -52,6 +52,26 @@ body {
 }
 .form-header img {
     margin-top: 31px;
+}
+
+.form-forgot-password > .span12, .footer > .span12 {
+    padding: 15px 30px;
+}
+
+.form-forgot-password .form-forgot-password-heading, .form-forgot-password .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-forgot-password input[type="text"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 0;
+    padding: 7px 9px;
+    width: 50%;
+}
+
+.captcha-img {
+    padding-bottom: 9px;
 }
 
 .btn {

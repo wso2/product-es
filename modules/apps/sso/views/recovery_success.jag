@@ -1,0 +1,142 @@
+<%
+/*
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
+/**
+ *  Page to notify successful password recovery
+ *  Provide the options to navigate to store and publisher
+ */
+
+var appsConfig = require('/config/sso.json');
+var storeUrl = appsConfig.urls['store'],
+    publisherUrl = appsConfig.urls['publisher'];
+
+%>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Password updated | WSO2 Enterprise Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="views/css/bootstrap.min.css" rel="stylesheet">
+    <link href="views/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="views/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="views/css/font-awesome.min.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="js/respond.min.js"></script>
+    <link rel="stylesheet" href="css/ie.css" type="text/css">
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="http://wso2.com/files/favicon.ico" type="image/x-icon"/>
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="span8 offset2">
+            <div class="row">
+                <div class="span8 form-header">
+                    <img src="views/img/logo-banner.png">
+                </div>
+            </div>
+            <div id="form-cont" class="row">
+                <div class="span8">
+                    <div class="form-forgot-password row-fluid">
+                        <div class="span12">
+                            <div class="row-fluid">
+                                <h3 class="form-forgot-password-heading">Password successfully updated</h3>
+                                <div yclass="control">
+                                    <p>Your password has been reset successfully. </br>Use the new password to sign in
+                                        to Store or Publisher.</p>
+                                </div>
+                                <div class="span6" style="float:left; width:30%">
+                                    <form action="<%=storeUrl%>">
+                                        <button id="gotostore" class="btn btn-large"
+                                                type="submit">Go to Store
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="span6" style="float:right; width:30%">
+                                    <form action="<%=publisherUrl%>">
+                                        <button id="gotopublisher" class="btn btn-large"
+                                                type="submit">Go to Publisher
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-footer span8 offset2 sso-footer">
+            <div class="footer row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <span> &copy; 2013 WSO2 Inc. All Rights Reserved. </span>
+                        </div>
+                        <div class="span6 pull-right">
+                            <ul>
+                                <li>
+                                    <a href="/publisher"><i class="icon-check-sign"></i> Publisher</a>
+                                </li>
+                                <li>
+                                    <a href="/store"><i class="icon-th-large"></i> Store</a>
+                                </li>
+                                <li>
+                                    <a href="http://docs.wso2.org/display/ES100/WSO2+Enterprise+Store"
+                                       target="_blank"><i class="icon-book"></i> Docs</a>
+                                </li>
+                                <li>
+                                    <a target="_blank" href="http://www.wso2.com" id="logo-wso2"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /container -->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="views/js/jquery-1.8.3.min.js"></script>
+<script src="views/js/bootstrap.min.js"></script>
+<script src="views/js/jquery.validate.js"></script>
+</body>
+</html>
