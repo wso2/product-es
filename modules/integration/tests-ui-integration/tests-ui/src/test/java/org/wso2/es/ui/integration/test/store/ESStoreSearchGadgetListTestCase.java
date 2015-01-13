@@ -1,37 +1,41 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  */
 
 package org.wso2.es.ui.integration.test.store;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import static org.testng.Assert.*;
-
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.openqa.selenium.support.ui.Select;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.es.ui.integration.util.*;
+import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * This class contains tests relates to search functionality of assets list page
@@ -54,20 +58,20 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = new ESWebDriver();
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
         adminUserName = userInfo.getUserName();
         adminUserPwd = userInfo.getPassword();
         acceptNextAlert = true;
-        wait = new WebDriverWait(driver, 30);
-        AutomationContext automationContext = new AutomationContext("ES",
+        wait = new WebDriverWait(driver, MAX_DRIVER_WAIT_TIME_SEC);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME,
                 TestUserMode.SUPER_TENANT_ADMIN);
         adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName,
                 adminUserPwd);
-        driver.get(baseUrl + "/" + storeApp);
+        driver.get(baseUrl + "/" + STORE_APP);
     }
 
     @Test(groups = "wso2.es.store", description = "Search By Category Template",
@@ -167,7 +171,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.store", description = "Add asset")//,
-            //dependsOnMethods = "testESStoreSearchAssetsByName")
+    //dependsOnMethods = "testESStoreSearchAssetsByName")
     public void testAddAsset() throws Exception {
         ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(),
                 userInfo.getPassword());
