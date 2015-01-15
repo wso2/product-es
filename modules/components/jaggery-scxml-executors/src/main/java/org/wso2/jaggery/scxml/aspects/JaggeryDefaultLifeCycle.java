@@ -214,10 +214,10 @@ public class JaggeryDefaultLifeCycle extends Aspect {
 //            Creating the checklist
 //            this is the first time the life cycle is associated with a resource.
             String initialState = scxml.getInitial();
-            addCheckItems(resource, checkListItems.get(initialState), initialState);
-            addTransitionApprovalItems(resource, transitionApproval.get(initialState), initialState);
-            addScripts(initialState, resource,scriptElements.get(initialState));
-            addTransitionUI(resource,transitionUIs.get(initialState));
+            addCheckItems(resource, checkListItems.get(initialState), initialState, aspectName);
+            addTransitionApprovalItems(resource, transitionApproval.get(initialState), initialState, aspectName);
+            addScripts(initialState, resource,scriptElements.get(initialState), aspectName);
+            addTransitionUI(resource,transitionUIs.get(initialState), aspectName);
 
         } catch (Exception e) {
             String message = "Resource does not contain a valid XML configuration: " + e.toString();
@@ -242,6 +242,7 @@ public class JaggeryDefaultLifeCycle extends Aspect {
         statCollection.setResourcePath(resource.getPath());
         statCollection.setUserName(CurrentSession.getUser());
         statCollection.setOriginalPath(resource.getPath());
+	statCollection.setAspectName(aspectName);
 
 //      writing the logs to the filters
         if (isAuditEnabled) {
@@ -361,6 +362,7 @@ public class JaggeryDefaultLifeCycle extends Aspect {
         statCollection.setResourcePath(resourcePath);
         statCollection.setUserName(user);
         statCollection.setOriginalPath(resourcePath);
+	statCollection.setAspectName(aspectName);
 
         //        Here we are doing the checkitem related operations.
         if("voteClick".equals(action)){
@@ -456,12 +458,12 @@ public class JaggeryDefaultLifeCycle extends Aspect {
             State state = (State) scxml.getChildren().get(nextState);
             resource.setProperty(stateProperty, state.getId().replace(".", " "));
 
-            clearCheckItems(resource);
-            clearTransitionApprovals(resource);
-            addCheckItems(resource, checkListItems.get(state.getId()), state.getId());
-            addTransitionApprovalItems(resource, transitionApproval.get(state.getId()), state.getId());
-            addScripts(state.getId(), resource,scriptElements.get(state.getId()));
-            addTransitionUI(resource, transitionUIs.get(state.getId()));
+            clearCheckItems(resource, aspectName);
+            clearTransitionApprovals(resource, aspectName);
+            addCheckItems(resource, checkListItems.get(state.getId()), state.getId(), aspectName);
+            addTransitionApprovalItems(resource, transitionApproval.get(state.getId()), state.getId(), aspectName);
+            addScripts(state.getId(), resource,scriptElements.get(state.getId()), aspectName);
+            addTransitionUI(resource, transitionUIs.get(state.getId()), aspectName);
 
             //            For auditing purposes
             statCollection.setTargetState(nextState);
