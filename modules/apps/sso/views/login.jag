@@ -1,9 +1,32 @@
 <%
+/*
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 var e = request.getParameter('authFailure');
+
+var recoveryModule = require('account-management').recovery;
+var challengeSet = recoveryModule.getChallengeQuestionSet();
+
 %>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Sign in or Register | WSO2 Enterprise Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,11 +37,11 @@ var e = request.getParameter('authFailure');
     <link href="views/css/bootstrap.min.css" rel="stylesheet">
     <link href="views/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="views/css/styles.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="views/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="views/css/font-awesome.min.css">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <script src="js/respond.min.js"></script>
     <link rel="stylesheet" href="css/ie.css" type="text/css">
     <![endif]-->
@@ -28,199 +51,237 @@ var e = request.getParameter('authFailure');
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="http://wso2.com/files/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="http://wso2.com/files/favicon.ico" type="image/x-icon"/>
 
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <div class="container">
-    	<div class="row">
-    		<div class="span8 offset2">
-    			<div class="row">
-					<div class="span8 form-header">
-						<img src="views/img/logo-banner.png">
-					</div>
-				</div>
-				<div id="form-cont" class="row">
-					<div class="span8">
-						<div class="form-signin row-fluid">
-							<div class="span12">
-								<div class="row-fluid">
-									<div class="span6">
-										<form id="loginForm" action="/commonauth" method="POST" >
-									        <h2 class="form-signin-heading">Sign in</h2>
-									        <% if(e){ %>
-									            <div class="alert alert-error">Username or password is invalid</div>
-									        <%
+<div class="container">
+    <div class="row">
+        <div class="span8 offset2">
+            <div class="row">
+                <div class="span8 form-header">
+                    <img src="views/img/logo-banner.png">
+                </div>
+            </div>
+            <div id="form-cont" class="row">
+                <div class="span8">
+                    <div class="form-signin row-fluid">
+                        <div class="span12">
+                            <div class="row-fluid">
+                                <div class="span6">
+                                    <form id="loginForm" action="/commonauth" method="POST">
+                                        <h2 class="form-signin-heading">Sign in</h2>
+                                        <% if(e){ %>
+                                        <div class="alert alert-error">Username or password is invalid</div>
+                                        <%
 
-                                            }%>
-									        <div class="control"><label>Username</label><input id="username" name="username" type="text" class="input-block-level"></div>
-									        <div class="control"><label>Password</label><input id="password" name="password" type="password" class="input-block-level"></div>
-									        <label class="checkbox lblRemember">
-									          <input type="checkbox" value="remember-me"> Remember me
-									        </label>
-									        <input type="hidden" name="sessionDataKey"  value="<%=request.getParameter("sessionDataKey")%>">
-									        <button class="btn btn-large pull-right" type="submit">Sign in</button>
-								    	</form>
-									</div>
+                                        }%>
+                                        <div class="control"><label>Username</label><input id="username" name="username"
+                                                                                           type="text"
+                                                                                           class="input-block-level">
+                                        </div>
+                                        <div class="control"><label>Password</label><input id="password" name="password"
+                                                                                           type="password"
+                                                                                           class="input-block-level">
+                                        </div>
+                                        <label class="checkbox lblRemember">
+                                            <input type="checkbox" value="remember-me"> Remember me
+                                        </label>
+                                        <input type="hidden" name="sessionDataKey"
+                                               value="<%=request.getParameter("sessionDataKey")%>">
+                                        <a href="recovery-option">Forgot your password?</a>
+                                        <button class="btn btn-large pull-right" type="submit">Sign in</button>
+                                    </form>
+                                </div>
 
-									<div class="span6">
-										<form id="registerForm">
-									        <h2 class="form-signin-heading">Register</h2>
-									         <div id="regFormError" class="alert alert-error" style="display:none"></div>
-                                             <div id="regFormSuc" class="alert alert-success" style="display:none"></div>
+                                <div class="span6">
+                                    <form id="registerForm">
+                                        <h2 class="form-signin-heading">Register</h2>
 
-									        <div class="control"><label>Username</label><input id="reg-username" name="reg-username" type="text" class="input-block-level required usrName"></div>
-									        <div class="control">
-									        	<label>Password</label>
-									        	<input id="reg-password" name="reg-password" type="password" class="input-block-level required">
-									        </div>
-									        <div class="control">
-							        			<label>Confirm password</label>
-									        	<input id="reg-password2" name="password2" type="password" class="input-block-level required" equalTo="#reg-password">
-									        </div>
-									        <%
-									        var claims = require('claims').getDefaultClaims();
-									        var renderedClaims = {};
+                                        <div id="regFormError" class="alert alert-error" style="display:none"></div>
+                                        <div id="regFormSuc" class="alert alert-success" style="display:none"></div>
 
-									        var claimUriOverrides = {
-									        	USERNAME: {
-									        		render: false // because this is already rendered by default
-									        	},
-									        	PASSWORD: {
-									        		render: false // because this is already rendered by default
-									        	},
-									        	EMAILADDRESS: {
-									        		render: true,
-									        		customClass: 'email'
-									        	}
-									        }
+                                        <div class="control"><label>Username</label><input id="reg-username"
+                                                name="reg-username" type="text" class="input-block-level required
+                                                usrName">
+                                        </div>
+                                        <div class="control">
+                                            <label>Password</label>
+                                            <input id="reg-password" name="reg-password" type="password"
+                                                   class="input-block-level required">
+                                        </div>
+                                        <div class="control">
+                                            <label>Confirm password</label>
+                                            <input id="reg-password2" name="password2" type="password"
+                                                   class="input-block-level required" equalTo="#reg-password">
+                                        </div>
+                                        <%
+                                        var claimsModule = require('account-management');
+                                        var claims = claimsModule.getDefaultClaims();
+                                        var renderedClaims = {};
 
-									        for (var i = 0; i < claims.length; i++) {
+                                        var claimUriOverrides = {
+                                            USERNAME: {
+                                                  render: false // because this is already rendered by default
+                                            },
+                                            PASSWORD: {
+                                                  render: false // because this is already rendered by default
+                                            },
+                                            EMAILADDRESS: {
+                                                  render: true,
+                                                  customClass: 'email'
+                                            }
+                                        }
 
-									        	var override = claimUriOverrides[claims[i].claimUri.toUpperCase()];
+                                        for (var claimIndex = 0; claimIndex < claims.length; claimIndex++) {
 
-									        	// render claim if it's required and not overriden to --> render:false
-									        	if (claims[i].isRequired &&
-									        		(!override || override.render !== false)) {
+                                               var override = claimUriOverrides[claims[claimIndex].claimUri.toUpperCase()];
 
-									        		var formElementName = 'reg-' + claims[i].displayTag.toLowerCase().replace(' ', '-');
+                                               // render claim if it's required and not overriden to --> render:false
+                                               if (claims[claimIndex].isRequired && (!override || override.render !== false)) {
+                                                    var formElementName = 'reg-' + claims[claimIndex].displayTag
+                                                              .toLowerCase().replace(' ', '-');
+                                        %>
+                                        <div class="control">
+                                            <label><%=claims[claimIndex].displayTag%></label>
+                                            <input type="text" name="<%=formElementName%>"
+                                                   data-claim-uri="<%=claims[claimIndex].claimUri%>"
+                                                   class="input-block-level required <%=claims[claimIndex].customClass%>">
+                                        </div>
+                                        <%
+                                                    renderedClaims[formElementName] = claims[claimIndex].claimUri;
+                                               }
+                                        }
+                                        %>
+                                        <div class="control">
+                                            <label>Security Question</label>
+                                            <select id='secret-question' name='secret-question'>
+                                        <%
+                                            for (var challengeIndex = 0; challengeIndex < challengeSet.length; challengeIndex++) {
+                                        %>
+                                                <option value="<%=challengeSet[challengeIndex].getQuestion()%>">
+                                                    <%=challengeSet[challengeIndex].getQuestion()%>
+                                                </option>
+                                        <%
+                                            }
+                                        %>
+                                            </select>
+                                        </div>
+                                        <div class="control">
+                                            <label>Answer</label>
+                                            <input type='text' id='secret-answer' name="secret-answer"
+                                                   class="input-block-level required">
+                                        </div>
+                                        <div class="control">
+                                            <input type="hidden" name="reg-claims" value='<%=renderedClaims%>'
+                                                   class="input-block-level required">
+                                        </div>
+                                        <div>
+                                            <input id="reg-action" name="action" type="hidden" value="register">
+                                        </div>
+                                        <button id="registrationSubmit" class="btn btn-large btn-primary pull-right"
+                                                type="button">Register
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
 
-									        		%> 
-									        		<div class = "control">
-									        			<label><%=claims[i].displayTag%></label>
-							        					<input type="text" name="<%=formElementName%>" data-claim-uri="<%=claims[i].claimUri%>" class="input-block-level required <%=claims[i].customClass%>">
-							        				</div> 
-							        				<%
+                        </div>
 
-									        		renderedClaims[formElementName] = claims[i].claimUri;
-									        	}
-									        }
-									        %>
-									        <div class="control">
-									        	<input type="hidden" name="reg-claims" value='<%=renderedClaims%>'>
-									        </div>
-									        <div>
-									        	<input id="reg-action" name="action" type="hidden" value="register">
-									        </div>
-									        <button id="registrationSubmit" class="btn btn-large btn-primary pull-right" type="button">Register</button>
-								    	</form>
-									</div>
-								</div>
-
-							</div>
-
-						</div>
-			      	</div>
-				</div>
-
-
-
-
-    		</div>
-    		<div class="row row-footer span8 offset2 sso-footer">
-
-						<div class="footer row-fluid">
-							<div class="span12">
-								<div class="row-fluid">
-									<div class="span6">
-										<span> &copy; 2013 WSO2 Inc. All Rights Reserved. </span>
-									</div>
-									<div class="span6 pull-right">
-										<ul>
-											<li>
-												<a href="/publisher"><i class="icon-check-sign"></i> Publisher</a>
-											</li>
-											<li>
-												<a href="/store"><i class="icon-th-large"></i> Store</a>
-											</li>
-											<li>
-												<a href="http://docs.wso2.org/display/ES100/WSO2+Enterprise+Store" target="_blank"><i class="icon-book"></i> Docs</a>
-											</li>
-											<li>
-												<a target="_blank" href="http://www.wso2.com" id="logo-wso2"></a>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-
-
-				</div>
-    	</div>
-
-
+                    </div>
+                </div>
+            </div>
 
 
-    </div> <!-- /container -->
+        </div>
+        <div class="row row-footer span8 offset2 sso-footer">
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="views/js/jquery-1.8.3.min.js"></script>
-    <script src="views/js/bootstrap.min.js"></script>
-    <script src="views/js/jquery.validate.js"></script>
-  	<script type="text/javascript">
-		$(function() {
-			function register() {
-				if (!$('#registerForm').valid()) {
-					return;
-				}
+            <div class="footer row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <span> &copy; 2013 WSO2 Inc. All Rights Reserved. </span>
+                        </div>
+                        <div class="span6 pull-right">
+                            <ul>
+                                <li>
+                                    <a href="/publisher"><i class="icon-check-sign"></i> Publisher</a>
+                                </li>
+                                <li>
+                                    <a href="/store"><i class="icon-th-large"></i> Store</a>
+                                </li>
+                                <li>
+                                    <a href="http://docs.wso2.org/display/ES100/WSO2+Enterprise+Store"
+                                       target="_blank"><i class="icon-book"></i> Docs</a>
+                                </li>
+                                <li>
+                                    <a target="_blank" href="http://www.wso2.com" id="logo-wso2"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-				var formData = $("#registerForm").serialize()
 
-				$.post('/sso/register', formData, function(data) {
-					if (JSON.parse(data).error == 'false') {
-						$('#regFormError').hide();
-						$('#regFormSuc').show();
-						$('#regFormSuc').text(JSON.parse(data).msg);
+        </div>
+    </div>
 
-						//submitting the login form
-						$('#username').val($('#reg-username').val());
-						$('#password').val($('#reg-password').val());
-						$('#loginForm').submit();
 
-					} else {
-						$('#regFormSuc').hide();
-						$('#regFormError').show();
-						$('#regFormError').text(JSON.parse(data).msg);
-					}
-				});
-			}
-			$("#registrationSubmit").bind('click', register);
+</div>
+<!-- /container -->
 
-			$('#registerForm input').bind('keypress', function(e) {
-				if (e.which == 13) {
-					register();
-				}
-			});
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="views/js/jquery-1.8.3.min.js"></script>
+<script src="views/js/bootstrap.min.js"></script>
+<script src="views/js/jquery.validate.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var ENTER_KEY = 13;
+        function register() {
+            if (!$('#registerForm').valid()) {
+                return;
+            }
 
-			jQuery.validator.addMethod("usrName", function(value, element) {
-				return this.optional(element) || /^[a-zA-Z0-9\-]*$/.test(value);
-			}, "Only alphanumeric characters and '-' allowed");
-		});
-	</script>
-  </body>
+            var formData = $("#registerForm").serialize();
+
+            $.post('/sso/register', formData, function (data) {
+                var regFormError = $('#regFormError');
+                var regFromSuccess = $('#regFormSuc');
+                if (JSON.parse(data).error == 'false') {
+                    regFormError.hide();
+                    regFromSuccess.show();
+                    regFromSuccess.text(JSON.parse(data).msg);
+
+                    //submitting the login form
+                    $('#username').val($('#reg-username').val());
+                    $('#password').val($('#reg-password').val());
+                    $('#loginForm').submit();
+
+                } else {
+                    regFromSuccess.hide();
+                    regFormError.show();
+                    regFormError.text(JSON.parse(data).msg);
+                }
+            });
+        }
+
+        $("#registrationSubmit").bind('click', register);
+
+        $('#registerForm input').bind('keypress', function (e) {
+            if (e.which == ENTER_KEY) {
+                register();
+            }
+        });
+
+        jQuery.validator.addMethod("usrName", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9\-]*$/.test(value);
+        }, "Only alphanumeric characters and '-' allowed");
+    });
+</script>
+</body>
 </html>

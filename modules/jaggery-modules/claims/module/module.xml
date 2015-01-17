@@ -1,7 +1,0 @@
-<module name="claims" xmlns="http://wso2.org/projects/jaggery/module.xml">
-   <script>
-       <name>claims</name>
-       <path>scripts/claims.js</path>
-   </script>
-</module>
-

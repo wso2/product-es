@@ -26,7 +26,7 @@
 
     <groupId>org.wso2.carbon</groupId>
     <artifactId>social-feature</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Social Feature Aggregator Module</name>

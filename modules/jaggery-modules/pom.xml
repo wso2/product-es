@@ -34,7 +34,7 @@
         <module>sso</module>
         <module>store</module>
         <module>ues</module>
-        <module>claims</module>
+        <module>account-management</module>
         <module>rxt</module>
         <module>utils</module>
         <module>lifecycle</module>
