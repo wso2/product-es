@@ -597,7 +597,7 @@
         <caramel.feature.version>1.0.1</caramel.feature.version>
         <handlebars.feature.version>1.0.0</handlebars.feature.version>
         <markdown.feature.version>1.0.0</markdown.feature.version>
-        <carbon.feature.version>1.1.0</carbon.feature.version>
+        <carbon.feature.version>1.2.0-SNAPSHOT</carbon.feature.version>
         <process.feature.version>1.0.0</process.feature.version>
         <uuid.feature.version>1.0.0</uuid.feature.version>
         <jaggery-test.feature.version>1.1.0</jaggery-test.feature.version>
