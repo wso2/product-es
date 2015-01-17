@@ -26,7 +26,8 @@ var type;
             prefix = config.urls.EXTENSIONS + '/',
             server = require('store').server,
             tenant = server.tenant(request, session),
-            configs = publisher.configs(tenant.tenantId);
+            configs = publisher.configs(tenant.tenantId),
+            constants = require("rxt").constants,
     mapper = function (path) {
         return function () {
             return path;
@@ -54,7 +55,7 @@ var type;
         if (suffix) {
             links = mod.publisher(request, session).assetLinks(type).links;
             if (!links) {
-                response.sendError(404, 'Request Resource cannot be found');
+                response.sendError(constants.STATUS_CODES.NOT_FOUND, 'Request Resource cannot be found');
                 return;
             }
             length = links.length;
@@ -68,7 +69,7 @@ var type;
             if (path) {
                 path = pages + path;
             } else {
-                response.sendError(404, 'Request Resource cannot be found');
+                response.sendError(constants.STATUS_CODES.NOT_FOUND, 'Request Resource cannot be found');
                 return;
             }
             request.getMappedPath = mapper(path);
@@ -87,7 +88,7 @@ var type;
         if (suffix) {
             links = mod.publisher(request, session).apiLinks(type).links;
             if (!links) {
-                response.sendError(404, 'Request Resource cannot be found');
+                response.sendError(constants.STATUS_CODES.NOT_FOUND, 'Request Resource cannot be found');
                 return;
             }
             length = links.length;
@@ -101,7 +102,7 @@ var type;
             if (path) {
                 path = apis + path;
             } else {
-                response.sendError(404, 'Request Resource cannot be found');
+                response.sendError(constants.STATUS_CODES.NOT_FOUND, 'Request Resource cannot be found');
                 return;
             }
             request.getMappedPath = mapper(path);
@@ -110,6 +111,6 @@ var type;
         }
     }
 
-    response.sendError(404, 'Requested Resource cannot be found');
+    response.sendError(constants.STATUS_CODES.NOT_FOUND, 'Requested Resource cannot be found');
 }());
 %>

@@ -137,11 +137,6 @@ var result;
                     log.debug('Copying old resource attribute value for ' + resourceField);
                 }
                 asset.attributes[resourceField] = original.attributes[resourceField];
-            }if (!asset.attributes[resourceField]) {
-                if (log.isDebugEnabled()) {
-                    log.debug('Copying old resource attribute value for ' + resourceField);
-                }
-                asset.attributes[resourceField] = original.attributes[resourceField];
             }
         }
     };

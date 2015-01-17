@@ -42,7 +42,7 @@ var notificationManager = {};
             storeNotifier.notifyEvent(eventName, emailContent, path, user);
             isSuccessful = true;
         } catch (e) {
-            log.error('Notifying the event ' + eventName + 'failed for ' + eventName);
+            log.error('Notifying the event ' + eventName + 'failed for ' + eventName, e);
             isSuccessful = false;
         }
         return isSuccessful;
@@ -61,7 +61,7 @@ var notificationManager = {};
             storeNotifier.subscribeToEvent(tenantId, resourcePath, endpoint, eventName);
             isSuccessful = true;
         } catch (e) {
-            log.error('Subscribing to asset on ' + resourcePath + ' failed for ' + eventName);
+            log.error('Subscribing to asset on ' + resourcePath + ' failed for ' + eventName, e);
             isSuccessful = false;
         }
         return isSuccessful;
@@ -93,7 +93,7 @@ var notificationManager = {};
         try {
             return storeNotifier.getAllSubscriptions();
         } catch (e) {
-            log.error("Retrieving subscription list failed");
+            log.error("Retrieving subscription list failed", e);
             return null;
         }
     };

@@ -146,6 +146,7 @@ public class JaggeryTravellingPermissionLifeCycle extends Aspect {
         aspectName = currentAspectName;
         currentAspectName = currentAspectName.replaceAll("\\s", "");
         stateProperty = LifecycleConstants.REGISTRY_LIFECYCLE + currentAspectName + ".state";
+	lifecycleProperty = lifecycleProperty + currentAspectName ;
 
         Iterator configChildElements = config.getChildElements();
         while (configChildElements.hasNext()) {
@@ -256,10 +257,10 @@ public class JaggeryTravellingPermissionLifeCycle extends Aspect {
 //            Creating the checklist
 //            this is the first time the life cycle is associated with a resource.
             String initialState = scxml.getInitial();
-            Utils.addCheckItems(resource, checkListItems.get(initialState), initialState);
-            Utils.addTransitionApprovalItems(resource, transitionApproval.get(initialState), initialState);
-            Utils.addScripts(initialState, resource,scriptElements.get(initialState));
-            Utils.addTransitionUI(resource,transitionUIs.get(initialState));
+            Utils.addCheckItems(resource, checkListItems.get(initialState), initialState, aspectName);
+            Utils.addTransitionApprovalItems(resource, transitionApproval.get(initialState), initialState, aspectName);
+            Utils.addScripts(initialState, resource,scriptElements.get(initialState), aspectName);
+            Utils.addTransitionUI(resource,transitionUIs.get(initialState), aspectName);
 
         } catch (Exception e) {
             String message = "Resource does not contain a valid XML configuration: " + e.toString();
@@ -284,6 +285,7 @@ public class JaggeryTravellingPermissionLifeCycle extends Aspect {
         statCollection.setResourcePath(resource.getPath());
         statCollection.setUserName(CurrentSession.getUser());
         statCollection.setOriginalPath(resource.getPath());
+	statCollection.setAspectName(aspectName);
 
 //      writing the logs to the registry
         if (isAuditEnabled) {
@@ -404,6 +406,7 @@ public class JaggeryTravellingPermissionLifeCycle extends Aspect {
         statCollection.setResourcePath(resourcePath);
         statCollection.setUserName(user);
         statCollection.setOriginalPath(resourcePath);
+	statCollection.setAspectName(aspectName);
 
         //        Here we are doing the checkitem related operations.
         if("voteClick".equals(action)){
@@ -486,12 +489,12 @@ public class JaggeryTravellingPermissionLifeCycle extends Aspect {
             State state = (State) scxml.getChildren().get(nextState);
             resource.setProperty(stateProperty, state.getId().replace(".", " "));
 
-            Utils.clearCheckItems(resource);
-            Utils.clearTransitionApprovals(resource);
-            Utils.addCheckItems(resource, checkListItems.get(state.getId()), state.getId());
-            Utils.addTransitionApprovalItems(resource, transitionApproval.get(state.getId()), state.getId());
-            Utils.addScripts(state.getId(), resource,scriptElements.get(state.getId()));
-            Utils.addTransitionUI(resource, transitionUIs.get(state.getId()));
+            Utils.clearCheckItems(resource, aspectName);
+            Utils.clearTransitionApprovals(resource, aspectName);
+            Utils.addCheckItems(resource, checkListItems.get(state.getId()), state.getId(), aspectName);
+            Utils.addTransitionApprovalItems(resource, transitionApproval.get(state.getId()), state.getId(), aspectName);
+            Utils.addScripts(state.getId(), resource,scriptElements.get(state.getId()), aspectName);
+            Utils.addTransitionUI(resource, transitionUIs.get(state.getId()), aspectName);
 
             //            For auditing purposes
             statCollection.setTargetState(nextState);

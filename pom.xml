@@ -259,12 +259,12 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -556,10 +556,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
-        <carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
-        <carbon.social.version>1.1.0-SNAPSHOT</carbon.social.version>
+        <carbon.kernel.version>4.3.0</carbon.kernel.version>
+        <carbon.social.version>1.2.0-SNAPSHOT</carbon.social.version>
 
-        <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
+        <test.framework.version>4.3.1</test.framework.version>
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
@@ -597,7 +597,7 @@
         <caramel.feature.version>1.0.1</caramel.feature.version>
         <handlebars.feature.version>1.0.0</handlebars.feature.version>
         <markdown.feature.version>1.0.0</markdown.feature.version>
-        <carbon.feature.version>1.1.0</carbon.feature.version>
+        <carbon.feature.version>1.2.0-SNAPSHOT</carbon.feature.version>
         <process.feature.version>1.0.0</process.feature.version>
         <uuid.feature.version>1.0.0</uuid.feature.version>
         <jaggery-test.feature.version>1.1.0</jaggery-test.feature.version>

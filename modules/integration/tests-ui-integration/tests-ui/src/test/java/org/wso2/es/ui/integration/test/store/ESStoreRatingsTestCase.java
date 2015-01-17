@@ -1,46 +1,46 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  */
 
 package org.wso2.es.ui.integration.test.store;
 
-import static org.testng.Assert.*;
-
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 /**
  * This class contains test related to posting and viewing rating from ES-front office
  */
 public class ESStoreRatingsTestCase extends BaseUITestCase {
-    private String webApp = "store";
-
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        driver = new ESWebDriver();
-        wait = new WebDriverWait(driver, 30);
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
+        wait = new WebDriverWait(driver, MAX_DRIVER_WAIT_TIME_SEC);
         baseUrl = getWebAppURL();
-        driver.get(baseUrl + "/" + webApp);
-
+        driver.get(baseUrl + "/" + STORE_APP);
     }
 
     @Test(groups = "wso2.es.store.ratings", description = "Test Start Add Rating")
@@ -60,7 +60,7 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.store.ratings", description = "Test Submit Rating",
             dependsOnMethods = "testStoreBeforeAddRatings")
     public void testESAddRating() throws Exception {
-        ESUtil.login(driver, baseUrl, webApp, userInfo.getUserName(), userInfo.getPassword());
+        ESUtil.login(driver, baseUrl, STORE_APP, userInfo.getUserName(), userInfo.getPassword());
         driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("h4")).click();
         driver.findElement(By.linkText("User Reviews")).click();

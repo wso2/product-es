@@ -1,4 +1,22 @@
 <?org.wso2.uesxml version="1.0" encoding="UTF-8"?>
+<!--
+  ~  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~  http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -138,6 +156,23 @@
                                             dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
                                     </fileset>
                                 </copy>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties"
+                                        token="Identity.Listener.Enable=false" value="Identity.Listener.Enable=true"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties"
+                                        token="Notification.Expire.Time=0" value="Notification.Expire.Time=3"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties"
+                                        token="UserAccount.Recovery.Enable=false" value="UserAccount.Recovery.Enable=true"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/email/email-admin-config.xml"
+                                        token="https://localhost:8443/InfoRecoverySample/infoRecover/verify?confirmation={confirmation-code}"
+                                        value="https://localhost:9443/sso/reset-link?confirmation={confirmation-code}&amp;amp;username={user-name}"/>
                                 
                                 <!--
                                 <copy todir="target/wso2carbon-core-${carbon.kernel.version}/samples"

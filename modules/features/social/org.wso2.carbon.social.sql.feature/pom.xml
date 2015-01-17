@@ -5,14 +5,14 @@
    <parent>
        <groupId>org.wso2.carbon</groupId>
        <artifactId>social-feature</artifactId>
-       <version>1.1.0-SNAPSHOT</version>
+       <version>1.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.social.sql.feature</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <name>WSO2 Carbon - Social - SQL Feature</name>
 
 
@@ -82,7 +82,7 @@
                             </bundles>
 
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
                                 <!--importFeatureDef>org.wso2.carbon.bam.toolbox.deployer:4.2.1</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.event.stream.manager:1.0.1</importFeatureDef-->
                             </importFeatures>
