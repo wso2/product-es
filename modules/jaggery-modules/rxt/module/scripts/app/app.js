@@ -267,7 +267,10 @@ var app = {};
             log.info('Landing page changed to : ' + configs.application.landingPage);
         }
         if ((serverConfigs.disabledAssets) && (serverConfigs.disabledAssets.length > 0)) {
-            configs.disabledAssets = disabledAssets.concat(serverConfigs.disabledAssets);
+            //Overriding extensions will completely replace the disabled assets list, this is required
+            //in order to allow app extensions to enable types that are already disabled by a previous extensions
+            configs.disabledAssets = serverConfigs.disabledAssets; 
+            //configs.disabledAssets = disabledAssets.concat(serverConfigs.disabledAssets);
             log.info('Disabled assets: ' + stringify(configs.disabledAssets));
         }
         //Invoke the server configs loaded
