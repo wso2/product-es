@@ -30,9 +30,9 @@
     <name>WSO2 Enterprise Store Features</name>
     <url>http://wso2.org</url>
     <modules>
-        <module>social</module>
+        <!--<module>social</module>-->
         <module>org.wso2.store.styles.feature</module>
-        <module>org.wso2.store.feature</module>
-        <module>org.wso2.es.feature</module>
+        <!--<module>org.wso2.store.feature</module>-->
+        <!--<module>org.wso2.es.feature</module>-->
     </modules>
 </project>

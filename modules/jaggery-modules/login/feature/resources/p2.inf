@@ -1,4 +1,0 @@
-instructions.configure = \
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../modules); \
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../modules/login); \
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.store.modules.login_${feature.version}/module/,target:${installFolder}/../../../modules/login,overwrite:true);\
