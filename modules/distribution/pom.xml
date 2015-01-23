@@ -156,24 +156,6 @@
                                             dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
                                     </fileset>
                                 </copy>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties"
-                                        token="Identity.Listener.Enable=false" value="Identity.Listener.Enable=true"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties"
-                                        token="Notification.Expire.Time=0" value="Notification.Expire.Time=3"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties"
-                                        token="UserAccount.Recovery.Enable=false" value="UserAccount.Recovery.Enable=true"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/email/email-admin-config.xml"
-                                        token="https://localhost:8443/InfoRecoverySample/infoRecover/verify?confirmation={confirmation-code}"
-                                        value="https://localhost:9443/sso/reset-link?confirmation={confirmation-code}&amp;amp;username={user-name}"/>
-                                
                                 <!--
                                 <copy todir="target/wso2carbon-core-${carbon.kernel.version}/samples"
                                       overwrite="true">
