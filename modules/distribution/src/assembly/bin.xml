@@ -122,6 +122,13 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/client</directory>
+            <outputDirectory>${pom.artifactId}-${project.version}/lib</outputDirectory>
+            <includes>
+                <include>*/**</include>
+            </includes>
+        </fileSet>
         <!--copy jaxrs web app for OAuth feature-->
         <fileSet>
             <directory>
@@ -256,7 +263,7 @@
                 <include>**/social.tbox</include>
             </includes>
         </fileSet-->
-        
+     <!--
         <fileSet>
             <directory>${project.basedir}/../components/asset-client/target</directory>
             <includes>
@@ -275,11 +282,15 @@
             </includes>
            <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
        </fileSet>
-
+     -->
        <fileSet>
         <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/samples</directory>
         <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
        </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/samples</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
+        </fileSet>
         <fileSet>
             <directory>src/repository/samples</directory>
             <outputDirectory>${project.artifactId}-${project.version}/samples</outputDirectory>
