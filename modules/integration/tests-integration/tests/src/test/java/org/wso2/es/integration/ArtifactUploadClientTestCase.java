@@ -47,6 +47,7 @@ public class ArtifactUploadClientTestCase extends ESIntegrationTest {
 	private String esUser;
 	private String esPwd;
 	private String carbonHome = "";
+    private static final String EXECUTABLE_JAR_FILE = "aset-client-jar-with-dependencies.jar";
 
 	@BeforeClass(alwaysRun = true)
 	public void init()
@@ -68,7 +69,7 @@ public class ArtifactUploadClientTestCase extends ESIntegrationTest {
 	public void publisherTest() throws Exception {
 
 		Process proc = Runtime.getRuntime().exec("java -jar " + carbonHome +
-		                                         "/lib/asset-client-2.0.0-SNAPSHOT-jar-with-dependencies.jar -host " +
+		                                         "/lib/"+EXECUTABLE_JAR_FILE+" -host " +
 		                                         esHost + " -port " + esPort + " -user " +
 		                                         esUser +
 		                                         " -pwd " + esPwd + " -location " + carbonHome +
