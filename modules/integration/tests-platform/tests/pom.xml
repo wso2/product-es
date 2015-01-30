@@ -306,12 +306,5 @@
             <artifactId>org.wso2.store.bamclient</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.wso2.store</groupId>
-            <artifactId>asset-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
     </dependencies>
 </project>
