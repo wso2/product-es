@@ -22,7 +22,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>wso2es-integration</artifactId>
-        <groupId>org.wso2.store</groupId>
+        <groupId>org.wso2.es</groupId>
         <version>2.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
@@ -46,24 +46,24 @@
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.store</groupId>
+            <groupId>org.wso2.es</groupId>
             <artifactId>org.wso2.es.integration.common.clients</artifactId>
             <version>${project.version}</version>
             <exclusions>
@@ -75,7 +75,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.wso2.store</groupId>
+            <groupId>org.wso2.es</groupId>
             <artifactId>org.wso2.es.integration.common.utils</artifactId>
             <version>${project.version}</version>
             <exclusions>
@@ -86,7 +86,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.store</groupId>
+            <groupId>org.wso2.es</groupId>
             <artifactId>ui-pages</artifactId>
             <version>${project.version}</version>
         </dependency>
