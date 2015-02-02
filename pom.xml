@@ -208,9 +208,8 @@
                         </execution>
                     </executions>
                 </plugin>
-                
 
-         
+
             </plugins>
         </pluginManagement>
     </build>
@@ -242,19 +241,19 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon</groupId>-->
-                <!--<artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>-->
-                <!--<version>${carbon.platform.version}</version>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>-->
+            <!--<version>${carbon.platform.version}</version>-->
             <!--</dependency>-->
             <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon</groupId>-->
-                <!--<artifactId>org.wso2.carbon.databridge.commons</artifactId>-->
-                <!--<version>${carbon.platform.version}</version>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.databridge.commons</artifactId>-->
+            <!--<version>${carbon.platform.version}</version>-->
             <!--</dependency>-->
             <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon</groupId>-->
-                <!--<artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>-->
-                <!--<version>${carbon.platform.version}</version>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>-->
+            <!--<version>${carbon.platform.version}</version>-->
             <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -314,9 +313,9 @@
                 <version>${el.api.version}</version>
             </dependency>
             <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon</groupId>-->
-                <!--<artifactId>org.wso2.carbon.hostobjects.sso</artifactId>-->
-                <!--<version>${sso.hostobjects.version}</version>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.hostobjects.sso</artifactId>-->
+            <!--<version>${sso.hostobjects.version}</version>-->
             <!--</dependency>-->
             <!--dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -433,8 +432,8 @@
         </dependencies>
     </dependencyManagement>
     <scm>
-        <connection>scm:git:https://github.com/wso2/enterprise-store.git</connection>
-        <developerConnection>scm:git:https://github.com/wso2/enterprise-store.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/product-es.git</connection>
+        <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
     </scm>
     <repositories>
         <repository>
@@ -555,7 +554,7 @@
     <properties>
         <project.scm.id>github-scm</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
+
         <carbon.kernel.version>4.3.0</carbon.kernel.version>
         <carbon.social.version>1.2.0-SNAPSHOT</carbon.social.version>
 
