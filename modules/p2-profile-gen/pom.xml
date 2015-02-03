@@ -99,31 +99,31 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:caramel.feature:${caramel.feature.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:event.feature:${project.version}
+                                <featureArtifactDef>org.wso2.carbon.store:event.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:login.feature:${project.version}
+                                <featureArtifactDef>org.wso2.carbon.store:login.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:permission.feature:${project.version}
+                                <featureArtifactDef>org.wso2.carbon.store:permission.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:registration.feature:${project.version}
+                                <featureArtifactDef>org.wso2.carbon.store:registration.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:sso.feature:${project.version}
-                                </featureArtifactDef>
-
-                                <featureArtifactDef>org.wso2.carbon.store:bampublisher.feature:${project.version}
+                                <featureArtifactDef>org.jaggeryjs.modules:sso.feature:${sso.feature.version}
                                 </featureArtifactDef>
 
-                                <featureArtifactDef>org.wso2.carbon.store:store.feature:${project.version}
+                                <featureArtifactDef>org.wso2.carbon.store:bampublisher.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:ues.feature:${project.version}
+
+                                <featureArtifactDef>org.wso2.carbon.store:store.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:account-management.feature:${project.version}
+                                <featureArtifactDef>org.wso2.carbon.store:ues.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                 <featureArtifactDef>org.wso2.carbon.store:rxt.feature:${project.version}
+                                <featureArtifactDef>org.wso2.carbon.store:account-management.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                 <featureArtifactDef>org.wso2.carbon.store:utils.feature:${project.version}
+                                 <featureArtifactDef>org.wso2.carbon.store:rxt.feature:${carbon.store.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.store:lifecycle.feature:${project.version}
+                                 <featureArtifactDef>org.wso2.carbon.store:utils.feature:${carbon.store.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon.store:lifecycle.feature:${carbon.store.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
@@ -169,10 +169,10 @@
                                     org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.feature:${jaxws.webapp.mgt.version}
                                 </featureArtifactDef-->
                                 <featureArtifactDef>
-                                    org.wso2.es:org.wso2.store.styles.feature:${project.version}
+                                    org.wso2.es:org.wso2.store.styles.feature:${carbon.store.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.store:org.wso2.store.feature:${project.version}
+                                    org.wso2.carbon.store:org.wso2.store.feature:${carbon.store.version}
                                 </featureArtifactDef>
                                 <!-- SSO -->
                                 <featureArtifactDef>
@@ -371,54 +371,54 @@
                                     <version>${jaggery-test.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.event.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.event.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.login.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.login.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.permission.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.permission.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.registration.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.registration.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.sso.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.store.bampublisher.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.jaggeryjs.modules.sso.feature.group</id>
+                                    <version>${sso.feature.version}</version>
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.carbon.store.store.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.bampublisher.feature.group</id>
+                                    <version>${carbon.store.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.store.modules.store.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.ues.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.ues.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.account-management.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.account-management.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.rxt.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.rxt.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.utils.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.utils.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.store.lifecycle.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <id>org.wso2.store.modules.lifecycle.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <!--<feature>
                                     <id>org.wso2.carbon.transport.commons.feature.group</id>
@@ -454,11 +454,11 @@
                                 </feature-->
                                 <feature>
                                     <id>org.wso2.store.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.styles.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>

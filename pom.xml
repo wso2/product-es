@@ -503,18 +503,6 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-    <distributionManagement>
-        <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 Internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
     <profiles>
         <profile>
             <id>sign</id>
@@ -557,17 +545,18 @@
 
         <carbon.kernel.version>4.3.0</carbon.kernel.version>
         <carbon.social.version>1.2.0-SNAPSHOT</carbon.social.version>
+        <carbon.store.version>2.0.0-SNAPSHOT</carbon.store.version>
 
         <test.framework.version>4.3.1</test.framework.version>
         <automation.utils.version>4.3.0</automation.utils.version>
 
         <!--repo versions-->
-        <carbon.commons.version>4.3.3</carbon.commons.version>
+        <carbon.commons.version>4.3.4</carbon.commons.version>
         <carbon.registry.version>4.3.0</carbon.registry.version>
         <carbon.governance.version>4.3.0</carbon.governance.version>
-        <carbon.deployment.version>4.3.0</carbon.deployment.version>
-        <carbon.identity.version>4.3.1</carbon.identity.version>
-        <carbon.multitenancy.version>4.3.0</carbon.multitenancy.version>
+        <carbon.deployment.version>4.3.1</carbon.deployment.version>
+        <carbon.identity.version>4.3.2</carbon.identity.version>
+        <carbon.multitenancy.version>4.3.3</carbon.multitenancy.version>
 
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
@@ -608,6 +597,7 @@
         <carbon.feature.version>1.2.0</carbon.feature.version>
         <process.feature.version>1.2.0</process.feature.version>
         <uuid.feature.version>1.2.0</uuid.feature.version>
+        <sso.feature.version>1.2.0</sso.feature.version>
         <jaggery-test.feature.version>1.2.0</jaggery-test.feature.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
 

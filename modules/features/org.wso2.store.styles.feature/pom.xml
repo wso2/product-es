@@ -49,7 +49,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.es.styles</id>
+                            <id>org.wso2.store.styles</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <!--<adviceFile>
                                 <properties>
