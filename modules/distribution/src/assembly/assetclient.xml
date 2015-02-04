@@ -34,7 +34,7 @@
         <include>org.wso2.store:asset-client</include>
       </includes>
       <binaries>
-        <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+        <outputDirectory>${project.artifactId}-${product.es.version}/lib</outputDirectory>
         <unpack>false</unpack>
       </binaries>
 

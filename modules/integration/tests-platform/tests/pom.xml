@@ -27,9 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.es</groupId>
     <artifactId>org.wso2.store.platform.tests</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <build>
@@ -37,7 +35,6 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
-                <version>2.12.3</version>
                 <configuration>
                     <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                     <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m</argLine>
@@ -57,7 +54,7 @@
                         <property>
                             <name>carbon.zip</name>
                             <value>
-                                ${basedir}/../../../distribution/target/wso2es-${project.version}.zip
+                                ${basedir}/../../../distribution/target/wso2es-${product.es.version}.zip
                             </value>
                         </property>
                         <property>
@@ -97,7 +94,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -168,7 +164,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.es</groupId>
                                     <artifactId>wso2es</artifactId>
-                                    <version>${project.version}</version>
+                                    <version>${product.es.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
@@ -182,7 +178,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -194,7 +189,6 @@
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
                 <executions>
                     <execution>
                         <id>copy-resources-jks</id>
@@ -208,7 +202,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2es-${project.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2es-${product.es.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -229,7 +223,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2es-${project.version}/repository/deployment/client/modules
+                                        ${basedir}/target/tobeCopied/wso2es-${product.es.version}/repository/deployment/client/modules
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
@@ -275,7 +269,6 @@
         <dependency>
             <groupId>org.wso2.es</groupId>
             <artifactId>org.wso2.es.integration.common.clients</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
@@ -287,7 +280,6 @@
         <dependency>
             <groupId>org.wso2.es</groupId>
             <artifactId>org.wso2.es.integration.common.utils</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
@@ -298,7 +290,6 @@
         <dependency>
             <groupId>org.wso2.es</groupId>
             <artifactId>ui-pages</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

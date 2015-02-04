@@ -92,7 +92,7 @@
                                 <artifactItem>
                                     <groupId>org.apache.shindig</groupId>
                                     <artifactId>shindig-server</artifactId>
-                                    <version>2.5.0-beta5</version>
+                                    <version>${shindig.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target/shindig</outputDirectory>
@@ -140,27 +140,27 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
-                                        <include name="${project.artifactId}-${project.version}.zip"/>
+                                        <include name="${project.artifactId}-${product.es.version}.zip"/>
                                     </fileset>
                                 </unzip>
                                 <copy todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components"
                                       overwrite="true">
                                     <fileset
-                                            dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
+                                            dir="${tempdir}/${project.artifactId}-${product.es.version}/repository/components">
                                     </fileset>
                                 </copy>
                                 
                                 <copy todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components"
                                       overwrite="true">
                                     <fileset
-                                            dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
+                                            dir="${tempdir}/${project.artifactId}-${product.es.version}/repository/components">
                                     </fileset>
                                 </copy>
                                 <!--
                                 <copy todir="target/wso2carbon-core-${carbon.kernel.version}/samples"
                                       overwrite="true">
                                     <fileset
-                                            dir="${tempdir}/${project.artifactId}-${project.version}/samples">
+                                            dir="${tempdir}/${project.artifactId}-${product.es.version}/samples">
                                     </fileset>
                                 </copy>
                                 -->
@@ -189,7 +189,7 @@
                                 <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
                                     log4j.logger.net.sf.ehcache=ERROR
                                 </concat>
-                                <delete file="target/${project.artifactId}-${project.version}.zip"/>
+                                <delete file="target/${project.artifactId}-${product.es.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                             </tasks>
                         </configuration>
@@ -274,7 +274,7 @@
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
                                 <delete dir="target/wso2carbon-core-${carbon.kernel.version}"/>
-                                <delete file="target/${project.artifactId}-${project.version}.jar"/>
+                                <delete file="target/${project.artifactId}-${product.es.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="target/antrun"/>

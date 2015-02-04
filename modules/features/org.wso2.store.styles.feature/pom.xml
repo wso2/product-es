@@ -33,7 +33,6 @@
         <dependency>
             <groupId>org.wso2.es</groupId>
             <artifactId>org.wso2.store.admin.styles</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
