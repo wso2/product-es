@@ -34,8 +34,5 @@
                 <exclude>**/.settings</exclude>
             </excludes>
         </fileSet>
-        
-
-        
     </fileSets>
 </assembly>
