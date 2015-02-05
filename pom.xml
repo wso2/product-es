@@ -17,6 +17,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2</groupId>
+        <artifactId>wso2</artifactId>
+        <version>1</version>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.es</groupId>
     <artifactId>wso2es-parent</artifactId>
@@ -33,14 +40,6 @@
     </licenses>
     <modules>
         <module>modules/components/store-admin</module>
-        <!--<module>modules/components/jaggery-scxml-executors</module>-->
-        <!--<module>modules/components/notifications</module>-->
-        <!--<module>modules/components/social</module>-->
-        <!--<module>modules/components/sso-common</module>-->
-        <!--<module>modules/jaggery-modules</module>-->
-        <!--<module>modules/components/asset-client</module>-->
-        <!--<module>modules/components/store-util</module>-->
-        <!--<module>modules/components/bam-client</module>-->
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
