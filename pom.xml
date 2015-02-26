@@ -80,8 +80,6 @@
         <module>modules/components/social</module>
         <module>modules/components/sso-common</module>
 	    <module>modules/features</module>
-        <module>modules/p2-profile-gen</module>
-        <module>modules/distribution</module>
     </modules>
 
     <properties>

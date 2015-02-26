@@ -11,7 +11,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>jaggery-scxml-executors</artifactId>
   <packaging>bundle</packaging>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <name>jaggery-scxml-executors</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -66,7 +66,7 @@
               <Bundle-SymbolicName>${pom.groupId}.${pom.artifactId}</Bundle-SymbolicName>
 	      <Service-Component>OSGI-INF/serviceComponents.xml</Service-Component>
               <Bundle-Name>${pom.artifactId}</Bundle-Name>
-              <Bundle-Version>1.0.0</Bundle-Version>
+              <Bundle-Version>1.1.0</Bundle-Version>
               <Private-Package>org.wso2.jaggery.scxml</Private-Package>
               <Bundle-Activator>org.wso2.jaggery.scxml.Activator</Bundle-Activator>
               <Import-Package>
