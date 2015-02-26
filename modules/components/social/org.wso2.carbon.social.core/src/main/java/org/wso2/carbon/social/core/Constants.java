@@ -18,18 +18,8 @@
 
 package org.wso2.carbon.social.core;
 
-import org.mozilla.javascript.NativeObject;
+public class Constants {
+	public static final String ID = "id";
+	public static final String TIMESTAMP = "timestamp";
 
-import java.util.UUID;
-
-public abstract class ActivityPublisher {
-	public String publish(NativeObject activity) {
-		String id = UUID.randomUUID().toString();
-		long unixTimestamp = System.currentTimeMillis() / 1000L;
-		activity.put(Constants.ID, activity, id);
-		activity.put(Constants.TIMESTAMP, activity, unixTimestamp);
-		return publish(id, activity);
-	}
-
-	protected abstract String publish(String id, NativeObject activity);
 }
