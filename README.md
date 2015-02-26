@@ -1,5 +1,5 @@
-Enterprise Store
-================
+Enterprise Store 
+=========================
 
 WSO2 Enterprise Store (ES) enables users to manage and provision the entire enterprise asset life cycle, for any type of asset in one store. The WSO2 ES is made-up of a combination of the Back-office and the Store Front. The Back-office allows users to add assets and manage them throughout the entire asset life cycle from creation to retirement; while also allowing users to maintain asset versioning. The Enterprise Store Front is a central multi-tenant store that helps to increase the visibility of enterprise assets, by allow users to  search and discover assets, while allowing them to subscribe (i.e., install, download etc.) to the assets as required. In addition, the Store Front facilitates social interaction among the users by allowing users to add asset reviews, rate assets and like or dislike reviews. The asset reviews will be automatically filtered based on its popularity and date added; thereby, users will be able to seamlessly sort the asset reviews using the available filters, which are namely, popular, oldest and newest. The asset review popularity aspect, will help the users to gauge the quality of the available assets based on the user feedback.
 
