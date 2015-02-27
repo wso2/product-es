@@ -44,4 +44,7 @@ public interface Activity {
 	void setLikeCount(int likeCount);
 
 	void setDislikeCount(int dislikeCount);
+
+	void setId(int id);
+
 }

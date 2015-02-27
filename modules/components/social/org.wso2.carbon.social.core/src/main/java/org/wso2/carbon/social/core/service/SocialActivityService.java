@@ -19,24 +19,23 @@
 package org.wso2.carbon.social.core.service;
 
 import com.google.gson.JsonObject;
-
-import org.mozilla.javascript.NativeObject;
 import org.wso2.carbon.social.core.Activity;
 import org.wso2.carbon.social.core.ActivityBrowser;
 import org.wso2.carbon.social.core.ActivityPublisher;
-import org.wso2.carbon.social.core.SortOrder;
 
 import java.util.List;
 
 public abstract class SocialActivityService {
 
-	public String publish(NativeObject activity) {
+	public String publish(String activity) {
 		return getActivityPublisher().publish(activity);
 	}
 
-	public String[] listActivities(String targetId, String PreviousActivityID, int limit) {
+	public String[] listActivities(String targetId, String order, int offset,
+			int limit) {
 		List<Activity> activities = getActivityBrowser()
-				.listActivitiesChronologically(targetId, PreviousActivityID, limit);
+				.listActivitiesChronologically(targetId, order, offset,
+						limit);
 		String[] serializedActivities = new String[activities.size()];
 		for (int i = 0; i < activities.size(); i++) {
 			serializedActivities[i] = activities.get(i).toString();
@@ -48,21 +47,60 @@ public abstract class SocialActivityService {
 		return getActivityBrowser().getRating(targetId);
 	}
 
-	public String getSocialObjectJson(String targetId, String sortOrder, String PreviousActivityID, int limit) {
-		SortOrder order;
+	public String getSocialObjectJson(String targetId, String sortOrder,
+			int offset, int limit) {
+		/*SortOrder order;
 		try {
 			order = SortOrder.valueOf(sortOrder);
 		} catch (IllegalArgumentException e) {
 			order = SortOrder.NEWEST;
-		}
+		}*/
 		JsonObject socialObject = getActivityBrowser().getSocialObject(
-				targetId, order, PreviousActivityID, limit);
+				targetId, sortOrder, offset, limit);
 
 		if (socialObject != null) {
 			return socialObject.toString();
 		} else {
 			return "{}";
 		}
+	}
+
+	public String getTopAssets(double avgRating, int limit) {
+		JsonObject topAssetObject = getActivityBrowser().getTopAssets(
+				avgRating, limit);
+		if (topAssetObject != null) {
+			return topAssetObject.toString();
+		} else {
+			return "{}";
+		}
+	}
+
+	public String getTopComments(String targetId, int likes) {
+		JsonObject topCommentObject = getActivityBrowser().getTopComments(
+				targetId, likes);
+		if (topCommentObject != null) {
+			return topCommentObject.toString();
+		} else {
+			return "{}";
+		}
+	}
+	
+	public String pollLatestComments(String targetId, int timestamp) {
+		JsonObject newestCommentObject = getActivityBrowser().pollNewestComments(
+				targetId, timestamp);
+		if (newestCommentObject != null) {
+			return newestCommentObject.toString();
+		} else {
+			return "{}";
+		}
+	}
+
+	public boolean removeActivity(String activityId) {
+		return getActivityPublisher().remove(activityId);
+	}
+
+	public boolean isUserliked(String userId, String targetId, int like) {
+		return getActivityBrowser().isUserlikedActivity(userId, targetId, like);
 	}
 
 	public abstract ActivityBrowser getActivityBrowser();
@@ -75,5 +113,5 @@ public abstract class SocialActivityService {
 	 *
 	 * @param configObject
 	 */
-	public abstract void configPublisher(NativeObject configObject);
+	public abstract void configPublisher(String configuration);
 }
