@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.social.sql.service;
 
-import org.mozilla.javascript.NativeObject;
 import org.wso2.carbon.social.sql.SQLActivityBrowser;
 import org.wso2.carbon.social.sql.SQLActivityPublisher;
 import org.wso2.carbon.social.core.ActivityBrowser;
@@ -41,6 +40,6 @@ public class SQLActivityService extends SocialActivityService {
     }
 
     @Override
-    public void configPublisher(NativeObject configObject) {
+    public void configPublisher(String configuration) {
     }
 }

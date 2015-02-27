@@ -31,7 +31,8 @@ public class SQLActivity implements Activity {
 
 	@Override
 	public String getId() {
-		return null;
+		JsonObject object = (JsonObject) this.body.get("object");
+		return object.get("id").getAsString();
 	}
 
 	@Override
@@ -41,57 +42,77 @@ public class SQLActivity implements Activity {
 
 	@Override
 	public int getTimestamp() {
-		return 0;
+		return this.body.get("published").getAsInt();
 	}
 
 	@Override
 	public String getActorId() {
-		return null;
+		JsonObject actor = (JsonObject)this.body.get("actor");
+		return actor.get("id").getAsString();
 	}
 
 	@Override
 	public String getTargetId() {
-		return null;
+		JsonObject target = (JsonObject)this.body.get("target");
+		return target.get("id").getAsString();
 	}
 
 	@Override
 	public int getLikeCount() {
-		JsonObject likes = (JsonObject) this.body.get("likes");
-		return likes.get("totalItems").getAsInt();
-	}
-
-	@Override
-	public int getDislikeCount() {
-		JsonObject dislikes = (JsonObject) this.body.get("dislikes");
-		return dislikes.get("totalItems").getAsInt();
-	}
-
-	@Override
-	public String getObjectType() {
-		return null;
-	}
-
-	@Override
-	public String getVerb() {
-		return null;
-	}
-
-	@Override
-	public int getRating() {
+		JsonObject object = (JsonObject) this.body.get("object");
+		JsonObject likes = (JsonObject) object.get("likes");
+		if (likes != null) {
+			return likes.get("totalItems").getAsInt();
+		}
 		return 0;
 	}
 
 	@Override
+	public int getDislikeCount() {
+		JsonObject object = (JsonObject) this.body.get("object");
+		JsonObject dislikes = (JsonObject) object.get("dislikes");
+		if (dislikes != null) {
+			return dislikes.get("totalItems").getAsInt();
+		}
+		return 0;
+	}
+
+	@Override
+	public String getObjectType() {
+		JsonObject object = (JsonObject) this.body.get("object");
+		return object.get("type").getAsString();
+	}
+
+	@Override
+	public String getVerb() {
+		return this.body.get("verb").getAsString();
+	}
+
+	@Override
+	public int getRating() {
+		JsonObject rating = (JsonObject) this.body.get("object");
+		return rating.get("rating").getAsInt();
+	}
+
+	@Override
 	public void setLikeCount(int likeCount) {
-		JsonObject likes = (JsonObject) this.body.get("likes");
+		JsonObject object = (JsonObject) this.body.get("object");
+		JsonObject likes = (JsonObject) object.get("likes");
 		likes.addProperty("totalItems", likeCount);
 		
 	}
 
 	@Override
 	public void setDislikeCount(int dislikeCount) {
-		JsonObject dislikes = (JsonObject) this.body.get("dislikes");
+		JsonObject object = (JsonObject) this.body.get("object");
+		JsonObject dislikes = (JsonObject) object.get("dislikes");
 		dislikes.addProperty("totalItems", dislikeCount);
 		
+	}
+	
+	@Override
+	public void setId(int id) {
+		JsonObject object = (JsonObject) this.body.get("object");
+		object.addProperty("id", id);
 	}
 }
