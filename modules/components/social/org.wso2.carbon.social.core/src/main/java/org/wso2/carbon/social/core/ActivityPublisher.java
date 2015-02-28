@@ -44,5 +44,5 @@ public abstract class ActivityPublisher {
 
 	protected abstract String publishActivity(JsonObject activity);
 
-	public abstract boolean remove(String activityId);
+	public abstract boolean remove(String activityId, String userId);
 }
