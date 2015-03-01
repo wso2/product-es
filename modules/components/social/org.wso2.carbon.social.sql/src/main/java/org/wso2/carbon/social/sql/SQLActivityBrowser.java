@@ -136,9 +136,9 @@ public class SQLActivityBrowser implements ActivityBrowser {
 				count = Integer.parseInt(resultSet
 						.getString(Constants.RATING_COUNT));
 				resultSet.close();
-				return (double) total / count;
-			} else {
-				return 0;
+				if(total != 0){
+					return (double) total / count;
+				}
 			}
 
 		} catch (SQLException e) {

@@ -95,8 +95,8 @@ public abstract class SocialActivityService {
 		}
 	}
 
-	public boolean removeActivity(String activityId) {
-		return getActivityPublisher().remove(activityId);
+	public boolean removeActivity(String activityId, String userId) {
+		return getActivityPublisher().remove(activityId, userId);
 	}
 
 	public boolean isUserliked(String userId, String targetId, int like) {
