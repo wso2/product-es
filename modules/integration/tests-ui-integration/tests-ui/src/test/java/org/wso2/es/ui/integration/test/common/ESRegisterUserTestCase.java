@@ -19,6 +19,7 @@
 package org.wso2.es.ui.integration.test.common;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -40,6 +41,7 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
     private UserManagementClient userManagementClient;
     private static final String NEW_USER_NAME = "testusernew";
     private static final String NEW_USER_PWD = "testusernew";
+    private static final String SECRET_QUESTION = "Favorite food ?";
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -62,13 +64,23 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
         driver.findElement(By.id("reg-password")).sendKeys(NEW_USER_PWD);
         driver.findElement(By.id("reg-password2")).clear();
         driver.findElement(By.id("reg-password2")).sendKeys(NEW_USER_PWD);
+
+        driver.findElement(By.name("reg-email")).clear();
+        driver.findElement(By.name("reg-email")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.name("reg-first-name")).clear();
+        driver.findElement(By.name("reg-first-name")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.name("reg-last-name")).clear();
+        driver.findElement(By.name("reg-last-name")).sendKeys(NEW_USER_PWD);
+        new Select(driver.findElement(By.name("secret-question"))).selectByVisibleText(SECRET_QUESTION);
+        driver.findElement(By.name("secret-answer")).clear();
+        driver.findElement(By.name("secret-answer")).sendKeys(NEW_USER_PWD);
         driver.findElement(By.id("registrationSubmit")).click();
         //check login for store
-        assertTrue(isElementPresent(By.linkText("My Items")), "Login failed for Store");
-        assertTrue(isElementPresent(By.linkText(NEW_USER_NAME)), "Login failed for Store");
+        assertTrue(isElementPresent(driver,By.linkText("My Items")), "Login failed for Store");
+        assertTrue(isElementPresent(driver,By.linkText(NEW_USER_NAME)), "Login failed for Store");
         //check login for publisher
         driver.get(baseUrl + PUBLISHER_URL);
-        assertTrue(isElementPresent(By.linkText(NEW_USER_NAME)), "Login failed for Publisher");
+        assertTrue(isElementPresent(driver,By.linkText(NEW_USER_NAME)), "Login failed for Publisher");
     }
 
     @AfterClass(alwaysRun = true)

@@ -45,7 +45,7 @@ public class ESPublisherOverridenGlobalPageTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Test overriding a global page in extensions")
     public void testESPublisherOverridenGlobalPageTestCase() throws Exception {
         driver.get(baseUrl + "/publisher/pages/splash");
-        assertTrue(isElementPresent(By.id("assetOverridenGlobalPage")));
+        assertTrue(isElementPresent(driver, By.id("assetOverridenGlobalPage")));
     }
 
     @AfterClass(alwaysRun = true)

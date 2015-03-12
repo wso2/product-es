@@ -41,11 +41,11 @@ public class ESPublishToStore extends BaseUITestCase {
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private static final String ASSET_NAME = "Publishing Asset";
     private static final String ASSET_VERSION = "1.0.0";
-    private static final String ASSET_CREATED_TIME = "12";
     private static final String ASSET_URL = "http://test";
     private static final String ASSET_DESCRIPTION = "for store";
     private static final String LC_COMMENT = "done";
     private static final int MAX_POLL_COUNT = 30;
+    private static final String ASSET_TYPE = "gadget";
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -65,25 +65,20 @@ public class ESPublishToStore extends BaseUITestCase {
     @Test(groups = "wso2.es.common", description = "Testing Publishing an asset to store")
     public void testESPublishToStore() throws Exception {
         //Add a new gadget with info
-        driver.findElement(By.linkText("Add")).click();
-        driver.findElement(By.name("overview_provider")).clear();
-        driver.findElement(By.name("overview_provider")).sendKeys(userInfo.getUserName());
+        driver.findElement(By.linkText("Add " + ASSET_TYPE)).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(ASSET_NAME);
         driver.findElement(By.name("overview_version")).clear();
         driver.findElement(By.name("overview_version")).sendKeys(ASSET_VERSION);
-        driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys(ASSET_CREATED_TIME);
         driver.findElement(By.name("overview_url")).clear();
         driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION);
         driver.findElement(By.id("btn-create-asset")).click();
-        if (isAlertPresent()) {
-            closeAlertAndGetItsText();
+        if (isAlertPresent(driver)) {
+            closeAlertAndGetItsText(driver, true);
         }
         //publish the gadget to store
-        driver.findElement(By.cssSelector("a.btn")).click();
         driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
         driver.findElement(By.linkText(ASSET_NAME)).click();
         driver.findElement(By.linkText("Life Cycle")).click();

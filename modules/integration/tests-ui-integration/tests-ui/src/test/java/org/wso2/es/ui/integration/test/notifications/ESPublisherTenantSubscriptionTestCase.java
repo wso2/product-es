@@ -80,9 +80,9 @@ public class ESPublisherTenantSubscriptionTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.notification", description = "Check if subscriptions are created")
     public void testSubscriptionCreation() throws Exception {
         //add new gadget
-        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, providerName, assetName, ASSET_VERSION, CREATED_TIME);
-        if (isAlertPresent()) {
-            closeAlertAndGetItsText();
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, assetName, ASSET_VERSION, "", "", "");
+        if (isAlertPresent(driver)) {
+            closeAlertAndGetItsText(driver, true);
         }
         //navigate to admin console
         driver.get(baseUrl + MANAGEMENT_CONSOLE_URL);

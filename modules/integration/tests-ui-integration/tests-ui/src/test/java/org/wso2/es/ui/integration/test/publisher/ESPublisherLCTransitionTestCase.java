@@ -65,9 +65,9 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         //add new gadget
-        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, currentUserName, assetName, ASSET_VERSION, CREATED_TIME);
-        if (isAlertPresent()) {
-            String modalText = closeAlertAndGetItsText();
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, assetName, ASSET_VERSION, "", "", "");
+        if (isAlertPresent(driver)) {
+            String modalText = closeAlertAndGetItsText(driver, true);
             LOG.warn("modal dialog appeared" + modalText);
         }
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
@@ -88,8 +88,9 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
         driver.findElement(By.id("commentModalText")).clear();
         driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
         driver.findElement(By.id("commentModalSave")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
-                ("//table[@id='lc-history']/tbody/tr/td[2]"), "admin changed the asset from Created to In-Review"));
+//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
+//                ("//table[@id='lc-history']/tbody/tr/td[2]"), "admin changed the asset from Created to In-Review"));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "In-Review"));
         assertEquals("admin changed the asset from Created to In-Review",
                 driver.findElement(By.xpath("//table[@id='lc-history']/tbody/tr/td[2]")).getText());
     }

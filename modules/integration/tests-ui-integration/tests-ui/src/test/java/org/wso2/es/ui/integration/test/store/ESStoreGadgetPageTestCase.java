@@ -19,6 +19,9 @@
 package org.wso2.es.ui.integration.test.store;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -44,6 +47,7 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
+        wait = new WebDriverWait(driver, MAX_DRIVER_WAIT_TIME_SEC);
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
     }
@@ -64,13 +68,13 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
                 .getText(), "Recently added Gadgets missing");
         assertEquals("Tags", driver.findElement(By.xpath("//div[@id='container-assets']/div/div[2]/div[2]/div/h4"))
                 .getText(), "Tags section missing");
-        assertTrue(isElementPresent(By.linkText("charts")), "Tags missing (charts tag)");
+        assertTrue(isElementPresent(driver, By.linkText("charts")), "Tags missing (charts tag)");
         assertEquals("All Categories", driver.findElement(By.cssSelector("div.breadcrumb-head")).getText(),
                 "Category drop down missing");
-        assertTrue(isElementPresent(By.cssSelector("i.icon-star")), "Popularity sort missing");
-        assertTrue(isElementPresent(By.cssSelector("i.icon-sort-alphabetical")), "Alphabetical sort missing");
-        assertTrue(isElementPresent(By.cssSelector("i.icon-calendar")), "Recent sort missing");
-        assertTrue(isElementPresent(By.id("search")), "Search tray missing");
+        assertTrue(isElementPresent(driver, By.cssSelector("i.icon-star")), "Popularity sort missing");
+        assertTrue(isElementPresent(driver, By.cssSelector("i.icon-sort-alphabetical")), "Alphabetical sort missing");
+        assertTrue(isElementPresent(driver, By.cssSelector("i.icon-calendar")), "Recent sort missing");
+        assertTrue(isElementPresent(driver, By.id("search")), "Search tray missing");
     }
 
     @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links",
@@ -87,9 +91,12 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
 
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
                 .click();
+        WebElement element = driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]"));
         driver.findElement(By.linkText("pie")).click();
+        wait.until(ExpectedConditions.stalenessOf(element));
         assertEquals(1, driver.findElements(By.cssSelector("div.span3.asset")).size(),
                 "Tags not working");
+        assertEquals("Pie Chart", driver.findElement(By.xpath("//h4[contains(.,'Pie Chart')]")).getText(), "Tags are not working");
     }
 
     @AfterClass(alwaysRun = true)

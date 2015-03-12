@@ -45,10 +45,12 @@ public class ESPublisherAssetNewPageTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Test adding a new asset page in extensions")
     public void testESPublisherAssetNewPageTestCase() throws Exception {
         driver.get(baseUrl + "/publisher/asts/gadget/list");
-        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+//        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+        driver.findElement(By.cssSelector("span.btn-asset")).click();
+
         driver.findElement(By.linkText("Service")).click();
         driver.get(baseUrl + "/publisher/asts/servicex/new_page");
-        assertTrue(isElementPresent(By.id("assetNewPageH1")));
+        assertTrue(isElementPresent(driver, By.id("assetNewPageH1")));
     }
 
     @AfterClass(alwaysRun = true)

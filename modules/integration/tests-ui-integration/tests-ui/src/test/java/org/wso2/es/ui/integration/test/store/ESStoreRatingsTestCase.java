@@ -72,7 +72,7 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
         driver.switchTo().defaultContent();
         driver.get(driver.getCurrentUrl());
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")),
+        assertTrue(isElementPresent(driver, By.cssSelector("div.com-rating-2star")),
                 "Rating is not added");
         assertEquals("cool!", driver.findElement(By.cssSelector("p")).getText(),
                 "Review Comment not added");
@@ -99,12 +99,12 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
         driver.findElement(By.cssSelector("h4")).click();
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")),
+        assertTrue(isElementPresent(driver, By.cssSelector("div.com-rating-2star")),
                 "My First Rating Doesn't appear");
         assertEquals("cool!", driver.findElement(By.xpath("//div[@id='stream']/div[1]/div/div/p"))
                 .getText(), "My First Review Doesn't appear");
         assertEquals("", driver.findElement(By.cssSelector("div.com-rating-4star")).getText());
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-4star")),
+        assertTrue(isElementPresent(driver, By.cssSelector("div.com-rating-4star")),
                 "My Second Rating Doesn't appear");
         assertEquals("Nice!", driver.findElement(By.xpath("//div[@id='stream']/div[2]/div/div/p"))
                 .getText(), "My Second Review Doesn't appear");
@@ -122,12 +122,12 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
         driver.findElement(By.linkText("User Reviews")).click();
 
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-2star")));
+        assertTrue(isElementPresent(driver, By.cssSelector("div.com-rating-2star")));
         assertEquals("cool!", driver.findElement(By.xpath("//div[@id='stream']/div[1]/div/div/p"))
                 .getText(), "First Review doesn't appear to anonymous user");
         assertEquals("", driver.findElement(By.cssSelector("div.com-rating-4star")).getText(),
                 "First Rating doesn't appear to anonymous user");
-        assertTrue(isElementPresent(By.cssSelector("div.com-rating-4star")),
+        assertTrue(isElementPresent(driver, By.cssSelector("div.com-rating-4star")),
                 "Second Rating doesn't appear to anonymous user");
         assertEquals("Nice!", driver.findElement(By.xpath("//div[@id='stream']/div[2]/div/div/p"))
                 .getText(), "Second Review doesn't appear to anonymous user");
@@ -140,7 +140,7 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
         driver.switchTo().defaultContent();
         driver.findElement(By.linkText("admin")).click();
         driver.findElement(By.linkText("Sign out")).click();
-        driver.findElement(By.cssSelector("h4")).click();
+        //driver.findElement(By.cssSelector("h4")).click();
         driver.findElement(By.linkText("User Reviews")).click();
         driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
         assertEquals("Please Sign in to add a Review",

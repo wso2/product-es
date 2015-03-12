@@ -22,7 +22,10 @@ import org.openqa.selenium.By;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
@@ -35,9 +38,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESPublisherAssetOverridePartialTestCase extends BaseUITestCase {
 
-    private static final String NAME_SPACE = "admin";
     private static final String VERSION = "1.0.0";
-    private static final String CREATED_TIME = "12";
     private static final String ASSET_NAME = "Servicex 1";
     private static final String SCOPES = "test";
     private static final String TYPES = "new";
@@ -49,18 +50,20 @@ public class ESPublisherAssetOverridePartialTestCase extends BaseUITestCase {
         super.init();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, PUBLISHER_APP, userInfo.getUserName(), userInfo.getPassword());
-
+        currentUserName = userInfo.getUserName();
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, userInfo.getPassword());
+        resourcePath = "/_system/governance/servicesx/" + currentUserName + "/" + ASSET_NAME + "/" + VERSION;
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
+        backendURL = automationContext.getContextUrls().getBackEndUrl();
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         driver.get(baseUrl + "/publisher/asts/servicex/list");
-        driver.findElement(By.linkText("Add")).click();
-        driver.findElement(By.name("overview_provider")).clear();
-        driver.findElement(By.name("overview_provider")).sendKeys(NAME_SPACE);
+        driver.findElement(By.linkText("Add servicex")).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(ASSET_NAME);
         driver.findElement(By.name("overview_version")).clear();
         driver.findElement(By.name("overview_version")).sendKeys(VERSION);
-        driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys(CREATED_TIME);
         driver.findElement(By.name("overview_scopes")).clear();
         driver.findElement(By.name("overview_scopes")).sendKeys(SCOPES);
         driver.findElement(By.name("overview_types")).clear();
@@ -74,13 +77,14 @@ public class ESPublisherAssetOverridePartialTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Test overriding a partial in extensions")
     public void testESPublisherAssetOverridePartialTestCase() throws Exception {
         driver.get(updateUrl);
-        assertTrue(isElementPresent(By.id("assetOverriddenListingH1")));
+        assertTrue(isElementPresent(driver, By.id("assetOverriddenListingH1")));
         assertEquals(driver.findElement(By.id("assetOverriddenListingH1")).getText(), "New Asset Update Partial of Publisher");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
+        resourceAdminServiceClient.deleteResource(resourcePath);
         driver.quit();
     }
 
