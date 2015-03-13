@@ -31,6 +31,7 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
+import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
@@ -43,16 +44,16 @@ import static org.testng.Assert.assertEquals;
 public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
 
     private static final Log log = LogFactory.getLog(ESStoreSearchGadgetListTestCase.class);
+    private static String assetType = "gadget";
     private static String assetName = "Sample Asset";
     private static String assetVersion = "1.2.3";
     private static String assetAuthor = "testAuthor";
-    private static String assetCreatedTime = "123";
     private static String assetCategory = "WSO2";
     private static String assetURL = "www.example.com";
     private static String assetDescription = "this is a sample asset";
+
     private static String resourcePath = "/_system/governance/gadgets/" + assetAuthor + "/"
             + assetName + "/" + assetVersion;
-
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @BeforeClass(alwaysRun = true)
@@ -100,8 +101,6 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys(adminUserName);
         driver.findElement(By.id("search-button2")).click();
-//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"),
-//                "Bar Chart"));
         wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElementLocated(By
                 .cssSelector("h4"), assetName)));
         assertEquals(2, driver.findElements(By.cssSelector("div.asset-details")).size(),
@@ -136,7 +135,6 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys("Line Chart");
         driver.findElement(By.id("search-button2")).click();
-//      wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
         assertEquals("We couldn't find anything for you.",
                 driver.findElement(By.cssSelector("div.empty-assert")).getText());
     }
@@ -151,7 +149,6 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_version")).clear();
         driver.findElement(By.name("overview_version")).sendKeys("9.9.9");
         driver.findElement(By.id("search-button2")).click();
-//      wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
         assertEquals("We couldn't find anything for you.",
                 driver.findElement(By.cssSelector("div.empty-assert")).getText());
     }
@@ -165,65 +162,18 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_provider")).clear();
         driver.findElement(By.name("overview_provider")).sendKeys("unavailable");
         driver.findElement(By.id("search-button2")).click();
-//        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div.empty-assert")));
         assertEquals("We couldn't find anything for you.",
                 driver.findElement(By.cssSelector("div.empty-assert")).getText());
     }
 
-    @Test(groups = "wso2.es.store", description = "Add asset")//,
-    //dependsOnMethods = "testESStoreSearchAssetsByName")
+    @Test(groups = "wso2.es.store", description = "Add asset")
     public void testAddAsset() throws Exception {
         ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(),
                 userInfo.getPassword());
+        AssetUtil.addNewAsset(driver, baseUrl, assetType, assetName, assetVersion, assetCategory, assetURL, assetDescription);
         driver.get(baseUrl + "/publisher/asts/gadget/list");
-        driver.findElement(By.linkText("Add")).click();
-//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), "Overview"));
-        driver.findElement(By.name("overview_provider")).clear();
-        driver.findElement(By.name("overview_provider")).sendKeys(assetAuthor);
-        driver.findElement(By.name("overview_name")).clear();
-        driver.findElement(By.name("overview_name")).sendKeys(assetName);
-        driver.findElement(By.name("overview_version")).clear();
-        driver.findElement(By.name("overview_version")).sendKeys(assetVersion);
-        driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys(assetCreatedTime);
-        new Select(driver.findElement(By.name("overview_category")))
-                .selectByVisibleText(assetCategory);
-        driver.findElement(By.name("overview_url")).clear();
-        driver.findElement(By.name("overview_url")).sendKeys(assetURL);
-        driver.findElement(By.name("overview_description")).clear();
-        driver.findElement(By.name("overview_description")).sendKeys(assetDescription);
-        driver.findElement(By.id("btn-create-asset")).click();
-        if (isAlertPresent()) {
-            String alert = closeAlertAndGetItsText();
-            log.warn(alert + ": modal box appeared");
-        }
         driver.findElementPoll(By.linkText(assetName), 10);
-        driver.findElement(By.cssSelector("a.btn")).click();
-        driver.findElement(By.linkText(assetName)).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"),
-                assetName));
-        driver.findElement(By.linkText("Life Cycle")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.pull-left"),
-                "Lifecycle - " + assetName));
-        driver.findElement(By.id("In-Review")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"),
-                "Add a comment"));
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys("ok");
-        driver.findElement(By.id("commentModalSave")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "IN-REVIEW"));
-        assertEquals(driver.findElement(By.id("state")).getText(), "IN-REVIEW",
-                "Not Promoted to In-Review");
-        driver.get(driver.getCurrentUrl());
-        driver.findElement(By.id("Published")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("commentModalLabel"),
-                "Add a comment"));
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys("ok");
-        driver.findElement(By.id("commentModalSave")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "PUBLISHED"));
-        assertEquals(driver.findElement(By.id("state")).getText(), "PUBLISHED",
-                "Not Promoted to Published");
+        AssetUtil.publishAssetToStore(driver, assetName);
     }
 
     @Test(groups = "wso2.es.store", description = "Search by newly added asset Name",
@@ -257,7 +207,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText(assetCategory);
         driver.findElement(By.id("search-button2")).click();
         driver.findElementPoll(By.linkText(assetName), 10);
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("h4"), assetName));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//h4[contains(.,'"+assetName+"')]"), assetName));
         assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText(),
                 "Newly added gadget is not found in the result of search by version : " +
                         assetVersion);

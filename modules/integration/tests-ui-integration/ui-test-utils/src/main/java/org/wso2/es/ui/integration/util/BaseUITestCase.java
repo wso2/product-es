@@ -19,10 +19,7 @@ package org.wso2.es.ui.integration.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
@@ -74,7 +71,7 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
      * @param by By element to be present
      * @return boolean true/false
      */
-    protected boolean isElementPresent(By by) {
+    protected static boolean isElementPresent(WebDriver driver, By by) {
         try {
             driver.findElement(by);
             return true;
@@ -91,7 +88,7 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
      *
      * @return boolean true/false
      */
-    protected boolean isAlertPresent() {
+    protected static boolean isAlertPresent(WebDriver driver) {
         try {
             driver.switchTo().alert();
             return true;
@@ -108,18 +105,14 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
      *
      * @return String - the text of the alert
      */
-    protected String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
+    protected static String closeAlertAndGetItsText(WebDriver driver, boolean acceptAlert) {
+        Alert alert = driver.switchTo().alert();
+        String alertText = alert.getText();
+        if (acceptAlert) {
+            alert.accept();
+        } else {
+            alert.dismiss();
         }
+        return alertText;
     }
 }

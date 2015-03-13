@@ -40,7 +40,7 @@ public class ESStoreOverriddenGlobalPageTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Overriding Global page via extension test case")
     public void testESStoreOverriddenGlobalPageTestCase() throws Exception {
         driver.get(baseUrl + "/store/pages/top-assets");
-        assertTrue(isElementPresent(By.id("assetOverridenGlobalPage")));
+        assertTrue(isElementPresent(driver, By.id("assetOverridenGlobalPage")));
     }
 
     @AfterClass(alwaysRun = true)

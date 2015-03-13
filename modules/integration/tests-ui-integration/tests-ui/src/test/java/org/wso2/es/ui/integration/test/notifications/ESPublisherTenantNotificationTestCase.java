@@ -85,7 +85,7 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         ESUtil.setupUserProfile(driver, baseUrl, currentUserName, FIRST_NAME, LAST_NAME, EMAIL);
         //login to publisher & add a new gadget
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
-        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, providerName, assetName, VERSION, CREATED_TIME);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, assetName, VERSION, "", "", "");
     }
 
 

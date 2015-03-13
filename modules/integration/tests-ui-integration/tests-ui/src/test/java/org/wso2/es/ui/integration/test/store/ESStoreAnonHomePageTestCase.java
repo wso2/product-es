@@ -37,6 +37,7 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
     private static final String LINE_CHART = "Line Chart";
     private static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
     private static final String AMAZON = "Amazon";
+    private static final int MAX_POLL_COUNT = 30;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -49,10 +50,10 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
     public void testAnonHomePage() throws Exception {
         //test appearance
         driver.get(baseUrl + STORE_URL);
-        assertTrue(isElementPresent(By.cssSelector("a.brand")), "Home Page error: Logo missing");
+        assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Home Page error: Logo missing");
         assertEquals("Sign in", driver.findElement(By.linkText("Sign in")).getText(),
                 "Home Page error: Sign in button missing");
-        assertTrue(isElementPresent(By.id("btn-register")), "Home Page error: Register button missing");
+        assertTrue(isElementPresent(driver, By.id("btn-register")), "Home Page error: Register button missing");
         assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
                 .getText(), "Home Page error: Gadget menu missing");
         assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
@@ -61,8 +62,8 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
                 "Home Page error: Recent Gadgets links missing");
         assertEquals("Recent Sites", driver.findElement(By.linkText("Recent Sites")).getText(),
                 "Home Page error: Recent Sites links missing");
-        assertTrue(isElementPresent(By.id("search")), "Home Page error: Search missing");
-        assertTrue(isElementPresent(By.cssSelector("div.span3.store-right > div.row > div.span3")),
+        assertTrue(isElementPresent(driver, By.id("search")), "Home Page error: Search missing");
+        assertTrue(isElementPresent(driver, By.cssSelector("div.span3.store-right > div.row > div.span3")),
                 "Home Page error: Recent Added side list missing");
     }
 
@@ -77,10 +78,12 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         //test menu navigation
         driver.get(baseUrl + STORE_URL);
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li")).click();
-        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//h4[contains(.," + LINE_PLUS_BAR_CHART + "')]"))
+        driver.findElementPoll(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"), MAX_POLL_COUNT);
+        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"))
                 .getText(), "Gadgets Menu not working");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")).click();
-        assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.," + AMAZON + "')]")).getText(),
+        driver.findElementPoll(By.xpath("//h4[contains(.,'" + AMAZON + "')]"), MAX_POLL_COUNT);
+        assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.,'" + AMAZON + "')]")).getText(),
                 "Sites Menu not working");
         driver.findElement(By.cssSelector("a.brand")).click();
     }
@@ -91,10 +94,12 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         driver.get(baseUrl + STORE_URL);
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Gadgets")).click();
+        driver.findElementPoll(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"), MAX_POLL_COUNT);
         assertEquals(LINE_CHART, driver.findElement(By.xpath("//h4[contains(.,'" + LINE_CHART + "')]")).getText(),
                 "Recent Gadgets link not working");
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Sites")).click();
+        driver.findElementPoll(By.xpath("//h4[contains(.,'" + AMAZON + "')]"), MAX_POLL_COUNT);
         assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.,'" + AMAZON + "')]")).getText(),
                 "Recent Sites link not working");
     }

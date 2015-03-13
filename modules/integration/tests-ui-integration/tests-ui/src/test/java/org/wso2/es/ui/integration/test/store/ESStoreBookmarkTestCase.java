@@ -58,7 +58,7 @@ public class ESStoreBookmarkTestCase extends BaseUITestCase {
         String bookmarkedAsset = driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4"))
                 .getText();
         driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).click();
-        if (isElementPresent(By.linkText("Sign in"))) {
+        if (isElementPresent(driver, By.linkText("Sign in"))) {
             driver.findElement(By.linkText("Sign in")).click();
         }
         //bookmark the asset
@@ -74,13 +74,14 @@ public class ESStoreBookmarkTestCase extends BaseUITestCase {
 
         //check if shown in My assets section
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
-        assertTrue(isElementPresent(By.linkText("My Assets")), "My Assets section missing");
+        assertTrue(isElementPresent(driver, By.linkText("My Assets")), "My Assets section missing");
         driver.findElement(By.cssSelector("i.icon-angle-down.pull-right")).click();
         assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("strong > a")).getText(),
                 "Bookmarked asset not shown in My Assets section");
 
         driver.findElement(By.linkText("View all")).click();
-        assertEquals("My Assets", driver.findElement(By.cssSelector("h3.asset-title-separator.asset-type-gadget"))
+        assertTrue(isElementPresent(driver, By.linkText("My Items")), "My Items section missing");
+        assertEquals("Gadgets", driver.findElement(By.cssSelector("h3.asset-title-separator.asset-type-gadget"))
                 .getText(), "View all not directing to My Items page");
     }
 

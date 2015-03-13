@@ -96,8 +96,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
 
         //navigate to publisher and add and publish a new gadget to support sort by created time
         driver.get(baseUrl + PUBLISHER_URL);
-        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, currentUserName, assetName,
-                ASSET_VERSION, ASSET_CREATED_TIME);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, assetName, ASSET_VERSION, "", "", "");
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         AssetUtil.publishAssetToStore(driver, assetName);
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);

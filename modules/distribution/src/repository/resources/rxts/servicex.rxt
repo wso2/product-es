@@ -20,7 +20,7 @@
             <field type="text" required="true" readonly="true">
                 <name label="Namespace">Provider</name>
             </field>
-            <field type="text" required="true" readonly="true">
+            <field type="text" required="true">
                 <name label="Name">Name</name>
             </field>
             <field type="text">

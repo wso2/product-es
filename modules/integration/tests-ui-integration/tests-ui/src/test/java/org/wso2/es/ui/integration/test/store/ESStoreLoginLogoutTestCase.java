@@ -52,8 +52,8 @@ public class ESStoreLoginLogoutTestCase extends BaseUITestCase {
         driver.findElement(By.id("password")).clear();
         driver.findElement(By.id("password")).sendKeys(currentUserPwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        assertTrue(isElementPresent(By.linkText("My Items")), "My Items link missing");
-        assertTrue(isElementPresent(By.linkText(currentUserName)), "Logged in user not shown");
+        assertTrue(isElementPresent(driver, By.linkText("My Items")), "My Items link missing");
+        assertTrue(isElementPresent(driver, By.linkText(currentUserName)), "Logged in user not shown");
     }
 
     @Test(groups = "wso2.es.store", description = "Test Store Logout",
@@ -62,7 +62,7 @@ public class ESStoreLoginLogoutTestCase extends BaseUITestCase {
         driver.get(baseUrl + STORE_URL);
         driver.findElement(By.linkText(currentUserName)).click();
         driver.findElement(By.linkText("Sign out")).click();
-        assertTrue(isElementPresent(By.linkText("Sign in")), "Sign in link missing");
+        assertTrue(isElementPresent(driver, By.linkText("Sign in")), "Sign in link missing");
         assertEquals("Register", driver.findElement(By.id("btn-register")).getText(), "Register button missing");
     }
 

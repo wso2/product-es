@@ -83,7 +83,7 @@ public class ESPublisherNotificationTestCase extends BaseUITestCase {
         ESUtil.setupUserProfile(driver, baseUrl, currentUserName, FIRST_NAME, LAST_NAME, EMAIL);
         //login to publisher & add a new gadget
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
-        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, currentUserName, assetName, VERSION, CREATED_TIME);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, assetName, VERSION, "", "", "");
     }
 
     @Test(groups = "wso2.es.notification", description = "Testing mails for LC state change event")
