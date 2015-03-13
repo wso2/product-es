@@ -19,9 +19,7 @@
 package org.wso2.es.ui.integration.test.store;
 
 import java.net.URLDecoder;
-import java.util.regex.Pattern;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -40,10 +38,9 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
     private static String correctTwitterLink = "https://twitter.com/intent/tweet?text=";
     private static String correctTwitterLink2 = "&url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
     private static String correctDiggLink = "https://digg.com/submit?url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
-
     private String gadgetId = "";
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
         currentUserName = userInfo.getUserName();
@@ -65,7 +62,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         correctDiggLink += gadgetId;
     }
 
-    @Test
+    @Test(groups = "wso2.es.store", description = "Testing facebook link in share tab")
     public void testFacebookSharing() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
@@ -80,7 +77,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         assertTrue(facebookLink.contains(correctFacebookLink), "Facebook sharing is wrong");
     }
 
-    @Test
+    @Test(groups = "wso2.es.store", description = "Testing Google plus link in share tab")
     public void testGPlusSharing() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
@@ -95,7 +92,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         assertTrue(gplusLink.contains(correctGplusLink), "GPlus sharing is wrong");
     }
 
-    @Test
+    @Test(groups = "wso2.es.store", description = "Testing Twitter link in share tab")
     public void testTwitterSharing() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
@@ -111,7 +108,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         assertTrue(twitterLink.contains(correctTwitterLink2), "Twitter sharing is wrong");
     }
 
-    @Test
+    @Test(groups = "wso2.es.store", description = "Testing Digg link in share tab")
     public void testDiggSharing() throws Exception {
         driver.get(baseUrl + "/store/asts/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
@@ -126,7 +123,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         assertTrue(diggLink.contains(correctDiggLink), "Digg sharing is wrong");
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.get(baseUrl + STORE_LOGOUT_URL);
         driver.quit();
