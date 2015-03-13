@@ -18,15 +18,20 @@
 
 package org.wso2.es.ui.integration.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 /**
  * Utility operations related to assets
  */
-public class AssetUtil extends ESIntegrationUITest {
+public class AssetUtil extends BaseUITestCase {
+
+    private static final Log log = LogFactory.getLog(BaseUITestCase.class);
 
     /**
      * Add a new asset
@@ -34,24 +39,28 @@ public class AssetUtil extends ESIntegrationUITest {
      * @param driver      WebDriver instance
      * @param baseUrl     base url of the server
      * @param assetType   asset type
-     * @param provider    provider name
      * @param assetName   asset name
      * @param version     version
-     * @param createdTime created time
      */
-    public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String provider,
-                                   String assetName, String version, String createdTime) {
+    public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String version, String category, String url, String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
-        driver.findElement(By.linkText("Add")).click();
-        driver.findElement(By.name("overview_provider")).clear();
-        driver.findElement(By.name("overview_provider")).sendKeys(provider);
+        driver.findElement(By.linkText("Add " + assetType)).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
         driver.findElement(By.name("overview_version")).sendKeys(version);
-        driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys(createdTime);
+        if(!category.equals("")){
+            new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(category);
+        }
+        driver.findElement(By.name("overview_url")).clear();
+        driver.findElement(By.name("overview_url")).sendKeys(url);
+        driver.findElement(By.name("overview_description")).clear();
+        driver.findElement(By.name("overview_description")).sendKeys(description);
         driver.findElement(By.id("btn-create-asset")).click();
+        if(isAlertPresent(driver)){
+            closeAlertAndGetItsText(driver, true);
+            log.warn("Alert box appeared when adding the asset " + assetName);
+        }
     }
 
     /**
@@ -121,21 +130,21 @@ public class AssetUtil extends ESIntegrationUITest {
         changeLCState(driver, "Published", "published");
     }
 
-    /**
-     * Close the alert and return the text
-     *
-     * @param driver      WebDriver instance
-     * @param acceptAlert whether to accept the alert
-     * @return alert text
-     */
-    private static String closeAlertAndGetItsText(WebDriver driver, boolean acceptAlert) {
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-        if (acceptAlert) {
-            alert.accept();
-        } else {
-            alert.dismiss();
-        }
-        return alertText;
-    }
+//    /**
+//     * Close the alert and return the text
+//     *
+//     * @param driver      WebDriver instance
+//     * @param acceptAlert whether to accept the alert
+//     * @return alert text
+//     */
+//    private static String closeAlertAndGetItsText(WebDriver driver, boolean acceptAlert) {
+//        Alert alert = driver.switchTo().alert();
+//        String alertText = alert.getText();
+//        if (acceptAlert) {
+//            alert.accept();
+//        } else {
+//            alert.dismiss();
+//        }
+//        return alertText;
+//    }
 }

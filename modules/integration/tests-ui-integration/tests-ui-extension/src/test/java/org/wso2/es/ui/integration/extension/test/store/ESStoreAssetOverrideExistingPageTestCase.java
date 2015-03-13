@@ -43,7 +43,7 @@ public class ESStoreAssetOverrideExistingPageTestCase extends BaseUITestCase {
     public void testESStoreAssetOverrideExistingPageTestCase() throws Exception {
 
         driver.get(baseUrl + "/store/asts/servicex/list");
-        assertTrue(isElementPresent(By.id("assetListingPageH1")));
+        assertTrue(isElementPresent(driver, By.id("assetListingPageH1")));
     }
 
     @AfterClass(alwaysRun = true)

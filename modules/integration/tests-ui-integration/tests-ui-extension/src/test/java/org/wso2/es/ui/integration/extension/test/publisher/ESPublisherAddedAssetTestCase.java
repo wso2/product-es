@@ -34,6 +34,9 @@ import org.wso2.es.ui.integration.util.ESWebDriver;
  */
 public class ESPublisherAddedAssetTestCase extends BaseUITestCase {
 
+    private static final String ASSET_TYPE = "Service";
+    private static final String ASSET_TYPE_PLURAL = "Services";
+
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
@@ -45,10 +48,15 @@ public class ESPublisherAddedAssetTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Testing adding a new asset type in extensions")
     public void testESPublisherAddedAssetTestCase() throws Exception {
         driver.get(baseUrl + PUBLISHER_URL);
-        assertTrue(isElementPresent(By.cssSelector("button.btn.dropdown-toggle")));
-        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
-        driver.findElement(By.linkText("Service")).click();
-        assertTrue(isElementPresent(By.cssSelector("span.publisherTitle")));
+//        assertTrue(isElementPresent(driver, By.cssSelector("button.btn.dropdown-toggle")));
+//        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+//        driver.findElement(By.linkText("Service")).click();
+        driver.findElement(By.cssSelector("span.btn-asset")).click();
+        assertEquals(driver.findElement(By.linkText(ASSET_TYPE)).getText(), ASSET_TYPE);
+        driver.findElement(By.linkText(ASSET_TYPE)).click();
+        assertEquals(driver.findElement(By.linkText(ASSET_TYPE_PLURAL)).getText(), ASSET_TYPE_PLURAL);
+        assertEquals(driver.findElement(By.xpath("//h2[@class='app-title']")).getText(), "Enterprise Store Back Office");
+//        assertTrue(isElementPresent(driver, By.cssSelector("span.publisherTitle")));
     }
 
     @AfterClass(alwaysRun = true)

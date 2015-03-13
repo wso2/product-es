@@ -41,7 +41,7 @@ public class ESStoreNewGlobalPageTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Add new Global page via extension test case")
     public void testESStoreNewGlobalPageTestCase() throws Exception {
         driver.get(baseUrl + "/store/pages/servicex_global");
-        assertTrue(isElementPresent(By.id("assetNewGlobalPage")));
+        assertTrue(isElementPresent(driver, By.id("assetNewGlobalPage")));
     }
 
     @AfterClass(alwaysRun = true)

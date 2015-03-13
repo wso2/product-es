@@ -310,6 +310,11 @@
                                     org.wso2.carbon.commons:org.wso2.carbon.databridge.datapublisher.feature:${carbon.commons.version}
                                 </featureArtifactDef>
 
+                                <!--- Notification Support: Mail -->
+                                <featureArtifactDef>
+                                    org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.wso2.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -621,6 +626,11 @@
                                     <version>${carbon.social.version}</version>
                                 </feature>
 
+                                <!-- Notification Support: Mail -->
+                                <feature>
+                                    <id>org.apache.axis2.transport.mail.feature.group</id>
+                                    <version>${axis2-transports.wso2.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>

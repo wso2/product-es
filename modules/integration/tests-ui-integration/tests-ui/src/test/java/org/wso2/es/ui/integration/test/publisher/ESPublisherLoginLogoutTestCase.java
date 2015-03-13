@@ -53,7 +53,7 @@ public class ESPublisherLoginLogoutTestCase extends BaseUITestCase {
         driver.findElement(By.id("password")).sendKeys(currentUserPwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         assertEquals("Asset | WSO2 Enterprise Store back-office", driver.getTitle());
-        assertTrue(isElementPresent(By.linkText(currentUserName)), "Logged in user not shown");
+        assertTrue(isElementPresent(driver, By.linkText(currentUserName)), "Logged in user not shown");
     }
 
     @Test(groups = "wso2.es.publisher", description = "verify login to ES Publisher",
@@ -61,7 +61,7 @@ public class ESPublisherLoginLogoutTestCase extends BaseUITestCase {
     public void testLogoutFromPublisher() throws Exception {
         driver.findElement(By.linkText(currentUserName)).click();
         driver.findElement(By.linkText("Sign out")).click();
-        assertTrue(isElementPresent(By.id("username")), "Not redirected to login view");
+        assertTrue(isElementPresent(driver, By.id("username")), "Not redirected to login view");
     }
 
     @AfterClass(alwaysRun = true)

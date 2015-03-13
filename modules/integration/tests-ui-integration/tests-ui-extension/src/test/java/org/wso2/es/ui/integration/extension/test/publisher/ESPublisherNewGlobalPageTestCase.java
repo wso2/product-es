@@ -45,7 +45,7 @@ public class ESPublisherNewGlobalPageTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Test adding a new global page in extensions")
     public void testESPublisherNewGlobalPageTestCase() throws Exception {
         driver.get(baseUrl + "/publisher/pages/servicex_global");
-        assertTrue(isElementPresent(By.id("assetNewGlobalPage")));
+        assertTrue(isElementPresent(driver, By.id("assetNewGlobalPage")));
     }
 
     @AfterClass(alwaysRun = true)

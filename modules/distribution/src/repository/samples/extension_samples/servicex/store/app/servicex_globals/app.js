@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-app.dependencies = ['store_common'];
+app.dependencies = ['store-common'];
 app.server = function(ctx) {
     return {
         endpoints: {
@@ -29,6 +29,9 @@ app.server = function(ctx) {
                 url: 'top-assets',
                 path: 'servicex_top_assets.jag'
             }]
+        },
+        configs: {
+            disabledAssets: ['ebook', 'api', 'wsdl', 'service','policy','proxy','schema','sequence','uri','wadl','endpoint']
         }
     }
 };

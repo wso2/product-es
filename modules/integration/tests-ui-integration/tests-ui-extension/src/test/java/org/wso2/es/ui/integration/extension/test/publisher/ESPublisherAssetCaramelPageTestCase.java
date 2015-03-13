@@ -45,12 +45,14 @@ public class ESPublisherAssetCaramelPageTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.extensions", description = "Testing adding a new caramel page in extensions")
     public void testESPublisherAssetCaramelPageTestCase() throws Exception {
         driver.get(baseUrl + "/publisher/asts/gadget/list");
-        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+//        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
+        driver.findElement(By.cssSelector("span.btn-asset")).click();
+
         driver.findElement(By.linkText("Service")).click();
         driver.get(baseUrl + "/publisher/asts/servicex/new_caramel_page");
-        assertTrue(isElementPresent(By.linkText("Overview")));
-        assertTrue(isElementPresent(By.linkText("Edit")));
-        assertTrue(isElementPresent(By.linkText("Life Cycle")));
+        assertTrue(isElementPresent(driver, By.linkText("Overview")));
+        assertTrue(isElementPresent(driver, By.linkText("Edit")));
+        assertTrue(isElementPresent(driver, By.linkText("Life Cycle")));
     }
 
     @AfterClass(alwaysRun = true)

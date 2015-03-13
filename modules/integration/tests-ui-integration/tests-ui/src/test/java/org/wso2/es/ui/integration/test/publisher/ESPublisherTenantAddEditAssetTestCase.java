@@ -75,15 +75,11 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.publisher", description = "Testing adding a new asset")
     public void testAddAsset() throws Exception {
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
-        driver.findElement(By.linkText("Add")).click();
-        driver.findElement(By.name("overview_provider")).clear();
-        driver.findElement(By.name("overview_provider")).sendKeys(providerName);
+        driver.findElement(By.linkText("Add gadget")).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
         driver.findElement(By.name("overview_version")).sendKeys(ASSET_VERSION);
-        driver.findElement(By.name("overview_createdtime")).clear();
-        driver.findElement(By.name("overview_createdtime")).sendKeys(ASSET_CREATED_TIME);
         new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(ASSET_CATEGORY_1);
         driver.findElement(By.name("overview_url")).clear();
         driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL_1);
@@ -93,7 +89,20 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
 
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         //check if the created gadget is shown
-        assertTrue(isElementPresent(By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
+        assertTrue(isElementPresent(driver, By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
+        driver.findElement(By.linkText(assetName)).click();
+        assertEquals(assetName, driver.findElement(By.xpath("//h1[contains(.,'"+assetName+"')]")).getText());
+        assertEquals(providerName, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[1]/div[2]")).getText(),
+                "Incorrect provider");
+        assertEquals(assetName, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[2]/div[2]")).getText(),
+                "Incorrect asset name");
+        assertEquals(ASSET_VERSION, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[3]/div[2]")).getText(),
+                "Incorrect version");
+        assertEquals(ASSET_CATEGORY_1, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[4]/div[2]")).getText());
+        assertEquals(ASSET_URL_1, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[5]/div[2]")).getText(),
+                "Incorrect URL");
+        assertEquals(ASSET_DESCRIPTION_1, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[6]/div[2]")).getText(),
+                "Incorrect description");
     }
 
     @Test(groups = "wso2.es.publisher", description = "Testing editing an asset",
@@ -108,23 +117,22 @@ public class ESPublisherTenantAddEditAssetTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_2);
         driver.findElement(By.id("editAssetButton")).click();
-        closeAlertAndGetItsText();
+        closeAlertAndGetItsText(driver, true);
 
         //check updated info
         driver.findElement(By.linkText("Overview")).click();
-        assertEquals(assetName, driver.findElement(By.cssSelector("h4")).getText());
-        assertEquals(driver.findElement(By.xpath("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr/td[2]"))
-                .getText(), providerName, "Incorrect provider");
-        assertEquals(driver.findElement(By.xpath("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[2]/td[2]"))
-                .getText(), assetName, "Incorrect asset name");
-        assertEquals(driver.findElement(By.xpath("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[3]/td[2]"))
-                .getText(), ASSET_VERSION, "Incorrect version");
-        assertEquals(driver.findElement(By.xpath("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[5]/td[2]"))
-                .getText(), "WSO2", "Incorrect Category");
-        assertEquals(driver.findElement(By.xpath("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[6]/td[2]"))
-                .getText(), ASSET_URL_2, "Incorrect URL");
-        assertEquals(driver.findElement(By.xpath("//div[@id='view']/div[2]/div/div/div[2]/table[2]/tbody/tr[7]/td[2]"))
-                .getText(), ASSET_DESCRIPTION_2, "Incorrect description");
+        assertEquals(assetName, driver.findElement(By.xpath("//h1[contains(.,'"+assetName+"')]")).getText());
+        assertEquals(providerName, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[1]/div[2]")).getText(),
+                "Incorrect provider");
+        assertEquals(assetName, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[2]/div[2]")).getText(),
+                "Incorrect asset name");
+        assertEquals(ASSET_VERSION, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[3]/div[2]")).getText(),
+                "Incorrect version");
+        assertEquals(ASSET_CATEGORY_2, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[4]/div[2]")).getText());
+        assertEquals(ASSET_URL_2, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[5]/div[2]")).getText(),
+                "Incorrect URL");
+        assertEquals(ASSET_DESCRIPTION_2, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[6]/div[2]")).getText(),
+                "Incorrect description");
     }
 
     @AfterClass(alwaysRun = true)

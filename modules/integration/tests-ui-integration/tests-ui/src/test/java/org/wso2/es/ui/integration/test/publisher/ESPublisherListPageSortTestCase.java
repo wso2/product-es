@@ -75,9 +75,9 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         if (currentUserName.equals(adminUserName)) {
             ESUtil.login(driver, baseUrl, PUBLISHER_APP, normalUserName, normalUserPwd);
-            AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, normalUserName, ASSET_NAME, VERSION_2, CREATED_TIME);
-            if (isAlertPresent()) {
-                String alert = closeAlertAndGetItsText();
+            AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, ASSET_NAME, VERSION_2, "", "", "");
+            if (isAlertPresent(driver)) {
+                String alert = closeAlertAndGetItsText(driver, true);
                 LOG.warn(alert + ": modal box appeared");
             }
             driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
