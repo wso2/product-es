@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeSuite;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+import org.wso2.carbon.integration.common.extensions.carbonserver.TestServerManager;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 
@@ -38,6 +39,8 @@ public class TestConfig extends BaseUITestCase {
     private static final String PUBLISHER_ROLE = "publisher";
     private static final String INTERNAL_PUBLISHER_ROLE = "Internal/publisher";
     private static final String AXIS2_CONFIG = File.separator + "notifications" + File.separator + "axis2.xml";
+    private static final String IDENTITY_MGT_PROPERTIES = File.separator + "passwordrecovery" + File.separator + "identity-mgt.properties";
+    private static final String IDENTITY_MGT_PATH = File.separator + "repository" + File.separator + "conf" + File.separator + "security" + File.separator + "identity-mgt.properties";
 
     @BeforeSuite
     public void configureESTestSuite() throws Exception {
@@ -48,8 +51,10 @@ public class TestConfig extends BaseUITestCase {
         ServerConfigurationManager serverManager = new ServerConfigurationManager(automationContext);
         String resourceLocation = getResourceLocation();
         String backendURL = automationContext.getContextUrls().getBackEndUrl();
+        String carbonHome = serverManager.getCarbonHome();
         //restart server with mailto config added in axis2.xml
-        serverManager.applyConfiguration(new File(resourceLocation + AXIS2_CONFIG));
+        serverManager.applyConfigurationWithoutRestart(new File(resourceLocation + AXIS2_CONFIG));
+        serverManager.applyConfiguration(new File(resourceLocation + IDENTITY_MGT_PROPERTIES), new File(carbonHome + IDENTITY_MGT_PATH), false, true);
         //assign publisher role to the normal user
         UserManagementClient userManagementClient = new UserManagementClient(backendURL, superAdminName, superAdminPwd);
         userManagementClient.updateUserListOfRole(INTERNAL_PUBLISHER_ROLE, new String[]{superUserName}, null);
