@@ -45,6 +45,7 @@ public class ESUtil extends ESIntegrationUITest {
     private static final String IMAPS = "imaps";
     public static final String SMTP_GMAIL_COM = "smtp.gmail.com";
     public static final String INBOX = "inbox";
+    private static final String TENANT_TOKEN = "/t/";
 
     /**
      * To login to store or publisher
@@ -101,6 +102,9 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.linkText("Sign out")).click();
     }
 
+    public static String getTenantQualifiedUrl(String domain){
+        return TENANT_TOKEN+domain;
+    }
     /**
      * To login to admin console
      *
@@ -249,6 +253,7 @@ public class ESUtil extends ESIntegrationUITest {
         }
         return false;
     }
+
 
     private static String getErrorMessage(String emailAddress) {
         return "Retrieving mails for: " + emailAddress + "failed";
