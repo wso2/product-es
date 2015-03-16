@@ -40,8 +40,12 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
 
     private UserManagementClient userManagementClient;
     private static final String NEW_USER_NAME = "testusernew";
-    private static final String NEW_USER_PWD = "testusernew";
+    private static final String NEW_USER_PWD = "qwe123Q!";
+    private static final String NEW_USER_FNAME = "test";
+    private static final String NEW_USER_LNAME = "user";
+    private static final String NEW_USER_EMAIL = "esmailsample@gmail.com";
     private static final String SECRET_QUESTION = "Favorite food ?";
+    private static final String SECRET_ANSWER = "Ice cream";
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -66,14 +70,14 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
         driver.findElement(By.id("reg-password2")).sendKeys(NEW_USER_PWD);
 
         driver.findElement(By.name("reg-email")).clear();
-        driver.findElement(By.name("reg-email")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.name("reg-email")).sendKeys(NEW_USER_EMAIL);
         driver.findElement(By.name("reg-first-name")).clear();
-        driver.findElement(By.name("reg-first-name")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.name("reg-first-name")).sendKeys(NEW_USER_FNAME);
         driver.findElement(By.name("reg-last-name")).clear();
-        driver.findElement(By.name("reg-last-name")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.name("reg-last-name")).sendKeys(NEW_USER_LNAME);
         new Select(driver.findElement(By.name("secret-question"))).selectByVisibleText(SECRET_QUESTION);
         driver.findElement(By.name("secret-answer")).clear();
-        driver.findElement(By.name("secret-answer")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.name("secret-answer")).sendKeys(SECRET_ANSWER);
         driver.findElement(By.id("registrationSubmit")).click();
         //check login for store
         assertTrue(isElementPresent(driver,By.linkText("My Items")), "Login failed for Store");
