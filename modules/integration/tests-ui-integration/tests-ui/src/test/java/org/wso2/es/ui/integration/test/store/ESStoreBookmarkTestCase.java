@@ -58,9 +58,7 @@ public class ESStoreBookmarkTestCase extends BaseUITestCase {
         String bookmarkedAsset = driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4"))
                 .getText();
         driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).click();
-        if (isElementPresent(driver, By.linkText("Sign in"))) {
-            driver.findElement(By.linkText("Sign in")).click();
-        }
+
         //bookmark the asset
         driver.findElement(By.id("btn-add-gadget")).click();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("btn-add-gadget"), "Bookmarked"));
