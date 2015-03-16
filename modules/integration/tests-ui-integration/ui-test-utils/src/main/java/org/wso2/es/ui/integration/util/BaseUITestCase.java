@@ -21,6 +21,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
@@ -52,6 +55,8 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
     protected static final String STORE_GADGET_LIST_PAGE = "/store/asts/gadget/list";
     protected static final String STORE_TOP_ASSETS_PAGE = "/store/pages/top-assets";
     protected static final String GADGET_REGISTRY_BASE_PATH = "/_system/governance/gadgets/";
+    protected static final String NONE_EXIST_TENANT_DOMAIN = "foo.com";
+    protected static final String ERROR_404 = "Error 404";
 
     protected static final int MAX_DRIVER_WAIT_TIME_SEC = 30;
 
@@ -60,6 +65,7 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
     protected String adminUserName;
     protected String adminUserPwd;
     protected String providerName;
+    protected Tenant tenantDetails;
 
     protected String resourcePath;
     protected String smtpPropertyLocation;
@@ -76,7 +82,7 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
             driver.findElement(by);
             return true;
         } catch (NoSuchElementException e) {
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Requested element is not present", e);
             }
             return false;
@@ -93,7 +99,7 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
             driver.switchTo().alert();
             return true;
         } catch (NoAlertPresentException e) {
-            if(LOG.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("No alert found", e);
             }
             return false;
@@ -114,5 +120,10 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
             alert.dismiss();
         }
         return alertText;
+    }
+
+    protected void buildTenantDetails(TestUserMode userMode) throws Exception {
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, userMode);
+        tenantDetails = automationContext.getContextTenant();
     }
 }

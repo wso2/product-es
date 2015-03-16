@@ -22,17 +22,22 @@ import org.openqa.selenium.By;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Test appearance and behavior of Store Home page
+ * Tests if the homepage of the Store is accessible when
+ * navigating it to it as a logged in user using the tenant url (t/carbon.super)
+ * 1. Checks if the homepage (top-assets) is loaded
+ * 2. Checks if the asset listing page is loaded
  */
-public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
+public class ESStoreCarbonSuperUserTUHomePageTestCase extends BaseUITestCase {
 
     protected static final String LINE_CHART = "Line Chart";
     protected static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
@@ -44,24 +49,27 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         super.init();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
+        buildTenantDetails(TestUserMode.SUPER_TENANT_ADMIN);
+        login();
     }
 
-    /**
-     * The method returns the store url of the homepage
-     * @return  A string url to the store homepage
-     */
-    public String resolveStoreUrl(){
-        return baseUrl+STORE_URL;
+    public void login() throws Exception {
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
+        ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
     }
 
-    @Test(groups = "wso2.es.store", description = "Test Anonymous User Home Page")
-    public void testAnonHomePage() throws Exception {
-        //test appearance
+    public String resolveStoreUrl() {
+        String tenantDomain = tenantDetails.getDomain();
+        return baseUrl + STORE_URL + ESUtil.getTenantQualifiedUrl(tenantDomain);
+    }
+
+    @Test(groups = "wso2.es.store", description = "Test if the homepage can be accessed by a logged in super tenant user" +
+            "using the tenant url(/t/carbon.super)")
+    public void testLoggedInHomePage() throws Exception {
         driver.get(resolveStoreUrl());
         assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Home Page error: Logo missing");
-        assertEquals("Sign in", driver.findElement(By.linkText("Sign in")).getText(),
-                "Home Page error: Sign in button missing");
-        assertTrue(isElementPresent(driver, By.id("btn-register")), "Home Page error: Register button missing");
         assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
                 .getText(), "Home Page error: Gadget menu missing");
         assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
@@ -75,15 +83,9 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
                 "Home Page error: Recent Added side list missing");
     }
 
-    @Test(groups = "wso2.es.store", description = "Test Anonymous User Recent sliding",
-            enabled = false)
-    public void testSliding() throws Exception {
-        //TODO how to detect sliding is successful?
-    }
-
-    @Test(groups = "wso2.es.store", description = "Test Anonymous Navigation from top menu")
-    public void testAnonNavigationTop() throws Exception {
-        //test menu navigation
+    @Test(groups = "wso2.es.store", description = "Test the navigation from top menu when accessing the homepage with " +
+            "a super tenant user using the tenant url(/t/carbon.super)")
+    public void testLoggedInNavigationTop() throws Exception {
         driver.get(resolveStoreUrl());
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li")).click();
         driver.findElementPoll(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"), MAX_POLL_COUNT);
@@ -96,9 +98,9 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         driver.findElement(By.cssSelector("a.brand")).click();
     }
 
-    @Test(groups = "wso2.es.store", description = "Test Anonymous Navigation page links")
-    public void testAnonNavigationLinks() throws Exception {
-        //test link navigation
+    @Test(groups = "wso2.es.store", description = "Test navigation page links when accessing the homepage with a " +
+            "super tenant user using the tenant url(/t/carbon.super)")
+    public void testLoggedInNavigationLinks() throws Exception {
         driver.get(resolveStoreUrl());
         driver.findElement(By.cssSelector("a.brand")).click();
         driver.findElement(By.linkText("Recent Gadgets")).click();
@@ -112,10 +114,15 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
                 "Recent Sites link not working");
     }
 
+    @Test(groups = "wso2.es.store", description= "Test if a logged in super tenant user can navigate to the asset " +
+            "listing page using the tenant url(/t/carbon.super)")
+    public void testAssetListingPage() throws Exception {
+        driver.get(resolveStoreUrl()+"/asts/gadget/list");
+        assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Asset listing page error: Logo missing");
+    }
+
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.quit();
     }
-
-
 }
