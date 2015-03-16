@@ -48,7 +48,6 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     private static final String VERSION_1 = "1.0.0";
     private static final String VERSION_2 = "2.0.0";
     private static final String ASSET_TYPE = "gadget";
-    private static final String CREATED_TIME = "12";
     private static final String USER1 = "user1";
     private static final int MAX_POLL_COUNT = 30;
     private static final String ASSET_NAME = "Sort Asset";
@@ -58,7 +57,8 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true)
+    //TODO enable tests after adding list view to publisher
+    @BeforeClass(alwaysRun = true, enabled = false)
     public void setUp() throws Exception {
         super.init(userMode);
         currentUserName = userInfo.getUserName().split("@")[0];
@@ -86,7 +86,7 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
     }
 
-    @Test(groups = "wso2.es.publisher", description = "Test sort by name")
+    @Test(groups = "wso2.es.publisher", description = "Test sort by name", enabled = false)
     public void testListPageSortByName() throws Exception {
         driver.get(baseUrl + PUBLISHER_URL);
         driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
@@ -98,7 +98,7 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by version",
-            dependsOnMethods = "testListPageSortByName")
+            dependsOnMethods = "testListPageSortByName", enabled = false)
     public void testListPageSortByVersion() throws Exception {
         driver.findElement(By.linkText("VERSION")).click();
         assertEquals(VERSION_1, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[3]"))
@@ -108,7 +108,7 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by owner",
-            dependsOnMethods = "testListPageSortByName")
+            dependsOnMethods = "testListPageSortByName", enabled = false)
     public void testListPageSortByOwner() throws Exception {
         driver.findElement(By.linkText("OWNER")).click();
         assertEquals(adminUserName, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[4]"))
@@ -118,14 +118,14 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by created time",
-            dependsOnMethods = "testListPageSortByName")
+            dependsOnMethods = "testListPageSortByName", enabled = false)
     public void testListPageSortByCreatedTime() throws Exception {
         driver.findElement(By.linkText("CREATED")).click();
         assertEquals(ASSET_NAME, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
                 .getText(), "Sort on created time failed");
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterClass(alwaysRun = true, enabled = false)
     public void tearDown() throws Exception {
         if (currentUserName.equals(normalUserName)) {
             resourceAdminServiceClient.deleteResource(resourcePath);
