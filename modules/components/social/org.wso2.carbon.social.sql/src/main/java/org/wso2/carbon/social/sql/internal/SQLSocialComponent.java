@@ -26,7 +26,6 @@ import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.social.sql.service.SQLActivityService;
 import org.wso2.carbon.social.core.service.SocialActivityService;
 import org.wso2.carbon.social.sql.JDBCPersistenceManager;
-import org.wso2.carbon.social.sql.Constants;
 
 /**
  * Registering {@link SocialActivityService}
@@ -50,8 +49,8 @@ public class SQLSocialComponent {
 			log.debug("Social Activity service is activated  with SQL Implementation");
 		}
 
-			String cmd = System.getProperty(Constants.SETUP_CMD);
-			if (cmd != null) {
+			//String cmd = System.getProperty(Constants.SETUP_CMD);
+			//if (cmd != null) {
 				JDBCPersistenceManager jdbcPersistenceManager;
 				try {
 					jdbcPersistenceManager = JDBCPersistenceManager
@@ -61,7 +60,7 @@ public class SQLSocialComponent {
 					log.error("Failed to initilize database. " + e);
 				}
 				
-			}
+			//}
 	}
 
 	protected void setDataSourceService(DataSourceService dataSourceService) {

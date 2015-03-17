@@ -23,22 +23,22 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 public interface ActivityBrowser {
-	double getRating(String targetId);
+	JsonObject getRating(String targetId) throws SocialActivityException;
 
 	JsonObject getSocialObject(String targetId, String order, int offset,
-			int limit);
+			int limit) throws SocialActivityException;
 
-	List<Activity> listActivities(String targetId, String order,int offset, int limit);
+	List<Activity> listActivities(String targetId, String order,int offset, int limit) throws SocialActivityException;
 
-	List<Activity> listActivitiesChronologically(String targetId, String order,
-			int offset, int limit);
+	/*List<Activity> listActivitiesChronologically(String targetId, String order,
+			int offset, int limit);*/
 
-	JsonObject getTopAssets(double avgRating, int limit);
+	JsonObject getTopAssets(double avgRating, int limit) throws SocialActivityException;
 
-	JsonObject getTopComments(String targetId, int likes);
+	JsonObject getTopComments(String targetId, int likes) throws SocialActivityException;
 
-	boolean isUserlikedActivity(String userId, String targetId, int like);
+	boolean isUserlikedActivity(String userId, String targetId, int like) throws SocialActivityException;
 
-	JsonObject pollNewestComments(String targetId, int timestamp);
+	JsonObject pollNewestComments(String targetId, int timestamp) throws SocialActivityException;
 
 }

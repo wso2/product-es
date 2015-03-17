@@ -25,8 +25,10 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.social.core.Activity;
 import org.wso2.carbon.social.core.ActivityBrowser;
+import org.wso2.carbon.social.core.SocialActivityException;
 import org.wso2.carbon.social.sql.Constants;
 
 import java.sql.Connection;
@@ -34,47 +36,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.wso2.carbon.social.sql.SocialUtil;
 
 public class SQLActivityBrowser implements ActivityBrowser {
 	private static final Log log = LogFactory.getLog(SQLActivityBrowser.class);
-	/*
-	 * public static final String PAGIN_SELECT_SQL = "SELECT " +
-	 * Constants.BODY_COLUMN + " FROM " + Constants.SOCIAL_COMMENTS_TABLE_NAME +
-	 * " WHERE " + Constants.CONTEXT_ID_COLUMN + "=? AND " +
-	 * Constants.TENANT_DOMAIN_COLUMN + "=? AND " + Constants.TIMESTAMP +
-	 * " < (SELECT " + Constants.TIMESTAMP + " FROM " +
-	 * Constants.SOCIAL_COMMENTS_TABLE_NAME + " WHERE " + Constants.ID_COLUMN +
-	 * " =?) ORDER BY " + Constants.TIMESTAMP + " DESC LIMIT ?";
-	 * 
-	 * public static final String INIT_SELECT_SQL = "SELECT " +
-	 * Constants.BODY_COLUMN + " FROM " + Constants.SOCIAL_COMMENTS_TABLE_NAME +
-	 * " WHERE " + Constants.CONTEXT_ID_COLUMN + "=? AND " +
-	 * Constants.TENANT_DOMAIN_COLUMN + "=? " + "ORDER BY " +
-	 * Constants.TIMESTAMP + " DESC LIMIT ?";
-	 */
 
+	//TODO think about oracle and other db support
 	public static final String COMMENT_SELECT_SQL_DESC = "SELECT "
 			+ Constants.BODY_COLUMN + ", " + Constants.ID_COLUMN + " FROM "
 			+ Constants.SOCIAL_COMMENTS_TABLE_NAME + " WHERE "
-			+ Constants.CONTEXT_ID_COLUMN + "=? AND "
-			+ Constants.TENANT_DOMAIN_COLUMN + "=? " + "ORDER BY "
+			+ Constants.CONTEXT_ID_COLUMN + "= ? AND "
+			+ Constants.TENANT_DOMAIN_COLUMN + "= ? " + "ORDER BY "
 			+ Constants.ID_COLUMN + " DESC LIMIT ?,?";
 
 	public static final String COMMENT_SELECT_SQL_ASC = "SELECT "
 			+ Constants.BODY_COLUMN + ", " + Constants.ID_COLUMN + " FROM "
 			+ Constants.SOCIAL_COMMENTS_TABLE_NAME + " WHERE "
-			+ Constants.CONTEXT_ID_COLUMN + "=? AND "
-			+ Constants.TENANT_DOMAIN_COLUMN + "=? " + "ORDER BY "
+			+ Constants.CONTEXT_ID_COLUMN + "= ? AND "
+			+ Constants.TENANT_DOMAIN_COLUMN + "= ? " + "ORDER BY "
 			+ Constants.ID_COLUMN + " ASC LIMIT ?,?";
 
 	public static final String SELECT_CACHE_SQL = "SELECT "
 			+ Constants.RATING_TOTAL + "," + Constants.RATING_COUNT + " FROM "
 			+ Constants.SOCIAL_RATING_CACHE_TABLE_NAME + " WHERE "
-			+ Constants.CONTEXT_ID_COLUMN + "=?";
+			+ Constants.CONTEXT_ID_COLUMN + "= ?";
 
 	public static final String TOP_ASSETS_SELECT_SQL = "SELECT "
 			+ Constants.RATING_TOTAL + "," + Constants.RATING_COUNT + ","
@@ -84,46 +71,43 @@ public class SQLActivityBrowser implements ActivityBrowser {
 	public static final String TOP_COMMENTS_SELECT_SQL = "SELECT "
 			+ Constants.BODY_COLUMN + " FROM "
 			+ Constants.SOCIAL_COMMENTS_TABLE_NAME + "WHERE "
-			+ Constants.CONTEXT_ID_COLUMN + " =? AND " + Constants.LIKES_COLUMN
-			+ " >?";
+			+ Constants.CONTEXT_ID_COLUMN + " = ? AND " + Constants.LIKES_COLUMN
+			+ " > ?";
 
 	public static final String SELECT_LIKE_STATUS = "SELECT "
 			+ Constants.ID_COLUMN + " FROM "
 			+ Constants.SOCIAL_LIKES_TABLE_NAME + " WHERE "
-			+ Constants.USER_COLUMN + " =? AND " + Constants.CONTEXT_ID_COLUMN
-			+ " =? AND " + Constants.LIKE_VALUE_COLUMN + " =?";
+			+ Constants.USER_COLUMN + " = ? AND " + Constants.CONTEXT_ID_COLUMN
+			+ " = ? AND " + Constants.LIKE_VALUE_COLUMN + " = ?";
 
 	public static final String POPULAR_COMMENTS_SELECT_SQL = "SELECT "
 			+ Constants.BODY_COLUMN + ", " + Constants.ID_COLUMN + " FROM "
 			+ Constants.SOCIAL_COMMENTS_TABLE_NAME + " WHERE "
-			+ Constants.CONTEXT_ID_COLUMN + "=? AND "
-			+ Constants.TENANT_DOMAIN_COLUMN + "=? ORDER BY "
+			+ Constants.CONTEXT_ID_COLUMN + "= ? AND "
+			+ Constants.TENANT_DOMAIN_COLUMN + "= ? ORDER BY "
 			+ Constants.LIKES_COLUMN + " DESC LIMIT ?,?";
 
 	public static final String POLL_COMMENTS_SQL = "SELECT "
 			+ Constants.BODY_COLUMN + ", " + Constants.ID_COLUMN + " FROM "
 			+ Constants.SOCIAL_COMMENTS_TABLE_NAME + " WHERE "
-			+ Constants.CONTEXT_ID_COLUMN + "=? AND "
-			+ Constants.TENANT_DOMAIN_COLUMN + "=? AND " + Constants.ID_COLUMN
-			+ " >? OREDR BY " + Constants.ID_COLUMN + " DESC";
+			+ Constants.CONTEXT_ID_COLUMN + " =? AND "
+			+ Constants.TENANT_DOMAIN_COLUMN + " =? AND " + Constants.ID_COLUMN
+			+ " > ? OREDR BY " + Constants.ID_COLUMN + " DESC";
 
 	private JsonParser parser = new JsonParser();
 
 	@Override
-	public double getRating(String targetId) {
-		DSConnection con = new DSConnection();
-		Connection connection = con.getConnection();
-
-		if (connection == null) {
-			if (log.isDebugEnabled()) {
-				log.debug(Constants.CONNECTION_ERROR);
-			}
-			return 0;
-		}
-
+	public JsonObject getRating(String targetId) throws SocialActivityException {
+		Connection connection = null;
 		PreparedStatement statement;
 		ResultSet resultSet;
+		String errorMsg = "Unable to retrieve rating for target: ";
+
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + SELECT_CACHE_SQL);
+			}
+			connection = DSConnection.getConnection();
 			statement = connection.prepareStatement(SELECT_CACHE_SQL);
 
 			statement.setString(1, targetId);
@@ -131,30 +115,35 @@ public class SQLActivityBrowser implements ActivityBrowser {
 
 			if (resultSet.next()) {
 				int total, count;
-				total = Integer.parseInt(resultSet
-						.getString(Constants.RATING_TOTAL));
-				count = Integer.parseInt(resultSet
-						.getString(Constants.RATING_COUNT));
+				total = resultSet.getInt(Constants.RATING_TOTAL);
+				count = resultSet.getInt(Constants.RATING_COUNT);
 				resultSet.close();
-				if(total != 0){
-					return (double) total / count;
+				if (total != 0) {
+					JsonObject object = new JsonObject();
+					object.addProperty(Constants.RATING, (double) total / count);
+					object.addProperty(Constants.COUNT, count);
+					return object;
 				}
 			}
 
 		} catch (SQLException e) {
-			log.error("Unable to retrieve rating for target: " + targetId + e);
+			String message = errorMsg + targetId + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} catch (DataSourceException e) {
+			String message = errorMsg + targetId + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
 		} finally {
-			if (con != null) {
-				con.closeConnection(connection);
-			}
+			DSConnection.closeConnection(connection);
 		}
 
-		return 0;
+		return null;
 	}
 
 	@Override
 	public JsonObject getSocialObject(String targetId, String order,
-			int offset, int limit) {
+			int offset, int limit) throws SocialActivityException {
 
 		List<Activity> activities = listActivities(targetId, order, offset,
 				limit);
@@ -174,18 +163,16 @@ public class SQLActivityBrowser implements ActivityBrowser {
 
 	@Override
 	public List<Activity> listActivities(String targetId, String order,
-			int offset, int limit) {
-		DSConnection con = new DSConnection();
-		Connection connection = con.getConnection();
-
-		if (connection == null) {
-			if (log.isDebugEnabled()) {
-				log.debug(Constants.CONNECTION_ERROR);
-			}
-			return null;
-		}
-
+			int offset, int limit) throws SocialActivityException {
+		Connection connection = null;
+		List<Activity> activities = null;
+		PreparedStatement statement;
+		ResultSet resultSet;
+		String tenantDomain = SocialUtil.getTenantDomain();
+		limit = SocialUtil.getActivityLimit(limit);
+		String errorMsg = "Unable to retrieve activities. ";
 		String SQL;
+
 		if ("NEWEST".equals(order)) {
 			SQL = COMMENT_SELECT_SQL_DESC;
 		} else if ("OLDEST".equals(order)) {
@@ -194,13 +181,11 @@ public class SQLActivityBrowser implements ActivityBrowser {
 			SQL = POPULAR_COMMENTS_SELECT_SQL;
 		}
 
-		List<Activity> activities = null;
-		PreparedStatement statement;
-		ResultSet resultSet;
-		String tenantDomain = SocialUtil.getTenantDomain();
-		limit = SocialUtil.getActivityLimit(limit);
-
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + SQL);
+			}
+			connection = DSConnection.getConnection();
 			statement = connection.prepareStatement(SQL);
 
 			statement.setString(1, targetId);
@@ -220,27 +205,32 @@ public class SQLActivityBrowser implements ActivityBrowser {
 			}
 			resultSet.close();
 		} catch (SQLException e) {
-			log.error("Unable to retrieve activities. " + e);
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} catch (DataSourceException e) {
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
 		} finally {
-			if (con != null) {
-				con.closeConnection(connection);
-			}
+			DSConnection.closeConnection(connection);
 		}
-
-		if (activities != null) {
+		/*if (activities != null) {
 			return activities;
 		} else {
 			return Collections.emptyList();
-		}
-	}
-
-	@Override
-	public List<Activity> listActivitiesChronologically(String targetId,
-			String order, int offset, int limit) {
-		List<Activity> activities = listActivities(targetId, order, offset,
-				limit);
+		}*/
 		return activities;
 	}
+
+	/*@Override
+	public List<Activity> listActivitiesChronologically(String targetId,
+			String order, int offset, int limit) {
+		List<Activity> activities;
+			activities = listActivities(targetId, order, offset,
+					limit);
+		return activities;
+	}*/
 
 	@SuppressWarnings("unused")
 	private String getTenant(JsonObject body) {
@@ -259,16 +249,10 @@ public class SQLActivityBrowser implements ActivityBrowser {
 	}
 
 	@Override
-	public JsonObject getTopAssets(double avgRating, int limit) {
-		DSConnection con = new DSConnection();
-		Connection connection = con.getConnection();
-
-		if (connection == null) {
-			if (log.isDebugEnabled()) {
-				log.debug(Constants.CONNECTION_ERROR);
-			}
-			return null;
-		}
+	public JsonObject getTopAssets(double avgRating, int limit)
+			throws SocialActivityException {
+		Connection connection = null;
+		String errorMsg = "Unable to retrieve top assets. ";
 
 		PreparedStatement statement;
 		ResultSet resultSet;
@@ -276,6 +260,10 @@ public class SQLActivityBrowser implements ActivityBrowser {
 		JsonObject jsonObj = new JsonObject();
 
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + TOP_ASSETS_SELECT_SQL);
+			}
+			connection = DSConnection.getConnection();
 			statement = connection.prepareStatement(TOP_ASSETS_SELECT_SQL);
 			// TODO need to implement limit
 			resultSet = statement.executeQuery();
@@ -285,10 +273,8 @@ public class SQLActivityBrowser implements ActivityBrowser {
 
 				int total, count;
 				double avg;
-				total = Integer.parseInt(resultSet
-						.getString(Constants.RATING_TOTAL));
-				count = Integer.parseInt(resultSet
-						.getString(Constants.RATING_COUNT));
+				total = resultSet.getInt(Constants.RATING_TOTAL);
+				count = resultSet.getInt(Constants.RATING_COUNT);
 				avg = (double) total / count;
 
 				if (avg >= avgRating) {
@@ -299,11 +285,15 @@ public class SQLActivityBrowser implements ActivityBrowser {
 			}
 			resultSet.close();
 		} catch (SQLException e) {
-			log.error("Unable to retrieve top assets. " + e);
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} catch (DataSourceException e) {
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
 		} finally {
-			if (con != null) {
-				con.closeConnection(connection);
-			}
+			DSConnection.closeConnection(connection);
 		}
 		if (assets.size() > 0) {
 			return jsonObj;
@@ -314,23 +304,20 @@ public class SQLActivityBrowser implements ActivityBrowser {
 	}
 
 	@Override
-	public JsonObject getTopComments(String targetId, int likes) {
-		DSConnection con = new DSConnection();
-		Connection connection = con.getConnection();
-
-		if (connection == null) {
-			if (log.isDebugEnabled()) {
-				log.debug(Constants.CONNECTION_ERROR);
-			}
-			return null;
-		}
-
+	public JsonObject getTopComments(String targetId, int likes)
+			throws SocialActivityException {
+		Connection connection = null;
 		PreparedStatement statement;
 		ResultSet resultSet;
 		JsonArray comments = new JsonArray();
 		JsonObject jsonObj = new JsonObject();
+		String errorMsg = "Unable to retrieve top comments. ";
 
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + TOP_COMMENTS_SELECT_SQL);
+			}
+			connection = DSConnection.getConnection();
 			statement = connection.prepareStatement(TOP_COMMENTS_SELECT_SQL);
 			statement.setString(1, targetId);
 			statement.setInt(2, likes);
@@ -347,11 +334,15 @@ public class SQLActivityBrowser implements ActivityBrowser {
 			}
 			resultSet.close();
 		} catch (SQLException e) {
-			log.error("Unable to retrieve top comments. " + e);
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} catch (DataSourceException e) {
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
 		} finally {
-			if (con != null) {
-				con.closeConnection(connection);
-			}
+			DSConnection.closeConnection(connection);
 		}
 		if (comments.size() > 0) {
 			return jsonObj;
@@ -361,19 +352,17 @@ public class SQLActivityBrowser implements ActivityBrowser {
 	}
 
 	@Override
-	public boolean isUserlikedActivity(String userId, String targetId, int like) {
-		DSConnection con = new DSConnection();
-		Connection connection = con.getConnection();
+	public boolean isUserlikedActivity(String userId, String targetId, int like) throws SocialActivityException {
+		Connection connection = null;
+		String errorMsg = "Error while checking user like activity. ";
 
-		if (connection == null) {
-			if (log.isDebugEnabled()) {
-				log.debug(Constants.CONNECTION_ERROR);
-			}
-			return false;
-		}
 		PreparedStatement statement;
 		ResultSet resultSet;
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + SELECT_LIKE_STATUS);
+			}
+			connection = DSConnection.getConnection();
 			statement = connection.prepareStatement(SELECT_LIKE_STATUS);
 			statement.setString(1, userId);
 			statement.setString(2, targetId);
@@ -385,34 +374,33 @@ public class SQLActivityBrowser implements ActivityBrowser {
 			}
 
 		} catch (SQLException e) {
-			log.error("Error while checking user like activity. " + e);
-		} finally {
-			if (con != null) {
-				con.closeConnection(connection);
-			}
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} catch(DataSourceException e){
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		}finally {
+			DSConnection.closeConnection(connection);
 		}
-
 		return false;
 	}
 
 	@Override
-	public JsonObject pollNewestComments(String targetId, int id) {
-		DSConnection con = new DSConnection();
-		Connection connection = con.getConnection();
-
-		if (connection == null) {
-			if (log.isDebugEnabled()) {
-				log.debug(Constants.CONNECTION_ERROR);
-			}
-			return null;
-		}
-
+	public JsonObject pollNewestComments(String targetId, int id) throws SocialActivityException {
+		Connection connection = null;
 		PreparedStatement statement;
 		ResultSet resultSet;
 		JsonArray comments = new JsonArray();
 		JsonObject jsonObj = new JsonObject();
+		String errorMsg = "Unable to retrieve latest comments. ";
 
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + POLL_COMMENTS_SQL);
+			}
+			connection = DSConnection.getConnection();
 			statement = connection.prepareStatement(POLL_COMMENTS_SQL);
 			statement.setString(1, targetId);
 			statement.setInt(2, id);
@@ -429,11 +417,15 @@ public class SQLActivityBrowser implements ActivityBrowser {
 			}
 			resultSet.close();
 		} catch (SQLException e) {
-			log.error("Unable to retrieve latest comments. " + e);
-		} finally {
-			if (con != null) {
-				con.closeConnection(connection);
-			}
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} catch(DataSourceException e){
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		}finally {		
+			DSConnection.closeConnection(connection);
 		}
 		if (comments.size() > 0) {
 			return jsonObj;
