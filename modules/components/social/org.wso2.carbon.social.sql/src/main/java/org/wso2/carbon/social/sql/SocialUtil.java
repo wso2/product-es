@@ -47,7 +47,7 @@ public class SocialUtil {
 	}
 
 	public static String getPreviousActivityID(String PreviousActivityID) {
-		if (PreviousActivityID != null && PreviousActivityID != "") {
+		if (PreviousActivityID.isEmpty()) {
 			return PreviousActivityID;
 		} else {
 			return null;

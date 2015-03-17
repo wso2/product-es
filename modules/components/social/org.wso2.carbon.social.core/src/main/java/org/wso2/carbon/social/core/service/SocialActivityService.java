@@ -19,23 +19,50 @@
 package org.wso2.carbon.social.core.service;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+
 import org.wso2.carbon.social.core.Activity;
 import org.wso2.carbon.social.core.ActivityBrowser;
 import org.wso2.carbon.social.core.ActivityPublisher;
+import org.wso2.carbon.social.core.SocialActivityException;
 
 import java.util.List;
 
 public abstract class SocialActivityService {
 
-	public String publish(String activity) {
+	/**
+	 * Allows activity to be passed into the service. 
+	 * 
+	 * Eg: -
+	 * {"verb":"post","object"
+	 * :{"objectType":"review","content":"sample comment",
+	 * "rating":4,"likes":{"totalItems"
+	 * :0},"dislikes":{"totalItems":0}},"target":
+	 * {"id":"319f492d-3210-4096-8ffb-f49b0fed1d2d"
+	 * },"actor":{"id":"user@tenant.com","objectType":"person"}}
+	 * 
+	 * @param activity
+	 * @throws SocialActivityException 
+	 * @throws JsonSyntaxException 
+	 * 
+	 */
+	public long publish(String activity) throws SocialActivityException {
 		return getActivityPublisher().publish(activity);
 	}
 
+	/**
+	 * 
+	 * @param targetId
+	 * @param order
+	 * @param offset
+	 * @param limit
+	 * @return
+	 * @throws SocialActivityException 
+	 */
 	public String[] listActivities(String targetId, String order, int offset,
-			int limit) {
+			int limit) throws SocialActivityException {
 		List<Activity> activities = getActivityBrowser()
-				.listActivitiesChronologically(targetId, order, offset,
-						limit);
+				.listActivities(targetId, order, offset, limit);
 		String[] serializedActivities = new String[activities.size()];
 		for (int i = 0; i < activities.size(); i++) {
 			serializedActivities[i] = activities.get(i).toString();
@@ -43,18 +70,33 @@ public abstract class SocialActivityService {
 		return serializedActivities;
 	}
 
-	public double getRating(String targetId) {
+	/**
+	 * Allows asset id to be passed into the service and retrieve average rating
+	 * for the given asset
+	 * 
+	 * @param targetId
+	 * @return averageRating
+	 */
+	public JsonObject getRating(String targetId) throws SocialActivityException {
 		return getActivityBrowser().getRating(targetId);
 	}
 
+	/**
+	 * Allows targetId, sortOrder, offset and limit to be passed into the
+	 * service and retrieve social activities. offset and limit will be used for
+	 * pagination purpose.
+	 * 
+	 * 1st page : offset=0 and limit =10 (returns 1st 10 activities according to
+	 * the given sort order) 2nd page : offset:10 and limit=10 ...
+	 * 
+	 * @param targetId
+	 * @param sortOrder
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
 	public String getSocialObjectJson(String targetId, String sortOrder,
-			int offset, int limit) {
-		/*SortOrder order;
-		try {
-			order = SortOrder.valueOf(sortOrder);
-		} catch (IllegalArgumentException e) {
-			order = SortOrder.NEWEST;
-		}*/
+			int offset, int limit) throws SocialActivityException {
 		JsonObject socialObject = getActivityBrowser().getSocialObject(
 				targetId, sortOrder, offset, limit);
 
@@ -65,7 +107,15 @@ public abstract class SocialActivityService {
 		}
 	}
 
-	public String getTopAssets(double avgRating, int limit) {
+	/**
+	 * Allows average rating and limit to be passed and returns assets with
+	 * greater average rating value.
+	 * 
+	 * @param avgRating
+	 * @param limit
+	 * @return
+	 */
+	public String getTopAssets(double avgRating, int limit) throws SocialActivityException {
 		JsonObject topAssetObject = getActivityBrowser().getTopAssets(
 				avgRating, limit);
 		if (topAssetObject != null) {
@@ -75,7 +125,15 @@ public abstract class SocialActivityService {
 		}
 	}
 
-	public String getTopComments(String targetId, int likes) {
+	/**
+	 * Allows target id and number of likes to be passed and return social
+	 * activities with greater number of likes.
+	 * 
+	 * @param targetId
+	 * @param likes
+	 * @return
+	 */
+	public String getTopComments(String targetId, int likes) throws SocialActivityException {
 		JsonObject topCommentObject = getActivityBrowser().getTopComments(
 				targetId, likes);
 		if (topCommentObject != null) {
@@ -84,10 +142,16 @@ public abstract class SocialActivityService {
 			return "{}";
 		}
 	}
-	
-	public String pollLatestComments(String targetId, int timestamp) {
-		JsonObject newestCommentObject = getActivityBrowser().pollNewestComments(
-				targetId, timestamp);
+
+	/**
+	 * 
+	 * @param targetId
+	 * @param timestamp
+	 * @return
+	 */
+	public String pollLatestComments(String targetId, int timestamp) throws SocialActivityException {
+		JsonObject newestCommentObject = getActivityBrowser()
+				.pollNewestComments(targetId, timestamp);
 		if (newestCommentObject != null) {
 			return newestCommentObject.toString();
 		} else {
@@ -95,11 +159,28 @@ public abstract class SocialActivityService {
 		}
 	}
 
-	public boolean removeActivity(String activityId, String userId) {
+	/**
+	 * Allows activity id and user id to be passed into the service and remove
+	 * given activity
+	 * 
+	 * @param activityId
+	 * @param userId
+	 * @return
+	 */
+	public boolean removeActivity(String activityId, String userId) throws SocialActivityException {
 		return getActivityPublisher().remove(activityId, userId);
 	}
 
-	public boolean isUserliked(String userId, String targetId, int like) {
+	/**
+	 * Allows user id, target id and like/unlike value into the service and get
+	 * like/unlike status
+	 * 
+	 * @param userId
+	 * @param targetId
+	 * @param like
+	 * @return
+	 */
+	public boolean isUserliked(String userId, String targetId, int like) throws SocialActivityException {
 		return getActivityBrowser().isUserlikedActivity(userId, targetId, like);
 	}
 

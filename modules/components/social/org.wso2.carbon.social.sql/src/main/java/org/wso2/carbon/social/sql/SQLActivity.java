@@ -61,20 +61,14 @@ public class SQLActivity implements Activity {
 	public int getLikeCount() {
 		JsonObject object = (JsonObject) this.body.get("object");
 		JsonObject likes = (JsonObject) object.get("likes");
-		if (likes != null) {
-			return likes.get("totalItems").getAsInt();
-		}
-		return 0;
+		return likes.get("totalItems").getAsInt();
 	}
 
 	@Override
 	public int getDislikeCount() {
 		JsonObject object = (JsonObject) this.body.get("object");
 		JsonObject dislikes = (JsonObject) object.get("dislikes");
-		if (dislikes != null) {
-			return dislikes.get("totalItems").getAsInt();
-		}
-		return 0;
+		return dislikes.get("totalItems").getAsInt();
 	}
 
 	@Override

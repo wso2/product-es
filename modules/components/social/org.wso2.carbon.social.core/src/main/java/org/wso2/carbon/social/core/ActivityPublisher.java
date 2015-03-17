@@ -18,31 +18,46 @@
 
 package org.wso2.carbon.social.core;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 //import java.util.UUID;
 
 public abstract class ActivityPublisher {
 	
+	private static final Log log = LogFactory
+			.getLog(ActivityPublisher.class);
+	
 	private JsonParser parser = new JsonParser();
 	
-	public String publish(String activity) {
-		
-		JsonObject jsonObject = (JsonObject)parser.parse(activity);
-		
-		//String id = UUID.randomUUID().toString();
-		String unixTimestamp = Long.toString(System.currentTimeMillis() / 1000L);
-		
-		//JsonObject object = (JsonObject) jsonObject.get("object");
-		//object.add(Constants.ID, (JsonElement)parser.parse(id));
-		jsonObject.add(Constants.PUBLISHED, (JsonElement) parser.parse(unixTimestamp));
-		
+	public long publish(String activity) throws SocialActivityException {
+		JsonObject jsonObject;
+		String unixTimestamp = Long
+				.toString(System.currentTimeMillis() / 1000L);
+		try {
+			jsonObject = (JsonObject) parser.parse(activity);
+			jsonObject.add(Constants.PUBLISHED,
+					(JsonElement) parser.parse(unixTimestamp));
+		} catch (JsonSyntaxException e) {
+			String message = "Malformed JSON element found: " + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		}
+		// TODO keep UUID and expose UUID to outside
+		// String id = UUID.randomUUID().toString();
+		// JsonObject object = (JsonObject) jsonObject.get("object");
+		// object.add(Constants.ID, (JsonElement)parser.parse(id));
+
+
 		return publishActivity(jsonObject);
 	}
 
-	protected abstract String publishActivity(JsonObject activity);
+	protected abstract long publishActivity(JsonObject activity) throws SocialActivityException;
 
-	public abstract boolean remove(String activityId, String userId);
+	public abstract boolean remove(String activityId, String userId) throws SocialActivityException;
 }
