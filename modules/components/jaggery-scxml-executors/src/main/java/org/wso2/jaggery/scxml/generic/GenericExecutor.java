@@ -76,7 +76,14 @@ public class GenericExecutor implements Execution
         DynamicValueInjector dynamicValueInjector=new DynamicValueInjector();
 
         //Set the asset author key
-        dynamicValueInjector.setDynamicValue(DynamicValueInjector.ASSET_AUTHOR_KEY,requestContext.getResource().getAuthorUserName());
+	//Workaround for https://wso2.org/jira/browse/REGISTRY-2214
+        String provider = requestContext.getResource().getProperty("overview_provider");
+        if (provider != null && provider.contains("-AT-")) {
+            provider = provider.substring(0, provider.indexOf("-AT-"));
+
+        }
+	//dynamicValueInjector.setDynamicValue(DynamicValueInjector.ASSET_AUTHOR_KEY,requestContext.getResource().getAuthorUserName());
+        dynamicValueInjector.setDynamicValue(DynamicValueInjector.ASSET_AUTHOR_KEY,provider);
 
         //Execute all permissions for the current state
         //this.stateExecutor.executePermissions(this.userRealm,dynamicValueInjector,path,s2);
