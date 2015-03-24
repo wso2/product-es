@@ -24,6 +24,7 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 
 import java.util.Map;
 import org.wso2.carbon.user.api.UserRealm;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.jaggery.scxml.RealmContext;
 import org.wso2.jaggery.scxml.management.DynamicValueInjector;
 import org.wso2.jaggery.scxml.management.StateExecutor;
@@ -77,8 +78,9 @@ public class GenericExecutor implements Execution
 
         //Set the asset author key
 	//Workaround for https://wso2.org/jira/browse/REGISTRY-2214
+        boolean isEmailEnabled = Boolean.parseBoolean(CarbonUtils.getServerConfiguration().getFirstProperty("EnableEmailUserName"));
         String provider = requestContext.getResource().getProperty("overview_provider");
-        if (provider != null && provider.contains("-AT-")) {
+        if (provider != null && !isEmailEnabled && provider.contains("-AT-")) {
             provider = provider.substring(0, provider.indexOf("-AT-"));
 
         }
