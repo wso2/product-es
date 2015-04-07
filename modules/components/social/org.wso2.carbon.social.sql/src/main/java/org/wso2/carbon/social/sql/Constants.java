@@ -62,6 +62,7 @@ public class Constants {
 	public static final String COMMENT_ID_COLUMN = "comment_id";
 	public static final int SUPER_TENANT_ID = -1234;
 	public static final String SUPER_TENANT_DOMAIN = "carbon.super";
+	public static final String AVERAGE_RATING = "rating_average";
 
 	public static enum VERB {
 		like, dislike, unlike, undislike;
