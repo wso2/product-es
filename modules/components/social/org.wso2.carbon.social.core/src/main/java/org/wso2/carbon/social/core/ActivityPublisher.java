@@ -18,8 +18,11 @@
 
 package org.wso2.carbon.social.core;
 
+import java.sql.SQLException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -60,4 +63,6 @@ public abstract class ActivityPublisher {
 	protected abstract long publishActivity(JsonObject activity) throws SocialActivityException;
 
 	public abstract boolean remove(String activityId, String userId) throws SocialActivityException;
+
+	public abstract int warmUpRatingCache(String targetId) throws SocialActivityException;
 }

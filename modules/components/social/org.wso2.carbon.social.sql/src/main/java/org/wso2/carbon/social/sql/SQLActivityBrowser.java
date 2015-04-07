@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.social.sql;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -93,6 +94,8 @@ public class SQLActivityBrowser implements ActivityBrowser {
 			+ Constants.CONTEXT_ID_COLUMN + " =? AND "
 			+ Constants.TENANT_DOMAIN_COLUMN + " =? AND " + Constants.ID_COLUMN
 			+ " > ? OREDR BY " + Constants.ID_COLUMN + " DESC";
+
+	public static final String POPULAR_ASSETS_SELECT_SQL = "SELECT PAYLOAD_CONTEXT_ID FROM SOCIAL_RATING_CACHE WHERE PAYLOAD_CONTEXT_ID LIKE ? AND TENANT_DOMAIN =? ORDER BY rating_average DESC LIMIT ?,?";
 
 	private JsonParser parser = new JsonParser();
 
@@ -432,6 +435,58 @@ public class SQLActivityBrowser implements ActivityBrowser {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public JsonObject getPopularAssets(String type, String tenantId, int limit, int offset)
+ throws SocialActivityException {
+		Connection connection = null;
+		String errorMsg = "Unable to retrieve top assets. ";
+
+		PreparedStatement statement;
+		ResultSet resultSet;
+		JsonArray assets = new JsonArray();
+		JsonObject jsonObj = new JsonObject();
+		String tenantDomain = SocialUtil.getTenantDomain();
+
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + POPULAR_ASSETS_SELECT_SQL);
+			}
+			connection = DSConnection.getConnection();
+			statement = connection.prepareStatement(POPULAR_ASSETS_SELECT_SQL);
+			statement.setString(1, type + "%");
+			statement.setString(2, tenantDomain);
+			statement.setInt(3, offset);
+			statement.setInt(4, limit);
+
+			resultSet = statement.executeQuery();
+			jsonObj.add(Constants.ASSETS, assets);
+			Gson gson = new Gson();
+
+			while (resultSet.next()) {
+				String targetId = resultSet
+						.getString(Constants.CONTEXT_ID_COLUMN);
+				assets.add(parser.parse(gson.toJson(targetId)));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} catch (DataSourceException e) {
+			String message = errorMsg + e.getMessage();
+			log.error(message, e);
+			throw new SocialActivityException(message, e);
+		} finally {
+			DSConnection.closeConnection(connection);
+		}
+		if (assets.size() > 0) {
+			return jsonObj;
+		} else {
+			return null;
+		}
+
 	}
 
 }

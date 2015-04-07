@@ -82,7 +82,7 @@ public class SQLActivityPublisher extends ActivityPublisher {
 			+ " FROM "
 			+ Constants.SOCIAL_COMMENTS_TABLE_NAME
 			+ " WHERE "
-			+ Constants.ID_COLUMN + " = ? FOR UPDATE";
+			+ Constants.ID_COLUMN + " = ?";
 
 	public static final String COMMENT_ACTIVITY_SELECT_SQL = "SELECT "
 			+ Constants.BODY_COLUMN + " FROM "
@@ -98,17 +98,17 @@ public class SQLActivityPublisher extends ActivityPublisher {
 	public static final String SELECT_CACHE_SQL = "SELECT "
 			+ Constants.RATING_TOTAL + "," + Constants.RATING_COUNT + " FROM "
 			+ Constants.SOCIAL_RATING_CACHE_TABLE_NAME + " WHERE "
-			+ Constants.CONTEXT_ID_COLUMN + "= ? FOR UPDATE";
+			+ Constants.CONTEXT_ID_COLUMN + "= ?";
 
 	public static final String UPDATE_CACHE_SQL = "UPDATE "
 			+ Constants.SOCIAL_RATING_CACHE_TABLE_NAME + " SET "
 			+ Constants.RATING_TOTAL + "= ?, " + Constants.RATING_COUNT
-			+ "= ? WHERE " + Constants.CONTEXT_ID_COLUMN + "= ?";
+			+ "= ?, " + Constants.AVERAGE_RATING + " = ? WHERE " + Constants.CONTEXT_ID_COLUMN + "= ?";
 
 	public static final String INSERT_CACHE_SQL = "INSERT INTO "
 			+ Constants.SOCIAL_RATING_CACHE_TABLE_NAME + " ("
 			+ Constants.CONTEXT_ID_COLUMN + ", " + Constants.RATING_TOTAL
-			+ ", " + Constants.RATING_COUNT + ") VALUES(?, ?, ?)";
+			+ ", " + Constants.RATING_COUNT + ", "+ Constants.AVERAGE_RATING + ", " + Constants.TENANT_DOMAIN_COLUMN + ") VALUES(?, ?, ?, ?, ?)";
 
 	public static final String DELETE_COMMENT_SQL = "DELETE FROM "
 			+ Constants.SOCIAL_COMMENTS_TABLE_NAME + " WHERE "
@@ -450,6 +450,9 @@ public class SQLActivityPublisher extends ActivityPublisher {
 			selectCacheStatement.setString(1, targetId);
 			resultSet = selectCacheStatement.executeQuery();
 			if (!resultSet.next()) {
+				//TODO get rid of this block as we are warming up the cache during asset creation
+				String tenantDomain = SocialUtil.getTenantDomain();
+
 				if (log.isDebugEnabled()) {
 					log.debug("Executing: " + INSERT_CACHE_SQL);
 				}
@@ -458,11 +461,13 @@ public class SQLActivityPublisher extends ActivityPublisher {
 				insertCacheStatement.setString(1, targetId);
 				insertCacheStatement.setInt(2, rating);
 				insertCacheStatement.setInt(3, 1);
+				insertCacheStatement.setDouble(4, rating);
+				insertCacheStatement.setString(5,tenantDomain);
 				insertCacheStatement.executeUpdate();
 			} else {
 				int total, count;
-				total = resultSet.getInt(Constants.RATING_TOTAL);
-				count = resultSet.getInt(Constants.RATING_COUNT);
+				total = resultSet.getInt(Constants.RATING_TOTAL) + rating;
+				count = resultSet.getInt(Constants.RATING_COUNT) + 1;
 
 				if (log.isDebugEnabled()) {
 					log.debug("Executing: " + UPDATE_CACHE_SQL);
@@ -471,9 +476,10 @@ public class SQLActivityPublisher extends ActivityPublisher {
 				updateCacheStatement = connection
 						.prepareStatement(UPDATE_CACHE_SQL);
 
-				updateCacheStatement.setInt(1, total + rating);
-				updateCacheStatement.setInt(2, count + 1);
-				updateCacheStatement.setString(3, targetId);
+				updateCacheStatement.setInt(1, total);
+				updateCacheStatement.setInt(2, count);
+				updateCacheStatement.setDouble(3, (double) total/count);
+				updateCacheStatement.setString(4, targetId);
 				updateCacheStatement.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -612,7 +618,8 @@ public class SQLActivityPublisher extends ActivityPublisher {
 
 						updateCacheStatement.setInt(1, total - rating);
 						updateCacheStatement.setInt(2, count - 1);
-						updateCacheStatement.setString(3, targetId);
+						updateCacheStatement.setDouble(3, (double)total-rating/count-1);
+						updateCacheStatement.setString(4, targetId);
 						updateCacheStatement.executeUpdate();
 					}
 					cacheResultSet.close();
@@ -628,6 +635,40 @@ public class SQLActivityPublisher extends ActivityPublisher {
 					"Malformed JSON element found: " + e.getMessage(),
 					e);
 			throw e;
+		}
+	}
+	
+	@Override
+	public int warmUpRatingCache(String targetId)
+			throws SocialActivityException {
+		PreparedStatement insertCacheWarmUpStatement;
+		Connection connection;
+		String tenantDomain = SocialUtil.getTenantDomain();
+		String errorMessage = "Unable to publish the target: " + targetId
+				+ " in to the rating cache.";
+
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Executing: " + INSERT_CACHE_SQL);
+			}
+			connection = DSConnection.getConnection();
+			insertCacheWarmUpStatement = connection
+					.prepareStatement(INSERT_CACHE_SQL);
+			insertCacheWarmUpStatement.setString(1, targetId);
+			insertCacheWarmUpStatement.setInt(2, 0);
+			insertCacheWarmUpStatement.setInt(3, 0);
+			insertCacheWarmUpStatement.setDouble(4, 0);
+			insertCacheWarmUpStatement.setString(5, tenantDomain);
+
+			int returnVal = insertCacheWarmUpStatement.executeUpdate();
+			return returnVal;
+
+		} catch (SQLException e) {
+			log.error(errorMessage + e.getMessage(), e);
+			throw new SocialActivityException(errorMessage, e);
+		} catch (DataSourceException e) {
+			log.error(errorMessage + e.getMessage(), e);
+			throw new SocialActivityException(errorMessage, e);
 		}
 	}
 

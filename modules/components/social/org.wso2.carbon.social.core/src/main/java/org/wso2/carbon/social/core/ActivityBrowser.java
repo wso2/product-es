@@ -41,4 +41,7 @@ public interface ActivityBrowser {
 
 	JsonObject pollNewestComments(String targetId, int timestamp) throws SocialActivityException;
 
+	JsonObject getPopularAssets(String type, String tenantId, int limit,
+			int offset) throws SocialActivityException;
+
 }

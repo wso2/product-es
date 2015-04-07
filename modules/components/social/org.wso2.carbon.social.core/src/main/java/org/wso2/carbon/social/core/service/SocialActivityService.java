@@ -125,6 +125,16 @@ public abstract class SocialActivityService {
 		}
 	}
 
+	public String getPopularAssets(String type, String tenantId, int limit, int offset) throws SocialActivityException {
+		JsonObject popularAssetObject = getActivityBrowser().getPopularAssets(
+				type, tenantId, limit, offset);
+		if (popularAssetObject != null) {
+			return popularAssetObject.toString();
+		} else {
+			return "{}";
+		}
+	}
+	
 	/**
 	 * Allows target id and number of likes to be passed and return social
 	 * activities with greater number of likes.
@@ -183,6 +193,11 @@ public abstract class SocialActivityService {
 	public boolean isUserliked(String userId, String targetId, int like) throws SocialActivityException {
 		return getActivityBrowser().isUserlikedActivity(userId, targetId, like);
 	}
+	
+	public int warmUpRatingCache(String targetId) throws SocialActivityException {
+		return getActivityPublisher().warmUpRatingCache(targetId);
+	}
+
 
 	public abstract ActivityBrowser getActivityBrowser();
 
