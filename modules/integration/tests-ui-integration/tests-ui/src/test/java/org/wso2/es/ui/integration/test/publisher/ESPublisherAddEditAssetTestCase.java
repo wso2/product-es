@@ -33,6 +33,7 @@ import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import static org.testng.Assert.*;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 
 /**
  * Add and Edit asset test for Super tenant:Super Admin & Super User
@@ -76,7 +77,7 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.publisher", description = "Testing adding a new asset")
     public void testAddAsset() throws Exception {
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
-        driver.findElement(By.linkText("Add gadget")).click();
+        driver.findElement(By.linkText("ADD GADGET")).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
@@ -86,6 +87,11 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL_1);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_1);
+        assertTrue(isElementPresent(driver, By.name("images_thumbnail")));
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                +"/../src/test/resources/images/thumbnail.jpg");
+        driver.findElement(By.name("images_banner")).sendKeys(FrameworkPathUtil.getReportLocation()
+                +"/../src/test/resources/images/banner.jpg");
         driver.findElement(By.id("btn-create-asset")).click();
 
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
@@ -109,7 +115,7 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
     public void testEditAsset() throws Exception {
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Edit")).click();
+        driver.findElement(By.linkText("EDIT")).click();
         new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(ASSET_CATEGORY_2);
         driver.findElement(By.name("overview_url")).clear();
         driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL_2);
@@ -121,16 +127,18 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         //check updated info
         driver.findElement(By.linkText("Overview")).click();
         assertEquals(assetName, driver.findElement(By.xpath("//h1[contains(.,'"+assetName+"')]")).getText());
-        assertEquals(currentUserName, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[1]/div[2]")).getText(),
+        assertEquals(currentUserName, driver.findElement(By.name("overview_provider")).getAttribute("value"),
                 "Incorrect provider");
-        assertEquals(assetName, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[2]/div[2]")).getText(),
+        //assertEquals(
+        assertEquals(assetName, driver.findElement(By.name("overview_name")).getAttribute("value"),
                 "Incorrect asset name");
-        assertEquals(ASSET_VERSION, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[3]/div[2]")).getText(),
+        assertEquals(ASSET_VERSION, driver.findElement(By.name("overview_version")).getAttribute("value"),
                 "Incorrect version");
-        assertEquals(ASSET_CATEGORY_2, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[4]/div[2]")).getText());
-        assertEquals(ASSET_URL_2, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[5]/div[2]")).getText(),
+        assertEquals(ASSET_CATEGORY_2, driver.findElement(By.name("overview_category")).getAttribute("value"),
+                "Incorrect category");
+        assertEquals(ASSET_URL_2, driver.findElement(By.name("overview_url")).getAttribute("value"),
                 "Incorrect URL");
-        assertEquals(ASSET_DESCRIPTION_2, driver.findElement(By.xpath("//div[@id='collapseOverview']/div[6]/div[2]")).getText(),
+        assertEquals(ASSET_DESCRIPTION_2, driver.findElement(By.name("overview_description")).getAttribute("value"),
                 "Incorrect description");
     }
 
