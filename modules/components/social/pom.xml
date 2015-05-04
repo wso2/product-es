@@ -19,6 +19,7 @@
     <modules>
         <module>org.wso2.carbon.social.core</module>
         <module>org.wso2.carbon.social.sql</module>
+		<module>org.wso2.carbon.social.db.adapter</module>
     </modules>
     
     <properties>

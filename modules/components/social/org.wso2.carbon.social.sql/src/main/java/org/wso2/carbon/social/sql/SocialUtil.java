@@ -18,9 +18,21 @@
 
 package org.wso2.carbon.social.sql;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.namespace.QName;
+
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.social.core.SocialActivityException;
+import org.wso2.carbon.utils.CarbonUtils;
 
 public class SocialUtil {
 	private static final Log log = LogFactory.getLog(SocialUtil.class);
@@ -52,6 +64,79 @@ public class SocialUtil {
 		} else {
 			return null;
 		}
+	}
+
+	public static String getSocialAdaptorImplClass() throws IOException,
+			SocialActivityException {
+		String configPath = CarbonUtils.getCarbonHome() + File.separator
+				+ "repository" + File.separator + "conf" + File.separator
+				+ "social.xml";
+		File socialXML = new File(configPath);
+		try {
+			InputStream inStream = new FileInputStream(socialXML);
+			OMElement root = OMXMLBuilderFactory.createOMBuilder(inStream)
+					.getDocumentElement();
+
+			OMElement QueryAdaptorClass = root.getFirstChildWithName(new QName(
+					"QueryAdaptorClass"));
+
+			if (QueryAdaptorClass == null) {
+				throw new SocialActivityException(
+						"No <QueryAdaptorClass> element found within "
+								+ configPath);
+			}
+
+			if (log.isDebugEnabled()) {
+				log.debug("QueryAdaptorClass in use is: "
+						+ QueryAdaptorClass.getText());
+			}
+
+			inStream.close();
+			return QueryAdaptorClass.getText();
+
+		} catch (FileNotFoundException e) {
+			log.error("Unable to find the social.xml configuration file in "
+					+ configPath, e);
+			throw e;
+		} catch (IOException e) {
+			log.error("Error occured while reading the configuration file.", e);
+			throw e;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static Object getQueryAdaptorObject(Class cls)
+			throws SocialActivityException {
+		Object obj = null;
+		String queryAdapterObjectErrorMessage = "Unable to get Query Adapter object";
+		try {
+			obj = cls.newInstance();
+			return obj;
+		} catch (InstantiationException e) {
+			log.error(queryAdapterObjectErrorMessage + e.getMessage());
+			throw new SocialActivityException(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			log.error(queryAdapterObjectErrorMessage + e.getMessage());
+			throw new SocialActivityException(e.getMessage(), e);
+		}
+
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static Class loadQueryAdaptorClass() throws SocialActivityException {
+		Class<?> cls = null;
+		String loadQueryErrorMessage = "Unable to load Query Adapter class.";
+		try {
+			cls = Class.forName(SocialUtil.getSocialAdaptorImplClass());
+			return cls;
+		} catch (ClassNotFoundException e) {
+			log.error(loadQueryErrorMessage + e.getMessage());
+			throw new SocialActivityException(e.getMessage(), e);
+		} catch (IOException e) {
+			log.error(loadQueryErrorMessage + e.getMessage());
+			throw new SocialActivityException(e.getMessage(), e);
+		}
+
 	}
 
 }
