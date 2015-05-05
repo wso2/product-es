@@ -39,6 +39,7 @@
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.core.feature:1.1.0</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.sql.feature:1.1.0</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.db.adapter.feature:1.1.0</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>
