@@ -415,12 +415,6 @@
                 <groupId>org.wso2.es</groupId>
                 <artifactId>org.wso2.es.integration.common.clients</artifactId>
                 <version>${product.es.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.es.integration.common.clients</artifactId>
-                <version>${product.es.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.wso2.carbon</groupId>
