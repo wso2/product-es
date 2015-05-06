@@ -84,7 +84,14 @@ public class ArtifactUploadClientTestCase extends ESIntegrationTest {
 		writer = new StringWriter();
 		IOUtils.copy(errorIn, writer, "utf-8");
 		String errorString = writer.toString();
+		log.info("Result of asset client execution ");
 		log.info(consoleMsg);
+		//If the execution fails we need to know the reason for the failure
+		if(errorString.length() > 0){
+		  log.error("Error in executing asset client: ");
+		  log.error(errorString);
+		}
+		
 		Assert.assertEquals("Assets not uploaded successfully", 0, errorString.length());
 	}
 

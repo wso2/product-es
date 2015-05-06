@@ -25,7 +25,7 @@ import java.net.MalformedURLException;
 public class ESServerExtensionForWait extends ExecutionListenerExtension {
 
     private static final Log LOG = LogFactory.getLog(ESServerExtensionForWait.class);
-    private static final long WAIT_TIME = 3000;
+    private static final long WAIT_TIME = 10000;
     private static final int MAX_ATTEMPT_COUNT = 10;
 
     /**
