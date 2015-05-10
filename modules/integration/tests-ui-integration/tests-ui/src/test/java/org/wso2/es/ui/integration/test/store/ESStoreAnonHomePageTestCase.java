@@ -64,7 +64,7 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         assertTrue(isElementPresent(driver, By.id("btn-register")), "Home Page error: Register button missing");
         assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
                 .getText(), "Home Page error: Gadget menu missing");
-        assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
+        assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[3]/li"))
                 .getText(), "Home Page error: Site menu missing");
         assertEquals("Recent Gadgets", driver.findElement(By.linkText("Recent Gadgets")).getText(),
                 "Home Page error: Recent Gadgets links missing");
@@ -89,7 +89,7 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         driver.findElementPoll(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"), MAX_POLL_COUNT);
         assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"))
                 .getText(), "Gadgets Menu not working");
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")).click();
+        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[3]/li")).click();
         driver.findElementPoll(By.xpath("//h4[contains(.,'" + AMAZON + "')]"), MAX_POLL_COUNT);
         assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.,'" + AMAZON + "')]")).getText(),
                 "Sites Menu not working");

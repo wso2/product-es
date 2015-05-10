@@ -82,17 +82,12 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
         //do a lc transition and check states
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Life Cycle")).click();
-        driver.findElement(By.id("In-Review")).click();
+        driver.findElement(By.linkText("LIFE CYCLE")).click();
 
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
-        driver.findElement(By.id("commentModalSave")).click();
-//        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
-//                ("//table[@id='lc-history']/tbody/tr/td[2]"), "admin changed the asset from Created to In-Review"));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "In-Review"));
-        assertEquals("admin changed the asset from Created to In-Review",
-                driver.findElement(By.xpath("//table[@id='lc-history']/tbody/tr/td[2]")).getText());
+		driver.findElement(By.id("lifecycle-comment")).clear();
+		driver.findElement(By.id("lifecycle-comment")).sendKeys("test");
+		driver.findElement(By.id("lcActionPromote")).click();
+		assertEquals(driver.findElement(By.xpath("//span[contains(.,'In-Review')]")).getText(), "In-Review");
     }
 
     @AfterClass(alwaysRun = true)
