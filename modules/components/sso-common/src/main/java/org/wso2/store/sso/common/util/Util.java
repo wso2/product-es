@@ -32,6 +32,7 @@ import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallerFactory;
 import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.util.Base64;
+import org.opensaml.xml.validation.ValidationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -272,23 +273,29 @@ public class Util {
         try {
             KeyStore keyStore = null;
             java.security.cert.X509Certificate cert = null;
-            if (tenantId != MultitenantConstants.SUPER_TENANT_ID) {
-                // get an instance of the corresponding Key Store Manager instance
-                KeyStoreManager keyStoreManager = KeyStoreManager.getInstance(tenantId);
-                keyStore = keyStoreManager.getKeyStore(generateKSNameFromDomainName(tenantDomain));
-                // log.info(keyStore.getCertificate(tenantDomain));
-                cert = (java.security.cert.X509Certificate) keyStore.getCertificate(tenantDomain);
-                // log.info(cert.getSubjectDN().getName());
-            } else {
-                keyStore = KeyStore.getInstance("JKS");
-                keyStore.load(new FileInputStream(new File(keyStoreName)), keyStorePassword.toCharArray());
-                cert = (java.security.cert.X509Certificate) keyStore.getCertificate(alias);
+
+            /* First validate the signature using super tenant key store. If validation fails, then
+            try to validate using logged in tenant key store. This is work around for STORE-607*/
+            keyStore = KeyStore.getInstance("JKS");
+            keyStore.load(new FileInputStream(new File(keyStoreName)), keyStorePassword.toCharArray());
+            cert = (java.security.cert.X509Certificate) keyStore.getCertificate(alias);
+
+            try {
+                validateSignatureHelper(cert, resp);
+                isSigValid = true;
+            } catch (org.opensaml.xml.validation.ValidationException e) {
+                if (tenantId != MultitenantConstants.SUPER_TENANT_ID) {
+                    KeyStoreManager keyStoreManager = KeyStoreManager.getInstance(tenantId);
+                    keyStore = keyStoreManager.getKeyStore(generateKSNameFromDomainName(tenantDomain));
+                    cert = (java.security.cert.X509Certificate) keyStore.getCertificate(tenantDomain);
+
+                    validateSignatureHelper(cert, resp);
+                    isSigValid = true;
+                } else {
+                    throw new ValidationException(e);
+                }
             }
 
-            X509CredentialImpl credentialImpl = new X509CredentialImpl(cert);
-            SignatureValidator signatureValidator = new SignatureValidator(credentialImpl);
-            signatureValidator.validate(resp.getSignature());
-            isSigValid = true;
             return isSigValid;
         } catch (Exception e) {
             e.printStackTrace();
@@ -315,6 +322,13 @@ public class Util {
     private static String generateKSNameFromDomainName(String tenantDomain) {
         String ksName = tenantDomain.trim().replace(".", "-");
         return (ksName + ".jks");
+    }
+
+    private static void validateSignatureHelper(java.security.cert.X509Certificate cert, Response resp)
+            throws ValidationException {
+        X509CredentialImpl credentialImpl = new X509CredentialImpl(cert);
+        SignatureValidator signatureValidator = new SignatureValidator(credentialImpl);
+        signatureValidator.validate(resp.getSignature());
     }
 
 }
