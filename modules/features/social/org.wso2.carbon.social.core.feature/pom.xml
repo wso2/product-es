@@ -5,14 +5,14 @@
    <parent>
        <groupId>org.wso2.carbon</groupId>
        <artifactId>social-feature</artifactId>
-       <version>1.1.0</version>
+       <version>1.2.0</version>
        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.social.core.feature</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <name>WSO2 Carbon - Social - Core Feature</name>
 
 
@@ -63,7 +63,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.social.core:1.1.0</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.social.core:1.2.0</bundleDef>
                             </bundles>
 
                             <importFeatures>

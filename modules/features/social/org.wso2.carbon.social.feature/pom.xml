@@ -5,14 +5,14 @@
    <parent>
        <groupId>org.wso2.carbon</groupId>
        <artifactId>social-feature</artifactId>
-       <version>1.1.0</version>
+       <version>1.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.social.feature</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <name>WSO2 Carbon - Social - Feature</name>
 
 
@@ -37,9 +37,9 @@
                                 <importFeatureDef>org.wso2.carbon.core.server:4.2.0</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.core.feature:1.1.0</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.sql.feature:1.1.0</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.db.adapter.feature:1.1.0</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.core.feature:1.2.0</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.sql.feature:1.2.0</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.db.adapter.feature:1.2.0</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

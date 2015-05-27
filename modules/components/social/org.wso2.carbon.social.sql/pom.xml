@@ -4,19 +4,19 @@
     <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>social</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.social.sql</artifactId>
 	<packaging>bundle</packaging>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <name>WSO2 Carbon - Social - SQL Based Implementation</name>
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.social.core</artifactId>
-	    <version>1.1.0</version>
+	    <version>1.2.0</version>
         </dependency>
     </dependencies>
     <build>

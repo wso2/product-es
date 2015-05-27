@@ -11,7 +11,7 @@
 
     <groupId>org.wso2.carbon</groupId>
     <artifactId>social</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Social Aggregator Module</name>
