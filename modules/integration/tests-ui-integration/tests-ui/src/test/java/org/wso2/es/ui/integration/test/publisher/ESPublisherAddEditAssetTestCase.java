@@ -142,6 +142,8 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
                 "Incorrect description");
     }
 
+
+
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         //delete resources and logout
