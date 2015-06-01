@@ -32,7 +32,9 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
 import static org.testng.Assert.*;
+
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 
 /**
@@ -89,9 +91,9 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_1);
         assertTrue(isElementPresent(driver, By.name("images_thumbnail")));
         driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
-                +"/../src/test/resources/images/thumbnail.jpg");
+                + "/../src/test/resources/images/thumbnail.jpg");
         driver.findElement(By.name("images_banner")).sendKeys(FrameworkPathUtil.getReportLocation()
-                +"/../src/test/resources/images/banner.jpg");
+                + "/../src/test/resources/images/banner.jpg");
         driver.findElement(By.id("btn-create-asset")).click();
 
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
@@ -126,7 +128,7 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
 
         //check updated info
         driver.findElement(By.linkText("Overview")).click();
-        assertEquals(assetName, driver.findElement(By.xpath("//h1[contains(.,'"+assetName+"')]")).getText());
+        assertEquals(assetName, driver.findElement(By.xpath("//h1[contains(.,'" + assetName + "')]")).getText());
         assertEquals(currentUserName, driver.findElement(By.name("overview_provider")).getAttribute("value"),
                 "Incorrect provider");
         //assertEquals(
@@ -141,8 +143,6 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         assertEquals(ASSET_DESCRIPTION_2, driver.findElement(By.name("overview_description")).getAttribute("value"),
                 "Incorrect description");
     }
-
-
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {

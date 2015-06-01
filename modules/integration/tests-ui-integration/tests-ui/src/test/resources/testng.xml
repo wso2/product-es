@@ -36,32 +36,31 @@
             <package name="org.wso2.es.ui.integration.test.*"/>
         </packages>
         <!--<classes>-->
-            <!--<class name="org.wso2.es.ui.integration.test.config.TestConfig"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.config.TestConfig"/>-->
 
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherAddEditAssetTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherTenantAddEditAssetTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginLogoutTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLCTransitionTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherAddEditAssetTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherTenantAddEditAssetTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginLogoutTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLCTransitionTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherValidationTestCase"/>-->
 
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherNotificationTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantNotificationTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherSubscriptionTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantSubscriptionTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherNotificationTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantNotificationTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherSubscriptionTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantSubscriptionTestCase"/>-->
 
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreAnonHomePageTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreAnonCategorySortingTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreBookmarkTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreLoginLogoutTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreGadgetPageTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreAnonHomePageTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreAnonCategorySortingTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreBookmarkTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreLoginLogoutTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreGadgetPageTestCase"/>-->
 
-            <!--<class name="org.wso2.es.ui.integration.test.common.ESRegisterUserTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.common.ESPublishToStore"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssetsTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreRatingsTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetListTestCase"/>-->
-
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherValidationTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.common.ESRegisterUserTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.common.ESPublishToStore"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssetsTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreRatingsTestCase"/>-->
+        <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetListTestCase"/>-->
         <!--</classes>-->
 
     </test>
