@@ -25,6 +25,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 
 /**
  * Utility operations related to assets
@@ -44,7 +45,7 @@ public class AssetUtil extends BaseUITestCase {
      */
     public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String version, String category, String url, String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
-        driver.findElement(By.linkText("Add " + assetType)).click();
+        driver.findElement(By.linkText("ADD " + assetType.toUpperCase())).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
@@ -56,6 +57,11 @@ public class AssetUtil extends BaseUITestCase {
         driver.findElement(By.name("overview_url")).sendKeys(url);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(description);
+
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                +"/../src/test/resources/images/thumbnail.jpg");
+        driver.findElement(By.name("images_banner")).sendKeys(FrameworkPathUtil.getReportLocation()
+                +"/../src/test/resources/images/banner.jpg");
         driver.findElement(By.id("btn-create-asset")).click();
         if(isAlertPresent(driver)){
             closeAlertAndGetItsText(driver, true);
@@ -77,7 +83,7 @@ public class AssetUtil extends BaseUITestCase {
                                      String description) {
         driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Edit")).click();
+        driver.findElement(By.linkText("EDIT")).click();
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(description);
         driver.findElement(By.id("editAssetButton")).click();
@@ -98,6 +104,20 @@ public class AssetUtil extends BaseUITestCase {
         driver.findElement(By.id("commentModalText")).sendKeys(comment);
         driver.findElement(By.id("commentModalSave")).click();
     }
+
+	public static void promoteAsset(WebDriver driver, String comment){
+
+		driver.findElement(By.id("lifecycle-comment")).clear();
+		driver.findElement(By.id("lifecycle-comment")).sendKeys(comment);
+		driver.findElement(By.id("lcActionPromote")).click();
+	}
+
+	public static void demoteAsset(WebDriver driver, String comment){
+
+		driver.findElement(By.id("lifecycle-comment")).clear();
+		driver.findElement(By.id("lifecycle-comment")).sendKeys(comment);
+		driver.findElement(By.id("lcActionDemote")).click();
+	}
 
     /**
      * Add ratings and reviews
@@ -124,10 +144,10 @@ public class AssetUtil extends BaseUITestCase {
      */
     public static void publishAssetToStore(WebDriver driver, String assetName) {
         driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Life Cycle")).click();
-        changeLCState(driver, "In-Review", "to review");
-        driver.get(driver.getCurrentUrl());
-        changeLCState(driver, "Published", "published");
+        driver.findElement(By.linkText("LIFE CYCLE")).click();
+
+		promoteAsset(driver, "to review");
+		promoteAsset(driver, "to published");
     }
 
 //    /**

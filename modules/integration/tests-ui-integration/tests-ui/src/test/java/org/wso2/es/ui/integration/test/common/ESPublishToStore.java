@@ -24,10 +24,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertEquals;
@@ -65,7 +67,7 @@ public class ESPublishToStore extends BaseUITestCase {
     @Test(groups = "wso2.es.common", description = "Testing Publishing an asset to store")
     public void testESPublishToStore() throws Exception {
         //Add a new gadget with info
-        driver.findElement(By.linkText("Add " + ASSET_TYPE)).click();
+        driver.findElement(By.linkText("ADD " + ASSET_TYPE.toUpperCase())).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(ASSET_NAME);
         driver.findElement(By.name("overview_version")).clear();
@@ -74,25 +76,18 @@ public class ESPublishToStore extends BaseUITestCase {
         driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION);
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                +"/../src/test/resources/images/thumbnail.jpg");
+        driver.findElement(By.name("images_banner")).sendKeys(FrameworkPathUtil.getReportLocation()
+                +"/../src/test/resources/images/banner.jpg");
         driver.findElement(By.id("btn-create-asset")).click();
         if (isAlertPresent(driver)) {
             closeAlertAndGetItsText(driver, true);
         }
         //publish the gadget to store
         driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
-        driver.findElement(By.linkText(ASSET_NAME)).click();
-        driver.findElement(By.linkText("Life Cycle")).click();
+		AssetUtil.publishAssetToStore(driver, ASSET_NAME);
 
-        driver.findElement(By.id("In-Review")).click();
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
-        driver.findElement(By.id("commentModalSave")).click();
-
-        driver.get(driver.getCurrentUrl());
-        driver.findElement(By.id("Published")).click();
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
-        driver.findElement(By.id("commentModalSave")).click();
         //navigate to store to check the published gadget
         driver.get(baseUrl + STORE_URL);
         driver.findElementPoll(By.xpath("//a[contains(.,'" + ASSET_NAME + "')]"), 5);
