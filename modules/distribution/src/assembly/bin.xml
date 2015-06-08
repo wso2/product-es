@@ -464,6 +464,12 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/social-datasources.xml</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/datasources/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
         <!--file>
             <source>src/repository/database/WSO2SOCIAL_DB.h2.db</source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/database</outputDirectory>
