@@ -19,6 +19,7 @@ package org.wso2.es.ui.integration.test.publisher.permissions;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.By;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -31,6 +32,9 @@ import org.wso2.es.integration.common.utils.PermissionConstants;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import javax.xml.xpath.XPathExpressionException;
 
@@ -63,7 +67,7 @@ public class ESPublisherAddPermissionTestCase extends BaseUITestCase {
     private String userKey;
 
     @Factory(dataProvider = "userProvider")
-    public ESPublisherAddPermissionTestCase(String userKey,String scenario)throws XPathExpressionException{
+    public ESPublisherAddPermissionTestCase(String userKey, String scenario) throws XPathExpressionException {
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         this.currentUser = automationContext.getSuperTenant().getTenantUser(userKey);
         this.userKey = userKey;
@@ -90,14 +94,28 @@ public class ESPublisherAddPermissionTestCase extends BaseUITestCase {
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test access to the add asset page")
-    public void testAccessToAddAssetPage(){
+    public void testAccessToAddAssetPage() {
         String url = addAssetURL(PermissionConstants.TEST_ASSET_TYPE);
-        LOG.info("Testing access to the add page "+url);
+        if (userKey == PermissionConstants.PUB_USER_PERM_ADD) {
+            //Should see the gadget listing title
+            assertTrue(driver.findElement(By.cssSelector("BODY")).getText().matches("Gadgets"), "Unable to navigate to " +
+                    "gadget create page");
+        } else {
+            //Should see a 401 page
+            assertTrue(driver.findElement(By.cssSelector("BODY")).getText().matches("HTTP Status 401 - You do not " +
+                    "have access to this page"), "User is able to access the gadget create page even without permission");
+        }
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test visibility of the add asset button")
-    public void testVisibilityOfAddAssetButton(){
-         LOG.info("Testing visibility of the add asset button");
+    public void testVisibilityOfAddAssetButton() {
+        String url = assetListingURL(PermissionConstants.TEST_ASSET_TYPE);
+        if (userKey == PermissionConstants.PUB_USER_PERM_ADD) {
+            assertTrue(isElementPresent(driver, By.id("Addgadget")));
+        } else if (userKey == PermissionConstants.PUB_USER_PERM_NO_ADD) {
+            assertFalse(isElementPresent(driver, By.id("Addgadget")));
+
+        }
     }
 
     @DataProvider(name = "userProvider")
@@ -106,7 +124,11 @@ public class ESPublisherAddPermissionTestCase extends BaseUITestCase {
                 {PermissionConstants.PUB_USER_PERM_NO_ADD, "Testing ability to add without add permission"}};
     }
 
-    private String addAssetURL(String type){
+    private String assetListingURL(String type) {
+        return baseUrl + "/" + PUBLISHER_APP + "/asts/" + type + "/list";
+    }
+
+    private String addAssetURL(String type) {
         return baseUrl + "/" + PUBLISHER_APP + "/asts/" + type + "/create";
     }
 
