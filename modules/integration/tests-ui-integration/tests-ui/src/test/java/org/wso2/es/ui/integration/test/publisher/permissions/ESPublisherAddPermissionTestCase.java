@@ -22,8 +22,17 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.User;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.es.integration.common.utils.PermissionConstants;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
+
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Tests the /add permission
@@ -50,15 +59,55 @@ import org.wso2.es.ui.integration.util.BaseUITestCase;
 
 public class ESPublisherAddPermissionTestCase extends BaseUITestCase {
     private static final Log LOG = LogFactory.getLog(ESPublisherAddPermissionTestCase.class);
-    private TestUserMode userMode;
+    private User currentUser;
+    private String userKey;
 
-
-    public ESPublisherAddPermissionTestCase() {
-        LOG.info("Constructor called " + ESPublisherAddPermissionTestCase.class);
+    @Factory(dataProvider = "userProvider")
+    public ESPublisherAddPermissionTestCase(String userKey,String scenario)throws XPathExpressionException{
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
+        this.currentUser = automationContext.getSuperTenant().getTenantUser(userKey);
+        this.userKey = userKey;
     }
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
-        LOG.info("setup method called " + ESPublisherAddPermissionTestCase.class);
+
+        super.init(TestUserMode.SUPER_TENANT_USER);
+
+        //Obtain the user credentials
+        String username = currentUser.getUserName();
+        String password = currentUser.getPassword();
+
+        //Obtain the application details
+        baseUrl = getWebAppURL();
+
+        //Create the web driver
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
+
+        LOG.info("Accessing login URL " + baseUrl + " app " + PUBLISHER_APP);
+
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, username, password);
     }
+
+    @Test(groups = "wso2.es.publisher", description = "Test access to the add asset page")
+    public void testAccessToAddAssetPage(){
+        String url = addAssetURL(PermissionConstants.TEST_ASSET_TYPE);
+        LOG.info("Testing access to the add page "+url);
+    }
+
+    @Test(groups = "wso2.es.publisher", description = "Test visibility of the add asset button")
+    public void testVisibilityOfAddAssetButton(){
+         LOG.info("Testing visibility of the add asset button");
+    }
+
+    @DataProvider(name = "userProvider")
+    private static Object[][] userProvider() {
+        return new Object[][]{{PermissionConstants.PUB_USER_PERM_ADD, "Testing ability to add asset with add permission"},
+                {PermissionConstants.PUB_USER_PERM_NO_ADD, "Testing ability to add without add permission"}};
+    }
+
+    private String addAssetURL(String type){
+        return baseUrl + "/" + PUBLISHER_APP + "/asts/" + type + "/create";
+    }
+
 }

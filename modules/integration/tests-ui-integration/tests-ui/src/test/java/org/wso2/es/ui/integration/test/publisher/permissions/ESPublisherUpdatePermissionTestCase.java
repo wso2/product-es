@@ -22,25 +22,67 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.User;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.es.integration.common.utils.PermissionConstants;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
+
+import javax.xml.xpath.XPathExpressionException;
 
 public class ESPublisherUpdatePermissionTestCase extends BaseUITestCase {
     private static final Log LOG = LogFactory.getLog(ESPublisherUpdatePermissionTestCase.class);
     private TestUserMode userMode;
+    private User currentUser;
+    private String userKey;
 
-    public ESPublisherUpdatePermissionTestCase() {
-        LOG.info("Constructor called " + ESPublisherUpdatePermissionTestCase.class);
+    public ESPublisherUpdatePermissionTestCase() throws XPathExpressionException {
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
+        this.currentUser = automationContext.getSuperTenant().getTenantUser(userKey);
+        this.userKey = userKey;
     }
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
-        LOG.info("setup method called " + ESPublisherUpdatePermissionTestCase.class);
+        super.init(TestUserMode.SUPER_TENANT_USER);
+
+        //Obtain the user credentials
+        String username = currentUser.getUserName();
+        String password = currentUser.getPassword();
+
+        //Obtain the application details
+        baseUrl = getWebAppURL();
+
+        //Create the web driver
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
+
+        LOG.info("Accessing login URL " + baseUrl + " app " + PUBLISHER_APP);
+
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, username, password);
     }
 
-//    @DataProvider(name = "userMode")
-//    private static Object[][] userModeProvider() {
-//        return new Object[][]{{TestUserMode.TENANT_ADMIN, "Add Edit asset - TenantAdmin"},
-//                {TestUserMode.TENANT_USER, "Add Edit asset - TenantUser"}};
-//    }
+    @Test(groups = "wso2.es.publisher", description = "Test access to the update page")
+    public void testAccessToUpdateAssetPage(){
+        String url = updateAssetURL(PermissionConstants.TEST_ASSET_TYPE,"id");
+        LOG.info("Accessing the update page: "+url);
+    }
+
+    @Test(groups = "wso2.es.publisher", description = "Test visibility of the update asset button")
+    public void testVisibilityOfUpdateAssetButton(){
+        LOG.info("Testing the visibility of the update asset button");
+    }
+
+    @DataProvider(name = "userProvider")
+    private static Object[][] userProvider() {
+        return new Object[][]{{PermissionConstants.PUB_USER_PERM_UPDATE, "Testing ability to update asset with update permission"},
+                {PermissionConstants.PUB_USER_PERM_NO_UPDATE, "Testing ability to update without update permission"}};
+    }
+
+    private String updateAssetURL(String type,String id){
+        return baseUrl + "/" + PUBLISHER_APP + "/asts/" + type + "/update/"+id;
+    }
 }

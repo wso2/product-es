@@ -32,7 +32,7 @@
         <!--
          Change this to true if you want to generate coverage statistics
         -->
-        <coverage>true</coverage>
+        <coverage>false</coverage>
         <!--
          Change this to true if you want to enable framework dashboard
         -->
@@ -132,6 +132,36 @@
                         <userName>testuser21</userName>
                         <password>testuser21</password>
                     </user>
+                    <user key="pub-user-perm-no-list">
+                        <userName>publisheruser1</userName>
+                        <password>publisheruser1</password>
+                        <roles>
+                            <role>role-pub-perm-no-list</role>
+                        </roles>
+                    </user>
+                    <user key="pub-user-perm-list">
+                        <userName>publisheruser2</userName>
+                        <password>publisheruser2</password>
+                        <roles>
+                            <role>role-pub-perm-list</role>
+                        </roles>
+                    </user>
+                    <user key="pub-user-perm-no-add">
+                        <userName>publisheruser3</userName>
+                        <password>publisheruser3</password>
+                    </user>
+                    <user key="pub-user-perm-add">
+                        <userName>publisheruser4</userName>
+                        <password>publisheruser4</password>
+                    </user>
+                    <user key="pub-user-perm-no-update">
+                        <userName>publisheruser5</userName>
+                        <password>publisheruser5</password>
+                    </user>
+                    <user key="pub-user-perm-update">
+                        <userName>publisheruser6</userName>
+                        <password>publisheruser6</password>
+                    </user>
                 </users>
             </tenant>
         </superTenant>
@@ -173,6 +203,45 @@
                 </users>
             </tenant>
         </tenants>
+        <roles>
+            <role name="role-pub-perm-list">
+                <permissions>
+                    <permission>/permission/admin/login</permission>
+                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                </permissions>
+            </role>
+            <role name="role-pub-perm-no-list">
+                <permissions>
+                    <permission>/permission/admin/login</permission>
+                </permissions>
+            </role>
+            <role name="role-pub-perm-add">
+                <permissions>
+                    <permission>/permission/admin/login</permission>
+                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                    <permission>/permission/admin/manage/resources/govern/gadget/add</permission>
+                </permissions>
+            </role>
+            <role name="role-pub-perm-no-add">
+                <permissions>
+                    <permission>/permission/admin/login</permission>
+                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                </permissions>
+            </role>
+            <role name="role-pub-perm-update">
+                <permissions>
+                    <permission>/permission/admin/login</permission>
+                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                    <permission>/permission/enterprisestore/apps/publisher/features/assets/gadget/update</permission>
+                </permissions>
+            </role>
+            <role name="role-pub-perm-no-update">
+                <permissions>
+                    <permission>/permission/admin/login</permission>
+                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                </permissions>
+            </role>
+        </roles>
     </userManagement>
     <!--
    This section will initiate the initial deployment of the platform required by

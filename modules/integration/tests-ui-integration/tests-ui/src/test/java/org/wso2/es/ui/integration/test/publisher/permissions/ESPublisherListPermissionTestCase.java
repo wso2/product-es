@@ -23,43 +23,86 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.User;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.es.integration.common.utils.PermissionConstants;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
+import org.wso2.es.ui.integration.util.ESWebDriver;
+
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Tests the /list permission
- *
+ * <p/>
  * Note: The logged in user should not have the admin role
- *
+ * <p/>
  * Case #1:
- *  Precondition:
- *      - User should have the /list permission
- *  Should be true:
- *      - The asset type should be listed in the asset list box
- *      - The asset list page should be accessible
+ * Precondition:
+ * - User should have the /list permission
+ * Should be true:
+ * - The asset type should be listed in the asset list box
+ * - The asset list page should be accessible
  * Case #2:
- *  Precondition:
- *      - User should not have the /list permission
- *  Should be true:
- *      - The asset type should not appear in the asset list box
- *      - The asset list page should not be accessible and should display a 401 error message
+ * Precondition:
+ * - User should not have the /list permission
+ * Should be true:
+ * - The asset type should not appear in the asset list box
+ * - The asset list page should not be accessible and should display a 401 error message
  */
 public class ESPublisherListPermissionTestCase extends BaseUITestCase {
     private static final Log LOG = LogFactory.getLog(ESPublisherListPermissionTestCase.class);
-    private TestUserMode userMode;
+    private User currentUser;
+    private String userKey;
 
-    public ESPublisherListPermissionTestCase() {
-        LOG.info("Constructor called "+ESPublisherListPermissionTestCase.class);
+    @Factory(dataProvider = "userProvider")
+    public ESPublisherListPermissionTestCase(String userKey, String scenario) throws XPathExpressionException {
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
+        this.currentUser = automationContext.getSuperTenant().getTenantUser(userKey);
+        this.userKey = userKey;
     }
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
-        LOG.info("setup method called "+ESPublisherListPermissionTestCase.class);
+
+        super.init(TestUserMode.SUPER_TENANT_USER);
+
+        //Obtain the user credentials
+        String username = currentUser.getUserName();
+        String password = currentUser.getPassword();
+
+        //Obtain the application details
+        baseUrl = getWebAppURL();
+
+        //Create the web driver
+        driver = new ESWebDriver(BrowserManager.getWebDriver());
+
+        LOG.info("Accessing login URL " + baseUrl + " app " + PUBLISHER_APP);
+
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, username, password);
     }
 
-//    @DataProvider(name = "userMode")
-//    private static Object[][] userModeProvider() {
-//        return new Object[][]{{TestUserMode.TENANT_ADMIN, "Add Edit asset - TenantAdmin"},
-//                {TestUserMode.TENANT_USER, "Add Edit asset - TenantUser"}};
-//    }
+    @Test(groups = "wso2.es.publisher", description = "Test accessing listing page")
+    public void testAccessToAssetListingPage() {
+        String url = assetListingURL(PermissionConstants.TEST_ASSET_TYPE);
+        LOG.info("Attempting to access " + url);
+    }
+
+    @Test(groups = "wso2.es.publisher", description = "Test visibility of asset type in asset corral")
+    public void testVisibilityOfAssetTypeInCorral(){
+
+    }
+
+    @DataProvider(name = "userProvider")
+    private static Object[][] userProvider() {
+        return new Object[][]{{PermissionConstants.PUB_USER_PERM_LIST, "Testing access to /list with list permission"},
+                {PermissionConstants.PUB_USER_PERM_NO_LIST, "Testing access to /list without list permission"}};
+    }
+
+    private String assetListingURL(String type) {
+        return baseUrl + "/" + PUBLISHER_APP + "/asts/" + type + "/list";
+    }
 }
