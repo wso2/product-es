@@ -162,6 +162,14 @@
                         <userName>publisheruser6</userName>
                         <password>publisheruser6</password>
                     </user>
+                    <user key="store-user-perm-list">
+                        <userName>publisheruser7</userName>
+                        <password>publisheruser7</password>
+                    </user>
+                    <user key="store-user-perm-no-list">
+                        <userName>publisheruser8</userName>
+                        <password>publisheruser8</password>
+                    </user>
                 </users>
             </tenant>
         </superTenant>
@@ -208,11 +216,13 @@
                 <permissions>
                     <permission>/permission/admin/login</permission>
                     <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                    <permission>/permission/admin/manage/resources/govern/site/list</permission>
                 </permissions>
             </role>
             <role name="role-pub-perm-no-list">
                 <permissions>
                     <permission>/permission/admin/login</permission>
+                    <permission>/permission/admin/manage/resources/govern/site/list</permission>
                 </permissions>
             </role>
             <role name="role-pub-perm-add">
@@ -239,6 +249,19 @@
                 <permissions>
                     <permission>/permission/admin/login</permission>
                     <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                </permissions>
+            </role>
+            <role name="role-store-perm-list">
+                 <permissions>
+                     <permission>/permission/admin/login</permission>
+                     <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
+                     <permission>/permission/admin/manage/resources/govern/site/list</permission>
+                 </permissions>
+            </role>
+            <role name="role-store-perm-no-list">
+                <permissions>
+                    <permission>/permission/admin/login</permission>
+                    <permission>/permission/admin/manage/resources/govern/site/list</permission>
                 </permissions>
             </role>
         </roles>
