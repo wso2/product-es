@@ -30,7 +30,7 @@ public class ESPublisherAssetOverrideRendererTestCase extends ESIntegrationUITes
 
   @Test(groups = "wso2.es", description = "")
   public void testESPublisherAssetOverrideRendererTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/lifecycle");
+    driver.get(baseUrl + "/publisher/assets/servicex/lifecycle");
  }
 
     @AfterClass(alwaysRun = true)

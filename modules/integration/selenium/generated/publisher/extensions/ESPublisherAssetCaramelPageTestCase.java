@@ -30,7 +30,7 @@ public class ESPublisherAssetCaramelPageTestCase extends ESIntegrationUITest {
 
   @Test(groups = "wso2.es", description = "")
   public void testESPublisherAssetCaramelPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/new_caramel_page");
+    driver.get(baseUrl + "/publisher/assets/servicex/new_caramel_page");
     assertTrue(isElementPresent(By.cssSelector("span.publisherTitle")));
     assertTrue(isElementPresent(By.linkText("Overview")));
     assertTrue(isElementPresent(By.linkText("Edit")));

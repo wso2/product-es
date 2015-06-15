@@ -30,7 +30,7 @@ public class ESStoreAddedAssetTestCase extends ESIntegrationUITest {
 
   @Test(groups = "wso2.es", description = "")
   public void testESStoreAddedAssetTestCase() throws Exception {
-    driver.get(baseUrl + "/store/asts/gadget/list");
+    driver.get(baseUrl + "/store/assets/gadget/list");
     driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[3]/li")).click();
     assertTrue(isElementPresent(By.id("assetListingPageH1")));
  }
