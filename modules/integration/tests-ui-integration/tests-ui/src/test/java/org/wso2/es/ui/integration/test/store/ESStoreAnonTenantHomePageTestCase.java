@@ -53,7 +53,7 @@ public class ESStoreAnonTenantHomePageTestCase extends ESStoreAnonHomePageTestCa
     @Test(groups = "wso2.es.store", description = "Test if the asset listing page loads when using /t/domain as anon " +
             "user")
     public void testAnonAssetListingPage() throws Exception {
-        driver.get(resolveStoreUrl()+"/asts/gadget/list");
+        driver.get(resolveStoreUrl()+"/assets/gadget/list");
         assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Home Page error: Logo missing");
     }
 

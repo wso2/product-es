@@ -171,7 +171,7 @@ public class ESStoreSearchGadgetListTestCase extends BaseUITestCase {
         ESUtil.login(driver, baseUrl, "publisher", userInfo.getUserName(),
                 userInfo.getPassword());
         AssetUtil.addNewAsset(driver, baseUrl, assetType, assetName, assetVersion, assetCategory, assetURL, assetDescription);
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + "/publisher/assets/gadget/list");
         driver.findElementPoll(By.linkText(assetName), 10);
         AssetUtil.publishAssetToStore(driver, assetName);
     }

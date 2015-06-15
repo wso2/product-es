@@ -33,11 +33,11 @@ import static org.testng.Assert.assertTrue;
 
 public class ESStoreSocialSharingTestCase extends BaseUITestCase{
     private static final int MAX_WAIT_TIME = 30;
-    private static String correctFacebookLink = "https://www.facebook.com/sharer/sharer.php?u=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
-    private static String correctGplusLink = "https://plus.google.com/share?url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
+    private static String correctFacebookLink = "https://www.facebook.com/sharer/sharer.php?u=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
+    private static String correctGplusLink = "https://plus.google.com/share?url=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
     private static String correctTwitterLink = "https://twitter.com/intent/tweet?text=";
-    private static String correctTwitterLink2 = "&url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
-    private static String correctDiggLink = "https://digg.com/submit?url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
+    private static String correctTwitterLink2 = "&url=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
+    private static String correctDiggLink = "https://digg.com/submit?url=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
     private String gadgetId = "";
 
     @BeforeClass(alwaysRun = true)
@@ -51,7 +51,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         wait = new WebDriverWait(driver, MAX_WAIT_TIME);
         ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
 
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + "/store/assets/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
         driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
         String[] gadgetUrlSplit = driver.getCurrentUrl().split("/");
@@ -64,7 +64,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
 
     @Test(groups = "wso2.es.store", description = "Testing facebook link in share tab")
     public void testFacebookSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + "/store/assets/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
         driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
@@ -79,7 +79,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
 
     @Test(groups = "wso2.es.store", description = "Testing Google plus link in share tab")
     public void testGPlusSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + "/store/assets/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
         driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
@@ -94,7 +94,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
 
     @Test(groups = "wso2.es.store", description = "Testing Twitter link in share tab")
     public void testTwitterSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + "/store/assets/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
         driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
@@ -110,7 +110,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
 
     @Test(groups = "wso2.es.store", description = "Testing Digg link in share tab")
     public void testDiggSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + "/store/assets/gadget/list");
         driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
         driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
