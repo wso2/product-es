@@ -51,8 +51,8 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
     protected static final String MANAGEMENT_CONSOLE_URL = "/carbon/";
     protected static final String PUBLISHER_LOGOUT_URL = "/publisher/logout";
     protected static final String STORE_LOGOUT_URL = "/store/logout";
-    protected static final String PUBLISHER_GADGET_LIST_PAGE = "/publisher/asts/gadget/list";
-    protected static final String STORE_GADGET_LIST_PAGE = "/store/asts/gadget/list";
+    protected static final String PUBLISHER_GADGET_LIST_PAGE = "/publisher/assets/gadget/list";
+    protected static final String STORE_GADGET_LIST_PAGE = "/store/assets/gadget/list";
     protected static final String STORE_TOP_ASSETS_PAGE = "/store/pages/top-assets";
     protected static final String GADGET_REGISTRY_BASE_PATH = "/_system/governance/gadgets/";
     protected static final String NONE_EXIST_TENANT_DOMAIN = "foo.com";

@@ -43,7 +43,7 @@ public class AssetUtil extends BaseUITestCase {
      * @param version     version
      */
     public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String version, String category, String url, String description) {
-        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
+        driver.get(baseUrl + "/publisher/assets/" + assetType + "/list");
         driver.findElement(By.linkText("Add " + assetType)).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
@@ -75,7 +75,7 @@ public class AssetUtil extends BaseUITestCase {
      */
     public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
                                      String description) {
-        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
+        driver.get(baseUrl + "/publisher/assets/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
         driver.findElement(By.name("overview_description")).clear();
