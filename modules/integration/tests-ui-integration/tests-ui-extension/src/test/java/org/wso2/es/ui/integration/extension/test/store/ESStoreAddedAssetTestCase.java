@@ -41,7 +41,7 @@ public class ESStoreAddedAssetTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.extensions", description = "The new asset type list page extension in store Test Case")
     public void testESStoreAddedAssetTestCase() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + "/store/assets/gadget/list");
         driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")).click();
         driver.findElementPoll(By.id("assetListingPageH1"),POLL_COUNT);
         assertTrue(isElementPresent(driver, By.id("assetListingPageH1")));

@@ -57,7 +57,7 @@ public class ESPublisherAssetOverrideRendererTestCase extends BaseUITestCase {
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
-        driver.get(baseUrl + "/publisher/asts/servicex/list");
+        driver.get(baseUrl + "/publisher/assets/servicex/list");
         driver.findElement(By.linkText("Add servicex")).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(ASSET_NAME);

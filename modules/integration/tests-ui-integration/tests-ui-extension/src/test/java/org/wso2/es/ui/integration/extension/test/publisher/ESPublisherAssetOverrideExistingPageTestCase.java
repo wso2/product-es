@@ -44,12 +44,12 @@ public class ESPublisherAssetOverrideExistingPageTestCase extends BaseUITestCase
 
     @Test(groups = "wso2.es.extensions", description = "Test overriding existing page in extensions")
     public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + "/publisher/assets/gadget/list");
 //        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
         driver.findElement(By.cssSelector("span.btn-asset")).click();
 
         driver.findElement(By.linkText("Service")).click();
-        driver.get(baseUrl + "/publisher/asts/servicex/details");
+        driver.get(baseUrl + "/publisher/assets/servicex/details");
         assertTrue(isElementPresent(driver, By.id("assetOveriddenDetailsPageH1")));
     }
 
