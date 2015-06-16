@@ -48,7 +48,7 @@
             </definition>
         </datasource>
 
-        <datasource>
+        <!--datasource>
             <name>WSO2AM_DB</name>
             <description>The datasource used for API Manager database</description>
             <jndiConfig>
@@ -67,7 +67,7 @@
                     <validationInterval>30000</validationInterval>
                 </configuration>
             </definition>
-        </datasource>
+        </datasource-->
 
         <!--datasource>
             <name>SOCIAL_CACHE</name>
