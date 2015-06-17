@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -284,12 +285,6 @@
                 <version>${carbon.registry.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.shindig</groupId>
-                <artifactId>shindig-server</artifactId>
-                <version>${shindig.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
                 <groupId>javax.el</groupId>
                 <artifactId>el-api</artifactId>
                 <version>${el.api.version}</version>
@@ -490,8 +485,8 @@
     <scm>
         <connection>scm:git:https://github.com/wso2/product-es.git</connection>
         <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <repositories>
         <repository>
             <id>wso2-nexus</id>
@@ -603,6 +598,7 @@
         <carbon.kernel.version>4.4.0</carbon.kernel.version>
         <carbon.social.version>2.2.0-SNAPSHOT</carbon.social.version>
         <carbon.store.version>2.2.0-SNAPSHOT</carbon.store.version>
+        <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <product.es.version>2.0.0-SNAPSHOT</product.es.version>
 
         <test.framework.version>4.3.1</test.framework.version>
@@ -643,7 +639,6 @@
         <gson.version>2.1</gson.version>
         <json.version>20070829</json.version>
         <junit.version>3.8.1</junit.version>
-        <shindig.version>2.5.0-beta5</shindig.version>
         <el.api.version>2.2</el.api.version>
         <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
