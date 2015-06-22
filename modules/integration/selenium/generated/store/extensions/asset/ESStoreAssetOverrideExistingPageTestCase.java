@@ -30,7 +30,7 @@ public class ESStoreAssetOverrideExistingPageTestCase extends ESIntegrationUITes
 
   @Test(groups = "wso2.es", description = "")
   public void testESStoreAssetOverrideExistingPageTestCase() throws Exception {
-    driver.get(baseUrl + "/store/asts/servicex/list");
+    driver.get(baseUrl + "/store/assets/servicex/list");
     assertTrue(isElementPresent(By.id("assetListingPageH1")));
  }
 

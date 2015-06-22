@@ -77,7 +77,7 @@ public class ESStoreTenantUserTUHomePageTestCase extends BaseUITestCase {
     @Test(groups="wso2.es.store" , description = "Test accessing asset listing page with a logged in tenant" +
             "user using the tenant url(t/wso2.com)")
     public void testAssetListingPage() throws Exception{
-        driver.get(resolveStoreUrl()+"/asts/gadget/list");
+        driver.get(resolveStoreUrl()+"/assets/gadget/list");
         assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Home Page error: Logo missing");
     }
 

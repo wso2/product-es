@@ -45,42 +45,39 @@ public class ESStoreBookmarkTestCase extends BaseUITestCase {
         currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
-        wait = new WebDriverWait(driver, WAIT_TIME);
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
+        driver.findElement(By.id("username")).clear();
+        driver.findElement(By.id("username")).sendKeys(currentUserName);
+        driver.findElement(By.id("password")).clear();
+        driver.findElement(By.id("password")).sendKeys(currentUserPwd);
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
     }
 
     @Test(groups = "wso2.es.store", description = "Test Bookmarking")
     public void testESStoreBookmarkTestCase() throws Exception {
         driver.get(baseUrl + STORE_TOP_ASSETS_PAGE);
-        driver.findElement(By.xpath("//i[@class='icon-cog']")).click();
         //select an asset to bookmark and open it
-        String bookmarkedAsset = driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4"))
-                .getText();
-        driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).click();
+        driver.findElement(By.xpath("/html/body/div/div[3]/div/div[2]/section/div[1]/div/div/div[1]/a")).click();
+        String bookmarkedAsset = driver.findElement(By.xpath("/html/body/div/div[3]/div/div[2]/section/div[1]/div/div/div[1]/a")).getText();
+
 
         //bookmark the asset
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("btn-add-gadget")));
         driver.findElement(By.id("btn-add-gadget")).click();
+
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("btn-add-gadget"), "Bookmarked"));
         assertEquals("Bookmarked", driver.findElement(By.id("btn-add-gadget")).getText(), "Bookmarking failed");
 
         //check if shown in My Items page
-        driver.findElement(By.linkText("My Items")).click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("strong")));
-        assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("strong")).getText(),
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myItemsToggle")));
+        driver.findElement(By.id("myItemsToggle")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("My bookmarks")));
+        assertTrue(isElementPresent(driver, By.linkText("My bookmarks")), "My bookmarks link missing");
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.ast-title a.ast-name")));
+        assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("div.ast-title a.ast-name")).getText(),
                 "Bookmarked asset not shown in My Items page");
 
-        //check if shown in My assets section
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
-        assertTrue(isElementPresent(driver, By.linkText("My Assets")), "My Assets section missing");
-        driver.findElement(By.cssSelector("i.icon-angle-down.pull-right")).click();
-        assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("strong > a")).getText(),
-                "Bookmarked asset not shown in My Assets section");
-
-        driver.findElement(By.linkText("View all")).click();
-        assertTrue(isElementPresent(driver, By.linkText("My Items")), "My Items section missing");
-        assertEquals("Gadgets", driver.findElement(By.cssSelector("h3.asset-title-separator.asset-type-gadget"))
-                .getText(), "View all not directing to My Items page");
     }
 
     @AfterClass(alwaysRun = true)

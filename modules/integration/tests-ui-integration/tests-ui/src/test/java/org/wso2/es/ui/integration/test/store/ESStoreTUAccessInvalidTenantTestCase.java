@@ -64,7 +64,7 @@ public class ESStoreTUAccessInvalidTenantTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.store", description = "Test if accessing the asset listing page of foo.com returns a 404 error")
     public void testAssetListingPage() throws Exception {
-        driver.get(resolveStoreUrl() + "/asts/gadget/list");
+        driver.get(resolveStoreUrl() + "/assets/gadget/list");
         checkErrorPresent();
     }
 

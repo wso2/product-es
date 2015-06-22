@@ -117,7 +117,7 @@ public class ESStoreCarbonSuperUserTUHomePageTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.store", description= "Test if a logged in super tenant user can navigate to the asset " +
             "listing page using the tenant url(/t/carbon.super)")
     public void testAssetListingPage() throws Exception {
-        driver.get(resolveStoreUrl()+"/asts/gadget/list");
+        driver.get(resolveStoreUrl()+"/assets/gadget/list");
         assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Asset listing page error: Logo missing");
     }
 
