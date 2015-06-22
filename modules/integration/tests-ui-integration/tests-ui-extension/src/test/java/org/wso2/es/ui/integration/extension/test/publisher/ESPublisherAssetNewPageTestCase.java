@@ -28,7 +28,7 @@ import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertTrue;
-
+import java.util.concurrent.TimeUnit;
 /**
  * Add a new page for an asset type under extension model
  */
@@ -44,12 +44,13 @@ public class ESPublisherAssetNewPageTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.extensions", description = "Test adding a new asset page in extensions")
     public void testESPublisherAssetNewPageTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + "/publisher/assets/gadget/list");
 //        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
-        driver.findElement(By.cssSelector("span.btn-asset")).click();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.findElement(By.id("popoverExampleTwo")).click();
 
         driver.findElement(By.linkText("Service")).click();
-        driver.get(baseUrl + "/publisher/asts/servicex/new_page");
+        driver.get(baseUrl + "/publisher/assets/servicex/new_page");
         assertTrue(isElementPresent(driver, By.id("assetNewPageH1")));
     }
 
