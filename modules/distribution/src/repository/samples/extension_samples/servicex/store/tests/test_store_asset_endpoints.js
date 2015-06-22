@@ -22,7 +22,7 @@ var username = configs.authConfiguration.username;
 var password = configs.authConfiguration.password;
 describe('ES Store Extension - API Tests', function() {
     it('Test calls the new asset extension API endpoint', function() {
-        var url = baseUrl.https + '/asts/servicex/apis/new_api';
+        var url = baseUrl.https + '/assets/servicex/apis/new_api';
         var response;
         var header = obtainAuthorizedHeaderForAPICall();
         var log = new Log();

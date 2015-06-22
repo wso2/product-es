@@ -31,7 +31,7 @@ app.server = function(ctx) {
             }]
         },
         configs:{
-            landingPage:'/asts/servicex/list',
+            landingPage:'/assets/servicex/list',
             disabledAssets:['gadget']
         }
     }

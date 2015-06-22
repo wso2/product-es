@@ -24,6 +24,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -58,7 +59,7 @@ public class ESPublisherAssetOverrideRendererTestCase extends BaseUITestCase {
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
         driver.get(baseUrl + "/publisher/assets/servicex/list");
-        driver.findElement(By.linkText("Add servicex")).click();
+        driver.findElement(By.id("Addservicex")).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(ASSET_NAME);
         driver.findElement(By.name("overview_version")).clear();
@@ -67,6 +68,11 @@ public class ESPublisherAssetOverrideRendererTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_scopes")).sendKeys(SCOPES);
         driver.findElement(By.name("overview_types")).clear();
         driver.findElement(By.name("overview_types")).sendKeys(TYPES);
+
+        assertTrue(isElementPresent(driver, By.name("images_thumbnail")));
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                                                                 +"/../src/test/resources/images/thumbnail.jpg");
+
         driver.findElement(By.id("btn-create-asset")).click();
         driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
         driver.findElement(By.linkText(ASSET_NAME)).click();
