@@ -23,7 +23,10 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 /**
@@ -43,20 +46,28 @@ public class AssetUtil extends BaseUITestCase {
      * @param version     version
      */
     public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String version, String category, String url, String description) {
-        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
-        driver.findElement(By.linkText("Add " + assetType)).click();
+        driver.get(baseUrl + "/publisher/assets/" + assetType + "/list");
+        WebDriverWait wait = new WebDriverWait(driver, 60);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Add"+assetType)));
+        driver.findElement(By.id("Add"+assetType)).click();
+        //driver.get(baseUrl+PUBLISHER_GADGET_CREATE_PAGE);
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
         driver.findElement(By.name("overview_version")).sendKeys(version);
-        if(!category.equals("")){
-            new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(category);
-        }
         driver.findElement(By.name("overview_url")).clear();
         driver.findElement(By.name("overview_url")).sendKeys(url);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(description);
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                                                                 +"/../src/test/resources/images/thumbnail.jpg");
+        driver.findElement(By.name("images_banner")).sendKeys(FrameworkPathUtil.getReportLocation()
+                                                              +"/../src/test/resources/images/banner.jpg");
         driver.findElement(By.id("btn-create-asset")).click();
+
+        if(!category.equals("")){
+            new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(category);
+        }
         if(isAlertPresent(driver)){
             closeAlertAndGetItsText(driver, true);
             log.warn("Alert box appeared when adding the asset " + assetName);
@@ -75,7 +86,7 @@ public class AssetUtil extends BaseUITestCase {
      */
     public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
                                      String description) {
-        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
+        driver.get(baseUrl + "/publisher/assets/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
         driver.findElement(By.linkText("Edit")).click();
         driver.findElement(By.name("overview_description")).clear();

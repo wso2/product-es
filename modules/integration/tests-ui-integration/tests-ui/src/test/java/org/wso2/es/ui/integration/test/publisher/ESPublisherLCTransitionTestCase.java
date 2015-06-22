@@ -56,13 +56,17 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
     public void setUp() throws Exception {
         super.init();
         assetName = "LC Test Asset";
-        currentUserName = userInfo.getUserName();
+        currentUserName = userInfo.getUserName().split("@")[0];
         currentUserPwd = userInfo.getPassword();
-        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
         driver = new ESWebDriver(BrowserManager.getWebDriver());
-        wait = new WebDriverWait(driver, MAX_POLL_COUNT);
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
+
+        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
+        wait = new WebDriverWait(driver, MAX_POLL_COUNT);
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, adminUserName, adminUserPwd);
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         //add new gadget
         AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE, assetName, ASSET_VERSION, "", "", "");
@@ -70,10 +74,7 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
             String modalText = closeAlertAndGetItsText(driver, true);
             LOG.warn("modal dialog appeared" + modalText);
         }
-        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
-        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
-        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
     }
 
@@ -82,24 +83,22 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
         //do a lc transition and check states
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Life Cycle")).click();
-        driver.findElement(By.id("In-Review")).click();
-
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
-        driver.findElement(By.id("commentModalSave")).click();
+        driver.findElement(By.id("LifeCycle")).click();
+        driver.findElement(By.id("lifecycle-comment")).clear();
+        driver.findElement(By.id("lifecycle-comment")).sendKeys("test");
+        driver.findElement(By.id("lcActionPromote")).click();
 //        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
 //                ("//table[@id='lc-history']/tbody/tr/td[2]"), "admin changed the asset from Created to In-Review"));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("state"), "In-Review"));
-        assertEquals("admin changed the asset from Created to In-Review",
-                driver.findElement(By.xpath("//table[@id='lc-history']/tbody/tr/td[2]")).getText());
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".alert-success"), "State updated successfully"));
+        assertEquals("admin moved asset from Created to In-Review",
+                driver.findElement(By.xpath("/html/body/div/div[3]/div[3]/div/div[2]/div/div/div[1]/span[2]")).getText());
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         //delete resources and logout
-        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         resourceAdminServiceClient.deleteResource(resourcePath);
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         driver.quit();
     }
 
