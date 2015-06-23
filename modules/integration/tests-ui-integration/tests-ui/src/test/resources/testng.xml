@@ -38,11 +38,11 @@
         <classes>
             <class name="org.wso2.es.ui.integration.test.config.TestConfig"/>
 
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherTenantAddEditAssetTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherAddEditAssetTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginLogoutTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLCTransitionTestCase"/>-->
+            <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherTenantAddEditAssetTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherAddEditAssetTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginLogoutTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLCTransitionTestCase"/>
 <!---->
             <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherNotificationTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantNotificationTestCase"/>-->
