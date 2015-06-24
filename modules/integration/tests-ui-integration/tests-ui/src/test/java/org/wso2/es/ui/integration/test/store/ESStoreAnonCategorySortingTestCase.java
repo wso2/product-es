@@ -64,7 +64,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
-        assetName = "Asset Recent";
+        assetName = "Zero Asset";
         super.init();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
         wait = new WebDriverWait(driver,MAX_POLL_COUNT);
@@ -128,25 +128,25 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
     public void testStoreSortOnAlphabeticalOrder() throws Exception {
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
         //sort by alphabetical order
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("sortDropdown")));
+        driver.findElement(By.cssSelector("#sortDropdown > img")).click();
         driver.findElement(By.cssSelector("#ul-sort-assets li:nth-child(2) a")).click();
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector
                 (".assets-container section div.ctrl-wr-asset:first-child a.ast-name")));
         assertEquals(assetName, driver.findElement(By.cssSelector
                 (".assets-container section div.ctrl-wr-asset:first-child a.ast-name")).getText(), "Alphabetical Sort failed");
-        assertEquals(BAR_CHART, driver.findElement(By.cssSelector
+        assertEquals(WSO2_JIRA, driver.findElement(By.cssSelector
                 (".assets-container section div.ctrl-wr-asset:nth-child(2) a.ast-name")).getText(), "Alphabetical Sort failed");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing sorting on created time")
     public void testStoreSortOnCreatedTime() throws Exception {
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
-        //sort by created time
-        driver.findElement(By.cssSelector("#ul-sort-assets li:nth-child(3) a")).click();
+        //sort by created time ( no need to click on hte link for sorting on created time since this is the default case )
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector
                 (".assets-container section div.ctrl-wr-asset:first-child a.ast-name")));
         assertEquals(assetName, driver.findElement(By.cssSelector(".assets-container section div.ctrl-wr-asset:first-child a.ast-name")).getText(), "Alphabetical Sort failed");
-        assertEquals(BAR_CHART, driver.findElement(By.cssSelector
-                (".assets-container section div.ctrl-wr-asset:nth-child(2) a.ast-name")).getText(), "Created time Sort failed");
+
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category Google")
