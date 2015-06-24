@@ -137,13 +137,13 @@ public class AssetUtil extends BaseUITestCase {
         driver.findElement(By.id("lifecycle-comment")).clear();
         driver.findElement(By.id("lifecycle-comment")).sendKeys("Promoting to review");
         driver.findElement(By.id("lcActionPromote")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".alert-success"), "State updated successfully"));
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".alert-success")));
 
 
         driver.findElement(By.id("lifecycle-comment")).clear();
         driver.findElement(By.id("lifecycle-comment")).sendKeys("Promoting to published");
         driver.findElement(By.id("lcActionPromote")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".alert-success"), "State updated successfully"));
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".alert-success")));
     }
 
 //    /**

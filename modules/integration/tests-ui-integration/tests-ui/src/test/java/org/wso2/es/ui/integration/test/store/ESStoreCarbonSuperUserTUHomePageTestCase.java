@@ -19,11 +19,16 @@
 package org.wso2.es.ui.integration.test.store;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
+import org.wso2.es.ui.integration.util.AssetUtil;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
@@ -43,6 +48,11 @@ public class ESStoreCarbonSuperUserTUHomePageTestCase extends BaseUITestCase {
     protected static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
     protected static final String AMAZON = "Amazon";
     protected static final int MAX_POLL_COUNT = 30;
+    private static final String ASSET_VERSION = "1.0.0";
+    private static final String ASSET_TYPE1 = "gadget";
+    private static final String ASSET_TYPE2 = "site";
+    private String assetName;
+    private String resourcePathSite;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -51,6 +61,32 @@ public class ESStoreCarbonSuperUserTUHomePageTestCase extends BaseUITestCase {
         baseUrl = getWebAppURL();
         buildTenantDetails(TestUserMode.SUPER_TENANT_ADMIN);
         login();
+
+
+        assetName = "Asset Recent";
+
+        resourcePath = GADGET_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
+        resourcePathSite = SITE_REGISTRY_BASE_PATH + currentUserName + "/" + assetName + "/" + ASSET_VERSION;
+
+        //navigate to publisher and add and publish a new gadget to support sort by created time
+        driver.get(baseUrl + PUBLISHER_URL);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE1, assetName, ASSET_VERSION, "", "", "");
+        driver.findElementPoll(By.linkText(assetName),MAX_POLL_COUNT);
+        driver.findElement(By.linkText(assetName)).click();
+        AssetUtil.publishAssetToStore(driver, assetName);
+
+        driver.get(baseUrl + PUBLISHER_URL);
+        AssetUtil.addNewAsset(driver, baseUrl, ASSET_TYPE2, assetName, ASSET_VERSION, "", "", "");
+        driver.findElementPoll(By.linkText(assetName),MAX_POLL_COUNT);
+        driver.findElement(By.linkText(assetName)).click();
+        AssetUtil.publishAssetToStore(driver, assetName);
+
+
+        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
+        //navigate to store and wait for the new gadget to be visible in store
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
+        driver.findElementPoll(By.xpath("//a[contains(.,'Asset Recent')]"), MAX_POLL_COUNT);
+
     }
 
     public void login() throws Exception {
@@ -69,60 +105,69 @@ public class ESStoreCarbonSuperUserTUHomePageTestCase extends BaseUITestCase {
             "using the tenant url(/t/carbon.super)")
     public void testLoggedInHomePage() throws Exception {
         driver.get(resolveStoreUrl());
-        assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Home Page error: Logo missing");
-        assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
-                .getText(), "Home Page error: Gadget menu missing");
-        assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
-                .getText(), "Home Page error: Site menu missing");
-        assertEquals("Recent Gadgets", driver.findElement(By.linkText("Recent Gadgets")).getText(),
-                "Home Page error: Recent Gadgets links missing");
-        assertEquals("Recent Sites", driver.findElement(By.linkText("Recent Sites")).getText(),
-                "Home Page error: Recent Sites links missing");
+        assertTrue(isElementPresent(driver, By.cssSelector(".app-logo")), "Home Page error: Logo missing");
+        assertTrue(isElementPresent(driver, By.id("popoverExampleTwo")), "Home Page error: Asset menu missing");
+        assertTrue(isElementPresent(driver, By.linkText("Recent Gadgets")), "Home Page error: Recent Gadgets links missing");
+        assertTrue(isElementPresent(driver, By.linkText("Recent Sites")), "Home Page error: Recent Sites links missing");
         assertTrue(isElementPresent(driver, By.id("search")), "Home Page error: Search missing");
-        assertTrue(isElementPresent(driver, By.cssSelector("div.span3.store-right > div.row > div.span3")),
-                "Home Page error: Recent Added side list missing");
     }
 
     @Test(groups = "wso2.es.store", description = "Test the navigation from top menu when accessing the homepage with " +
             "a super tenant user using the tenant url(/t/carbon.super)")
     public void testLoggedInNavigationTop() throws Exception {
         driver.get(resolveStoreUrl());
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li")).click();
-        driver.findElementPoll(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"), MAX_POLL_COUNT);
-        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"))
+        WebDriverWait wait = new WebDriverWait(driver, 60);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("popoverExampleTwo")));
+        driver.findElement(By.id("popoverExampleTwo")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Gadget")));
+        driver.findElement(By.linkText("Gadget")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(LINE_CHART )));
+        driver.findElementPoll(By.linkText(LINE_CHART ), MAX_POLL_COUNT);
+        assertEquals(LINE_CHART, driver.findElement(By.linkText(LINE_CHART))
                 .getText(), "Gadgets Menu not working");
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")).click();
-        driver.findElementPoll(By.xpath("//h4[contains(.,'" + AMAZON + "')]"), MAX_POLL_COUNT);
-        assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.,'" + AMAZON + "')]")).getText(),
-                "Sites Menu not working");
-        driver.findElement(By.cssSelector("a.brand")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("popoverExampleTwo")));
+        driver.findElement(By.id("popoverExampleTwo")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Site")));
+        driver.findElement(By.linkText("Site")).click();
+        driver.findElementPoll(By.linkText(AMAZON), MAX_POLL_COUNT);
+        assertEquals(AMAZON, driver.findElement(By.linkText(AMAZON)).getText(),
+                     "Sites Menu not working");
+        driver.findElement(By.cssSelector("h2.app-title")).click();
     }
 
     @Test(groups = "wso2.es.store", description = "Test navigation page links when accessing the homepage with a " +
             "super tenant user using the tenant url(/t/carbon.super)")
     public void testLoggedInNavigationLinks() throws Exception {
         driver.get(resolveStoreUrl());
-        driver.findElement(By.cssSelector("a.brand")).click();
+        driver.findElement(By.cssSelector("div.app-logo a")).click();
         driver.findElement(By.linkText("Recent Gadgets")).click();
-        driver.findElementPoll(By.xpath("//h4[contains(.,'" + LINE_PLUS_BAR_CHART + "')]"), MAX_POLL_COUNT);
-        assertEquals(LINE_CHART, driver.findElement(By.xpath("//h4[contains(.,'" + LINE_CHART + "')]")).getText(),
-                "Recent Gadgets link not working");
-        driver.findElement(By.cssSelector("a.brand")).click();
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
+        assertEquals(assetName, driver.findElement(By.cssSelector(".assets-container section div.ctrl-wr-asset:first-child a.ast-name")).getText(),
+                     "Recent Gadgets link not working");
+
+        driver.findElement(By.cssSelector("div.app-logo a")).click();
         driver.findElement(By.linkText("Recent Sites")).click();
-        driver.findElementPoll(By.xpath("//h4[contains(.,'" + AMAZON + "')]"), MAX_POLL_COUNT);
-        assertEquals(AMAZON, driver.findElement(By.xpath("//h4[contains(.,'" + AMAZON + "')]")).getText(),
-                "Recent Sites link not working");
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
+        assertEquals(assetName, driver.findElement(By.cssSelector(".assets-container section div.ctrl-wr-asset:first-child a.ast-name")).getText(),
+                     "Recent Sites link not working");
     }
 
     @Test(groups = "wso2.es.store", description= "Test if a logged in super tenant user can navigate to the asset " +
             "listing page using the tenant url(/t/carbon.super)")
     public void testAssetListingPage() throws Exception {
-        driver.get(resolveStoreUrl()+"/assets/gadget/list");
-        assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Asset listing page error: Logo missing");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
+        assertTrue(isElementPresent(driver, By.cssSelector("div.app-logo a")), "Asset listing page error: Logo missing");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
+        AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
+        String backendURL = automationContext.getContextUrls().getBackEndUrl();
+        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
+        resourceAdminServiceClient.deleteResource(resourcePath);
+        resourceAdminServiceClient.deleteResource(resourcePathSite);
         driver.quit();
     }
 }

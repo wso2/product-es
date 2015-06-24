@@ -35,6 +35,7 @@ import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Category and sorting test for Anonymous store
@@ -158,7 +159,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("search-button2")));
         driver.findElement(By.id("search-button2")).click();
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("div.ctrl-wr-asset")));
-        assertEquals(GOOGLE_COUNT, driver.findElements(By.cssSelector("div.ctrl-wr-asset")).size(), "Google Category wrong");
+        assertTrue(isElementPresent(driver,By.cssSelector("div.ctrl-wr-asset")), "Google Category wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category WSO2")
@@ -171,7 +172,7 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText("WSO2");
         driver.findElement(By.id("search-button2")).click();
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("div.ctrl-wr-asset")));
-        assertEquals(WSO2_COUNT, driver.findElements(By.cssSelector("div.ctrl-wr-asset")).size(), "WSO2 Category wrong");
+        assertTrue(isElementPresent(driver,By.cssSelector("div.ctrl-wr-asset")), "WSO2 Category wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing category template")
@@ -184,7 +185,8 @@ public class ESStoreAnonCategorySortingTestCase extends BaseUITestCase {
         new Select(driver.findElement(By.id("overview_category"))).selectByVisibleText("Templates");
         driver.findElement(By.id("search-button2")).click();
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("div.ctrl-wr-asset")));
-            assertEquals(TEMPLATE_COUNT, driver.findElements(By.cssSelector("div.ctrl-wr-asset")).size(), "Template Category wrong");
+        assertTrue(isElementPresent(driver,By.cssSelector("div.ctrl-wr-asset")), "WSO2 Category wrong");
+
     }
 
     @AfterClass(alwaysRun = true)

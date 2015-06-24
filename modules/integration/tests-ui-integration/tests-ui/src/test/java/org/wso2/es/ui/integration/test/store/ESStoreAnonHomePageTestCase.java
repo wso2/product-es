@@ -82,7 +82,7 @@ public class ESStoreAnonHomePageTestCase extends BaseUITestCase {
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         //navigate to store and wait for the new gadget to be visible in store
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
-        driver.findElementPoll(By.xpath("//a[contains(.,'Asset Recent')]"), MAX_POLL_COUNT);
+        driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
 
     }
 
