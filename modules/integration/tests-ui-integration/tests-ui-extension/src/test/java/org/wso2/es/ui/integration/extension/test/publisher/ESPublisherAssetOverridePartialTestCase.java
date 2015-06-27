@@ -29,6 +29,8 @@ import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
+
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -58,8 +60,8 @@ public class ESPublisherAssetOverridePartialTestCase extends BaseUITestCase {
         adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, adminUserName, adminUserPwd);
-        driver.get(baseUrl + "/publisher/asts/servicex/list");
-        driver.findElement(By.linkText("Add servicex")).click();
+        driver.get(baseUrl + "/publisher/assets/servicex/list");
+        driver.findElement(By.id("Addservicex")).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(ASSET_NAME);
         driver.findElement(By.name("overview_version")).clear();
@@ -68,6 +70,11 @@ public class ESPublisherAssetOverridePartialTestCase extends BaseUITestCase {
         driver.findElement(By.name("overview_scopes")).sendKeys(SCOPES);
         driver.findElement(By.name("overview_types")).clear();
         driver.findElement(By.name("overview_types")).sendKeys(TYPES);
+
+        assertTrue(isElementPresent(driver, By.name("images_thumbnail")));
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                                                                 +"/../src/test/resources/images/thumbnail.jpg");
+
         driver.findElement(By.id("btn-create-asset")).click();
         driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
         driver.findElement(By.linkText(ASSET_NAME)).click();

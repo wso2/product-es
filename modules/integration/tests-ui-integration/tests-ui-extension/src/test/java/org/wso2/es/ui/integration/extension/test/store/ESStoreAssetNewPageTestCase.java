@@ -39,7 +39,7 @@ public class ESStoreAssetNewPageTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.extensions", description = "New page added via extensions test case")
     public void testESStoreAssetNewPageTestCase() throws Exception {
-        driver.get(baseUrl + "/store/asts/servicex/new_page");
+        driver.get(baseUrl + "/store/assets/servicex/new_page");
         assertTrue(isElementPresent(driver, By.id("assetNewPageH1")));
     }
 

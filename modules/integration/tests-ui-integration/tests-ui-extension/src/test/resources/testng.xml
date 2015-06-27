@@ -35,7 +35,8 @@
         <packages>
             <package name="org.wso2.es.ui.integration.extension.test.*"/>
         </packages>
-        <!--<classes>-->
+        <classes>
+            <!--<class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetOverrideRendererTestCase" />-->
             <!--<class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAddedAssetTestCase" />-->
             <!--<class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetCaramelPageTestCase" />-->
             <!--<class name="org.wso2.es.ui.integration.extension.test.publisher.ESPublisherAssetNewPageTestCase" />-->
@@ -49,7 +50,7 @@
             <!--<class name="org.wso2.es.ui.integration.extension.test.store.ESStoreAssetOverrideExistingPageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.extension.test.store.ESStoreNewGlobalPageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.extension.test.store.ESStoreOverriddenGlobalPageTestCase"/>-->
-        <!--</classes>-->
+        </classes>
     </test>
 
 

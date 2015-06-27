@@ -30,7 +30,7 @@ public class ESPublisherAssetNewPageTestCase extends ESIntegrationUITest {
 
   @Test(groups = "wso2.es", description = "")
   public void testESPublisherAssetNewPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/new_page");
+    driver.get(baseUrl + "/publisher/assets/servicex/new_page");
     assertTrue(isElementPresent(By.id("servicexNewPageH1")));
  }
 

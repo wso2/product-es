@@ -58,7 +58,7 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     }
 
     //TODO enable tests after adding list view to publisher
-    @BeforeClass(alwaysRun = true, enabled = false)
+    @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init(userMode);
         currentUserName = userInfo.getUserName().split("@")[0];
@@ -90,38 +90,42 @@ public class ESPublisherListPageSortTestCase extends BaseUITestCase {
     public void testListPageSortByName() throws Exception {
         driver.get(baseUrl + PUBLISHER_URL);
         driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
-        driver.findElement(By.partialLinkText("NAME")).click();
-        assertEquals(NAME_SORT_ASSET_1, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
+        driver.findElement(By.cssSelector("#dropdownMenu1 > img")).click();
+        driver.findElement(By.linkText("Name")).click();
+        assertEquals(NAME_SORT_ASSET_1, driver.findElement(By.xpath("/html/body/div/div[3]/div/div[3]/div/div[1]/div/div/a/h3"))
                 .getText(), "Sort on name failed");
-        assertEquals(NAME_SORT_ASSET_2, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[14]/td[2]"))
+        assertEquals(NAME_SORT_ASSET_2, driver.findElement(By.xpath("/html/body/div/div[3]/div/div[3]/div/div[2]/div/div/a/h3"))
                 .getText(), "Sort on name failed");
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by version",
             dependsOnMethods = "testListPageSortByName", enabled = false)
     public void testListPageSortByVersion() throws Exception {
-        driver.findElement(By.linkText("VERSION")).click();
-        assertEquals(VERSION_1, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[3]"))
+        driver.findElement(By.cssSelector("#dropdownMenu1 > img")).click();
+        driver.findElement(By.linkText("Version")).click();
+        assertEquals(VERSION_1, driver.findElement(By.xpath("/html/body/div/div[3]/div/div[3]/div/div[1]/div/div/span[1]"))
                 .getText(), "Sort on version failed");
-        assertEquals(VERSION_2, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[14]/td[3]"))
+        assertEquals(VERSION_2, driver.findElement(By.xpath("/html/body/div/div[3]/div/div[3]/div/div[2]/div/div/span[1]"))
                 .getText(), "Sort on version failed");
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by owner",
             dependsOnMethods = "testListPageSortByName", enabled = false)
     public void testListPageSortByOwner() throws Exception {
-        driver.findElement(By.linkText("OWNER")).click();
-        assertEquals(adminUserName, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[4]"))
+        driver.findElement(By.cssSelector("#dropdownMenu1 > img")).click();
+        driver.findElement(By.linkText("Status")).click();
+        assertEquals(adminUserName, driver.findElement(By.xpath("/html/body/div/div[3]/div/div[3]/div/div[1]/div/div/span[2]"))
                 .getText(), "Sort on owner failed");
-        assertEquals(normalUserName, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[14]/td[4]"))
+        assertEquals(normalUserName, driver.findElement(By.xpath("/html/body/div/div[3]/div/div[3]/div/div[2]/div/div/span[2]"))
                 .getText(), "Sort on owner failed");
     }
 
     @Test(groups = "wso2.es.publisher", description = "Test sort by created time",
             dependsOnMethods = "testListPageSortByName", enabled = false)
     public void testListPageSortByCreatedTime() throws Exception {
+        driver.findElement(By.cssSelector("#dropdownMenu1 > img")).click();
         driver.findElement(By.linkText("CREATED")).click();
-        assertEquals(ASSET_NAME, driver.findElement(By.xpath("//tbody[@id='list-asset-table-body']/tr[1]/td[2]"))
+        assertEquals(ASSET_NAME, driver.findElement(By.xpath("/html/body/div/div[3]/div/div[3]/div/div[1]/div/div/a/h3"))
                 .getText(), "Sort on created time failed");
     }
 

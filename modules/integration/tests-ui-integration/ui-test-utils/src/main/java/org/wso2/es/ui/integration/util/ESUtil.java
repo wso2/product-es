@@ -20,6 +20,9 @@ package org.wso2.es.ui.integration.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 import javax.mail.*;
@@ -61,11 +64,13 @@ public class ESUtil extends ESIntegrationUITest {
     public static void login(ESWebDriver driver, String url, String webApp, String userName, String pwd)
             throws InterruptedException, XPathExpressionException {
         String fullUrl = "";
+        WebDriverWait wait = new WebDriverWait(driver, MAX_POLL_COUNT);
+
         if ("store".equalsIgnoreCase(webApp)) {
             fullUrl = url + STORE_SUFFIX;
             driver.get(fullUrl);
-            driver.findElement(By.partialLinkText("Sign in")).click();
-
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul.navbar-right li:first-child a")));
+            driver.findElement(By.cssSelector("ul.navbar-right li:first-child a")).click();
         } else if ("publisher".equalsIgnoreCase(webApp)) {
             fullUrl = url + PUBLISHER_SUFFIX;
             driver.get(fullUrl);
@@ -76,7 +81,8 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.id("password")).clear();
         driver.findElement(By.id("password")).sendKeys(pwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        driver.get(fullUrl);
+        //driver.get(fullUrl);
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".wr-global-header h2.app-title")));
     }
 
     /**

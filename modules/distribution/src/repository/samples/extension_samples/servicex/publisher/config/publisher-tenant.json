@@ -12,7 +12,7 @@
         "password": "admin"
     },
     "application": {
-        "landingPage": "/asts/gadget/list"
+        "landingPage": "/assets/gadget/list"
     },
     "assets":["gadget","site","servicex"],
     "authentication": {

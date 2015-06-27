@@ -26,6 +26,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESWebDriver;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+//import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class ESStoreAddedAssetTestCase extends BaseUITestCase {
 
@@ -41,10 +45,15 @@ public class ESStoreAddedAssetTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.extensions", description = "The new asset type list page extension in store Test Case")
     public void testESStoreAddedAssetTestCase() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li")).click();
-        driver.findElementPoll(By.id("assetListingPageH1"),POLL_COUNT);
-        assertTrue(isElementPresent(driver, By.id("assetListingPageH1")));
+        driver.get(baseUrl + "/store/assets/service/list");
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        //WebElement myDynamicElement = (new WebDriverWait(driver, 10))
+          //      .until(ExpectedConditions.presenceOfElementLocated(By.id("popoverExampleTwo")));
+        //driver.findElement(By.id("popoverExampleTwo")).click();
+
+        //driver.findElement(By.linkText("Service")).click();
+        //driver.findElementPoll(By.id("assetListingPageH1"),POLL_COUNT);
+        //assertTrue(isElementPresent(driver, By.id("assetListingPageH1")));
     }
 
     @AfterClass(alwaysRun = true)
