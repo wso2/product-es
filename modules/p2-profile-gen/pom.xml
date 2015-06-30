@@ -202,7 +202,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.feature:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}
@@ -529,7 +529,7 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.idp.mgt.feature.group</id>
+                                    <id>org.wso2.carbon.idp.mgt.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
