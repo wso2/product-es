@@ -63,9 +63,23 @@
             </directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/multitenancy</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${product.es.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/identity.xml</include>
+            </includes>
+            <excludes>
+                <exclude>**/catalina-server.xml</exclude>
+                <exclude>**/axis2/*</exclude>
+            </excludes>
+        </fileSet>
 
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources
+            </directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/resources</outputDirectory>
         </fileSet>
 
@@ -95,7 +109,8 @@
         <!-- copy the landing page webapp -->
         <fileSet>
             <directory>lib/home</directory>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/deployment/server/webapps/STRATOS_ROOT
+            <outputDirectory>
+                ${project.artifactId}-${product.es.version}/repository/deployment/server/webapps/STRATOS_ROOT
             </outputDirectory>
         </fileSet>
         <fileSet>
@@ -138,14 +153,6 @@
             </outputDirectory>
             <includes>
                 <include>oauth2endpoints.war</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>target/shindig</directory>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/deployment/server/webapps/SHINDIG
-            </outputDirectory>
-            <includes>
-                <include>**/**</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -221,7 +228,8 @@
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/
             </directory>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/resources/security/</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/resources/security/
+            </outputDirectory>
             <includes>
                 <include>**/sso_redirect.html</include>
             </includes>
@@ -240,13 +248,23 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/deployment/server/webapps
+            </outputDirectory>
+            <includes>
+                <include>shindig.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/repository/bam</directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/bam/</outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
         </fileSet>
-        
+
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/components/patches/</outputDirectory>
@@ -254,30 +272,30 @@
                 <include>**/patch0001/*.*</include>
             </includes>
         </fileSet-->
-     <!--
+        <!--
+           <fileSet>
+               <directory>${project.basedir}/../components/asset-client/target</directory>
+               <includes>
+                   <include>*.jar</include>
+               </includes>
+               <outputDirectory>${project.artifactId}-${product.es.version}/lib</outputDirectory>
+           </fileSet>
+
+           <fileSet>
+              <directory>${project.basedir}/../components/asset-client/src/samples</directory>
+               <includes>
+                   <include>build.xml</include>
+                   <include>*.txt</include>
+                   <include>sample-gadgets*/*/*</include>
+                   <include>sample-gadgets/*.json</include>
+               </includes>
+              <outputDirectory>${project.artifactId}-${product.es.version}/samples</outputDirectory>
+          </fileSet>
+        -->
         <fileSet>
-            <directory>${project.basedir}/../components/asset-client/target</directory>
-            <includes>
-                <include>*.jar</include>
-            </includes>
-            <outputDirectory>${project.artifactId}-${product.es.version}/lib</outputDirectory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/samples</directory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/samples</outputDirectory>
         </fileSet>
-        
-        <fileSet>
-           <directory>${project.basedir}/../components/asset-client/src/samples</directory>
-            <includes>
-                <include>build.xml</include>
-                <include>*.txt</include>
-                <include>sample-gadgets*/*/*</include>
-                <include>sample-gadgets/*.json</include>
-            </includes>
-           <outputDirectory>${project.artifactId}-${product.es.version}/samples</outputDirectory>
-       </fileSet>
-     -->
-       <fileSet>
-        <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/samples</directory>
-        <outputDirectory>${project.artifactId}-${product.es.version}/samples</outputDirectory>
-       </fileSet>
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/samples</directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/samples</outputDirectory>
@@ -286,16 +304,9 @@
             <directory>src/repository/samples</directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/samples</outputDirectory>
         </fileSet>
-        
+
     </fileSets>
     <dependencySets>
-        <!--        <dependencySet>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/deployment/server/webapps</outputDirectory>
-            <outputFileNameMapping>ROOT.war</outputFileNameMapping>
-            <includes>
-                <include>org.apache.shindig:shindig-server:war</include>
-            </includes>
-        </dependencySet>-->
         <dependencySet>
             <outputDirectory>${project.artifactId}-${product.es.version}/lib/endorsed</outputDirectory>
             <includes>
@@ -310,8 +321,8 @@
                 <include>org.apache.rampart:rampart:mar</include>
             </includes>
         </dependencySet>
-        
-		
+
+
     </dependencySets>
     <files>
         <file>
@@ -321,10 +332,6 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-
-
-
-        
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${project.artifactId}-${product.es.version}</outputDirectory>
@@ -424,11 +431,11 @@
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file-->
-        <file>
+        <!--file>
             <source>src/repository/conf/identity.xml</source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
-        </file>
+        </file-->
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties
@@ -459,8 +466,17 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/social.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/social.xml
+            </source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/social-datasources.xml
+            </source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/datasources/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -469,8 +485,7 @@
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/database</outputDirectory>
             <fileMode>644</fileMode>
         </file-->
-        
-        
+
 
         <!--        <file>
             <source>conf/wso2is-user-certs.jks</source>
@@ -482,28 +497,43 @@
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>-->
-        
 
-       </files>
-  
-  <!--
-      <moduleSets>
-      
-    <moduleSet>
-    
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/association-config.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${product.es.version}/repository/conf/etc</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
-      
-      <includes>
-        <include>org.wso2.store:asset-client</include>
-      </includes>
-      <binaries>
-        <attachmentClassifier>jar-with-dependencies</attachmentClassifier>
-        <outputDirectory>${project.artifactId}-${product.es.version}/lib</outputDirectory>
-        <unpack>false</unpack>
-      </binaries>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/governance.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${product.es.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
--->
+    </files>
 
+    <!--
+        <moduleSets>
+
+      <moduleSet>
+
+
+
+        <includes>
+          <include>org.wso2.store:asset-client</include>
+        </includes>
+        <binaries>
+          <attachmentClassifier>jar-with-dependencies</attachmentClassifier>
+          <outputDirectory>${project.artifactId}-${product.es.version}/lib</outputDirectory>
+          <unpack>false</unpack>
+        </binaries>
+
+  -->
 
 
 </assembly>

@@ -35,7 +35,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:h2:repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                    <url>jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
@@ -48,7 +48,7 @@
             </definition>
         </datasource>
 
-        <datasource>
+        <!--datasource>
             <name>WSO2AM_DB</name>
             <description>The datasource used for API Manager database</description>
             <jndiConfig>
@@ -67,7 +67,7 @@
                     <validationInterval>30000</validationInterval>
                 </configuration>
             </definition>
-        </datasource>
+        </datasource-->
 
         <!--datasource>
             <name>SOCIAL_CACHE</name>
@@ -100,7 +100,7 @@
             </definition>
         </datasource-->
 
-        <datasource>
+        <!--datasource>
             <name>WSO2_SOCIAL_DB</name>
             <description>The datasource used for social framework</description>
             <jndiConfig>
@@ -119,9 +119,9 @@
                     <validationInterval>30000</validationInterval>
                 </configuration>
             </definition>
-        </datasource>
+        </datasource-->
 
-	<datasource>
+	<!--datasource>
             <name>JAGH2</name>
             <description>The datasource used for by the Jaggery Storage Manager</description>
             <jndiConfig>
@@ -137,7 +137,7 @@
                     <maxWait>60000</maxWait>
                 </configuration>
             </definition>
-        </datasource>
+        </datasource-->
 
         <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
         <!--datasource>

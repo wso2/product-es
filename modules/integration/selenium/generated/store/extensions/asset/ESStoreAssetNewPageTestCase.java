@@ -30,7 +30,7 @@ public class ESStoreAssetNewPageTestCase extends ESIntegrationUITest {
 
   @Test(groups = "wso2.es", description = "")
   public void testESStoreAssetNewPageTestCase() throws Exception {
-    driver.get(baseUrl + "/store/asts/servicex/new_page");
+    driver.get(baseUrl + "/store/assets/servicex/new_page");
     assertTrue(isElementPresent(By.id("assetNewPageH1")));
  }
 

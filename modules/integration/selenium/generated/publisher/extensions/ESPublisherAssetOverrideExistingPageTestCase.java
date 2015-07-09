@@ -30,7 +30,7 @@ public class ESPublisherAssetOverrideExistingPageTestCase extends ESIntegrationU
 
   @Test(groups = "wso2.es", description = "")
   public void testESPublisherAssetOverrideExistingPageTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/details");
+    driver.get(baseUrl + "/publisher/assets/servicex/details");
     assertTrue(isElementPresent(By.id("assetOveriddenDetailsPage")));
  }
 

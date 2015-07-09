@@ -18,6 +18,7 @@
 package org.wso2.es.ui.integration.test.store;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 import org.wso2.es.ui.integration.util.ESUtil;
 
@@ -43,18 +44,23 @@ public class ESStoreAnonTenantHomePageTestCase extends ESStoreAnonHomePageTestCa
     public void testAnonHomePage() throws Exception {
         //test appearance
         driver.get(resolveStoreUrl());
-        assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Home Page error: Logo missing");
-        assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[1]/li"))
-                .getText(), "Home Page error: Gadget menu missing");
-        assertEquals("Site", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a[2]/li"))
-                .getText(), "Home Page error: Site menu missing");
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("span.btn-asset")));
+        assertTrue(isElementPresent(driver, By.cssSelector(".app-logo")), "Home Page error: Logo missing");
+        driver.findElement(By.cssSelector("span.btn-asset")).click();
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.linkText("Gadget")));
+        assertTrue(isElementPresent(driver,By.linkText("Gadget")), "Home Page error: Gadget menu missing");
+        assertTrue(isElementPresent(driver,By.linkText("Site")), "Home Page error: Site menu missing");
+
     }
 
     @Test(groups = "wso2.es.store", description = "Test if the asset listing page loads when using /t/domain as anon " +
             "user")
     public void testAnonAssetListingPage() throws Exception {
-        driver.get(resolveStoreUrl()+"/asts/gadget/list");
-        assertTrue(isElementPresent(driver, By.cssSelector("a.brand")), "Home Page error: Logo missing");
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".ctrl-wr-asset")));
+        assertTrue(isElementPresent(driver, By.cssSelector(".app-logo")), "Home Page error: Logo missing");
+        assertTrue(isElementPresent(driver, By.cssSelector(".ctrl-wr-asset")), "Home Page error: Gadgets list is not populated");
+
     }
 
     @Override

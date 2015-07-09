@@ -30,11 +30,6 @@
     <description>WSO2 Enterprise Store Distribution</description>
     <dependencies>
         <dependency>
-            <groupId>org.apache.shindig</groupId>
-            <artifactId>shindig-server</artifactId>
-            <type>war</type>
-        </dependency>
-        <dependency>
             <groupId>javax.el</groupId>
             <artifactId>el-api</artifactId>
         </dependency>
@@ -87,14 +82,6 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
                                 </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.shindig</groupId>
-                                    <artifactId>shindig-server</artifactId>
-                                    <version>${shindig.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/shindig</outputDirectory>
-                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -134,7 +121,6 @@
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp" />
                                 <property name="jardir" value="target/jars" />
-                                <!--<property name="shindig.version" value="2.5.0-beta5" />-->
                                 <mkdir dir="${tempdir}" />
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
@@ -145,37 +131,6 @@
                                     <fileset dir="${tempdir}/${project.artifactId}-${product.es.version}/repository/components">
                                     </fileset>
                                 </copy>
-                                
-                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components" overwrite="true">
-                                    <fileset dir="${tempdir}/${project.artifactId}-${product.es.version}/repository/components">
-                                    </fileset>
-                                </copy>
-                                <!--
-                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/samples" overwrite="true">
-                                    <fileset dir="${tempdir}/${project.artifactId}-${product.es.version}/samples">
-                                    </fileset>
-                                </copy>
-                                -->
-                                
-                                <!--testing -->
-                                <unzip src="target/shindig/WEB-INF/lib/shindig-common-${shindig.version}.jar" dest="${jardir}/shindig-common-${shindig.version}">
-                                    <patternset>
-                                        <exclude name="**/shindig.properties" />
-                                    </patternset>
-                                </unzip>
-                                <copy file="src/repository/conf/shindig.properties" todir="${jardir}/shindig-common-${shindig.version}" />
-                                      
-                                      
-                                <delete file="target/shindig/WEB-INF/lib/shindig-common-${shindig.version}.jar" />
-                                <zip destfile="target/shindig/WEB-INF/lib/shindig-common-${shindig.version}.jar" basedir="${jardir}/shindig-common-${shindig.version}" />
-                                <delete>
-                                    <fileset dir="target/shindig/WEB-INF/lib" includes="slf4j*" />
-                                </delete>
-                                <copy file="src/repository/resources/shindig/index.jsp" todir="target/shindig" />
-                                <!--<zip destfile="target/ROOT.war" basedir="target/shindig" />-->
-                                <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
-                                    log4j.logger.net.sf.ehcache=ERROR
-                                </concat>
                                 <delete file="target/${project.artifactId}-${product.es.version}.zip" />
                                 <delete dir="${tempdir}" />
                             </tasks>
@@ -200,15 +155,15 @@
                                     <classpath>
                                         <path refid="h2.classpath" />
                                     </classpath>
-                                    <fileset file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/application-mgt/h2.sql" />
+                                    <fileset file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/h2.sql" />
                                 </sql>
-                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
+                                <!--sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
                                     <classpath>
                                         <path refid="h2.classpath" />
                                     </classpath>
                                     <fileset file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/h2.sql" />
 
-                                </sql>
+                                </sql-->
                                 <echo message="##################### END ########################" />
                             </target>
                         </configuration>
@@ -254,7 +209,6 @@
                                 <delete dir="target/site" />
                                 <delete dir="target/antrun" />
                                 <delete dir="src/site" />
-                                <delete dir="target/shindig" />
                                 <delete dir="target/jaxwebapps" />
                             </tasks>
                         </configuration>
@@ -284,9 +238,6 @@
                                 <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
-                            
-
-          
                         </configuration>
                     </execution>
                     <execution>

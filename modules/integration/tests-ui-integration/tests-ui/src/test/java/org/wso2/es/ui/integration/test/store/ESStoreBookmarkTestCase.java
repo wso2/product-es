@@ -37,50 +37,49 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESStoreBookmarkTestCase extends BaseUITestCase {
 
-    private static final int WAIT_TIME = 30;
+    private static final int MAX_POLL_COUNT = 30;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
-        currentUserName = userInfo.getUserName();
-        currentUserPwd = userInfo.getPassword();
+        super.init();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
-        wait = new WebDriverWait(driver, WAIT_TIME);
+        wait = new WebDriverWait(driver,MAX_POLL_COUNT);
+        currentUserName = userInfo.getUserName().split("@")[0];
+        currentUserPwd = userInfo.getPassword();
         baseUrl = getWebAppURL();
         ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
+
+
     }
 
     @Test(groups = "wso2.es.store", description = "Test Bookmarking")
     public void testESStoreBookmarkTestCase() throws Exception {
-        driver.get(baseUrl + STORE_TOP_ASSETS_PAGE);
-        driver.findElement(By.xpath("//i[@class='icon-cog']")).click();
-        //select an asset to bookmark and open it
-        String bookmarkedAsset = driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4"))
-                .getText();
-        driver.findElement(By.xpath("//div[@id='assets-container']/div/div[1]/div/div/a/h4")).click();
+
+        driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
+        //get the first element from the gadget list
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector
+                (".assets-container section div.ctrl-wr-asset:first-child a.ast-name")));
+        String bookmarkedAsset = driver.findElement(By.cssSelector
+                (".assets-container section div.ctrl-wr-asset:first-child a.ast-name")).getText();
+        driver.findElement(By.cssSelector(".assets-container section div.ctrl-wr-asset:first-child a.ast-name")).click();
 
         //bookmark the asset
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("btn-add-gadget")));
         driver.findElement(By.id("btn-add-gadget")).click();
+
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("btn-add-gadget"), "Bookmarked"));
         assertEquals("Bookmarked", driver.findElement(By.id("btn-add-gadget")).getText(), "Bookmarking failed");
 
         //check if shown in My Items page
-        driver.findElement(By.linkText("My Items")).click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("strong")));
-        assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("strong")).getText(),
+/*
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.ast-title a.ast-name")));
+        assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("div.ast-title a.ast-name")).getText(),
                 "Bookmarked asset not shown in My Items page");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".bookmark-link")));
+        driver.findElement(By.cssSelector(".bookmark-link")).click();
+        */
 
-        //check if shown in My assets section
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
-        assertTrue(isElementPresent(driver, By.linkText("My Assets")), "My Assets section missing");
-        driver.findElement(By.cssSelector("i.icon-angle-down.pull-right")).click();
-        assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("strong > a")).getText(),
-                "Bookmarked asset not shown in My Assets section");
-
-        driver.findElement(By.linkText("View all")).click();
-        assertTrue(isElementPresent(driver, By.linkText("My Items")), "My Items section missing");
-        assertEquals("Gadgets", driver.findElement(By.cssSelector("h3.asset-title-separator.asset-type-gadget"))
-                .getText(), "View all not directing to My Items page");
     }
 
     @AfterClass(alwaysRun = true)

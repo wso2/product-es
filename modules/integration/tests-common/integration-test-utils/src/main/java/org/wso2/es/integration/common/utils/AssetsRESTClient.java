@@ -135,6 +135,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
             }
             URL endpointUrl = new URL(listAssetsEndpoint);
             URLConnection urlConn = endpointUrl.openConnection();
+            urlConn.setRequestProperty("Accept","application/json");
             urlConn.setRequestProperty(COOKIE, JSESSIONID + "=" + sessionId + ";");
             // SessionId Cookie
             urlConn.connect();
