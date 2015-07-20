@@ -336,6 +336,9 @@
                                 <feaureArtifactDef>
                                     org.wso2.carbon.store:org.wso2.carbon.store.extensions.assets.site.feature:${carbon.store.version}
                                 </feaureArtifactDef>
+                                <feaureArtifactDef>
+                                    org.wso2.ciphertool:org.wso2.ciphertool.feature:${ciphertool.version}
+                                </feaureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
@@ -671,6 +674,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.store.extensions.assets.site.feature.group</id>
                                     <version>${carbon.store.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.ciphertool.feature.group</id>
+                                    <version>${ciphertool.version}</version>
                                 </feature>
                             </features>
                         </configuration>
