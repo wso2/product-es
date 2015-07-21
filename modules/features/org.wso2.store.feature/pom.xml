@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.store</groupId>
         <artifactId>wso2store-features</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.wso2.store</groupId>
             <artifactId>org.wso2.store.sso.common</artifactId>
-            <version>${ues.version}</version>
+            <version>${carbon.store.bundle.version}</version>
         </dependency>
        <!-- <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -82,8 +82,9 @@
                             <bundles>
                                 <bundleDef>slf4j.wso2:slf4j:1.5.10.wso2v1</bundleDef>
                                 <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso</bundleDef>-->
-                                <bundleDef>org.wso2.store:org.wso2.store.sso.common:${carbon.store.bundle.version}</bundleDef>
-                                <bundleDef>org.wso2.store:org.wso2.store.admin.styles</bundleDef>
+                                <bundleDef>
+                                    org.wso2.store:org.wso2.store.sso.common:${carbon.store.bundle.version}</bundleDef>
+                                <bundleDef>org.wso2.store:org.wso2.store.admin.styles:${carbon.store.bundle.version}</bundleDef>
                                 <!--<bundleDef>org.wso2.store:org.wso2.carbon.social:1.0.0</bundleDef>-->
                                 <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra</bundleDef>-->
                                 <bundleDef>org.wso2.store:jaggery-scxml-executors:${carbon.store.bundle.version}</bundleDef>
