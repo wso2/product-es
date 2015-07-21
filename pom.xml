@@ -480,6 +480,11 @@
                 <version>${testng.version}</version>
                 <scope>compile</scope>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.ciphertool</groupId>
+                <artifactId>org.wso2.ciphertool</artifactId>
+                <version>${ciphertool.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <scm>
@@ -603,6 +608,7 @@
 
         <test.framework.version>4.3.1</test.framework.version>
         <automation.utils.version>4.3.0</automation.utils.version>
+        <ciphertool.version>1.0.0-wso2v3</ciphertool.version>
 
         <!--repo versions-->
         <carbon.commons.version>4.4.3</carbon.commons.version>
@@ -642,7 +648,7 @@
         <el.api.version>2.2</el.api.version>
         <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
-        <jaggery.feature.version>0.10.1</jaggery.feature.version>
+        <jaggery.feature.version>0.10.2</jaggery.feature.version>
         <caramel.feature.version>1.0.1</caramel.feature.version>
         <handlebars.feature.version>1.0.0</handlebars.feature.version>
         <markdown.feature.version>1.0.0</markdown.feature.version>
