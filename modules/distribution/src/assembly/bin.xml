@@ -176,14 +176,11 @@
         </fileSet>
         <fileSet>
             <directory>src/repository/conf/security</directory>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security/</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/identity/</outputDirectory>
             <includes>
                 <include>**/application-authenticators.xml</include>
                 <!-- Replacement for application-authenticators.xml -->
                 <include>**/application-authentication.xml</include>
-                <include>**/cipher-text.properties</include>
-                <include>**/cipher-tool.properties</include>
-                <include>**/cipher-standalone-config.properties</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -219,7 +216,7 @@
         </fileSet>
         <fileSet>
             <directory>src/repository/conf</directory>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security/</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/identity/</outputDirectory>
             <includes>
                 <include>**/sso-idp-config.xml</include>
             </includes>
@@ -469,9 +466,9 @@
         </file-->
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity-mgt.properties
             </source>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/identity</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
