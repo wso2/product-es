@@ -170,7 +170,7 @@
                                     org.wso2.es:org.wso2.store.styles.feature:${product.es.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.store:org.wso2.store.feature:${carbon.store.version}
+                                    org.wso2.carbon.store:org.wso2.carbon.store.feature:${carbon.store.version}
                                 </featureArtifactDef>
                                 <!-- SSO -->
                                 <featureArtifactDef>
@@ -252,7 +252,7 @@
                                     org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.server.feature:${carbon.deployment.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.commons:org.wso2.carbon.user.mgt.feature:${carbon.commons.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.user.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.databridge.streamdefn.registry.server.feature:${carbon.platform.version}
@@ -336,6 +336,9 @@
                                 <feaureArtifactDef>
                                     org.wso2.carbon.store:org.wso2.carbon.store.extensions.assets.site.feature:${carbon.store.version}
                                 </feaureArtifactDef>
+                                <feaureArtifactDef>
+                                    org.wso2.ciphertool:org.wso2.ciphertool.feature:${ciphertool.version}
+                                </feaureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
@@ -365,7 +368,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
+                                    <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.jaggeryjs.modules.caramel.feature.group</id>
@@ -478,7 +481,7 @@
                                     <version>${jaxws.webapp.mgt.version}</version>
                                 </feature-->
                                 <feature>
-                                    <id>org.wso2.store.feature.group</id>
+                                    <id>org.wso2.carbon.store.feature.group</id>
                                     <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
@@ -671,6 +674,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.store.extensions.assets.site.feature.group</id>
                                     <version>${carbon.store.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.ciphertool.feature.group</id>
+                                    <version>${ciphertool.version}</version>
                                 </feature>
                             </features>
                         </configuration>
