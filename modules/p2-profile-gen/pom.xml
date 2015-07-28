@@ -170,7 +170,7 @@
                                     org.wso2.es:org.wso2.store.styles.feature:${product.es.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.store:org.wso2.store.feature:${carbon.store.version}
+                                    org.wso2.carbon.store:org.wso2.carbon.store.feature:${carbon.store.version}
                                 </featureArtifactDef>
                                 <!-- SSO -->
                                 <featureArtifactDef>
@@ -481,7 +481,7 @@
                                     <version>${jaxws.webapp.mgt.version}</version>
                                 </feature-->
                                 <feature>
-                                    <id>org.wso2.store.feature.group</id>
+                                    <id>org.wso2.carbon.store.feature.group</id>
                                     <version>${carbon.store.version}</version>
                                 </feature>
                                 <feature>
