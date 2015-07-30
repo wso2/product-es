@@ -66,6 +66,18 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy
             </directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/multitenancy</outputDirectory>
+            <excludes>
+                <exclude>**/tenant-mgt.xml</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/tenant-mgt.xml</include>
+            </includes>
         </fileSet>
         <!--fileSet>
             <directory>
