@@ -55,6 +55,11 @@ public class ActivityPublisher {
         String username = "admin";
         String password = "admin";
 
+        try {
+        	password = PrivilegedCarbonContext.getCurrentContext().getUserRealm().getRealmConfiguration().getAdminPassword();
+        } catch (Exception e) {
+            LOG.error("Can't get admin password", e);
+        }
         if (publisher == null) {
             try {
                 publisher = new DataPublisher(url, username, password);
