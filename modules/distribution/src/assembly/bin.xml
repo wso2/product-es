@@ -66,8 +66,20 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy
             </directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/multitenancy</outputDirectory>
+            <excludes>
+                <exclude>**/tenant-mgt.xml</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/tenant-mgt.xml</include>
+            </includes>
+        </fileSet>
+        <!--fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/
             </directory>
@@ -79,7 +91,7 @@
                 <exclude>**/catalina-server.xml</exclude>
                 <exclude>**/axis2/*</exclude>
             </excludes>
-        </fileSet>
+        </fileSet-->
 
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources
@@ -459,11 +471,12 @@
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file-->
-        <!--file>
+        <file>
             <source>src/repository/conf/identity.xml</source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file-->
+        </file>
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity-mgt.properties
@@ -539,6 +552,14 @@
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/governance.xml
             </source>
             <outputDirectory>${pom.artifactId}-${product.es.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/shindig.properties</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
