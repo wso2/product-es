@@ -600,7 +600,7 @@
         <project.scm.id>github-scm</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <carbon.kernel.version>4.4.0</carbon.kernel.version>
+        <carbon.kernel.version>4.4.1</carbon.kernel.version>
         <carbon.social.version>2.3.1-SNAPSHOT</carbon.social.version>
         <carbon.store.version>2.3.1-SNAPSHOT</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
@@ -611,7 +611,7 @@
         <ciphertool.version>1.0.0-wso2v3</ciphertool.version>
 
         <!--repo versions-->
-        <carbon.commons.version>4.4.3</carbon.commons.version>
+        <carbon.commons.version>4.4.4</carbon.commons.version>
         <carbon.registry.version>4.4.3</carbon.registry.version>
         <carbon.governance.version>4.5.1</carbon.governance.version>
         <carbon.deployment.version>4.4.0</carbon.deployment.version>
