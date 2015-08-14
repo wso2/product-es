@@ -192,6 +192,25 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>${maven.antrunplugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>configure-user-mgt.xml</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <tasks>
+                                    <!-- commenting "GetAllRolesOfUserEnabled" property to fix
+                                    https://wso2.org/jira/browse/IDENTITY-3498 -->
+                                    <replace
+                                            file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
+                                            token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;"
+                                            value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;"/>
+                                </tasks>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
