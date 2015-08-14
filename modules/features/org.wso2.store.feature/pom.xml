@@ -174,7 +174,7 @@
                                     org.wso2.carbon.module.mgt.server:${carbon.kernal.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.user.mgt:${carbon.commons.version}
+                                    org.wso2.carbon.user.mgt:${carbon.identity.version}
                                 </importFeatureDef>
                                 <!--<importFeatureDef>
                                     org.wso2.carbon.databridge.streamdefn.cassandra:${carbon.platform.version}
