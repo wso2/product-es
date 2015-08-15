@@ -513,6 +513,16 @@
     </scm>
     <repositories>
         <repository>
+            <id>store-staging</id>
+            <name>Store Staging Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/orgwso2carbonstore-026/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
             <id>wso2-nexus</id>
             <name>WSO2 Internal Repository</name>
             <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
