@@ -671,11 +671,11 @@
         <caramel.feature.version>1.0.1</caramel.feature.version>
         <handlebars.feature.version>1.0.0</handlebars.feature.version>
         <markdown.feature.version>1.0.0</markdown.feature.version>
-        <carbon.feature.version>1.3.1</carbon.feature.version>
-        <process.feature.version>1.3.1</process.feature.version>
-        <uuid.feature.version>1.3.1</uuid.feature.version>
-        <sso.feature.version>1.3.1</sso.feature.version>
-        <jaggery-test.feature.version>1.3.1</jaggery-test.feature.version>
+        <carbon.feature.version>1.3.2</carbon.feature.version>
+        <process.feature.version>1.3.2</process.feature.version>
+        <uuid.feature.version>1.3.2</uuid.feature.version>
+        <sso.feature.version>1.3.2</sso.feature.version>
+        <jaggery-test.feature.version>1.3.2</jaggery-test.feature.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
         <axis2-transports.wso2.version>1.1.0-wso2v12</axis2-transports.wso2.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
