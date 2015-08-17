@@ -3,6 +3,7 @@ package org.wso2.carbon.social;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.NativeObject;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
 
 import java.util.UUID;
