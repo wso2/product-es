@@ -33,7 +33,7 @@
                             <id>org.wso2.carbon.social</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernal.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:compatible:${carbon.kernal.base.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.social.core.feature:${project.version}</includedFeatureDef>
