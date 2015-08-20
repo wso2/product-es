@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.FrameworkConstants;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.integration.common.extensions.carbonserver.*;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.*;
 import org.wso2.carbon.integration.common.extensions.utils.ExtensionCommonConstants;
 
 import java.io.File;
