@@ -19,7 +19,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <!--<version>${maven.resourcesplugin.version}</version> -->
                 <executions>
                     <execution>
                         <id>copy-p2.inf</id>
