@@ -21,7 +21,7 @@
 
     <parent>
         <groupId>org.wso2.store</groupId>
-        <artifactId>wso2store-features</artifactId>
+        <artifactId>wso2store-parent</artifactId>
         <version>1.3.0-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
