@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.wso2.store</groupId>
   <artifactId>wso2store-parent</artifactId>
-  <version>1.3.0</version>
+  <version>1.3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>WSO2 Enterprise Store - Parent</name>
   <url>http://wso2.org/projects/appserver/java</url>
@@ -27,7 +27,7 @@
     <url>https://github.com/wso2/product-es.git</url>
     <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
     <connection>scm:git:https://github.com/wso2/product-es.git</connection>
-    <tag>v1.3.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <repositories>
@@ -259,7 +259,7 @@
 
   <properties>
     <project.scm.id>github-scm</project.scm.id>
-    <ues.version>1.3.0</ues.version>
+    <ues.version>1.3.1-SNAPSHOT</ues.version>
     <carbon.kernal.version>4.4.1</carbon.kernal.version>
     <carbon.kernal.base.version>4.4.0</carbon.kernal.base.version>
     <carbon.platform.version>4.4.1</carbon.platform.version>
@@ -270,9 +270,9 @@
     <carbon.registry.base.version>4.4.0</carbon.registry.base.version>
     <carbon.governance.version>4.5.1</carbon.governance.version>
     <carbon.governance.base.version>4.4.0</carbon.governance.base.version>
-    <carbon.social.version>1.3.0</carbon.social.version>
+    <carbon.social.version>1.3.1-SNAPSHOT</carbon.social.version>
     <carbon.social.pkg.version>1.2.1</carbon.social.pkg.version>
-    <carbon.store.bundle.version>1.3.0</carbon.store.bundle.version>
+    <carbon.store.bundle.version>1.3.1-SNAPSHOT</carbon.store.bundle.version>
 
     <!-- jaggery versions -->
     <jaggery.feature.version>0.10.1</jaggery.feature.version>
