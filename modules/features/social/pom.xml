@@ -55,5 +55,5 @@
    <!--properties>
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
     </properties-->
-    
+
 </project>
