@@ -65,6 +65,43 @@
     </pluginRepositories>
 
     <build>
+      <pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>maven-scr-plugin</artifactId>
+            <version>${maven-src-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>generate-scr-scrdescriptor</id>
+                <goals>
+                  <goal>scr</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>maven-bundle-plugin</artifactId>
+            <version>${maven-bunlde-plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <orbRepository>NONE</orbRepository>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.wso2.maven</groupId>
+            <artifactId>carbon-p2-plugin</artifactId>
+            <version>${carbon.p2.plugin.version}</version>
+            <extensions>true</extensions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>${maven-resources-plugin.version}</version>
+            <extensions>true</extensions>
+          </plugin>
+        </plugins>
+      </pluginManagement>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
@@ -81,6 +118,88 @@
         <module>modules/components/sso-common</module>
 	    <module>modules/features</module>
     </modules>
+
+    <dependencyManagement>
+      <dependencies>
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>3.8.1</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.carbon.governance</groupId>
+          <artifactId>org.wso2.carbon.governance.registry.extensions</artifactId>
+          <version>${carbon.governance.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+          <version>${carbon.kernal.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+          <version>${carbon.kernal.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.google.code.gson</groupId>
+          <artifactId>gson</artifactId>
+          <version>${google.gson.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20070829</version>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.social.core</artifactId>
+          <version>${carbon.social.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>rhino.wso2</groupId>
+          <artifactId>js</artifactId>
+          <version>${rhino.osgi.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+          <version>${commons-logging.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>opensaml.wso2</groupId>
+          <artifactId>opensaml2</artifactId>
+          <version>${opensaml2.wso2.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>commons-codec.wso2</groupId>
+          <artifactId>commons-codec</artifactId>
+          <version>${commons-codec.osgi.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.core</artifactId>
+          <version>${carbon.kernal.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.hostobjects.sso</artifactId>
+          <version>${sso.hostobjects.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.store</groupId>
+          <artifactId>org.wso2.store.sso.common</artifactId>
+          <version>${carbon.store.bundle.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.wso2.store</groupId>
+          <artifactId>org.wso2.store.admin.styles</artifactId>
+          <version>${ues.version}</version>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
+
 
     <properties>
         <ues.version>1.0.0</ues.version>
