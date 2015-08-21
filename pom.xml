@@ -170,9 +170,7 @@
     <module>modules/components/jaggery-scxml-executors</module>
     <module>modules/components/social</module>
     <module>modules/components/sso-common</module>
-    <module>modules/features/social</module>
-    <module>modules/features/org.wso2.store.styles.feature</module>
-    <module>modules/features/org.wso2.store.feature</module>
+    <module>modules/features</module>
   </modules>
 
   <dependencyManagement>
