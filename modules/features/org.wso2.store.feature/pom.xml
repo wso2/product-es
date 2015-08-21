@@ -15,14 +15,12 @@
  ~ limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
       <groupId>org.wso2.store</groupId>
       <artifactId>wso2store-parent</artifactId>
-      <version>1.3.0-SNAPSHOT</version>
+      <version>1.3.0</version>
       <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -80,7 +78,7 @@
                                 <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.datasink.cassandra</bundleDef>-->
                                 <bundleDef>org.wso2.store:jaggery-scxml-executors:${carbon.store.bundle.version}</bundleDef>
                             </bundles>
-                            <importBundles/>
+                            <importBundles />
                             <importFeatures>
                                 <importFeatureDef>
                                     org.jaggeryjs:${jaggery.feature.version}
@@ -230,7 +228,7 @@
                         <phase>install</phase>
                         <configuration>
                             <tasks>
-                                <delete dir="src"/>
+                                <delete dir="src" />
                             </tasks>
                         </configuration>
                         <goals>
