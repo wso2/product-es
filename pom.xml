@@ -70,6 +70,18 @@
       <pluginManagement>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <configuration>
+                <preparationGoals>clean install</preparationGoals>
+                <autoVersionSubmodules>false</autoVersionSubmodules>
+            </configuration>
+          </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-deploy-plugin</artifactId>
+          </plugin>
+          <plugin>
             <groupId>org.apache.felix</groupId>
             <artifactId>maven-scr-plugin</artifactId>
             <version>${maven-src-plugin.version}</version>
