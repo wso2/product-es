@@ -170,7 +170,9 @@
     <module>modules/components/jaggery-scxml-executors</module>
     <module>modules/components/social</module>
     <module>modules/components/sso-common</module>
-    <module>modules/features</module>
+    <module>modules/features/social</module>
+    <module>modules/features/org.wso2.store.styles.feature</module>
+    <module>modules/features/org.wso2.store.feature</module>
   </modules>
 
   <dependencyManagement>
@@ -257,7 +259,7 @@
 
   <properties>
     <project.scm.id>github-scm</project.scm.id>
-    <ues.version>1.0.0</ues.version>
+    <ues.version>1.3.0-SNAPSHOT</ues.version>
     <carbon.kernal.version>4.4.1</carbon.kernal.version>
     <carbon.kernal.base.version>4.4.0</carbon.kernal.base.version>
     <carbon.platform.version>4.4.1</carbon.platform.version>
