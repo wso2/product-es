@@ -20,10 +20,12 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:http://svn.wso2.org/repos/wso2/trunk/carbon/products/UserEngagementServer</connection>
-        <developerConnection>scm:svn:https://svn.wso2.org/repos/wso2/trunk/carbon/products/ues
-        </developerConnection>
+      <url>https://github.com/wso2/product-es.git</url>
+      <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
+      <connection>scm:git:https://github.com/wso2/product-es.git</connection>
+      <tag>HEAD</tag>
     </scm>
+
     <repositories>
         <repository>
             <id>wso2-maven2-repository</id>
@@ -202,6 +204,7 @@
 
 
     <properties>
+        <project.scm.id>github-scm</project.scm.id>
         <ues.version>1.0.0</ues.version>
         <carbon.kernal.version>4.4.1</carbon.kernal.version>
         <carbon.kernal.base.version>4.4.0</carbon.kernal.base.version>
