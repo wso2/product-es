@@ -23,7 +23,7 @@
         <groupId>org.wso2.store</groupId>
         <artifactId>wso2store-features</artifactId>
         <version>1.3.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

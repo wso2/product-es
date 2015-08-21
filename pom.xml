@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+  <parent>
+    <groupId>org.wso2</groupId>
+    <artifactId>wso2</artifactId>
+    <version>1</version>
+  </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.wso2.store</groupId>
   <artifactId>wso2store-parent</artifactId>
@@ -164,7 +170,9 @@
     <module>modules/components/jaggery-scxml-executors</module>
     <module>modules/components/social</module>
     <module>modules/components/sso-common</module>
-    <module>modules/features</module>
+    <module>modules/features/social</module>
+    <module>modules/features/org.wso2.store.styles.feature</module>
+    <module>modules/features/org.wso2.store.feature</module>
   </modules>
 
   <dependencyManagement>
@@ -306,5 +314,5 @@
     <cep.component.version>1.0.0</cep.component.version>
     <google.gson.version>2.1</google.gson.version>
   </properties>
-  
+
 </project>
