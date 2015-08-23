@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.context.ContextXpathConstants;
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
-import org.wso2.carbon.integration.common.extensions.carbonserver.TestServerManager;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
 import org.wso2.carbon.integration.common.extensions.utils.ExtensionCommonConstants;
 import org.wso2.carbon.utils.ServerConstants;
 

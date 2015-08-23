@@ -625,8 +625,8 @@
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <product.es.version>2.0.0-SNAPSHOT</product.es.version>
 
-        <test.framework.version>4.3.1</test.framework.version>
-        <automation.utils.version>4.3.0</automation.utils.version>
+        <test.framework.version>4.4.2</test.framework.version>
+        <automation.utils.version>4.4.1</automation.utils.version>
         <ciphertool.version>1.0.0-wso2v3</ciphertool.version>
 
         <!--repo versions-->

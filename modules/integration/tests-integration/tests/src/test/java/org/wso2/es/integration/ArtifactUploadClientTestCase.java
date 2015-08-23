@@ -27,6 +27,7 @@ import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.es.integration.common.utils.ESIntegrationTest;
 import org.wso2.es.integration.common.utils.ESIntegrationTestConstants;
 import org.xml.sax.SAXException;
@@ -51,8 +52,8 @@ public class ArtifactUploadClientTestCase extends ESIntegrationTest {
 
 	@BeforeClass(alwaysRun = true)
 	public void init()
-			throws XPathExpressionException, IOException, URISyntaxException, SAXException,
-			       XMLStreamException, LoginAuthenticationExceptionException {
+            throws XPathExpressionException, IOException, URISyntaxException, SAXException,
+            XMLStreamException, LoginAuthenticationExceptionException, AutomationUtilException {
 
 		esContext = new AutomationContext(ESIntegrationTestConstants.ES_PRODUCT_NAME,
 		                                  TestUserMode.SUPER_TENANT_ADMIN);
