@@ -44,7 +44,7 @@ public class ESPublisherAssetNewPageTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.extensions", description = "Test adding a new asset page in extensions")
     public void testESPublisherAssetNewPageTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/assets/gadget/list");
+        driver.get(baseUrl + "/publisher/assets/servicex/list");
 //        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.findElement(By.id("popoverExampleTwo")).click();
