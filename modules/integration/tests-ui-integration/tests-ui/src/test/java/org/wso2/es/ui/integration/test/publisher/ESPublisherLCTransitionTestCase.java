@@ -90,8 +90,8 @@ public class ESPublisherLCTransitionTestCase extends BaseUITestCase {
 //        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath
 //                ("//table[@id='lc-history']/tbody/tr/td[2]"), "admin changed the asset from Created to In-Review"));
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".alert-success"), "State updated successfully"));
-        assertEquals("admin moved asset from Created to In-Review",
-                driver.findElement(By.xpath("/html/body/div/div[3]/div[3]/div/div[2]/div/div/div[1]/span[2]")).getText());
+        assertEquals("State updated successfully",
+                driver.findElement(By.cssSelector("#lifecycle-notifications div.alert-success")).getText().trim());
     }
 
     @AfterClass(alwaysRun = true)
