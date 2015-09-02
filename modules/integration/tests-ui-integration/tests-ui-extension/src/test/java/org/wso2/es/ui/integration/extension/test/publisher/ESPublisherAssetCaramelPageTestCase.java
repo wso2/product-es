@@ -45,7 +45,7 @@ public class ESPublisherAssetCaramelPageTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.extensions", description = "Testing adding a new caramel page in extensions")
     public void testESPublisherAssetCaramelPageTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/assets/gadget/list");
+        driver.get(baseUrl + "/publisher/assets/servicex/list");
 //        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.findElement(By.id("popoverExampleTwo")).click();

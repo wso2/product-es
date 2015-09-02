@@ -39,13 +39,17 @@
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-                <!--exclude>**/ciphertool.bat</exclude-->
                 <exclude>**/master-datasources.xml</exclude>
                 <exclude>**/org.wso2.carbon.identity.relyingparty.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/org.wso2.carbon.identity.user.registration.ui-3.1.0.SNAPSHOT.jar</exclude>
                 <exclude>**/log4j.properties</exclude>
                 <exclude>**/email/email-admin-config.xml</exclude>
                 <exclude>**/claim-config.xml</exclude>
+                <exclude>**/ciphertool.bat</exclude>
+                <exclude>**/ciphertool.sh</exclude>
+                <exclude>**/cipher-text.properties</exclude>
+                <exclude>**/cipher-tool.properties</exclude>
+                <exclude>**/lib/org.wso2.ciphertool-1.0.0-wso2v3.jar</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -62,8 +66,20 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy
             </directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/multitenancy</outputDirectory>
+            <excludes>
+                <exclude>**/tenant-mgt.xml</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/tenant-mgt.xml</include>
+            </includes>
+        </fileSet>
+        <!--fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/
             </directory>
@@ -75,7 +91,7 @@
                 <exclude>**/catalina-server.xml</exclude>
                 <exclude>**/axis2/*</exclude>
             </excludes>
-        </fileSet>
+        </fileSet-->
 
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources
@@ -172,11 +188,35 @@
         </fileSet>
         <fileSet>
             <directory>src/repository/conf/security</directory>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security/</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/identity/</outputDirectory>
             <includes>
                 <include>**/application-authenticators.xml</include>
                 <!-- Replacement for application-authenticators.xml -->
                 <include>**/application-authentication.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security</directory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security/</outputDirectory>
+            <includes>
+                <include>**/cipher-text.properties</include>
+                <include>**/cipher-tool.properties</include>
+                <include>**/cipher-standalone-config.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/bin</directory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/bin/</outputDirectory>
+            <includes>
+                <include>**/ciphertool.sh</include>
+                <include>**/ciphertool.bat</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib</directory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/lib/</outputDirectory>
+            <includes>
+                <include>**/org.wso2.ciphertool-1.0.0-wso2v3.jar</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -188,7 +228,7 @@
         </fileSet>
         <fileSet>
             <directory>src/repository/conf</directory>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security/</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/identity/</outputDirectory>
             <includes>
                 <include>**/sso-idp-config.xml</include>
             </includes>
@@ -431,16 +471,17 @@
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file-->
-        <!--file>
+        <file>
             <source>src/repository/conf/identity.xml</source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file-->
+        </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity-mgt.properties
             </source>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/identity</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -498,19 +539,27 @@
             <fileMode>644</fileMode>
         </file>-->
 
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/association-config.xml
-            </source>
-            <outputDirectory>${pom.artifactId}-${product.es.version}/repository/conf/etc</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
+        <!--<file>-->
+            <!--<source>-->
+                <!--../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/association-config.xml-->
+            <!--</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${product.es.version}/repository/conf/etc</outputDirectory>-->
+            <!--<filtered>true</filtered>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
 
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/governance.xml
             </source>
             <outputDirectory>${pom.artifactId}-${product.es.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/shindig.properties</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

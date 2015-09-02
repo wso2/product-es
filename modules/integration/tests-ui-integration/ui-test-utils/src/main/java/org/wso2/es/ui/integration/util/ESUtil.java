@@ -20,7 +20,7 @@ package org.wso2.es.ui.integration.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
@@ -32,6 +32,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * Contains utility methods for ES operations
@@ -69,8 +71,8 @@ public class ESUtil extends ESIntegrationUITest {
         if ("store".equalsIgnoreCase(webApp)) {
             fullUrl = url + STORE_SUFFIX;
             driver.get(fullUrl);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul.navbar-right li:first-child a")));
-            driver.findElement(By.cssSelector("ul.navbar-right li:first-child a")).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btn-signin")));
+            driver.findElement(By.id("btn-signin")).click();
         } else if ("publisher".equalsIgnoreCase(webApp)) {
             fullUrl = url + PUBLISHER_SUFFIX;
             driver.get(fullUrl);
@@ -82,7 +84,19 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.id("password")).sendKeys(pwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         //driver.get(fullUrl);
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".wr-global-header h2.app-title")));
+        WebElement userNameElement;
+        if ("store".equalsIgnoreCase(webApp)) {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("logedInUser")));
+            userNameElement = driver.findElement(By.id("logedInUser"));
+        } else if ("publisher".equalsIgnoreCase(webApp)) {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.wr-auth-container div.auth-img span")));
+            userNameElement = driver.findElement(By.cssSelector("div.wr-auth-container div.auth-img span"));
+        } else {
+            throw new AssertionError("web app name should be store or publisher");
+        }
+        int atPos = userName.indexOf('@');
+        String userNameNoTenant = atPos >= 0 ? userName.substring(0, atPos) : userName;
+        assertEquals(userNameElement.getText().trim(), userNameNoTenant);
     }
 
     /**

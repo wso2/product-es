@@ -30,11 +30,11 @@ System Requirements
 3. Portal app requires full Javascript enablement of the Web browser
 
 For more details see
-http://docs.wso2.org/wiki/display/ES100/Installation+Prerequisites
+http://docs.wso2.org/wiki/display/ES200/Installation+Prerequisites
 
 Known Issues
 ------------
-https://wso2.org/jira/browse/STORE-250?filter=11199
+https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=11574
 
 
 WSO2 Enterprise Store Binary Distribution Directory Structure
