@@ -19,6 +19,8 @@
 package org.wso2.es.ui.integration.test.common;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,6 +30,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertTrue;
@@ -46,6 +49,8 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
     private static final String NEW_USER_EMAIL = "esmailsample@gmail.com";
     private static final String SECRET_QUESTION = "Favorite food ?";
     private static final String SECRET_ANSWER = "Ice cream";
+    private static final int MAX_POLL_COUNT = 30;
+
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -75,16 +80,24 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
         driver.findElement(By.name("reg-first-name")).sendKeys(NEW_USER_FNAME);
         driver.findElement(By.name("reg-last-name")).clear();
         driver.findElement(By.name("reg-last-name")).sendKeys(NEW_USER_LNAME);
-        new Select(driver.findElement(By.name("secret-question"))).selectByVisibleText(SECRET_QUESTION);
-        driver.findElement(By.name("secret-answer")).clear();
-        driver.findElement(By.name("secret-answer")).sendKeys(SECRET_ANSWER);
         driver.findElement(By.id("registrationSubmit")).click();
+        // check the success message
+        assertTrue(isElementPresent(driver,By.id("regFormSuc")),"User creation failed.");
+        driver.findElement(By.id("signInLink")).click();
+
+        driver.findElementPoll(By.id("username"), MAX_POLL_COUNT);
+        driver.findElement(By.id("username")).clear();
+        driver.findElement(By.id("username")).sendKeys(NEW_USER_NAME);
+        driver.findElement(By.id("password")).clear();
+        driver.findElement(By.id("password")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.id("registrationSubmit")).click();
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#logedInUser")));
+
+
+
         //check login for store
-        assertTrue(isElementPresent(driver,By.linkText("My Items")), "Login failed for Store");
+        assertTrue(isElementPresent(driver, By.linkText("My Items")), "Login failed for Store");
         assertTrue(isElementPresent(driver,By.linkText(NEW_USER_NAME)), "Login failed for Store");
-        //check login for publisher
-        driver.get(baseUrl + PUBLISHER_URL);
-        assertTrue(isElementPresent(driver,By.linkText(NEW_USER_NAME)), "Login failed for Publisher");
     }
 
     @AfterClass(alwaysRun = true)
