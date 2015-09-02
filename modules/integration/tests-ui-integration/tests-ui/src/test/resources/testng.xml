@@ -56,6 +56,7 @@
             <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreBookmarkTestCase"/> -->
             <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreLoginLogoutTestCase"/> -->
             <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreCarbonSuperUserTUHomePageTestCase"/> -->
+
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreGadgetPageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreRatingsTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetListTestCase"/>-->
