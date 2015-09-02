@@ -64,7 +64,7 @@
             <class name="org.wso2.es.ui.integration.test.store.ESStoreSocialSharingTestCase"/>
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreTenantUserTUHomePageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreTUAccessInvalidTenantTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.common.ESRegisterUserTestCase"/>-->
+            <class name="org.wso2.es.ui.integration.test.common.ESRegisterUserTestCase"/>
             <class name="org.wso2.es.ui.integration.test.common.ESPublishToStore"/>
         </classes>
 
