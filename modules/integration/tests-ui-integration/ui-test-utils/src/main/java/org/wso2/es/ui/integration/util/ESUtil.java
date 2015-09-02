@@ -83,8 +83,13 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.id("password")).sendKeys(pwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         //driver.get(fullUrl);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("logedInUser")));
-        assertEquals(driver.findElement(By.id("logedInUser")).getText().trim(), userName);
+        if ("store".equalsIgnoreCase(webApp)) {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("logedInUser")));
+            assertEquals(driver.findElement(By.id("logedInUser")).getText().trim(), userName);
+        } else if ("publisher".equalsIgnoreCase(webApp)) {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.wr-auth-container div.auth-img span")));
+            assertEquals(driver.findElement(By.cssSelector("div.wr-auth-container div.auth-img span")).getText().trim(), userName);
+        }
     }
 
     /**
