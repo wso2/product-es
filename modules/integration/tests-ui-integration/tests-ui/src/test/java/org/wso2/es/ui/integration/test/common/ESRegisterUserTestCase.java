@@ -19,6 +19,7 @@
 package org.wso2.es.ui.integration.test.common;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -33,6 +34,7 @@ import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -90,14 +92,14 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
         driver.findElement(By.id("username")).sendKeys(NEW_USER_NAME);
         driver.findElement(By.id("password")).clear();
         driver.findElement(By.id("password")).sendKeys(NEW_USER_PWD);
-        driver.findElement(By.id("registrationSubmit")).click();
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#logedInUser")));
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
 
+        WebElement userNameElement = driver.findElement(By.id("logedInUser"));
 
+        assertEquals(userNameElement.getText().trim(), NEW_USER_NAME);
 
         //check login for store
-        assertTrue(isElementPresent(driver, By.linkText("My Items")), "Login failed for Store");
-        assertTrue(isElementPresent(driver,By.linkText(NEW_USER_NAME)), "Login failed for Store");
+        assertTrue(isElementPresent(driver, By.linkText("My bookmarks")), "Login failed for Store");
     }
 
     @AfterClass(alwaysRun = true)
