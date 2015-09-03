@@ -20,6 +20,7 @@ package org.wso2.es.ui.integration.test.common;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -34,6 +35,8 @@ import static org.testng.Assert.assertTrue;
  * Check if it can be seen store side and verify details
  */
 public class ESRBACAsReviewerTestCase extends BaseUITestCase {
+
+    private static final int MAX_POLL_COUNT = 30;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -79,6 +82,7 @@ public class ESRBACAsReviewerTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.store", description = "verify not being able to login to store")
     public void testRestrictLoginToStoreAsReviewer() throws Exception {
         driver.get(baseUrl + STORE_TOP_ASSETS_PAGE);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_POLL_COUNT);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btn-signin")));
         driver.findElement(By.id("btn-signin")).click();
         assertEquals(driver.findElement(By.cssSelector("h3")).getText(), "You do not have permission to login to this" +
