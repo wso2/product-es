@@ -19,6 +19,7 @@ package org.wso2.es.ui.integration.test.common;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -78,7 +79,8 @@ public class ESRBACAsReviewerTestCase extends BaseUITestCase {
     @Test(groups = "wso2.es.store", description = "verify not being able to login to store")
     public void testRestrictLoginToStoreAsReviewer() throws Exception {
         driver.get(baseUrl + STORE_TOP_ASSETS_PAGE);
-        driver.findElement(By.cssSelector("span.ro-text")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btn-signin")));
+        driver.findElement(By.id("btn-signin")).click();
         assertEquals(driver.findElement(By.cssSelector("h3")).getText(), "You do not have permission to login to this" +
                 " application.Please contact your administrator and request permission.");
     }
