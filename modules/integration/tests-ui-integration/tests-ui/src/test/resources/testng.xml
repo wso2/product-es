@@ -61,7 +61,7 @@
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreGadgetPageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreRatingsTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetListTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssetsTestCase"/>-->
+            <class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssetsTestCase"/>
             <class name="org.wso2.es.ui.integration.test.store.ESStoreSocialSharingTestCase"/>
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreTenantUserTUHomePageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreTUAccessInvalidTenantTestCase"/>-->

@@ -33,7 +33,7 @@ public class ESStoreSearchTopAssetsTestCase extends BaseUITestCase {
             "Discussion";
     public static final String WSO2_ARCHITECTURE_LIST_DISCUSSION = "WSO2 Architecture List " +
             "Discussion";
-    public static final String WSO2_CARBON_DIV_LIST_DISCUSSION = "WSO2 Carbon Div List Discussion";
+    public static final String WSO2_CARBON_DIV_LIST_DISCUSSION = "WSO2 Carbon Dev List Discussion";
     public static final String WSO2_DEV_LIST_DISCUSSION = "WSO2 Dev List Discussion";
 
     @BeforeClass(alwaysRun = true)
@@ -50,36 +50,19 @@ public class ESStoreSearchTopAssetsTestCase extends BaseUITestCase {
         driver.findElement(By.id("search")).click();
         driver.findElement(By.id("search")).clear();
         driver.findElement(By.id("search")).sendKeys("list");
-        driver.findElement(By.cssSelector("i.icon-search")).click();
-        assertEquals(WSO2_CARBON_COMMITS_LIST_DISCUSSION, driver.findElement(By.xpath("//h4" +
+        driver.findElement(By.id("search-button")).click();
+        assertEquals(WSO2_CARBON_COMMITS_LIST_DISCUSSION, driver.findElement(By.xpath("//div[1]/div/div/div[1]/a" +
                 "[contains(.,'" + WSO2_CARBON_COMMITS_LIST_DISCUSSION + "')]")).getText());
-        assertEquals(WSO2_ARCHITECTURE_LIST_DISCUSSION, driver.findElement(By.xpath("//h4" +
+        assertEquals(WSO2_ARCHITECTURE_LIST_DISCUSSION, driver.findElement(By.xpath("//div[2]/div/div/div[1]/a" +
                 "[contains(.,'" + WSO2_ARCHITECTURE_LIST_DISCUSSION + "')]")).getText());
-        assertEquals(WSO2_CARBON_DIV_LIST_DISCUSSION, driver.findElement(By.xpath("//h4" +
-                "[contains(.,'" + WSO2_CARBON_DIV_LIST_DISCUSSION + "')]")).getText());
-        assertEquals(WSO2_DEV_LIST_DISCUSSION, driver.findElement(By.xpath("//h4" +
+        assertEquals(WSO2_DEV_LIST_DISCUSSION, driver.findElement(By.xpath("//div[3]/div/div/div[1]/a" +
                 "[contains(.,'" + WSO2_DEV_LIST_DISCUSSION + "')]")).getText());
-        assertEquals(4, driver.findElements(By.cssSelector("div.asset-details")).size(), "Top " +
+        assertEquals(WSO2_CARBON_DIV_LIST_DISCUSSION, driver.findElement(By.xpath("//div[4]/div/div/div[1]/a" +
+                "[contains(.,'" + WSO2_CARBON_DIV_LIST_DISCUSSION + "')]")).getText());
+        assertEquals(4, driver.findElements(By.cssSelector("div.ctrl-wr-asset")).size(), "Top " +
                 "Assets search result count incorrect");
 
     }
-
-    @Test(groups = "wso2.es.store.anon", description = "Test Recently added right navigation's " +
-            "results", dependsOnMethods = "testESStoreSearchTopAssets")
-    public void testESStoreSearchTopAssetsRecentlyAdded() throws Exception {
-        assertEquals(WSO2_CARBON_COMMITS_LIST_DISCUSSION, driver.findElement(
-                By.xpath("//h4[contains(.,'" + WSO2_CARBON_COMMITS_LIST_DISCUSSION + "')]")).getText());
-        assertEquals(WSO2_ARCHITECTURE_LIST_DISCUSSION, driver.findElement(
-                By.xpath("//a[contains(text(),'WSO2 Architecture List Discussion')]")).getText());
-        assertEquals(WSO2_CARBON_DIV_LIST_DISCUSSION, driver.findElement(
-                By.xpath("//a[contains(text(),'WSO2 Carbon Div List Discussion')]")).getText());
-        assertEquals(WSO2_DEV_LIST_DISCUSSION, driver.findElement(
-                By.xpath("//a[contains(text(),'WSO2 Dev List Discussion')]")).getText());
-        assertEquals(4, driver.findElements(By.cssSelector("div.row-fluid.recently-added")).size
-                (), "Top assets search result recently added count incorrect");
-
-    }
-
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.quit();
