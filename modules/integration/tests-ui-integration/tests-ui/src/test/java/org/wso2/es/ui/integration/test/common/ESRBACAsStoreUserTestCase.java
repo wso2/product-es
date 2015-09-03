@@ -19,9 +19,11 @@ package org.wso2.es.ui.integration.test.common;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertEquals;
@@ -37,25 +39,15 @@ public class ESRBACAsStoreUserTestCase extends BaseUITestCase {
     public void setUp() throws Exception {
         super.init("superTenant", "storeUser1");
 
-        currentUserName = userInfo.getUserName().split("@")[0];
+        currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
     }
 
-    @Test(groups = "wso2.es.store", description = "verify login to ES Publisher")
+    @Test(groups = "wso2.es.store", description = "verify login to ES Store")
     public void testLoginToStore() throws Exception {
-        driver.get(baseUrl + STORE_TOP_ASSETS_PAGE);
-        driver.findElement(By.cssSelector("span.ro-text")).click();
-        driver.findElement(By.id("username")).clear();
-        driver.findElement(By.id("username")).sendKeys(currentUserName);
-        driver.findElement(By.id("password")).clear();
-        driver.findElement(By.id("password")).sendKeys(currentUserPwd);
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        assertEquals(currentUserName, driver.findElement(By.xpath
-                ("/html/body/div/div[1]/header/div/div[2]/div/a/div/span")).getText().trim(), "Logged in user not shown");
-        assertTrue(isElementPresent(driver, By.linkText("My bookmarks")), "Login failed for Store");
-
+        ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
     }
 
     @Test(groups = "wso2.es.publisher", description = "verify not being able to login to publisher")
