@@ -104,9 +104,6 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
 
         assertEquals(userNameElement.getText().trim(), NEW_USER_NAME);
 
-        //check login for store
-        assertTrue(isElementPresent(driver, By.linkText("My bookmarks")), "Login failed for Store");
-
         //Checking claim from carbon console.
         driver.get(baseUrl + MANAGEMENT_CONSOLE_URL);
         driver.findElement(By.id("txtUserName")).clear();
