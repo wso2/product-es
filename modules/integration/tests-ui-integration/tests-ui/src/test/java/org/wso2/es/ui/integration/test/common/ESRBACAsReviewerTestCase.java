@@ -22,6 +22,7 @@ import org.openqa.selenium.By;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertEquals;
@@ -37,23 +38,15 @@ public class ESRBACAsReviewerTestCase extends BaseUITestCase {
     public void setUp() throws Exception {
         super.init("superTenant", "reviewer1");
 
-        currentUserName = userInfo.getUserName().split("@")[0];
+        currentUserName = userInfo.getUserName();
         currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
     }
 
-    @Test(groups = "wso2.es.store", description = "verify login to ES Store")
+    @Test(groups = "wso2.es.store", description = "verify login to ES Publisher")
     public void testLoginToPublisherAsReviewer() throws Exception {
-        driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
-        driver.findElement(By.id("username")).clear();
-        driver.findElement(By.id("username")).sendKeys(currentUserName);
-        driver.findElement(By.id("password")).clear();
-        driver.findElement(By.id("password")).sendKeys(currentUserPwd);
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        assertEquals("Asset | WSO2 Enterprise Store Publisher", driver.getTitle());
-        assertEquals(currentUserName, driver.findElement(By.xpath("/html/body/div/div[1]/header/div/div[2]/div/a/div/span"))
-                .getText(), "Logged in user not shown");
+        ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
 
     }
 
