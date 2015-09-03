@@ -177,17 +177,20 @@ public class ESUtil extends ESIntegrationUITest {
                     "                                                         Profile')])[2]";
         }
         driver.get(url + ADMIN_CONSOLE_SUFFIX);
-        driver.findElement(By.cssSelector("#menu-panel-button3 > span")).click();
+        driver.findElement(By.cssSelector("#menu-panel-button1 > span")).click();
         driver.findElement(By.linkText("Users and Roles")).click();
         driver.findElement(By.linkText("Users")).click();
         driver.findElement(By.xpath(userProfileElement)).click();
+        driver.findElement(By.linkText("Add New Profile")).click();
+        driver.findElement(By.id("profile")).clear();
+        driver.findElement(By.id("profile")).sendKeys(firstName);
         driver.findElement(By.id("http://wso2.org/claims/givenname")).clear();
         driver.findElement(By.id("http://wso2.org/claims/givenname")).sendKeys(firstName);
         driver.findElement(By.id("http://wso2.org/claims/lastname")).clear();
         driver.findElement(By.id("http://wso2.org/claims/lastname")).sendKeys(lastName);
         driver.findElement(By.id("http://wso2.org/claims/emailaddress")).clear();
         driver.findElement(By.id("http://wso2.org/claims/emailaddress")).sendKeys(email);
-        driver.findElement(By.name("updateprofile")).click();
+        driver.findElement(By.name("addprofile")).click();
         driver.findElement(By.cssSelector("button[type=\"button\"]")).click();
         driver.findElement(By.cssSelector("#menu-panel-button1 > span")).click();
     }
@@ -204,10 +207,10 @@ public class ESUtil extends ESIntegrationUITest {
      * @throws MessagingException
      * @throws InterruptedException
      */
-    public static boolean containsEmail(String smtpPropertyFile, String password, String email,
-                                        String subject) throws MessagingException, InterruptedException, IOException {
+    public static String readEmail(String smtpPropertyFile, String password, String email,
+                                   String subject) throws MessagingException, InterruptedException, IOException {
         Properties props = new Properties();
-        boolean hasEmail = false;
+        String message = null;
         Folder inbox = null;
         Store store = null;
         FileInputStream inputStream = null;
@@ -220,7 +223,7 @@ public class ESUtil extends ESIntegrationUITest {
             store.connect(SMTP_GMAIL_COM, email, password);
             inbox = store.getFolder(INBOX);
             inbox.open(Folder.READ_ONLY);
-            hasEmail = hasMailWithSubject(inbox, subject);
+            message = getMailWithSubject(inbox, subject);
         } catch (MessagingException e) {
             LOG.error(getErrorMessage(email), e);
             throw e;
@@ -256,22 +259,28 @@ public class ESUtil extends ESIntegrationUITest {
                 }
             }
         }
-        return hasEmail;
+        return message;
     }
 
-    private static boolean hasMailWithSubject(Folder inbox, String subject) throws MessagingException,
-            InterruptedException {
+    private static String getMailWithSubject(Folder inbox, String subject) throws MessagingException,
+            InterruptedException, IOException {
         int pollCount = 0;
         while ((pollCount <= MAX_MAIL_POLL)) {
             Message[] messages = inbox.getMessages();
-            for (Message msg : messages) {
-                if (subject.equals(msg.getSubject())) {
-                    return true;
+            for (int i = messages.length - 1; i >= 0; i--) {
+                Message message = messages[i];
+                if (subject.equals(message.getSubject())) {
+                    Object content = message.getContent();
+                    if (content instanceof String) {
+                        return (String) content;
+                    } else {
+                        throw new AssertionError("non text email content in email titled " + subject);
+                    }
                 }
             }
             Thread.sleep(MAIL_WAIT_TIME);
         }
-        return false;
+        return null;
     }
 
 

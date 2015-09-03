@@ -95,7 +95,7 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         //check notification for initial LC state change
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         //read email using smtp
-        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, LCNotificationSubject);
+        boolean hasMail = (ESUtil.readEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, LCNotificationSubject) != null);
         assertTrue(hasMail, "LC Notification failed for user:" + currentUserName);
     }
 
@@ -107,7 +107,7 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
         AssetUtil.updateAsset(driver, baseUrl, ASSET_TYPE, assetName, ASSET_DESCRIPTION);
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         //read email using smtp
-        boolean hasMail = ESUtil.containsEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, updateNotificationSubject);
+        boolean hasMail = (ESUtil.readEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, updateNotificationSubject) != null);
         assertTrue(hasMail, "Asset Update Notification failed for user:" + currentUserName);
     }
 

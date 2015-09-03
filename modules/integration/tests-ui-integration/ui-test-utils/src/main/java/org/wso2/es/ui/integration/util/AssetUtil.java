@@ -82,15 +82,15 @@ public class AssetUtil extends BaseUITestCase {
      * @param description asset description
      * @return the edit response
      */
-    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
+    public static void updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
                                      String description) {
         driver.get(baseUrl + "/publisher/assets/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Edit")).click();
+        driver.findElement(By.id("Edit")).click();
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(description);
         driver.findElement(By.id("editAssetButton")).click();
-        return closeAlertAndGetItsText(driver, true);
+//        return closeAlertAndGetItsText(driver, true);
     }
 
     /**

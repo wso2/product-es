@@ -19,11 +19,13 @@
 package org.wso2.es.ui.integration.test.common;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
@@ -65,7 +67,7 @@ public class ESPublishToStore extends BaseUITestCase {
     @Test(groups = "wso2.es.common", description = "Testing Publishing an asset to store")
     public void testESPublishToStore() throws Exception {
         //Add a new gadget with info
-        driver.findElement(By.linkText("Add " + ASSET_TYPE)).click();
+        driver.findElement(By.id("Add" + ASSET_TYPE)).click();
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(ASSET_NAME);
         driver.findElement(By.name("overview_version")).clear();
@@ -74,32 +76,33 @@ public class ESPublishToStore extends BaseUITestCase {
         driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION);
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                +"/../src/test/resources/images/thumbnail.jpg");
+        driver.findElement(By.name("images_banner")).sendKeys(FrameworkPathUtil.getReportLocation()
+                + "/../src/test/resources/images/banner.jpg");
         driver.findElement(By.id("btn-create-asset")).click();
-        if (isAlertPresent(driver)) {
-            closeAlertAndGetItsText(driver, true);
-        }
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Add" + ASSET_TYPE)));
+
         //publish the gadget to store
         driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
         driver.findElement(By.linkText(ASSET_NAME)).click();
-        driver.findElement(By.linkText("Life Cycle")).click();
+        driver.findElement(By.id("LifeCycle")).click();
 
-        driver.findElement(By.id("In-Review")).click();
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
-        driver.findElement(By.id("commentModalSave")).click();
+        driver.findElement(By.id("lcActionPromote")).click();
+//        driver.findElement(By.id("commentModalText")).clear();
+//        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
+//        driver.findElement(By.id("commentModalSave")).click();
 
         driver.get(driver.getCurrentUrl());
-        driver.findElement(By.id("Published")).click();
-        driver.findElement(By.id("commentModalText")).clear();
-        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
-        driver.findElement(By.id("commentModalSave")).click();
+        driver.findElement(By.id("lcActionPromote")).click();
+//        driver.findElement(By.id("commentModalText")).clear();
+//        driver.findElement(By.id("commentModalText")).sendKeys(LC_COMMENT);
+//        driver.findElement(By.id("commentModalSave")).click();
         //navigate to store to check the published gadget
         driver.get(baseUrl + STORE_URL);
-        driver.findElementPoll(By.xpath("//a[contains(.,'" + ASSET_NAME + "')]"), 5);
+        driver.findElementPoll(By.linkText(ASSET_NAME), MAX_POLL_COUNT);
+        driver.findElement(By.linkText(ASSET_NAME)).click();
         assertEquals(ASSET_NAME, driver.findElement(By.cssSelector("h4")).getText());
-        driver.findElement(By.cssSelector("div.asset-author-category > ul > li")).click();
-        assertEquals(ASSET_NAME, driver.findElement(By.cssSelector("h3")).getText());
-        assertEquals(ASSET_DESCRIPTION, driver.findElement(By.cssSelector("p")).getText());
     }
 
     @AfterClass(alwaysRun = true)
