@@ -67,6 +67,8 @@
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreTUAccessInvalidTenantTestCase"/>-->
             <class name="org.wso2.es.ui.integration.test.common.ESRegisterUserTestCase"/>
             <class name="org.wso2.es.ui.integration.test.common.ESPublishToStore"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESRBACAsReviewerTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESRBACAsStoreUserTestCase"/>
         </classes>
 
     </test>
