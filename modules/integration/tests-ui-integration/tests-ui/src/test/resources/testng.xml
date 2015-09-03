@@ -48,6 +48,7 @@
             <class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantNotificationTestCase"/>
             <class name="org.wso2.es.ui.integration.test.notifications.ESPublisherSubscriptionTestCase"/>
             <class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantSubscriptionTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESPasswordRecovery"/>
 
             <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonCategorySortingTestCase"/> -->
             <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonHomePageTestCase"/> -->

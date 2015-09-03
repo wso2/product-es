@@ -68,17 +68,14 @@ public class ESStoreBookmarkTestCase extends BaseUITestCase {
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("btn-add-gadget")));
         driver.findElement(By.id("btn-add-gadget")).click();
 
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("btn-add-gadget"), "Bookmarked"));
-        assertEquals("Bookmarked", driver.findElement(By.id("btn-add-gadget")).getText(), "Bookmarking failed");
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("main-bookmark"), "Bookmarked"));
+        assertEquals("Bookmarked", driver.findElement(By.id("main-bookmark")).getText(), "Bookmarking failed");
 
         //check if shown in My Items page
-/*
+        driver.findElement(By.cssSelector(".bookmark-link-text")).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.ast-title a.ast-name")));
         assertEquals(bookmarkedAsset, driver.findElement(By.cssSelector("div.ast-title a.ast-name")).getText(),
                 "Bookmarked asset not shown in My Items page");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".bookmark-link")));
-        driver.findElement(By.cssSelector(".bookmark-link")).click();
-        */
 
     }
 

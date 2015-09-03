@@ -294,29 +294,13 @@
         <dependency>
             <groupId>org.wso2.es</groupId>
             <artifactId>ui-test-utils</artifactId>
-        </dependency>
+        </dependency>     
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-android-driver</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.opera</groupId>
-            <artifactId>operadriver</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-remote-driver</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
     <properties>
         <skipUiTests>true</skipUiTests>
     </properties>
