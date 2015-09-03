@@ -121,8 +121,7 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        //logout and delete new user
-        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
+        //delete new user
         userManagementClient.deleteUser(NEW_USER_NAME);
         driver.quit();
     }
