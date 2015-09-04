@@ -48,13 +48,14 @@ public class ESRBACAsReviewerTestCase extends BaseUITestCase {
         baseUrl = getWebAppURL();
     }
 
-    @Test(groups = "wso2.es.store", description = "verify login to ES Publisher")
+    @Test(groups = "wso2.es.publisher", description = "verify login to ES Publisher")
     public void testLoginToPublisherAsReviewer() throws Exception {
         ESUtil.login(driver, baseUrl, PUBLISHER_APP, currentUserName, currentUserPwd);
 
     }
 
-    @Test(groups = "wso2.es.publisher", description = "verify not being able to add asset")
+    @Test(groups = "wso2.es.publisher", description = "verify not being able to add asset",
+            dependsOnMethods = "testLoginToPublisherAsReviewer")
     public void testRestrictAddAssetAsReviewer() throws Exception {
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         assertTrue(!isElementPresent(driver, By.id("Addgadget")), "User who has only internal/reviewer role can add " +
@@ -62,7 +63,8 @@ public class ESRBACAsReviewerTestCase extends BaseUITestCase {
 
     }
 
-    @Test(groups = "wso2.es.publisher", description = "verify not being able to edit asset")
+    @Test(groups = "wso2.es.publisher", description = "verify not being able to edit asset",
+            dependsOnMethods ="testRestrictAddAssetAsReviewer")
     public void testRestrictEditAssetAsReviewer() throws Exception {
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("h3.ast-name")).click();
@@ -70,7 +72,8 @@ public class ESRBACAsReviewerTestCase extends BaseUITestCase {
                 "asset.");
 
     }
-    @Test(groups = "wso2.es.publisher", description = "verify not being able to version asset")
+    @Test(groups = "wso2.es.publisher", description = "verify not being able to version asset",
+            dependsOnMethods ="testRestrictEditAssetAsReviewer")
     public void testRestrictVersionAssetAsReviewer() throws Exception {
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         driver.findElement(By.cssSelector("h3.ast-name")).click();
@@ -79,7 +82,8 @@ public class ESRBACAsReviewerTestCase extends BaseUITestCase {
 
     }
 
-    @Test(groups = "wso2.es.store", description = "verify not being able to login to store")
+    @Test(groups = "wso2.es.publisher", description = "verify not being able to login to store",
+            dependsOnMethods ="testRestrictVersionAssetAsReviewer")
     public void testRestrictLoginToStoreAsReviewer() throws Exception {
         driver.get(baseUrl + STORE_TOP_ASSETS_PAGE);
         WebDriverWait wait = new WebDriverWait(driver, MAX_POLL_COUNT);

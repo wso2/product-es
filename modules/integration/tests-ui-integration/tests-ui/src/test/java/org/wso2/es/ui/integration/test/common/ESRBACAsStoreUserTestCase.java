@@ -50,7 +50,8 @@ public class ESRBACAsStoreUserTestCase extends BaseUITestCase {
         ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
     }
 
-    @Test(groups = "wso2.es.publisher", description = "verify not being able to login to publisher")
+    @Test(groups = "wso2.es.store", description = "verify not being able to login to publisher",
+            dependsOnMethods = "testLoginToStore")
     public void testRestrictLoginToPublisherAsStoreOnlyUser() throws Exception {
         driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         assertEquals(driver.findElement(By.cssSelector("h3")).getText(), "You do not have permission to login to this" +
