@@ -97,6 +97,9 @@
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources
             </directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/resources</outputDirectory>
+            <excludes>
+                <exclude>**/server.rxt</exclude>
+            </excludes>
         </fileSet>
 
         <fileSet>
