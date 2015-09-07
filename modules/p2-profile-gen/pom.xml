@@ -313,7 +313,7 @@
                                     org.wso2.carbon.commons:org.wso2.carbon.databridge.datapublisher.feature:${carbon.commons.version}
                                 </featureArtifactDef>
 
-                                <!--- Notification Support: Mail -->
+                                <!-- Notification Support: Mail -->
                                 <featureArtifactDef>
                                     org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.wso2.version}
                                 </featureArtifactDef>
