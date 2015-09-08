@@ -669,10 +669,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <carbon.kernel.version>4.4.1</carbon.kernel.version>
-        <carbon.social.version>2.3.5</carbon.social.version>
-        <carbon.store.version>2.3.5</carbon.store.version>
+        <carbon.social.version>2.3.5-SNAPSHOT</carbon.social.version>
+        <carbon.store.version>2.3.5-SNAPSHOT</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
-        <product.es.version>2.0.0</product.es.version>
+        <product.es.version>2.0.0-SNAPSHOT</product.es.version>
 
         <test.framework.version>4.4.2</test.framework.version>
         <automation.utils.version>4.4.2</automation.utils.version>
@@ -682,7 +682,7 @@
         <carbon.commons.version>4.4.6</carbon.commons.version>
         <carbon.registry.version>4.4.8</carbon.registry.version>
         <carbon.governance.version>4.5.8</carbon.governance.version>
-        <carbon.deployment.version>4.4.0</carbon.deployment.version>
+        <carbon.deployment.version>4.5.2</carbon.deployment.version>
         <carbon.identity.version>4.5.6</carbon.identity.version>
         <carbon.multitenancy.version>4.4.1</carbon.multitenancy.version>
 
@@ -709,7 +709,7 @@
         <commons-logging.version>1.1.1</commons-logging.version>
         <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
         <commons-codec.osgi.version>1.4.0.wso2v1</commons-codec.osgi.version>
-        <gson.version>2.1</gson.version>
+        <gson.version>2.2.4</gson.version>
         <json.version>20070829</json.version>
         <junit.version>3.8.1</junit.version>
         <el.api.version>2.2</el.api.version>
