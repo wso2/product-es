@@ -14,8 +14,7 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -27,7 +26,7 @@
     <groupId>org.wso2.es</groupId>
     <artifactId>wso2es-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
     <name>WSO2 Enterprise Store</name>
     <url>http://wso2.com/products/enterprise-store</url>
     <description>WSO2 Enterprise Store</description>
@@ -215,10 +214,7 @@
                                 <tasks>
                                     <!-- commenting "GetAllRolesOfUserEnabled" property to fix
                                     https://wso2.org/jira/browse/IDENTITY-3498 -->
-                                    <replace
-                                            file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
-                                            token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;"
-                                            value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;"/>
+                                    <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;" />
                                 </tasks>
                             </configuration>
                         </execution>
@@ -558,7 +554,7 @@
     <scm>
         <connection>scm:git:https://github.com/wso2/product-es.git</connection>
         <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v2.0.0</tag>
     </scm>
     <repositories>
         <repository>
