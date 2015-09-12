@@ -409,9 +409,9 @@
          accordingly-->
     <transportSender name="mailto"
                      class="org.apache.axis2.transport.mail.MailTransportSender">
-        <parameter name="mail.smtp.from">esmailsample@gmail.com</parameter>
-        <parameter name="mail.smtp.user">esmailsample</parameter>
-        <parameter name="mail.smtp.password">esMailTest</parameter>
+        <parameter name="mail.smtp.from">test.automation.dummy@gmail.com</parameter>
+        <parameter name="mail.smtp.user">test.automation.dummy</parameter>
+        <parameter name="mail.smtp.password">automation.test</parameter>
         <parameter name="mail.smtp.host">smtp.gmail.com</parameter>
 
         <parameter name="mail.smtp.port">587</parameter>
