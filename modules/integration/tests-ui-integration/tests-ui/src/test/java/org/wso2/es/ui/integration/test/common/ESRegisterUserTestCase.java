@@ -19,7 +19,11 @@
 package org.wso2.es.ui.integration.test.common;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -28,8 +32,12 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
+import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
+import java.util.concurrent.TimeUnit;
+
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -39,13 +47,15 @@ import static org.testng.Assert.assertTrue;
 public class ESRegisterUserTestCase extends BaseUITestCase {
 
     private UserManagementClient userManagementClient;
-    private static final String NEW_USER_NAME = "testusernew";
+    private static final String NEW_USER_NAME = "zeetestusernew";
     private static final String NEW_USER_PWD = "qwe123Q!";
     private static final String NEW_USER_FNAME = "test";
     private static final String NEW_USER_LNAME = "user";
-    private static final String NEW_USER_EMAIL = "esmailsample@gmail.com";
+    private static final String NEW_USER_EMAIL = "zeetestusernew@gmail.com";
     private static final String SECRET_QUESTION = "Favorite food ?";
     private static final String SECRET_ANSWER = "Ice cream";
+    private static final int MAX_POLL_COUNT = 30;
+
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -55,6 +65,9 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
         AutomationContext automationContext = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         userManagementClient = new UserManagementClient(backendURL, userInfo.getUserName(), userInfo.getPassword());
+
+        adminUserName = automationContext.getSuperTenant().getTenantAdmin().getUserName();
+        adminUserPwd = automationContext.getSuperTenant().getTenantAdmin().getPassword();
     }
 
     @Test(groups = "wso2.es.common", description = "Testing user registration")
@@ -75,22 +88,40 @@ public class ESRegisterUserTestCase extends BaseUITestCase {
         driver.findElement(By.name("reg-first-name")).sendKeys(NEW_USER_FNAME);
         driver.findElement(By.name("reg-last-name")).clear();
         driver.findElement(By.name("reg-last-name")).sendKeys(NEW_USER_LNAME);
-        new Select(driver.findElement(By.name("secret-question"))).selectByVisibleText(SECRET_QUESTION);
-        driver.findElement(By.name("secret-answer")).clear();
-        driver.findElement(By.name("secret-answer")).sendKeys(SECRET_ANSWER);
         driver.findElement(By.id("registrationSubmit")).click();
-        //check login for store
-        assertTrue(isElementPresent(driver,By.linkText("My Items")), "Login failed for Store");
-        assertTrue(isElementPresent(driver,By.linkText(NEW_USER_NAME)), "Login failed for Store");
-        //check login for publisher
-        driver.get(baseUrl + PUBLISHER_URL);
-        assertTrue(isElementPresent(driver,By.linkText(NEW_USER_NAME)), "Login failed for Publisher");
+        // check the success message
+        assertTrue(isElementPresent(driver,By.id("regFormSuc")),"User creation failed.");
+        driver.findElement(By.id("signInLink")).click();
+
+        driver.findElementPoll(By.id("username"), MAX_POLL_COUNT);
+        driver.findElement(By.id("username")).clear();
+        driver.findElement(By.id("username")).sendKeys(NEW_USER_NAME);
+        driver.findElement(By.id("password")).clear();
+        driver.findElement(By.id("password")).sendKeys(NEW_USER_PWD);
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+
+        WebElement userNameElement = driver.findElement(By.id("logedInUser"));
+
+        assertEquals(userNameElement.getText().trim(), NEW_USER_NAME);
+
+        //Checking claim from carbon console.
+        driver.get(baseUrl + MANAGEMENT_CONSOLE_URL);
+        driver.findElement(By.id("txtUserName")).clear();
+        driver.findElement(By.id("txtUserName")).sendKeys(adminUserName);
+        driver.findElement(By.id("txtPassword")).clear();
+        driver.findElement(By.id("txtPassword")).sendKeys(adminUserPwd);
+
+        driver.findElement(By.cssSelector("input.button")).click();
+        driver.findElement(By.linkText("Users and Roles")).click();
+        driver.findElement(By.linkText("Users")).click();
+        driver.findElement(By.cssSelector("#userTable tbody tr:last-child td:nth-child(2) a:nth-child(5)")).click();
+        driver.findElement(By.linkText("default")).click();
+        assertEquals(driver.findElement(By.cssSelector(".styledLeft tr:nth-child(7) input")).getAttribute("value"), NEW_USER_EMAIL , "Claims are not working properly.");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        //logout and delete new user
-        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
+        //delete new user
         userManagementClient.deleteUser(NEW_USER_NAME);
         driver.quit();
     }

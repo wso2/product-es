@@ -52,7 +52,7 @@ public class ESPublisherLoginLogoutTestCase extends BaseUITestCase {
         driver.findElement(By.id("password")).clear();
         driver.findElement(By.id("password")).sendKeys(currentUserPwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        assertEquals("Asset | WSO2 Enterprise Store back-office", driver.getTitle());
+        assertEquals("Asset | WSO2 Enterprise Store Publisher", driver.getTitle());
         assertEquals(currentUserName, driver.findElement(By.xpath("/html/body/div/div[1]/header/div/div[2]/div/a/div/span"))
                 .getText(), "Logged in user not shown");
     }
