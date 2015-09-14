@@ -41,8 +41,8 @@ public class ESPublisherTenantNotificationTestCase extends BaseUITestCase {
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private TestUserMode userMode;
-    private static final String EMAIL = "esmailsample@gmail.com";
-    private static final String EMAIL_PWD = "esMailTest";
+    private static final String EMAIL = "test.automation.dummy@gmail.com";
+    private static final String EMAIL_PWD = "automation.test1";
     private static final String FIRST_NAME = "name 1";
     private static final String LAST_NAME = "name 2";
     private static final String VERSION = "1.0.0";

@@ -34,10 +34,10 @@ import static org.testng.Assert.assertEquals;
 
 public class ESPasswordRecovery extends BaseUITestCase{
     private static final int MAX_WAIT_TIME = 30;
-    private static final String EMAIL_PWD = "esMailTest";
+    private static final String EMAIL_PWD = "automation.test1";
     private static final String USER = "recoveryuser";
     private static final String PASSWORD = "qwe123Q!";
-    private static final String EMAIL = "esmailsample@gmail.com";
+    private static final String EMAIL = "test.automation.dummy@gmail.com";
     private static final String FIRST_NAME = "recovery";
     private static final String LAST_NAME = "user";
     private static final String QUESTION = "Favorite food ?";
