@@ -181,16 +181,16 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.linkText("Users and Roles")).click();
         driver.findElement(By.linkText("Users")).click();
         driver.findElement(By.xpath(userProfileElement)).click();
-        driver.findElement(By.linkText("Add New Profile")).click();
-        driver.findElement(By.id("profile")).clear();
-        driver.findElement(By.id("profile")).sendKeys(firstName);
+        driver.findElement(By.linkText("default")).click();
+        //driver.findElement(By.id("profile")).clear();
+        //driver.findElement(By.id("profile")).sendKeys(firstName);
         driver.findElement(By.id("http://wso2.org/claims/givenname")).clear();
         driver.findElement(By.id("http://wso2.org/claims/givenname")).sendKeys(firstName);
         driver.findElement(By.id("http://wso2.org/claims/lastname")).clear();
         driver.findElement(By.id("http://wso2.org/claims/lastname")).sendKeys(lastName);
         driver.findElement(By.id("http://wso2.org/claims/emailaddress")).clear();
         driver.findElement(By.id("http://wso2.org/claims/emailaddress")).sendKeys(email);
-        driver.findElement(By.name("addprofile")).click();
+        driver.findElement(By.name("updateprofile")).click();
         driver.findElement(By.cssSelector("button[type=\"button\"]")).click();
         driver.findElement(By.cssSelector("#menu-panel-button1 > span")).click();
     }
