@@ -666,8 +666,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <carbon.kernel.version>4.4.1</carbon.kernel.version>
-        <carbon.social.version>2.3.8-SNAPSHOT</carbon.social.version>
-        <carbon.store.version>2.3.8-SNAPSHOT</carbon.store.version>
+        <carbon.social.version>2.3.8</carbon.social.version>
+        <carbon.store.version>2.3.8</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <product.es.version>2.0.1-SNAPSHOT</product.es.version>
 
@@ -712,7 +712,7 @@
         <el.api.version>2.2</el.api.version>
         <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
-        <jaggery.feature.version>0.10.2</jaggery.feature.version>
+        <jaggery.feature.version>0.11.1</jaggery.feature.version>
         <caramel.feature.version>1.4.0</caramel.feature.version>
         <handlebars.feature.version>1.4.0</handlebars.feature.version>
         <markdown.feature.version>1.4.0</markdown.feature.version>
