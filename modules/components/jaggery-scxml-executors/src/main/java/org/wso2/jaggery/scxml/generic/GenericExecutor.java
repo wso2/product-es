@@ -76,7 +76,7 @@ public class GenericExecutor implements Execution
         DynamicValueInjector dynamicValueInjector=new DynamicValueInjector();
 
         //Set the asset author key
-        dynamicValueInjector.setDynamicValue(DynamicValueInjector.ASSET_AUTHOR_KEY,requestContext.getResource().getAuthorUserName());
+        dynamicValueInjector.setDynamicValue(DynamicValueInjector.ASSET_AUTHOR_KEY,requestContext.getResource().getAuthorUserName().replaceAll("[a-zA-Z]*/",""));
 
         //Execute all permissions for the current state
         //this.stateExecutor.executePermissions(this.userRealm,dynamicValueInjector,path,s2);

@@ -14,7 +14,7 @@ var user = {};
          * "/" will be replaced.
          */
 
-        return username.replace('@', ':').replace('/', ':');
+        return username.replace('@', ':').replaceAll("[a-zA-Z]*/","");
     };
 
     user.privateRole = function (username) {
