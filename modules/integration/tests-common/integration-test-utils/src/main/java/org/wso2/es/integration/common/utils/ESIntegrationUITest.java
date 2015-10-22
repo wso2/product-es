@@ -32,6 +32,11 @@ public abstract class ESIntegrationUITest extends ESIntegrationTest{
         return  UrlGenerationUtil.getWebAppURL(esContext.getContextTenant(), esContext.getInstance());
     }
 
+    protected String getWebAppURLHttps() throws XPathExpressionException {
+        return  UrlGenerationUtil.getWebAppURLHttps(esContext.getContextTenant(), esContext
+                .getInstance());
+    }
+
     protected String getStorePublisherUrl() throws XPathExpressionException {
         return UrlGenerationUtil.getWebAppURL(esContext.getContextTenant(), esContext.getInstance()).split("\\/t\\/")
                 [0];
