@@ -40,7 +40,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
     public static final String LOCALHOST = "localhost:9763";
     private static String correctFacebookLink = "https://facebook.com/sharer.php?u=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
     private static String correctGplusLink = "https://plus.google.com/share?url=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
-    private static String correctTwitterLink = "https://twitter.com/intent/tweet?text=";
+    private static String correctTwitterLink = "https://twitter.com/intent/tweet?";
     private static String correctTwitterLink2 = "/store/t/carbon.super/assets/gadget/details/";
     private static String correctDiggLink = "https://digg.com/submit?url=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
     private String gadgetId = "";
@@ -105,6 +105,7 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         switchWindow();
         String twitterLink = driver.getCurrentUrl();
         twitterLink = URLDecoder.decode(twitterLink, "UTF-8");
+        System.out.println(twitterLink);
         assertTrue(twitterLink.contains(correctTwitterLink), "Twitter sharing is wrong");
         assertTrue(twitterLink.contains(correctTwitterLink2), "Twitter sharing is wrong");
     }
