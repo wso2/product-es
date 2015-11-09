@@ -88,6 +88,13 @@ public class ESPublisherAssetOverridePartialTestCase extends BaseUITestCase {
         assertEquals(driver.findElement(By.id("assetOverriddenListingH1")).getText(), "New Asset Update Partial of Publisher");
     }
 
+    @Test(groups = "wso2.es.extensions", description = "Test overriding listAssetTableBody partial in extensions")
+    public void testESPublisherAssetOverrideListAssetBodyPartialTestCase() throws Exception {
+        driver.get(baseUrl + "/publisher/assets/servicex/list");
+        assertTrue(isElementPresent(driver, By.className("assetOverriddenListingElement")));
+        assertEquals(driver.findElement(By.className("assetOverriddenListingElement")).getText(), "New Asset List Partial of Publisher");
+    }
+
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
