@@ -42,7 +42,8 @@ public class AssetsRESTClient extends ESIntegrationTest {
     private static final String JSESSIONID = "JSESSIONID";
 
     private static final String UTF_8 = "UTF-8";
-    private static final String DATA = "data";
+    private static final String ASSET_LIST_KEY = "list";
+    private static final String AUTH_RESPONSE_WRAP_KEY = "data";
 
     private static final String SESSIONID = "sessionId";
     private static final String USERNAME = "username";
@@ -89,7 +90,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
             // Get response data.
             input = new InputStreamReader(urlConn.getInputStream());
             JsonElement elem = parser.parse(input);
-            sessionID = elem.getAsJsonObject().getAsJsonObject(DATA).get(SESSIONID).toString();
+            sessionID = elem.getAsJsonObject().getAsJsonObject(AUTH_RESPONSE_WRAP_KEY).get(SESSIONID).toString();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Received SessionID : " + sessionID);
             }
@@ -135,6 +136,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
             }
             URL endpointUrl = new URL(listAssetsEndpoint);
             URLConnection urlConn = endpointUrl.openConnection();
+            urlConn.setRequestProperty("Accept","application/json");
             urlConn.setRequestProperty(COOKIE, JSESSIONID + "=" + sessionId + ";");
             // SessionId Cookie
             urlConn.connect();
@@ -143,7 +145,7 @@ public class AssetsRESTClient extends ESIntegrationTest {
             JsonElement elem = parser.parse(input);
 
             // parse response to a JasonArray
-            return elem.getAsJsonObject().getAsJsonArray(DATA);
+            return elem.getAsJsonObject().getAsJsonArray(ASSET_LIST_KEY);
         } catch (MalformedURLException e) {
             LOG.error(getAssetRetrievingErrorMassage(listAssetsEndpoint), e);
             throw e;

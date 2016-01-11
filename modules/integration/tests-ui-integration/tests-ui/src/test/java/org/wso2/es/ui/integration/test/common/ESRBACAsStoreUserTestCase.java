@@ -15,48 +15,51 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+package org.wso2.es.ui.integration.test.common;
 
-package org.wso2.es.ui.integration.extension.test.publisher;
 
 import org.openqa.selenium.By;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.annotations.*;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import java.util.concurrent.TimeUnit;
+
 /**
- * Add a new page for an asset type under extension model
+ * Create a new asset in publisher and publish it to store
+ * Check if it can be seen store side and verify details
  */
-public class ESPublisherAssetNewPageTestCase extends BaseUITestCase {
+public class ESRBACAsStoreUserTestCase extends BaseUITestCase {
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
-        super.init();
+        super.init("superTenant", "storeUser1");
+
+        currentUserName = userInfo.getUserName();
+        currentUserPwd = userInfo.getPassword();
         driver = new ESWebDriver(BrowserManager.getWebDriver());
         baseUrl = getWebAppURL();
-        ESUtil.login(driver, baseUrl, PUBLISHER_APP, userInfo.getUserName(), userInfo.getPassword());
     }
 
-    @Test(groups = "wso2.es.extensions", description = "Test adding a new asset page in extensions")
-    public void testESPublisherAssetNewPageTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/assets/servicex/list");
-//        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("popoverExampleTwo")).click();
+    @Test(groups = "wso2.es.store", description = "verify login to ES Store")
+    public void testLoginToStore() throws Exception {
+        ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
+    }
 
-        driver.findElement(By.linkText("Service")).click();
-        driver.get(baseUrl + "/publisher/assets/servicex/new_page");
-        assertTrue(isElementPresent(driver, By.id("assetNewPageH1")));
+    @Test(groups = "wso2.es.store", description = "verify not being able to login to publisher",
+            dependsOnMethods = "testLoginToStore")
+    public void testRestrictLoginToPublisherAsStoreOnlyUser() throws Exception {
+        driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
+        assertEquals(driver.findElement(By.cssSelector("h3")).getText(), "You do not have permission to login to this" +
+                " application.Please contact your administrator and request permission.");
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        driver.get(baseUrl + PUBLISHER_LOGOUT_URL);
         driver.quit();
     }
 

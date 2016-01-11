@@ -40,6 +40,7 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
     private String firstAsset;
     private static final String LINE_PLUS_BAR_CHART = "Line Plus Bar Chart";
     private static final String LINE_CHART = "Line Chart";
+    private static final int MAX_POLL_COUNT = 30;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -54,49 +55,58 @@ public class ESStoreGadgetPageTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.store", description = "Test Gadgets Page")
     public void testGadgetPage() throws Exception {
-        //test appearance of gadget page
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
-        assertEquals("Gadget", driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
-                .getText(), "Gadget Menu missing");
-        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//a[contains(text()," +
-                "'Line Plus Bar Chart')]")).getText(), "Gadgets missing");
-        firstAsset = driver.findElement(By.cssSelector("h4")).getText();
-        assertEquals("Recently Added", driver.findElement(By.xpath
-                ("//div[@id='container-assets']/div/div[2]/div[1]/div/h4")).getText(),
-                "Recently Added section missing");
-        assertEquals(LINE_PLUS_BAR_CHART, driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]"))
-                .getText(), "Recently added Gadgets missing");
-        assertEquals("Tags", driver.findElement(By.xpath("//div[@id='container-assets']/div/div[2]/div[2]/div/h4"))
-                .getText(), "Tags section missing");
-        assertTrue(isElementPresent(driver, By.linkText("charts")), "Tags missing (charts tag)");
-        assertEquals("All Categories", driver.findElement(By.cssSelector("div.breadcrumb-head")).getText(),
-                "Category drop down missing");
-        assertTrue(isElementPresent(driver, By.cssSelector("i.icon-star")), "Popularity sort missing");
-        assertTrue(isElementPresent(driver, By.cssSelector("i.icon-sort-alphabetical")), "Alphabetical sort missing");
-        assertTrue(isElementPresent(driver, By.cssSelector("i.icon-calendar")), "Recent sort missing");
-        assertTrue(isElementPresent(driver, By.id("search")), "Search tray missing");
+        WebDriverWait wait = new WebDriverWait(driver, MAX_POLL_COUNT);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Gadgets")));
+        assertTrue(isElementPresent(driver, By.linkText("Gadgets")), "Gadgets heading missing");
+        assertTrue(isElementPresent(driver,By.linkText(LINE_PLUS_BAR_CHART)), LINE_PLUS_BAR_CHART + " Gadgets missing");
+        assertTrue(isElementPresent(driver,By.linkText(LINE_CHART)),LINE_CHART + " Gadgets missing");
+        assertTrue(isElementPresent(driver,By.cssSelector("span.advanced-search-text")), "Advanced search missing");
+        assertTrue(isElementPresent(driver,By.cssSelector("#sortDropdown > img")), "Sorting dropdown missing");
+        assertEquals(driver.findElement(By.cssSelector("span.sort-asset-info")).getText(), "( Date/Time Created )");
+        driver.findElement(By.cssSelector("#sortDropdown > img")).click();
+        assertTrue(isElementPresent(driver,By.linkText("POPULAR")), "Popular sort missing");
+        assertTrue(isElementPresent(driver,By.linkText("NAME")), "Sort by name missing");
+        assertTrue(isElementPresent(driver,By.linkText("DATE/TIME CREATED")),"Sort by created date/time missing");
     }
 
     @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links",
             dependsOnMethods = "testGadgetPage")
+    public void testSearchFromPage() throws Exception {
+        driver.findElement(By.id("search")).click();
+        driver.findElement(By.id("search")).clear();
+        driver.findElement(By.id("search")).sendKeys("wso2");
+        assertTrue(isElementPresent(driver,By.linkText("WSO2 Carbon Commits List Discussion")));
+        assertTrue(isElementPresent(driver,By.linkText("WSO2 Architecture List Discussion")));
+        assertTrue(isElementPresent(driver,By.linkText("WSO2 Carbon Dev List Discussion")));
+        assertEquals(driver.findElement(By.linkText("WSO2 Dev List Discussion")).getText(), "WSO2 Dev List Discussion");
+        assertTrue(isElementPresent(driver,By.linkText("WSO2 Dev List Discussion")));
+        assertTrue(isElementPresent(driver,By.linkText("WSO2 Jira")));
+        driver.findElement(By.id("search")).clear();
+        driver.findElement(By.id("search")).sendKeys("pie");
+        driver.findElement(By.id("search-button")).click();
+        assertTrue(isElementPresent(driver,By.linkText("Pie Chart")));
+        assertTrue(isElementPresent(driver,By.id("advanced-search-btn")));
+        driver.findElement(By.id("advanced-search-btn")).click();
+        assertTrue(isElementPresent(driver,By.cssSelector("div.search-title")));
+        assertEquals(driver.findElement(By.cssSelector("div.search-title")).getText(), "Search Gadgets");
+        driver.findElement(By.name("overview_name")).clear();
+        driver.findElement(By.name("overview_name")).sendKeys("chart");
+        driver.findElement(By.id("search-button2")).click();
+        assertTrue(isElementPresent(driver,By.linkText("Line Plus Bar Chart")));
+        assertTrue(isElementPresent(driver,By.linkText("Line Chart")));
+        assertTrue(isElementPresent(driver,By.linkText("Stacked Bar Chart")));
+        assertTrue(isElementPresent(driver,By.linkText("Pie Chart")));
+    }
+
+    @Test(groups = "wso2.es.store", description = "Test Gadgets Page Links",
+            dependsOnMethods = "testSearchFromPage")
     public void testLinksFromPage() throws Exception {
         //test links
         driver.get(baseUrl + STORE_GADGET_LIST_PAGE);
-        assertEquals(firstAsset, driver.findElement(By.cssSelector("h4")).getText(),
-                "Cannot view selected Gadget's page through Gadget list");
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li")).click();
-        driver.findElement(By.xpath("//a[contains(text(),'Line Chart')]")).click();
-        assertEquals(LINE_CHART, driver.findElement(By.cssSelector("h3")).getText(),
-                "Cannot view selected Gadget's page through Recently added list");
-
-        driver.findElement(By.xpath("//div[@id='container-search']/div/div/div/div/a/li"))
-                .click();
-        WebElement element = driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]"));
-        driver.findElement(By.linkText("pie")).click();
-        wait.until(ExpectedConditions.stalenessOf(element));
-        assertEquals(1, driver.findElements(By.cssSelector("div.span3.asset")).size(),
-                "Tags not working");
-        assertEquals("Pie Chart", driver.findElement(By.xpath("//h4[contains(.,'Pie Chart')]")).getText(), "Tags are not working");
+        driver.findElement(By.linkText("WSO2 Carbon Commits List Discussion")).click();
+        assertEquals(driver.findElement(By.cssSelector("h3")).getText(), "Gadget Details",
+                "Cannot reach asset details page from gadget list page");
     }
 
     @AfterClass(alwaysRun = true)

@@ -30,7 +30,7 @@ public class ESPublisherAssetOverridePartialTestCase extends ESIntegrationUITest
 
   @Test(groups = "wso2.es", description = "")
   public void testESPublisherAssetOverridePartialTestCase() throws Exception {
-    driver.get(baseUrl + "/publisher/asts/servicex/update");
+    driver.get(baseUrl + "/publisher/assets/servicex/update");
  }
 
     @AfterClass(alwaysRun = true)

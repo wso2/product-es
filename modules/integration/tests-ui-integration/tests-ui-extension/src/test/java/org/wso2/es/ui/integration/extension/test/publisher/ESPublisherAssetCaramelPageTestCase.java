@@ -28,6 +28,7 @@ import org.wso2.es.ui.integration.util.ESUtil;
 import org.wso2.es.ui.integration.util.ESWebDriver;
 
 import static org.testng.Assert.assertTrue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Add a new caramel page for an asset type under extension model
@@ -44,15 +45,17 @@ public class ESPublisherAssetCaramelPageTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.extensions", description = "Testing adding a new caramel page in extensions")
     public void testESPublisherAssetCaramelPageTestCase() throws Exception {
-        driver.get(baseUrl + "/publisher/asts/gadget/list");
+        driver.get(baseUrl + "/publisher/assets/servicex/list");
 //        driver.findElement(By.cssSelector("button.btn.dropdown-toggle")).click();
-        driver.findElement(By.cssSelector("span.btn-asset")).click();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.findElement(By.id("popoverExampleTwo")).click();
 
         driver.findElement(By.linkText("Service")).click();
-        driver.get(baseUrl + "/publisher/asts/servicex/new_caramel_page");
-        assertTrue(isElementPresent(driver, By.linkText("Overview")));
-        assertTrue(isElementPresent(driver, By.linkText("Edit")));
-        assertTrue(isElementPresent(driver, By.linkText("Life Cycle")));
+        driver.get(baseUrl + "/publisher/assets/servicex/new_caramel_page");
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        assertTrue(isElementPresent(driver, By.id("Overview")));
+        assertTrue(isElementPresent(driver, By.id("Edit")));
+        //assertTrue(isElementPresent(driver, By.id("Life Cycle")));
     }
 
     @AfterClass(alwaysRun = true)

@@ -19,7 +19,11 @@
 package org.wso2.es.ui.integration.test.store;
 
 import java.net.URLDecoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -33,11 +37,12 @@ import static org.testng.Assert.assertTrue;
 
 public class ESStoreSocialSharingTestCase extends BaseUITestCase{
     private static final int MAX_WAIT_TIME = 30;
-    private static String correctFacebookLink = "https://www.facebook.com/sharer/sharer.php?u=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
-    private static String correctGplusLink = "https://plus.google.com/share?url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
-    private static String correctTwitterLink = "https://twitter.com/intent/tweet?text=";
-    private static String correctTwitterLink2 = "&url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
-    private static String correctDiggLink = "https://digg.com/submit?url=http://localhost:9763/store/t/carbon.super/asts/gadget/details/";
+    public static final String LOCALHOST = "localhost:9763";
+    private static String correctFacebookLink = "https://facebook.com/sharer.php?u=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
+    private static String correctGplusLink = "https://plus.google.com/share?url=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
+    private static String correctTwitterLink = "https://twitter.com/intent/tweet?";
+    private static String correctTwitterLink2 = "/store/t/carbon.super/assets/gadget/details/";
+    private static String correctDiggLink = "https://digg.com/submit?url=http://localhost:9763/store/t/carbon.super/assets/gadget/details/";
     private String gadgetId = "";
 
     @BeforeClass(alwaysRun = true)
@@ -51,9 +56,8 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
         wait = new WebDriverWait(driver, MAX_WAIT_TIME);
         ESUtil.login(driver, baseUrl, STORE_APP, currentUserName, currentUserPwd);
 
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
-        driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
+        driver.get(baseUrl + "/store/assets/gadget/list");
+        driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]")).click();
         String[] gadgetUrlSplit = driver.getCurrentUrl().split("/");
         gadgetId = gadgetUrlSplit[gadgetUrlSplit.length-1];
         correctGplusLink += gadgetId;
@@ -64,63 +68,80 @@ public class ESStoreSocialSharingTestCase extends BaseUITestCase{
 
     @Test(groups = "wso2.es.store", description = "Testing facebook link in share tab")
     public void testFacebookSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
-        driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
+        driver.get(baseUrl + "/store/assets/gadget/list");
+        driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
         driver.findElement(By.linkText("Share")).click();
         assertEquals(driver.findElement(By.xpath("//h4[contains(.,'Social Sites')]")).getText(), "Social Sites");
 
-        driver.findElement(By.xpath("//img[@src='/store/themes/store/img/facebook.png']")).click();
-        String facebookLink = driver.getCurrentUrl();
-        facebookLink = URLDecoder.decode(URLDecoder.decode(facebookLink, "UTF-8"), "UTF-8");
-        assertTrue(facebookLink.contains(correctFacebookLink), "Facebook sharing is wrong");
+        WebElement element = driver.findElement(By.xpath("//img[@src='/store/themes/store/img/facebook.png']"));
+        String facebookLink = element.findElement(By.xpath("..")).getAttribute("href");
+        assertTrue(matchUrl(correctFacebookLink, facebookLink), "Facebook sharing is wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing Google plus link in share tab")
     public void testGPlusSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
-        driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
+        driver.get(baseUrl + "/store/assets/gadget/list");
+        driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
         driver.findElement(By.linkText("Share")).click();
         assertEquals(driver.findElement(By.xpath("//h4[contains(.,'Social Sites')]")).getText(), "Social Sites");
 
-        driver.findElement(By.xpath("//img[@src='/store/themes/store/img/google.png']")).click();
-        String gplusLink = driver.getCurrentUrl();
+        WebElement element = driver.findElement(By.xpath("//img[@src='/store/themes/store/img/google.png']"));
+        String gplusLink = element.findElement(By.xpath("..")).getAttribute("href");
         gplusLink = URLDecoder.decode(gplusLink, "UTF-8");
-        assertTrue(gplusLink.contains(correctGplusLink), "GPlus sharing is wrong");
+        assertTrue(matchUrl(correctGplusLink, gplusLink), "GPlus sharing is wrong");
     }
 
     @Test(groups = "wso2.es.store", description = "Testing Twitter link in share tab")
     public void testTwitterSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
-        driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
+        driver.get(baseUrl + "/store/assets/gadget/list");
+        driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
         driver.findElement(By.linkText("Share")).click();
         assertEquals(driver.findElement(By.xpath("//h4[contains(.,'Social Sites')]")).getText(), "Social Sites");
 
         driver.findElement(By.xpath("//img[@src='/store/themes/store/img/twitter.png']")).click();
+        switchWindow();
         String twitterLink = driver.getCurrentUrl();
         twitterLink = URLDecoder.decode(twitterLink, "UTF-8");
+        System.out.println(twitterLink);
         assertTrue(twitterLink.contains(correctTwitterLink), "Twitter sharing is wrong");
         assertTrue(twitterLink.contains(correctTwitterLink2), "Twitter sharing is wrong");
     }
 
+    public boolean matchUrl(String withLocalhostURL, String realURL) {
+        int localhostIndex = withLocalhostURL.indexOf(LOCALHOST);
+        String firstPart = Pattern.quote(withLocalhostURL.substring(0, localhostIndex));
+        String secoundPart = Pattern.quote(withLocalhostURL.substring(localhostIndex + LOCALHOST.length()));
+        Pattern p = Pattern.compile(firstPart + ".*" + secoundPart);
+        Matcher m = p.matcher(realURL);
+        return m.matches();
+    }
+
+    public void switchWindow() {
+        String currentWindow = driver.getWindowHandle();
+        for (String nextWindow : driver.getWindowHandles()) {
+            if (!nextWindow.equals(currentWindow)) {
+                driver.switchTo().window(nextWindow);
+            }
+        }
+    }
+
     @Test(groups = "wso2.es.store", description = "Testing Digg link in share tab")
     public void testDiggSharing() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
-        driver.findElement(By.xpath("//span[contains(.,'Gadget')]")).click();
-        driver.findElement(By.xpath("//h4[contains(.,'Line Plus Bar Chart')]")).click();
+        driver.get(baseUrl + "/store/assets/gadget/list");
+        driver.findElement(By.xpath("//a[contains(.,'Line Plus Bar Chart')]")).click();
         assertEquals(driver.findElement(By.linkText("Share")).getText(), "Share");
         driver.findElement(By.linkText("Share")).click();
         assertEquals(driver.findElement(By.xpath("//h4[contains(.,'Social Sites')]")).getText(), "Social Sites");
 
         driver.findElement(By.xpath("//img[@src='/store/themes/store/img/diggit.png']")).click();
+        switchWindow();
         String diggLink = driver.getCurrentUrl();
+
         diggLink = URLDecoder.decode(diggLink, "UTF-8");
-        assertTrue(diggLink.contains(correctDiggLink), "Digg sharing is wrong");
+        assertTrue(matchUrl(correctDiggLink, diggLink), "Digg sharing is wrong");
     }
 
     @AfterClass(alwaysRun = true)

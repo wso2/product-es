@@ -23,7 +23,11 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 
 /**
@@ -32,6 +36,7 @@ import org.wso2.es.integration.common.utils.ESIntegrationUITest;
 public class AssetUtil extends BaseUITestCase {
 
     private static final Log log = LogFactory.getLog(BaseUITestCase.class);
+    private static final int MAX_POLL_COUNT = 30;
 
     /**
      * Add a new asset
@@ -43,8 +48,11 @@ public class AssetUtil extends BaseUITestCase {
      * @param version     version
      */
     public static void addNewAsset(WebDriver driver, String baseUrl, String assetType, String assetName, String version, String category, String url, String description) {
-        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
-        driver.findElement(By.linkText("Add " + assetType)).click();
+        driver.get(baseUrl + "/publisher/assets/" + assetType + "/list");
+        WebDriverWait wait = new WebDriverWait(driver, MAX_POLL_COUNT);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Add"+assetType)));
+        driver.findElement(By.id("Add"+assetType)).click();
+        //driver.get(baseUrl+PUBLISHER_GADGET_CREATE_PAGE);
         driver.findElement(By.name("overview_name")).clear();
         driver.findElement(By.name("overview_name")).sendKeys(assetName);
         driver.findElement(By.name("overview_version")).clear();
@@ -56,11 +64,12 @@ public class AssetUtil extends BaseUITestCase {
         driver.findElement(By.name("overview_url")).sendKeys(url);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(description);
+        driver.findElement(By.name("images_thumbnail")).sendKeys(FrameworkPathUtil.getReportLocation()
+                                                                 +"/../src/test/resources/images/thumbnail.jpg");
+        driver.findElement(By.name("images_banner")).sendKeys(FrameworkPathUtil.getReportLocation()
+                                                              +"/../src/test/resources/images/banner.jpg");
         driver.findElement(By.id("btn-create-asset")).click();
-        if(isAlertPresent(driver)){
-            closeAlertAndGetItsText(driver, true);
-            log.warn("Alert box appeared when adding the asset " + assetName);
-        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Add"+assetType)));
     }
 
     /**
@@ -73,15 +82,15 @@ public class AssetUtil extends BaseUITestCase {
      * @param description asset description
      * @return the edit response
      */
-    public static String updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
+    public static void updateAsset(WebDriver driver, String baseUrl, String assetType, String assetName,
                                      String description) {
-        driver.get(baseUrl + "/publisher/asts/" + assetType + "/list");
+        driver.get(baseUrl + "/publisher/assets/" + assetType + "/list");
         driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Edit")).click();
+        driver.findElement(By.id("Edit")).click();
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(description);
         driver.findElement(By.id("editAssetButton")).click();
-        return closeAlertAndGetItsText(driver, true);
+//        return closeAlertAndGetItsText(driver, true);
     }
 
     /**
@@ -107,8 +116,6 @@ public class AssetUtil extends BaseUITestCase {
      * @param starCount rating
      */
     public static void addRatingsAndReviews(ESWebDriver driver, String review, String starCount) {
-        driver.findElement(By.linkText("User Reviews")).click();
-        driver.switchTo().frame(driver.findElement(By.id("socialIfr")));
         driver.findElement(By.id("com-body")).clear();
         driver.findElement(By.id("com-body")).sendKeys(review);
         driver.findElement(By.linkText(starCount)).click();
@@ -123,11 +130,20 @@ public class AssetUtil extends BaseUITestCase {
      * @param assetName asset name
      */
     public static void publishAssetToStore(WebDriver driver, String assetName) {
-        driver.findElement(By.linkText(assetName)).click();
-        driver.findElement(By.linkText("Life Cycle")).click();
-        changeLCState(driver, "In-Review", "to review");
-        driver.get(driver.getCurrentUrl());
-        changeLCState(driver, "Published", "published");
+        WebDriverWait wait = new WebDriverWait(driver,MAX_POLL_COUNT);
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("LifeCycle")));
+        driver.findElement(By.id("LifeCycle")).click();
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("lifecycle-comment")));
+        driver.findElement(By.id("lifecycle-comment")).clear();
+        driver.findElement(By.id("lifecycle-comment")).sendKeys("Promoting to review");
+        driver.findElement(By.id("lcActionPromote")).click();
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".alert-success")));
+
+
+        driver.findElement(By.id("lifecycle-comment")).clear();
+        driver.findElement(By.id("lifecycle-comment")).sendKeys("Promoting to published");
+        driver.findElement(By.id("lcActionPromote")).click();
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".alert-success")));
     }
 
 //    /**

@@ -45,7 +45,7 @@ public class ESStoreRatingsTestCase extends BaseUITestCase {
 
     @Test(groups = "wso2.es.store.ratings", description = "Test Start Add Rating")
     public void testStoreBeforeAddRatings() throws Exception {
-        driver.get(baseUrl + "/store/asts/gadget/list");
+        driver.get(baseUrl + "/store/assets/gadget/list");
         driver.findElement(By.cssSelector("i.icon-cog")).click();
         driver.findElement(By.cssSelector("h4")).click();
         driver.findElement(By.linkText("User Reviews")).click();

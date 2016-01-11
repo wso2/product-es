@@ -132,43 +132,26 @@
                         <userName>testuser21</userName>
                         <password>testuser21</password>
                     </user>
-                    <user key="pub-user-perm-no-list">
-                        <userName>publisheruser1</userName>
-                        <password>publisheruser1</password>
+                    <user key="reviewer1">
+                        <userName>reviewer1</userName>
+                        <password>reviewer1pass</password>
                         <roles>
-                            <role>role-pub-perm-no-list</role>
+                            <role>Internal/reviewer</role>
                         </roles>
                     </user>
-                    <user key="pub-user-perm-list">
-                        <userName>publisheruser2</userName>
-                        <password>publisheruser2</password>
+                    <user key="storeUser1">
+                        <userName>storeUser1</userName>
+                        <password>storeUser1pass</password>
                         <roles>
-                            <role>role-pub-perm-list</role>
+                            <role>Internal/store</role>
                         </roles>
                     </user>
-                    <user key="pub-user-perm-no-add">
-                        <userName>publisheruser3</userName>
-                        <password>publisheruser3</password>
-                    </user>
-                    <user key="pub-user-perm-add">
-                        <userName>publisheruser4</userName>
-                        <password>publisheruser4</password>
-                    </user>
-                    <user key="pub-user-perm-no-update">
-                        <userName>publisheruser5</userName>
-                        <password>publisheruser5</password>
-                    </user>
-                    <user key="pub-user-perm-update">
-                        <userName>publisheruser6</userName>
-                        <password>publisheruser6</password>
-                    </user>
-                    <user key="store-user-perm-list">
-                        <userName>publisheruser7</userName>
-                        <password>publisheruser7</password>
-                    </user>
-                    <user key="store-user-perm-no-list">
-                        <userName>publisheruser8</userName>
-                        <password>publisheruser8</password>
+                    <user key="publisherUser1">
+                        <userName>publisherUser1</userName>
+                        <password>publisherUser1</password>
+                        <roles>
+                            <role>Internal/publisher</role>
+                        </roles>
                     </user>
                 </users>
             </tenant>
@@ -211,60 +194,6 @@
                 </users>
             </tenant>
         </tenants>
-        <roles>
-            <role name="role-pub-perm-list">
-                <permissions>
-                    <permission>/permission/admin/login</permission>
-                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
-                    <permission>/permission/admin/manage/resources/govern/site/list</permission>
-                </permissions>
-            </role>
-            <role name="role-pub-perm-no-list">
-                <permissions>
-                    <permission>/permission/admin/login</permission>
-                    <permission>/permission/admin/manage/resources/govern/site/list</permission>
-                </permissions>
-            </role>
-            <role name="role-pub-perm-add">
-                <permissions>
-                    <permission>/permission/admin/login</permission>
-                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
-                    <permission>/permission/admin/manage/resources/govern/gadget/add</permission>
-                </permissions>
-            </role>
-            <role name="role-pub-perm-no-add">
-                <permissions>
-                    <permission>/permission/admin/login</permission>
-                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
-                </permissions>
-            </role>
-            <role name="role-pub-perm-update">
-                <permissions>
-                    <permission>/permission/admin/login</permission>
-                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
-                    <permission>/permission/enterprisestore/apps/publisher/features/assets/gadget/update</permission>
-                </permissions>
-            </role>
-            <role name="role-pub-perm-no-update">
-                <permissions>
-                    <permission>/permission/admin/login</permission>
-                    <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
-                </permissions>
-            </role>
-            <role name="role-store-perm-list">
-                 <permissions>
-                     <permission>/permission/admin/login</permission>
-                     <permission>/permission/admin/manage/resources/govern/gadget/list</permission>
-                     <permission>/permission/admin/manage/resources/govern/site/list</permission>
-                 </permissions>
-            </role>
-            <role name="role-store-perm-no-list">
-                <permissions>
-                    <permission>/permission/admin/login</permission>
-                    <permission>/permission/admin/manage/resources/govern/site/list</permission>
-                </permissions>
-            </role>
-        </roles>
     </userManagement>
     <!--
    This section will initiate the initial deployment of the platform required by
@@ -332,7 +261,7 @@
         <platformExecutionManager>
             <extentionClasses>
                 <class>
-                    <name>org.wso2.carbon.integration.common.extensions.carbonserver.CarbonServerExtension</name>
+                    <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
                     <!--<parameter name="-DportOffset" value="0" />-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>

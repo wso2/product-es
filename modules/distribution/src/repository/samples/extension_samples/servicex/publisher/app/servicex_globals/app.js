@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-app.dependencies = ['publisher_common'];
+app.dependencies = ['publisher-common'];
 app.server = function(ctx) {
     return {
         endpoints: {
@@ -31,7 +31,7 @@ app.server = function(ctx) {
             }]
         },
         configs:{
-            landingPage:'/asts/servicex/list',
+            landingPage:'/assets/servicex/list',
             disabledAssets:['gadget']
         }
     }

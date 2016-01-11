@@ -22,7 +22,7 @@ import org.testng.annotations.BeforeSuite;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
-import org.wso2.carbon.integration.common.extensions.carbonserver.TestServerManager;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.es.ui.integration.util.BaseUITestCase;
 
@@ -40,7 +40,7 @@ public class TestConfig extends BaseUITestCase {
     private static final String INTERNAL_PUBLISHER_ROLE = "Internal/publisher";
     private static final String AXIS2_CONFIG = File.separator + "notifications" + File.separator + "axis2.xml";
     private static final String IDENTITY_MGT_PROPERTIES = File.separator + "passwordrecovery" + File.separator + "identity-mgt.properties";
-    private static final String IDENTITY_MGT_PATH = File.separator + "repository" + File.separator + "conf" + File.separator + "security" + File.separator + "identity-mgt.properties";
+    private static final String IDENTITY_MGT_PATH = File.separator + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity-mgt.properties";
 
     @BeforeSuite
     public void configureESTestSuite() throws Exception {
