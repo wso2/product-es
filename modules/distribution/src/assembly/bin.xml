@@ -476,7 +476,7 @@
         </file-->
         <file>
             <source>src/repository/conf/identity.xml</source>
-            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf</outputDirectory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/identity/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
