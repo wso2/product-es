@@ -132,6 +132,27 @@
                         <userName>testuser21</userName>
                         <password>testuser21</password>
                     </user>
+                    <user key="reviewer1">
+                        <userName>reviewer1</userName>
+                        <password>reviewer1pass</password>
+                        <roles>
+                            <role>Internal/reviewer</role>
+                        </roles>
+                    </user>
+                    <user key="storeUser1">
+                        <userName>storeUser1</userName>
+                        <password>storeUser1pass</password>
+                        <roles>
+                            <role>Internal/store</role>
+                        </roles>
+                    </user>
+                    <user key="publisherUser1">
+                        <userName>publisherUser1</userName>
+                        <password>publisherUser1</password>
+                        <roles>
+                            <role>Internal/publisher</role>
+                        </roles>
+                    </user>
                 </users>
             </tenant>
         </superTenant>
@@ -240,7 +261,7 @@
         <platformExecutionManager>
             <extentionClasses>
                 <class>
-                    <name>org.wso2.carbon.integration.common.extensions.carbonserver.CarbonServerExtension</name>
+                    <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
                     <!--<parameter name="-DportOffset" value="0" />-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>

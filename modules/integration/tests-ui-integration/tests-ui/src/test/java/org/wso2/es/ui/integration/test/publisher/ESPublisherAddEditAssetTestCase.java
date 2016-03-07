@@ -117,13 +117,13 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         //check if the created gadget is shown
         assertTrue(isElementPresent(driver, By.linkText(assetName)), "Adding an asset failed for user:" + currentUserName);
         driver.findElement(By.linkText(assetName)).click();
-        assertEquals(assetName, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(2) div.col-lg-10")).getText());
-        assertEquals(ASSET_VERSION_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(3) div.col-lg-10")).getText(),
+        assertEquals(assetName, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(2) div:nth-child(2)")).getText());
+        assertEquals(ASSET_VERSION_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(3) div:nth-child(2)")).getText(),
                      "Incorrect version");
-        assertEquals(ASSET_CATEGORY_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(4) div.col-lg-10")).getText());
-        assertEquals(ASSET_URL_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(5) div.col-lg-10")).getText(),
+        assertEquals(ASSET_CATEGORY_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(4) div:nth-child(2)")).getText());
+        assertEquals(ASSET_URL_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(5) div:nth-child(2)")).getText(),
                      "Incorrect URL");
-        assertEquals(ASSET_DESCRIPTION_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(6) div.col-lg-10")).getText(),
+        assertEquals(ASSET_DESCRIPTION_1, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(6) div:nth-child(2)")).getText(),
                      "Incorrect description");
     }
 
@@ -135,31 +135,21 @@ public class ESPublisherAddEditAssetTestCase extends BaseUITestCase {
         driver.findElement(By.linkText(assetName)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Edit")));
         driver.findElement(By.id("Edit")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("overview_version")));
-        driver.findElement(By.name("overview_version")).clear();
-        driver.findElement(By.name("overview_version")).sendKeys(ASSET_VERSION_2);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("overview_category")));
         new Select(driver.findElement(By.name("overview_category"))).selectByVisibleText(ASSET_CATEGORY_2);
         driver.findElement(By.name("overview_url")).clear();
         driver.findElement(By.name("overview_url")).sendKeys(ASSET_URL_2);
         driver.findElement(By.name("overview_description")).clear();
         driver.findElement(By.name("overview_description")).sendKeys(ASSET_DESCRIPTION_2);
         driver.findElement(By.id("editAssetButton")).click();
-        //closeAlertAndGetItsText(driver, true);
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Updated the gadget successfully")));
-        //driver.get(baseUrl + PUBLISHER_GADGET_LIST_PAGE);
         //check updated info
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Overview")));
-        driver.findElement(By.id("Overview")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("Overview")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div[3]/div[1]/div/div/div[2]/h1")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#collapseOverview div:nth-child(2) div:nth-child(2)")));
 
-        assertEquals(assetName, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(2) div.col-lg-10")).getText());
-        assertEquals(ASSET_VERSION_2, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(3) div.col-lg-10")).getText(),
-                     "Incorrect version");
-        assertEquals(ASSET_CATEGORY_2, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(4) div.col-lg-10")).getText());
-        assertEquals(ASSET_URL_2, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(5) div.col-lg-10")).getText(),
+        assertEquals(assetName, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(2) div:nth-child(2)")).getText());
+        assertEquals(ASSET_CATEGORY_2, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(4) div:nth-child(2)")).getText());
+        assertEquals(ASSET_URL_2, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(5) div:nth-child(2)")).getText(),
                      "Incorrect URL");
-        assertEquals(ASSET_DESCRIPTION_2, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(6) div.col-lg-10")).getText(),
+        assertEquals(ASSET_DESCRIPTION_2, driver.findElement(By.cssSelector("#collapseOverview div:nth-child(6) div:nth-child(2)")).getText(),
                      "Incorrect description");
     }
 

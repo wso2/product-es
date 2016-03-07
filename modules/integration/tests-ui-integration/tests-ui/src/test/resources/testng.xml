@@ -27,7 +27,7 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
-        <listener class-name="org.wso2.carbon.integration.common.extensions.selenium.uimgt.UIManagementListener"/>
+        <listener class-name="org.wso2.carbon.integration.common.extensions.selenium.UIManagementListener"/>
     </listeners>
 
 
@@ -43,28 +43,32 @@
             <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherListPageSortTestCase"/>
             <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLoginLogoutTestCase"/>
             <class name="org.wso2.es.ui.integration.test.publisher.ESPublisherLCTransitionTestCase"/>
-<!---->
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherNotificationTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantNotificationTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherSubscriptionTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantSubscriptionTestCase"/>-->
-<!---->
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonCategorySortingTestCase"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonHomePageTestCase"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonSuperTenantHomePageTestCase"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonTenantHomePageTestCase"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreBookmarkTestCase"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreLoginLogoutTestCase"/>
-            <class name="org.wso2.es.ui.integration.test.store.ESStoreCarbonSuperUserTUHomePageTestCase"/>
+
+            <class name="org.wso2.es.ui.integration.test.notifications.ESPublisherNotificationTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantNotificationTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.notifications.ESPublisherSubscriptionTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.notifications.ESPublisherTenantSubscriptionTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESPasswordRecovery"/>
+
+            <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonCategorySortingTestCase"/> -->
+            <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonHomePageTestCase"/> -->
+            <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonSuperTenantHomePageTestCase"/> -->
+            <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreAnonTenantHomePageTestCase"/> -->
+            <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreBookmarkTestCase"/> -->
+            <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreLoginLogoutTestCase"/> -->
+            <!-- <class name="org.wso2.es.ui.integration.test.store.ESStoreCarbonSuperUserTUHomePageTestCase"/> -->
+
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreGadgetPageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreRatingsTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchGadgetListTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSearchTopAssetsTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreSocialSharingTestCase"/>-->
+            <class name="org.wso2.es.ui.integration.test.store.ESStoreSocialSharingTestCase"/>
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreTenantUserTUHomePageTestCase"/>-->
             <!--<class name="org.wso2.es.ui.integration.test.store.ESStoreTUAccessInvalidTenantTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.common.ESRegisterUserTestCase"/>-->
-            <!--<class name="org.wso2.es.ui.integration.test.common.ESPublishToStore"/>-->
+            <class name="org.wso2.es.ui.integration.test.common.ESRegisterUserTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESPublishToStore"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESRBACAsReviewerTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESRBACAsStoreUserTestCase"/>
         </classes>
 
     </test>

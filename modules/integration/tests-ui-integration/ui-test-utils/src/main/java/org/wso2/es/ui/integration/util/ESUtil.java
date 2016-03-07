@@ -20,7 +20,7 @@ package org.wso2.es.ui.integration.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.wso2.es.integration.common.utils.ESIntegrationUITest;
@@ -32,6 +32,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * Contains utility methods for ES operations
@@ -69,8 +71,8 @@ public class ESUtil extends ESIntegrationUITest {
         if ("store".equalsIgnoreCase(webApp)) {
             fullUrl = url + STORE_SUFFIX;
             driver.get(fullUrl);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul.navbar-right li:first-child a")));
-            driver.findElement(By.cssSelector("ul.navbar-right li:first-child a")).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btn-signin")));
+            driver.findElement(By.id("btn-signin")).click();
         } else if ("publisher".equalsIgnoreCase(webApp)) {
             fullUrl = url + PUBLISHER_SUFFIX;
             driver.get(fullUrl);
@@ -82,7 +84,19 @@ public class ESUtil extends ESIntegrationUITest {
         driver.findElement(By.id("password")).sendKeys(pwd);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         //driver.get(fullUrl);
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".wr-global-header h2.app-title")));
+        WebElement userNameElement;
+        if ("store".equalsIgnoreCase(webApp)) {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("logedInUser")));
+            userNameElement = driver.findElement(By.id("logedInUser"));
+        } else if ("publisher".equalsIgnoreCase(webApp)) {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.wr-auth-container div.auth-img span")));
+            userNameElement = driver.findElement(By.cssSelector("div.wr-auth-container div.auth-img span"));
+        } else {
+            throw new AssertionError("web app name should be store or publisher");
+        }
+        int atPos = userName.indexOf('@');
+        String userNameNoTenant = atPos >= 0 ? userName.substring(0, atPos) : userName;
+        assertEquals(userNameElement.getText().trim(), userNameNoTenant);
     }
 
     /**
@@ -163,10 +177,13 @@ public class ESUtil extends ESIntegrationUITest {
                     "                                                         Profile')])[2]";
         }
         driver.get(url + ADMIN_CONSOLE_SUFFIX);
-        driver.findElement(By.cssSelector("#menu-panel-button3 > span")).click();
+        driver.findElement(By.cssSelector("#menu-panel-button1 > span")).click();
         driver.findElement(By.linkText("Users and Roles")).click();
         driver.findElement(By.linkText("Users")).click();
         driver.findElement(By.xpath(userProfileElement)).click();
+        driver.findElement(By.linkText("default")).click();
+        //driver.findElement(By.id("profile")).clear();
+        //driver.findElement(By.id("profile")).sendKeys(firstName);
         driver.findElement(By.id("http://wso2.org/claims/givenname")).clear();
         driver.findElement(By.id("http://wso2.org/claims/givenname")).sendKeys(firstName);
         driver.findElement(By.id("http://wso2.org/claims/lastname")).clear();
@@ -190,10 +207,10 @@ public class ESUtil extends ESIntegrationUITest {
      * @throws MessagingException
      * @throws InterruptedException
      */
-    public static boolean containsEmail(String smtpPropertyFile, String password, String email,
-                                        String subject) throws MessagingException, InterruptedException, IOException {
+    public static String readEmail(String smtpPropertyFile, String password, String email,
+                                   String subject) throws MessagingException, InterruptedException, IOException {
         Properties props = new Properties();
-        boolean hasEmail = false;
+        String message = null;
         Folder inbox = null;
         Store store = null;
         FileInputStream inputStream = null;
@@ -206,7 +223,7 @@ public class ESUtil extends ESIntegrationUITest {
             store.connect(SMTP_GMAIL_COM, email, password);
             inbox = store.getFolder(INBOX);
             inbox.open(Folder.READ_ONLY);
-            hasEmail = hasMailWithSubject(inbox, subject);
+            message = getMailWithSubject(inbox, subject);
         } catch (MessagingException e) {
             LOG.error(getErrorMessage(email), e);
             throw e;
@@ -242,22 +259,28 @@ public class ESUtil extends ESIntegrationUITest {
                 }
             }
         }
-        return hasEmail;
+        return message;
     }
 
-    private static boolean hasMailWithSubject(Folder inbox, String subject) throws MessagingException,
-            InterruptedException {
+    private static String getMailWithSubject(Folder inbox, String subject) throws MessagingException,
+            InterruptedException, IOException {
         int pollCount = 0;
         while ((pollCount <= MAX_MAIL_POLL)) {
             Message[] messages = inbox.getMessages();
-            for (Message msg : messages) {
-                if (subject.equals(msg.getSubject())) {
-                    return true;
+            for (int i = messages.length - 1; i >= 0; i--) {
+                Message message = messages[i];
+                if (subject.equals(message.getSubject())) {
+                    Object content = message.getContent();
+                    if (content instanceof String) {
+                        return (String) content;
+                    } else {
+                        throw new AssertionError("non text email content in email titled " + subject);
+                    }
                 }
             }
             Thread.sleep(MAIL_WAIT_TIME);
         }
-        return false;
+        return null;
     }
 
 

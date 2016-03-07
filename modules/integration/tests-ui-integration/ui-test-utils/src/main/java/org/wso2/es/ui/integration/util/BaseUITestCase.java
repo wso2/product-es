@@ -88,6 +88,11 @@ public abstract class BaseUITestCase extends ESIntegrationUITest {
                 LOG.debug("Requested element is not present", e);
             }
             return false;
+        } catch (TimeoutException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Requested element is not present", e);
+            }
+            return false;
         }
     }
 

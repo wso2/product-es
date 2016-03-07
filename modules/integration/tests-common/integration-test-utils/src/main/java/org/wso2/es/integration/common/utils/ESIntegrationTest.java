@@ -51,6 +51,18 @@ public abstract class ESIntegrationTest {
         userInfo = tenantInfo.getContextUser();
 
     }
+    protected void init(String tenantKey, String userKey) throws Exception {
+
+        esContext = new AutomationContext(ESIntegrationTestConstants.ES_PRODUCT_NAME, "es002",
+                tenantKey, userKey);
+        LoginLogoutClient loginLogoutClient = new LoginLogoutClient(esContext);
+        sessionCookie = loginLogoutClient.login();
+        //return the current tenant as the userType(TestUserMode)
+        tenantInfo = esContext.getContextTenant();
+        //return the user information initialized with the system
+        userInfo = tenantInfo.getContextUser();
+
+    }
 
     protected void cleanup() {
         userInfo = null;

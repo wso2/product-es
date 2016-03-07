@@ -84,6 +84,8 @@ public class ESPublisherSubscriptionTestCase extends BaseUITestCase {
         //navigate to admin console
         driver.get(baseUrl + "/carbon/");
         driver.findElement(By.linkText("Gadgets")).click();
+        driver.findElementPoll(By.linkText("NAME"), MAX_POLL_COUNT);
+        driver.findElement(By.linkText("NAME")).click();
         driver.findElementPoll(By.linkText(assetName), MAX_POLL_COUNT);
         driver.findElement(By.linkText(assetName)).click();
         //check two subscriptions
