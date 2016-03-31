@@ -347,6 +347,15 @@
             <directory>src/repository/samples</directory>
             <outputDirectory>${project.artifactId}-${product.es.version}/samples</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/metrics/
+            </directory>
+            <outputDirectory>${project.artifactId}-${product.es.version}/dbscripts/metrics</outputDirectory>
+            <includes>
+                <include>**/*.sql</include>
+            </includes>
+        </fileSet>
 
     </fileSets>
     <dependencySets>
@@ -369,7 +378,7 @@
     </dependencySets>
     <files>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/event-broker.xml
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry-event-broker.xml
             </source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
@@ -564,6 +573,26 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/shindig.properties</source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/datasources/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/database/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
