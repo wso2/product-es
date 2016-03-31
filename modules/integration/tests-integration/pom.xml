@@ -31,7 +31,6 @@
     <name>WSO2 ES Integration Test</name>
 
     <modules>
-        <module>tests</module>
     </modules>
 
 </project>
