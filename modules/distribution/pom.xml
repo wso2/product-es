@@ -150,6 +150,8 @@
                                 <path id="h2.classpath">
                                     <path refid="maven.compile.classpath" />
                                 </path>
+                                <replace file="../../modules/p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/publisher/config/publisher.json" token="&quot;version&quot;: &quot;&quot;" value="&quot;version&quot;: &quot;${project.parent.version}&quot;" />
+                                <replace file="../../modules/p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/store/config/store.json" token="&quot;version&quot;: &quot;&quot;" value="&quot;version&quot;: &quot;${project.parent.version}&quot;" />
                                 <echo message="########### Create Identity Database ##############" />
                                 <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
                                     <classpath>
