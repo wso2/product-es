@@ -666,8 +666,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <carbon.kernel.version>4.4.5</carbon.kernel.version>
-        <carbon.social.version>2.3.11-SNAPSHOT</carbon.social.version>
-        <carbon.store.version>2.3.11-SNAPSHOT</carbon.store.version>
+        <carbon.social.version>2.3.11-alpha</carbon.social.version>
+        <carbon.store.version>2.3.11-alpha</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <product.es.version>2.1.0-SNAPSHOT</product.es.version>
 
@@ -677,8 +677,8 @@
 
         <!--repo versions-->
         <carbon.commons.version>4.5.2</carbon.commons.version>
-        <carbon.registry.version>4.5.3-SNAPSHOT</carbon.registry.version>
-        <carbon.governance.version>4.6.2-SNAPSHOT</carbon.governance.version>
+        <carbon.registry.version>4.5.3-beta</carbon.registry.version>
+        <carbon.governance.version>4.6.2-beta</carbon.governance.version>
         <carbon.deployment.version>4.6.1</carbon.deployment.version>
         <carbon.identity.version>5.0.8</carbon.identity.version>
         <carbon.multitenancy.version>4.5.1</carbon.multitenancy.version>
@@ -713,14 +713,14 @@
         <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
         <jaggery.feature.version>0.12.3</jaggery.feature.version>
-        <caramel.feature.version>1.4.5-SNAPSHOT</caramel.feature.version>
-        <handlebars.feature.version>1.4.5-SNAPSHOT</handlebars.feature.version>
-        <markdown.feature.version>1.4.5-SNAPSHOT</markdown.feature.version>
-        <carbon.feature.version>1.4.5-SNAPSHOT</carbon.feature.version>
-        <process.feature.version>1.4.5-SNAPSHOT</process.feature.version>
-        <uuid.feature.version>1.4.5-SNAPSHOT</uuid.feature.version>
-        <sso.feature.version>1.4.5-SNAPSHOT</sso.feature.version>
-        <jaggery-test.feature.version>1.4.5-SNAPSHOT</jaggery-test.feature.version>
+        <caramel.feature.version>1.4.5-beta</caramel.feature.version>
+        <handlebars.feature.version>1.4.5-beta</handlebars.feature.version>
+        <markdown.feature.version>1.4.5-beta</markdown.feature.version>
+        <carbon.feature.version>1.4.5-beta</carbon.feature.version>
+        <process.feature.version>1.4.5-beta</process.feature.version>
+        <uuid.feature.version>1.4.5-beta</uuid.feature.version>
+        <sso.feature.version>1.4.5-beta</sso.feature.version>
+        <jaggery-test.feature.version>1.4.5-beta</jaggery-test.feature.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
         <axis2-transports.wso2.version>1.1.0-wso2v12</axis2-transports.wso2.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
