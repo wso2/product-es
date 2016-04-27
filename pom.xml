@@ -713,14 +713,14 @@
         <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
         <jaggery.feature.version>0.12.3</jaggery.feature.version>
-        <caramel.feature.version>1.4.5</caramel.feature.version>
-        <handlebars.feature.version>1.4.5</handlebars.feature.version>
-        <markdown.feature.version>1.4.5</markdown.feature.version>
-        <carbon.feature.version>1.4.5</carbon.feature.version>
-        <process.feature.version>1.4.5</process.feature.version>
-        <uuid.feature.version>1.4.5</uuid.feature.version>
-        <sso.feature.version>1.4.5</sso.feature.version>
-        <jaggery-test.feature.version>1.4.5</jaggery-test.feature.version>
+        <caramel.feature.version>1.5.3-SNAPSHOT</caramel.feature.version>
+        <handlebars.feature.version>1.5.3-SNAPSHOT</handlebars.feature.version>
+        <markdown.feature.version>1.5.3-SNAPSHOT</markdown.feature.version>
+        <carbon.feature.version>1.5.3-SNAPSHOT</carbon.feature.version>
+        <process.feature.version>1.5.3-SNAPSHOT</process.feature.version>
+        <uuid.feature.version>1.5.3-SNAPSHOT</uuid.feature.version>
+        <sso.feature.version>1.5.3-SNAPSHOT</sso.feature.version>
+        <jaggery-test.feature.version>1.5.3-SNAPSHOT</jaggery-test.feature.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
         <axis2-transports.wso2.version>1.1.0-wso2v12</axis2-transports.wso2.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
