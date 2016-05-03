@@ -26,7 +26,7 @@
     <groupId>org.wso2.es</groupId>
     <artifactId>wso2es-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0-beta</version>
+    <version>2.1.0-SNAPSHOT</version>
     <name>WSO2 Enterprise Store</name>
     <url>http://wso2.com/products/enterprise-store</url>
     <description>WSO2 Enterprise Store</description>
@@ -554,7 +554,7 @@
     <scm>
         <connection>scm:git:https://github.com/wso2/product-es.git</connection>
         <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
-        <tag>v2.1.0-beta</tag>
+        <tag>HEAD</tag>
     </scm>
     <repositories>
         <repository>
@@ -668,7 +668,7 @@
         <carbon.social.version>2.3.11-beta</carbon.social.version>
         <carbon.store.version>2.3.11-beta</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
-        <product.es.version>2.1.0-beta</product.es.version>
+        <product.es.version>2.1.0-SNAPSHOT</product.es.version>
 
         <test.framework.version>4.4.3</test.framework.version>
         <automation.utils.version>4.4.2</automation.utils.version>
