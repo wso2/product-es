@@ -1,0 +1,67 @@
+<aspect name="SampleLifeCycle3" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml"
+                   version="1.0"
+                   initialstate="Development">
+                <state id="Development">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Code Completed" forEvent="Promote">
+                                <!--<permissions>
+                                    <permission roles=""/>
+                                </permissions>
+                                <validations>
+                                    <validation forEvent="" class="">
+                                        <parameter name="" value=""/>
+                                    </validation>
+                                </validations>-->
+                            </item>
+                            <item name="WSDL, Schema Created" forEvent="Promote">
+                            </item>
+                            <item name="QoS Created" forEvent="Promote">
+                            </item>
+                        </data>
+                        <!--<data name="transitionValidation">
+                            <validation forEvent="" class="">
+                                <parameter name="" value=""/>
+                            </validation>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="" roles=""/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="">
+                                <console function="">
+                                    <script type="text/javascript">
+                                    </script>
+                                </console>
+                                <server function="">
+                                    <script type="text/javascript"></script>
+                                </server>
+                            </js>
+                        </data>-->
+                    </datamodel>
+                    <transition event="Promote" target="Tested"/>                  
+                </state>
+                <state id="Tested">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Effective Inspection Completed" forEvent="Promote">
+                            </item>
+                            <item name="Test Cases Passed" forEvent="Promote">
+                            </item>
+                            <item name="Smoke Test Passed" forEvent="Promote">
+                            </item>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Production"/>
+                    <transition event="Demote" target="Development"/>
+                </state>
+                <state id="Production">  
+                    <transition event="Demote" target="Tested"/>
+                </state>                
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>

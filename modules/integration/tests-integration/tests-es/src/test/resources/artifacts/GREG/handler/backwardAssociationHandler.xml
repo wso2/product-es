@@ -1,0 +1,8 @@
+<handler class="org.wso2.carbon.registry.backward.association.handler.BackwardAssociationHandler">
+    <property name="associationMappings" type="xml">
+        <type original="calls" dual="calledBy"/>
+    </property>
+    <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.URLMatcher">
+        <property name="pattern">.*</property>
+    </filter>
+</handler>

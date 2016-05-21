@@ -1,0 +1,6 @@
+{
+  "overview_name": "endpoint1234",
+  "overview_version": "1.2.3",
+  "overview_endpointType": "HTTP",
+  "overview_timeoutInSeconds": "30"
+}

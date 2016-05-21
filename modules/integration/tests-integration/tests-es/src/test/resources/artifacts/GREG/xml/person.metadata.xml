@@ -1,0 +1,18 @@
+<metadata xmlns="http://www.wso2.org/governance/metadata">
+    <contactDetails>
+        <address2>ACME Avenue</address2>
+        <address1>12345</address1>
+        <city>Palo Alto</city>
+        <country>USA</country>
+        <state>California</state>
+        <email>john@smith.com</email>
+        <zip>94949</zip>
+    </contactDetails>
+    <overview>
+        <id>123-abc-4567-defghi</id>
+        <description>I'm John Smith</description>
+        <title>Mr.</title>
+        <name>John Smith</name>
+        <website>http://john.smith.com</website>
+    </overview>
+</metadata>

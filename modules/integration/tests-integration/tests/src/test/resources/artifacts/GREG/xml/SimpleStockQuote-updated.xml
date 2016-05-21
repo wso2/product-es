@@ -1,0 +1,19 @@
+<serviceMetaData xmlns="http://www.wso2.org/governance/metadata">
+    <overview>
+        <name>SimpleStockQuoteService</name>
+        <namespace>http://services.samples</namespace>
+        <description>SimpleStockQuoteService Description Updated</description>
+    </overview>
+    <serviceLifecycle/>
+    <contacts/>
+    <interface>
+        <wsdlURL>http://svn.wso2.org/repos/wso2/people/krishantha/SimpleStockQuoteService.wsdl</wsdlURL>
+        <transportProtocols>HTTP</transportProtocols>
+    </interface>
+    <security/>
+    <endpoints/>
+    <docLinks/>
+    <operation xmlns="">Edit</operation>
+    <currentName xmlns=""></currentName>
+    <currentNamespace xmlns=""></currentNamespace>
+</serviceMetaData>

@@ -1,0 +1,3 @@
+<aspect name="RegistryXMLLifeCycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+    <configuration type="resource">/_system/governance/trunk/lifeCycleConfig.xml</configuration>
+</aspect>

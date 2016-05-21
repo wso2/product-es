@@ -1,0 +1,86 @@
+<aspect name="TransitionEventsLC"
+	class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+	<configuration type="literal">
+		<lifecycle>
+			<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
+				initialstate="Commencement">
+				<state id="Commencement">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Requirements Gathered" forEvent="">
+							</item>
+							<item name="Document Requirements" forEvent="">
+							</item>
+							<item name="Architecture Diagram Finalized" forEvent="">
+							</item>
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Development" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Creation">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Code Completed" forEvent="">
+							</item>
+							<item name="WSDL Created" forEvent="">
+							</item>
+							<item name="QoS Created" forEvent="">
+							</item>
+							<item name="Schema Created" forEvent="">
+							</item>
+							<item name="Services Created" forEvent="">
+							</item>
+							<item name="Completion of Creation" forEvent="">
+							</item>
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Development" />
+					<transition event="Demote" target="Commencement" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Development">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Effective Inspection Completed" forEvent="">
+							</item>
+							<item name="Test Cases Passed" forEvent="">
+							</item>
+							<item name="Smoke Test Passed" forEvent="">>
+							</item>
+						</data>
+					</datamodel>
+					<transition event="Promote" target="QAed" />
+					<transition event="Demote" target="Commencement" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="QAed">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Service Configuration" forEvent="">
+							</item>
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Launched" />
+					<transition event="Demote" target="Commencement" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Launched">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Service Configuration" forEvent="">
+							</item>
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Obsolete" />
+					<transition event="Demote" target="Development" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Obsolete">
+				</state>
+				<state id="Halted">
+				</state>
+			</scxml>
+		</lifecycle>
+	</configuration>
+</aspect>

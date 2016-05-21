@@ -1,0 +1,31 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="ES-Publisher-Store-test-suite">
+    <parameter name="useDefaultListeners" value="false"/>
+
+    <listeners>
+        <listener
+                class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
+        <listener
+                class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
+    </listeners>
+    <test name="es" preserve-order="true" parallel="false">
+        <packages>
+            <package name="org.wso2.carbon.registry.es.governancresteapi"/>
+            <package name="org.wso2.carbon.registry.es.publisher.generic"/>
+            <package name="org.wso2.carbon.registry.es.publisher.crud"/>
+            <package name="org.wso2.carbon.registry.es.publisher.search"/>
+            <package name="org.wso2.carbon.registry.es.publisher.lifecycle"/>
+            <package name="org.wso2.carbon.registry.es.notes"/>
+            <package name="org.wso2.carbon.registry.es.tags"/>
+            <package name="org.wso2.carbon.registry.jira"/>
+        </packages>
+    </test>
+    <test name="search" preserve-order="true" parallel="false">
+        <packages>
+            <package name="org.wso2.carbon.registry.es.store.search"/>
+        </packages>
+    </test>
+</suite>

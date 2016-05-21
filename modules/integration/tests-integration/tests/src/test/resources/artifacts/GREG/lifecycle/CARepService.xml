@@ -1,0 +1,379 @@
+<aspect name="CARepService" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initialstate="Architected">
+                <state id="Architected">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Service is Architected" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment" value="/_system/governance/trunk/{@resourcePath}/{@resourceName}"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="application/vnd.wso2-service+xml:targetEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@resourceName}/{@version}/service"/>
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype" value="application/vnd.wso2.endpoint"/>
+                                <parameter name="copyComments" value="true"/>
+                                <parameter name="copyTags" value="true"/> 
+                                <parameter name="copyRatings" value="true"/>
+                                <parameter name="copyAssociations" value="false"/>
+                                <parameter name="copyDependencies" value="false"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false"/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="doPromote">
+                                    <script type="text/javascript">
+                                        doPromote = function() {
+                                            window.location = unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Planned"/>
+                </state>
+                <state id="Planned">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Service is Defined" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Defined"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Defined">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Service Definition" forEvent="Promote">
+                            </item>
+                            <item name="Service Design" forEvent="Promote">
+                            </item>
+                            <item name="Test Objectives(Optional)" forEvent="">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Designed"/>
+                    <transition event="Demote" target="Planned"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Designed">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Static Code Analysis" forEvent="Promote">
+                            </item>
+                            <item name="Unit Test" forEvent="Promote">
+                            </item>
+                            <item name="Itinery Test" forEvent="Promote">
+                            </item>
+                            <item name="Deployment Manual" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Developed"/>
+                    <transition event="Demote" target="Defined"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Developed">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Static Code Analysis" forEvent="Promote">
+                            </item>
+                            <item name="Automated test cases" forEvent="Promote">
+                            </item>
+                            <item name="Configuration  document produced" forEvent="Promote">
+                            </item>
+                            <item name="DB artefact produced" forEvent="Promote">
+                            </item>
+                            <item name="Brush Test" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="RemoteDevTested"/>
+                    <transition event="Demote" target="Designed"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="RemoteDevTested">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Functional Tests" forEvent="Promote">
+                            </item>
+                            <item name="Governance Tests" forEvent="Promote">
+                            </item>
+                            <item name="Third Party Integration Tests" forEvent="Promote">
+                            </item>
+                            <item name="SIP Integration Tests" forEvent="Promote">
+                            </item>
+                            <item name="Performance and Volume Tests(Optional)" forEvent="">
+                            </item>
+                            <item name="Functional Regression Tests(Optional)" forEvent="">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="FunctionalandPerformanceTested"/>
+                    <transition event="Demote" target="Developed"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="FunctionalandPerformanceTested">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Deploy and Fallback Test" forEvent="Promote">
+                            </item>
+                            <item name="Operability Test" forEvent="Promote">
+                            </item>
+                            <item name="Javadocs / Opins Produced" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="QATested"/>
+                    <transition event="Demote" target="RemoteDevTested"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="QATested">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Handover to Support" forEvent="Promote">
+                            </item>
+                            <item name="Brush Test(Optional)" forEvent="">
+                            </item>
+                            <item name="Final Approval Reviewed" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="ReleaseTested"/>
+                    <transition event="Demote" target="FunctionalandPerformanceTested"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="ReleaseTested">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Ready to go to Live" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="application/vnd.wso2-service+xml:currentEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@resourceName}/{@version}/service"/>
+                                <parameter name="application/vnd.wso2-service+xml:targetEnvironment" value="/_system/governance/branches/production/{@resourcePath}/{@resourceName}/{@version}/service"/>
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype" value="application/vnd.wso2.endpoint"/>
+                                <parameter name="copyComments" value="true"/>
+                                <parameter name="copyTags" value="true"/> 
+                                <parameter name="copyRatings" value="true"/>
+                                <parameter name="copyAssociations" value="false"/>
+                                <parameter name="copyDependencies" value="false"/>
+                            </execution>
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false"/>
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="doPromote">
+                                    <script type="text/javascript">
+                                        doPromote = function() {
+                                            window.location = unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Live"/>
+                    <transition event="Demote" target="QATested"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Live">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="End Of Life Agreed" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+			    <execution forEvent="Demote" class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+				<parameter name="currentEnvironment" value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="targetEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="application/vnd.wso2-service+xml:targetEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@resourceName}/{@version}/service"/>
+                                <parameter name="application/vnd.wso2-service+xml:currentEnvironment" value="/_system/governance/branches/production/{@resourcePath}/{@resourceName}/{@version}/service"/>
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype" value="application/vnd.wso2.endpoint"/>
+                                <parameter name="copyComments" value="true"/>
+                                <parameter name="copyTags" value="true"/> 
+                                <parameter name="copyRatings" value="true"/>
+                                <parameter name="copyAssociations" value="false"/>
+                                <parameter name="copyDependencies" value="false"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+			    <ui forEvent="Demote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false"/>
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+			<data name="transitionScripts">
+                            <js forEvent="Demote">
+                                <console function="doDemote">
+                                    <script type="text/javascript">
+                                        doDemote = function() {
+                                            window.location = unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Live:EOL"/>
+                    <transition event="Demote" target="ReleaseTested"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Live:EOL">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Ready to be deprecated" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Deprecated"/>
+                    <transition event="Demote" target="Live"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Deprecated">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Ready to be retired" forEvent="Promote">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Retired"/>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Retired">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Abandon" target="Abandoned"/>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+                <state id="Abandoned">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Copy" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Copy" href="../bacustom/pre_invoke_aspect_ajaxprocessor.jsp"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Copy" target="Planned"/>
+                </state>
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>

@@ -1,0 +1,167 @@
+<aspect name="ÀÁÂÃÄÅÆÇÈÉ" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml"
+                   version="1.0"
+                   initialstate="Commencement">
+                <state id="Commencement">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Requirements Gathered" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Document Requirements" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="archroleure Finalized" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Design UML Diagrams" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="High Level Design Completed" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Completion of Commencement" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                        </data>
+                        <data name="transitionPermission">
+<!--                             <permission forEvent="Abort" roles=""/> -->
+<!--                             <permission forEvent="Promote" roles=""/> -->
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Creation"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="Creation">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Code Completed" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="WSDL Created" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="QoS Created" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Schema Created" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Services Created" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Completion of Creation" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                        </data>
+                        <data name="transitionPermission">
+<!--                             <permission forEvent="Promote" roles=""/> -->
+<!--                             <permission forEvent="Demote" roles=""/> -->
+<!--                             <permission forEvent="Abort" roles=""/> -->
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Development"/>
+                    <transition event="Demote" target="Commencement"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="Development">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Effective Inspection Completed" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Test Cases Passed" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                            <item name="Smoke Test Passed" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                        </data>
+                        <data name="transitionPermission">
+<!--                             <permission forEvent="Promote" roles=""/> -->
+<!--                             <permission forEvent="Demote" roles=""/> -->
+<!--                             <permission forEvent="Abort" roles=""/> -->
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="QAed"/>
+                    <transition event="Demote" target="Creation"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="QAed">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Service Configuration" forEvent="">
+<!--                                 <permissions> -->
+<!--                                     <permission roles=""/> -->
+<!--                                 </permissions> -->
+                            </item>
+                        </data>
+                        <data name="transitionPermission">
+<!--                             <permission forEvent="Promote" roles=""/> -->
+<!--                             <permission forEvent="Demote" roles=""/> -->
+<!--                             <permission forEvent="Abort" roles=""/> -->
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Launched"/>
+                    <transition event="Demote" target="Creation"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="Launched">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Service Configuration">
+<!--                                 <permissions> -->
+<!--                                     <permission roles="techoprole"/> -->
+<!--                                 </permissions> -->
+                            </item>
+                        </data>
+                        <data name="transitionPermission">
+<!--                             <permission forEvent="Promote" roles=""/> -->
+<!--                             <permission forEvent="Demote" roles=""/> -->
+<!--                             <permission forEvent="Abort" roles="archrole"/> -->
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target=""/>
+                    <transition event="Demote" target=""/>
+                    <transition event="Abort" target=""/>
+                </state>
+                <state id="Obsolete">
+                </state>
+                <state id="Halted">
+                </state>
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>

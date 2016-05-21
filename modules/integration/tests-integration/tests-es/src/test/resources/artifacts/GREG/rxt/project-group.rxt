@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<artifactType type="application/vnd.wso2-projectgroup+xml" shortName="groups" singularLabel="Project Group" pluralLabel="Project Groups" hasNamespace="false" iconSet="4">
+	<storagePath>/project-groups/@{overview_name}</storagePath>
+	<nameAttribute>overview_name</nameAttribute>
+	<ui>
+		<list>
+			<column name="Name">
+				<data type="path" value="overview_name" href="@{storagePath}"/>
+			</column>
+		</list>
+	</ui>
+	<relationships>
+		<association type="isPartOf"  source="@{groupMembers_entry:value}"/>
+	</relationships>  	
+	<content>
+		<table name="Overview">
+			<field type="text" required="true">
+				<name>Name</name>
+			</field>
+			<field type="text" required="true" path="true" url="true">
+				<name>Group Owner</name>
+			</field>
+			<field type="text-area">
+				<name>Description</name>
+			</field>
+		</table>
+		<table name="GroupMembers">
+			<subheading>
+				<heading>Type</heading>
+				<heading>Path</heading>
+			</subheading>
+			<field type="option-text" maxoccurs="unbounded" path="true" url="true">
+				<name>Member</name>
+				<values>
+					<value>Junior</value>
+					<value>Senior</value>          
+				</values>
+			</field>
+		</table>
+		<table name="Documentation" columns="3">
+			<subheading>
+				<heading>Document Type</heading>
+				<heading>URL</heading>
+				<heading>Comment</heading>
+			</subheading>
+			<field type="text">
+				<name>Document Type1</name>
+			</field>
+			<field type="text" url="true">
+				<name>URL1</name>
+			</field>
+			<field type="text-area">
+				<name>Document Comment1</name>
+			</field>
+			<field type="text">
+				<name>Document Type2</name>
+			</field>
+			<field type="text" url="true">
+				<name>URL2</name>
+			</field>
+			<field type="text-area">
+				<name>Document Comment2</name>
+			</field>
+		</table>
+	</content>
+</artifactType>
+
