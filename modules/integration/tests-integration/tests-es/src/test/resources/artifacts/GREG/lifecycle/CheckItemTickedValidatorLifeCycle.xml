@@ -1,0 +1,92 @@
+<aspect name="CheckListLC" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml"
+                   version="1.0"
+                   initialstate="Development">
+                <state id="Development">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Code Completed" forEvent="">
+                            </item>
+                            <item name="WSDL, Schema Created" forEvent="">
+                            </item>
+                            <item name="QoS Created" forEvent="">
+                            </item>
+                        </data>
+<!-- 			<data name="transitionExecution"> -->
+<!--                             <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor"> -->
+<!--                                 <parameter name="currentEnvironment" value="/_system/governance/trunk/{@resourcePath}/{@resourceName}"/> -->
+<!--                                 <parameter name="targetEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"/> -->
+<!--                                 <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/> -->
+<!--                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/> -->
+<!--                                 <parameter name="endpoint.mediatype" value="application/vnd.wso2.endpoint"/> -->
+<!--                             </execution>			 -->
+<!--                         </data> -->
+<!-- 			<data name="transitionUI"> -->
+<!--                             <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp"/> -->
+<!--                         </data> -->
+<!--                         <data name="transitionValidation"> -->
+<!--                             <validation forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.validators.CheckItemTickedValidator"> -->
+<!--                                 <parameter name="itemIndex" value="1"/> -->
+<!--                                 <parameter name="checked" value="true"/>                                 -->
+<!--                                 <parameter name="itemIndex" value="2"/> -->
+<!--                                 <parameter name="checked" value="true"/>                                 -->
+<!--                                 <parameter name="itemIndex" value="3"/> -->
+<!--                                 <parameter name="checked" value="false"/> -->
+<!--                             </validation> -->
+<!--                         </data>	                      -->
+                    </datamodel>
+                    <transition event="Promote" target="Testing"/>                  
+                </state>
+                <state id="Testing">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Effective Inspection Completed" forEvent="">
+                            </item>
+                            <item name="Test Cases Passed" forEvent="">
+                            </item>
+                            <item name="Smoke Test Passed" forEvent="">
+                            </item>
+                        </data>
+<!--                         <data name="transitionExecution"> -->
+<!--                             <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor"> -->
+<!--                                 <parameter name="currentEnvironment" value="/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"/> -->
+<!--                                 <parameter name="targetEnvironment" value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/> -->
+<!--                                 <parameter name="service.mediatype" value="application/vnd.wso2-service+xml"/> -->
+<!--                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/> -->
+<!--                                 <parameter name="endpoint.mediatype" value="application/vnd.wso2.endpoint"/> -->
+<!--                             </execution> -->
+<!-- 			    <execution forEvent="Demote" class="org.wso2.carbon.governance.registry.extensions.executors.DemoteActionExecutor"> -->
+<!--                             </execution> -->
+<!--                         </data> -->
+<!-- 			<data name="transitionUI"> -->
+<!--                             <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp"/> -->
+<!--                         </data> -->
+<!--                         <data name="transitionValidation"> -->
+<!--                             <validation forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.validators.CheckItemTickedValidator"> -->
+<!--                                 <parameter name="itemIndex" value="1"/> -->
+<!--                                 <parameter name="checked" value="false"/>                                 -->
+<!--                                 <parameter name="itemIndex" value="2"/> -->
+<!--                                 <parameter name="checked" value="true"/>                                 -->
+<!--                                 <parameter name="itemIndex" value="3"/> -->
+<!--                                 <parameter name="checked" value="false"/> -->
+<!--                             </validation> -->
+<!--                         </data>	  -->
+                    </datamodel>
+                    <transition event="Promote" target="Production"/>
+                    <transition event="Demote" target="Development"/>
+                </state>
+                <state id="Production">  
+		    <datamodel>
+<!-- 			<data name="transitionExecution"> -->
+<!-- 			    <execution forEvent="Demote" class="org.wso2.carbon.governance.registry.extensions.executors.DemoteActionExecutor"> -->
+<!--                             </execution> -->
+<!--                         </data> -->
+                    </datamodel>
+                    <transition event="Demote" target="Testing"/>
+                </state>                
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>

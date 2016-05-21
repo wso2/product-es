@@ -1,0 +1,9 @@
+{
+  "details_name":"%s",
+  "details_date": "%s",
+  "details_venue": "%s",
+  "rules_gender": "%s",
+  "participants_contact": "%s",
+  "rules_description": "%s",
+  "serviceLifecycle_lifecycleName": "%s"
+}

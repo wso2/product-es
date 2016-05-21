@@ -1,0 +1,85 @@
+<artifactType type="application/vnd.abc123-abc123+xml" shortName="person" singularLabel="Person" pluralLabel="People" hasNamespace="false" iconSet="1">
+	<storagePath>/people/@{overview_id}</storagePath>
+	<nameAttribute>overview_id</nameAttribute>
+	<ui>
+		<list>
+			<column name="ID">
+				<data type="path" value="overview_id" href="@{storagePath}"/>
+			</column>
+			<column name="Name">
+				<data type="path" value="overview_name" href="@{storagePath}"/>
+			</column>
+		</list>
+	</ui>
+	<content>
+		<table name="Overview">
+			<field type="options">
+				<name label="title">Title</name>
+				<values>
+					<value>Mr.</value>
+					<value>Ms.</value>
+				</values>
+			</field>
+			<field type="text" required="true">
+				<name>ID</name>
+			</field>
+			<field type="text" required="true">
+				<name>Name</name>
+			</field>
+			<field type="text" url="true">
+				<name>Website</name>
+			</field>
+			<field type="text-area">
+				<name>Description</name>
+			</field>
+		</table>
+		<table name="Contact Details">
+			<field type="text">
+				<name>Address 1</name>
+			</field>
+			<field type="text">
+				<name>Address 2</name>
+			</field>
+			<field type="text">
+				<name>City</name>
+			</field>
+			<field type="text">
+				<name>State</name>
+			</field>
+			<field type="text">
+				<name>Zip</name>
+			</field>
+			<field type="text">
+				<name>Country</name>
+			</field>
+			<field type="text">
+				<name>Phone</name>
+			</field>
+			<field type="text">
+				<name>Fax</name>
+			</field>
+			<field type="text">
+				<name>Email</name>
+			</field>
+		</table>
+		<table name="External Links" columns="3">
+			<subheading>
+				<heading>URL</heading>
+			</subheading>
+			<field type="text" url="true">
+				<name>URL</name>
+			</field>
+			<field type="text" url="true">
+				<name>URL1</name>
+			</field>
+			<field type="text" url="true">
+				<name>URL2</name>
+			</field>
+		</table>
+		<table name="Comments">
+			<field type="text-area">
+				<name>Comments</name>
+			</field>
+		</table>
+	</content>
+</artifactType>

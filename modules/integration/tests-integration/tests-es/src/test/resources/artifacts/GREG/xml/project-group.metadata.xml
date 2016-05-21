@@ -1,0 +1,9 @@
+<metadata xmlns="http://www.wso2.org/governance/metadata">
+    <overview>
+        <name>ACME Development Group</name>
+        <groupOwner>/people/123-abc-4567-defghi</groupOwner>
+    </overview>
+    <groupMembers>
+        <entry>Senior:/people/123-abc-4567-defghi</entry>
+    </groupMembers>
+</metadata>

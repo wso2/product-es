@@ -1,0 +1,83 @@
+<artifactType type="application/vnd.wso2-application+xml" shortName="applications" singularLabel="Enterprise Application" pluralLabel="Enterprise Applications" hasNamespace="false" iconSet="9">
+    <storagePath>/applications/@{overview_name}/@{overview_version}</storagePath>
+	<nameAttribute>overview_name</nameAttribute>
+	<lifecycle>ServiceLifeCycle</lifecycle>
+    <ui>
+        <list>
+            <column name="Name">
+                <data type="path" value="overview_name" href="/applications/@{name}"/>
+            </column>
+            <column name="Version">
+                <data type="path" value="overview_version" href="@{storagePath}"/>
+            </column>
+        </list>
+    </ui>
+    <relationships>
+        <association type="isConsumedBy" source="@{assets_entry:value}"/>
+    </relationships>
+    <content>
+        <table name="Overview">
+            <field type="text" required="true">
+                <name>Name</name>
+            </field>
+            <field type="text" required="true">
+                <name>Version</name>
+            </field>
+            <field type="text-area">
+                <name>Description</name>
+            </field>
+        </table>
+        <table name="Assets">
+            <subheading>
+                <heading>Type</heading>
+                <heading>Path</heading>
+            </subheading>
+            <field type="option-text" maxoccurs="unbounded" path="true" url="true">
+                <name>Asset</name>
+                <values>
+                    <value>Generic</value>
+                    <value>Service</value>
+                </values>
+            </field>
+        </table>
+		<table name="Tests">
+			<field type="text" path="true">
+                <name>Test Harness</name>
+            </field>
+        </table>
+        <table name="Documentation" columns="3">
+            <subheading>
+                <heading>Document Type</heading>
+                <heading>URL</heading>
+                <heading>Comment</heading>
+            </subheading>
+            <field type="text">
+                <name>Document Type</name>
+            </field>
+            <field type="text" url="true">
+                <name>URL</name>
+            </field>
+            <field type="text-area">
+                <name>Document Comment</name>
+            </field>
+            <field type="text">
+                <name>Document Type1</name>
+            </field>
+            <field type="text" url="true">
+                <name>URL1</name>
+            </field>
+            <field type="text-area">
+                <name>Document Comment1</name>
+            </field>
+            <field type="text">
+                <name>Document Type2</name>
+            </field>
+            <field type="text" url="true">
+                <name>URL2</name>
+            </field>
+            <field type="text-area">
+                <name>Document Comment2</name>
+            </field>
+        </table>
+    </content>
+</artifactType>

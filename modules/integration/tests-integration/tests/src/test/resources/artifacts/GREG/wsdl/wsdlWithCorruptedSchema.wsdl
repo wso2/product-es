@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="BizService" targetNamespace="http://foo.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://foo.com" xmlns:p="http://bar.org/purchasing" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schrt namespace="http://bar.org/purchasing" schemaLocation="https://svn.wso2.org/repos/wso2/carbon/platform/branches/4.2.0/products/greg/4.6.0/modules/integration/registry/tests-metadata/src/test/resources/artifacts/GREG/xsd/purchasing.xsd">
+			</xsd:import>
+		</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="queryInvalidQty">
+    <wsdl:part name="NewPart" element="p:invalidQty">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="queryInvalidProductId">
+    <wsdl:part name="NewPart" element="p:invalidProductId">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="queryRequest">
+    <wsdl:part name="parameters" element="p:productQuery">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="queryResponse">
+    <wsdl:part name="parameters" element="p:productQueryResult">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="BizService">
+    <wsdl:operation name="query">
+      <wsdl:input message="tns:queryRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:queryResponse">
+    </wsdl:output>
+      <wsdl:fault name="f02" message="tns:queryInvalidQty">
+    </wsdl:fault>
+      <wsdl:fault name="f01" message="tns:queryInvalidProductId">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BizServiceSOAP" type="tns:BizService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="query">
+      <soap:operation soapAction="http://foo.com/query"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="f02">
+        <soap:fault name="f02" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="f01">
+        <soap:fault name="f01" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BizService">
+    <wsdl:port name="BizServiceSOAP" binding="tns:BizServiceSOAP">
+      <soap:address location="http://people.wso2.com:9763/services/BizService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

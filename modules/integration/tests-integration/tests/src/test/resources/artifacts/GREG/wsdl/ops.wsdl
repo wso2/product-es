@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns="http://ops.epo.org/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+xmlns:tns="http://ops.epo.org/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ops="http://ops.epo.org" 
+xmlns:exch="http://www.epo.org/exchange" xmlns:ftxt="http://www.epo.org/fulltext" 
+targetNamespace="http://ops.epo.org/wsdl" 
+name="OpenPatentServices">
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import namespace="http://ops.epo.org" schemaLocation="ops.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getPatentDataResponse">
+    <wsdl:part name="return" element="ops:world-patent-data"/>
+  </wsdl:message>
+  <wsdl:message name="getBiblioRetrievalRequest">
+    <wsdl:part name="biblioRetrievalRequest" element="ops:biblio-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getBiblioSearchRequest">
+    <wsdl:part name="biblioSearchRequest" element="ops:biblio-search"/>
+  </wsdl:message>
+  <wsdl:message name="getClaimsRequest">
+    <wsdl:part name="getClaimsRequestPart" element="ops:claims-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getFulltextInquiryRequest">
+    <wsdl:part name="getFulltextInquiryRequestPart" element="ops:fulltext-inquiry"/>
+  </wsdl:message>
+  <wsdl:message name="getEquivalentsInquiryRequest">
+    <wsdl:part name="getEquivalentsInquiryRequestPart" element="ops:equivalents-inquiry"/>
+  </wsdl:message>
+  <wsdl:message name="getDescriptionRequest">
+    <wsdl:part name="getDescriptionRequestPart" element="ops:description-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentInquiryRequest">
+    <wsdl:part name="getDocumentInquiryRequestPart" element="ops:document-inquiry"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentRetrievalRequest">
+    <wsdl:part name="getDocumentRetrievalRequestPart" element="ops:document-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getFamilyRequest">
+    <wsdl:part name="getFamilyRequestPart" element="ops:family-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getFamilyAndBiblioRequest">
+    <wsdl:part name="getFamilyAndBiblioRequestPart" element="ops:family-and-biblio-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getFamilyAndLegalRequest">
+    <wsdl:part name="getFamilyAndLegalRequestPart" element="ops:family-and-legal-retrieval"/>
+  </wsdl:message>
+
+  <wsdl:message name="getFamilyAndLegalAndBiblioRequest">
+    <wsdl:part name="getFamilyAndLegalAndBiblioRequestPart" element="ops:family-and-legal-and-biblio-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getLegalRequest">
+    <wsdl:part name="getLegalRequestPart" element="ops:legal-retrieval"/>
+  </wsdl:message>
+  <wsdl:message name="getLegalAndBiblioRequest">
+    <wsdl:part name="getLegalAndBiblioRequestPart" element="ops:legal-and-biblio-retrieval"/>
+  </wsdl:message>
+  
+  <wsdl:message name="getNumberServiceRequest">
+    <wsdl:part name="getNumberServiceRequestPart" element="ops:standardization"/>
+  </wsdl:message>  
+
+  <wsdl:portType name="BiblioRetrievalPortType">
+    <wsdl:operation name="biblio-retrieval">
+      <wsdl:input name="getBiblioRetrievalRequest" message="tns:getBiblioRetrievalRequest"/>
+      <wsdl:output name="getBiblioRetrievalResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="BiblioSearchPortType">
+    <wsdl:operation name="biblio-search">
+      <wsdl:input name="getBiblioSearchRequest" message="tns:getBiblioSearchRequest"/>
+      <wsdl:output name="getBiblioSearchResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ClaimsPortType">
+    <wsdl:operation name="claims-retrieval">
+      <wsdl:input name="getClaimsRequest" message="tns:getClaimsRequest"/>
+      <wsdl:output name="getClaimsResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DescriptionPortType">
+    <wsdl:operation name="description-retrieval">
+      <wsdl:input name="getDescriptionRequest" message="tns:getDescriptionRequest"/>
+      <wsdl:output name="getDescriptionResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="FulltextInquiryPortType">
+    <wsdl:operation name="fulltext-inquiry">
+      <wsdl:input name="getFulltextInquiryRequest" message="tns:getFulltextInquiryRequest"/>
+      <wsdl:output name="getFulltextInquiryResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="EquivalentsInquiryPortType">
+    <wsdl:operation name="equivalents-inquiry">
+      <wsdl:input name="getEquivalentsInquiryRequest" message="tns:getEquivalentsInquiryRequest"/>
+      <wsdl:output name="getEquivalentsInquiryResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DocumentInquiryPortType">
+    <wsdl:operation name="document-inquiry">
+      <wsdl:input name="getDocumentInquiryRequest" message="tns:getDocumentInquiryRequest"/>
+      <wsdl:output name="getDocumentInquiryResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DocumentRetrievalPortType">
+    <wsdl:operation name="document-retrieval">
+      <wsdl:input name="getDocumentRetrievalRequest" message="tns:getDocumentRetrievalRequest"/>
+      <wsdl:output name="getDocumentRetrievalResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="FamilyPortType">
+    <wsdl:operation name="family-retrieval">
+      <wsdl:input name="getFamilyRequest" message="tns:getFamilyRequest"/>
+      <wsdl:output name="getFamilyResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="FamilyAndBiblioPortType">
+    <wsdl:operation name="family-and-biblio-retrieval">
+      <wsdl:input name="getFamilyAndBiblioRequest" message="tns:getFamilyAndBiblioRequest"/>
+      <wsdl:output name="getFamilyAndBiblioResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="FamilyAndLegalPortType">
+    <wsdl:operation name="family-and-legal-retrieval">
+      <wsdl:input name="getFamilyAndLegalRequest" message="tns:getFamilyAndLegalRequest"/>
+      <wsdl:output name="getFamilyAndLegalResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:portType name="FamilyAndLegalAndBiblioPortType">
+    <wsdl:operation name="family-and-legal-and-biblio-retrieval">
+      <wsdl:input name="getFamilyAndLegalAndBiblioRequest" message="tns:getFamilyAndLegalAndBiblioRequest"/>
+      <wsdl:output name="getFamilyAndLegalAndBiblioResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="LegalPortType">
+    <wsdl:operation name="legal-retrieval">
+      <wsdl:input name="getLegalRequest" message="tns:getLegalRequest"/>
+      <wsdl:output name="getLegalResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="LegalAndBiblioPortType">
+    <wsdl:operation name="legal-and-biblio-retrieval">
+      <wsdl:input name="getLegalAndBiblioRequest" message="tns:getLegalAndBiblioRequest"/>
+      <wsdl:output name="getLegalAndBiblioResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:portType name="NumberServicePortType">
+    <wsdl:operation name="standardization">
+      <wsdl:input name="getNumberServiceRequest" message="tns:getNumberServiceRequest"/>
+      <wsdl:output name="getNumberServiceResponse" message="tns:getPatentDataResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="BiblioRetrievalBinding" type="tns:BiblioRetrievalPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="biblio-retrieval">
+      <soap:operation soapAction="biblio-retrieval"/>
+      <wsdl:input name="getBiblioRetrievalRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getBiblioRetrievalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BiblioSearchBinding" type="tns:BiblioSearchPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="biblio-search">
+      <soap:operation soapAction="biblio-search"/>
+      <wsdl:input name="getBiblioSearchRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getBiblioSearchResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ClaimsBinding" type="tns:ClaimsPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="claims-retrieval">
+      <soap:operation soapAction="claims-retrieval"/>
+      <wsdl:input name="getClaimsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getClaimsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DescriptionBinding" type="tns:DescriptionPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="description-retrieval">
+      <soap:operation soapAction="description-retrieval"/>
+      <wsdl:input name="getDescriptionRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getDescriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FulltextInquiryBinding" type="tns:FulltextInquiryPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="fulltext-inquiry">
+      <soap:operation soapAction="fulltext-inquiry"/>
+      <wsdl:input name="getFulltextInquiryRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFulltextInquiryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="EquivalentsInquiryBinding" type="tns:EquivalentsInquiryPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="equivalents-inquiry">
+      <soap:operation soapAction="equivalents-inquiry"/>
+      <wsdl:input name="getEquivalentsInquiryRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getEquivalentsInquiryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DocumentInquiryBinding" type="tns:DocumentInquiryPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="document-inquiry">
+      <soap:operation soapAction="document-inquiry"/>
+      <wsdl:input name="getDocumentInquiryRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getDocumentInquiryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DocumentRetrievalBinding" type="tns:DocumentRetrievalPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="document-retrieval">
+      <soap:operation soapAction="document-retrieval"/>
+      <wsdl:input name="getDocumentRetrievalRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getDocumentRetrievalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FamilyBinding" type="tns:FamilyPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="family-retrieval">
+      <soap:operation soapAction="family-retrieval"/>
+      <wsdl:input name="getFamilyRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFamilyResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FamilyAndBiblioBinding" type="tns:FamilyAndBiblioPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="family-and-biblio-retrieval">
+      <soap:operation soapAction="family-and-biblio-retrieval"/>
+      <wsdl:input name="getFamilyAndBiblioRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFamilyAndBiblioResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FamilyAndLegalBinding" type="tns:FamilyAndLegalPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="family-and-legal-retrieval">
+      <soap:operation soapAction="family-and-legal-retrieval"/>
+      <wsdl:input name="getFamilyAndLegalRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFamilyAndLegalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:binding name="FamilyAndLegalAndBiblioBinding" type="tns:FamilyAndLegalAndBiblioPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="family-and-legal-and-biblio-retrieval">
+      <soap:operation soapAction="family-and-legal-and-biblio-retrieval"/>
+      <wsdl:input name="getFamilyAndLegalAndBiblioRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFamilyAndLegalAndBiblioResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="LegalBinding" type="tns:LegalPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="legal-retrieval">
+      <soap:operation soapAction="legal-retrieval"/>
+      <wsdl:input name="getLegalRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getLegalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="LegalAndBiblioBinding" type="tns:LegalAndBiblioPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="legal-and-biblio-retrieval">
+      <soap:operation soapAction="legal-and-biblio-retrieval"/>
+      <wsdl:input name="getLegalAndBiblioRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getLegalAndBiblioResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:binding name="NumberServiceBinding" type="tns:NumberServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="standardization">
+      <soap:operation soapAction="number-service"/>
+      <wsdl:input name="getNumberServiceRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNumberServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>  
+
+  <wsdl:service name="OPSBiblioRetrievalService">
+    <wsdl:port name="BiblioRetrievalPort" binding="tns:BiblioRetrievalBinding">
+      <soap:address location="http://ops.epo.org//soap-services/biblio-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSBiblioSearchService">
+    <wsdl:port name="BiblioSearchPort" binding="tns:BiblioSearchBinding">
+      <soap:address location="http://ops.epo.org//soap-services/biblio-search"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSClaimsService">
+    <wsdl:port name="ClaimsPort" binding="tns:ClaimsBinding">
+      <soap:address location="http://ops.epo.org//soap-services/claims-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSDescriptionService">
+    <wsdl:port name="DescriptionPort" binding="tns:DescriptionBinding">
+      <soap:address location="http://ops.epo.org//soap-services/description-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSFulltextInquiryService">
+    <wsdl:port name="FulltextInquiryPort" binding="tns:FulltextInquiryBinding">
+      <soap:address location="http://ops.epo.org//soap-services/fulltext-inquiry"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSEquivalentsInquiryService">
+    <wsdl:port name="EquivalentsInquiryPort" binding="tns:EquivalentsInquiryBinding">
+      <soap:address location="http://ops.epo.org//soap-services/equivalents-inquiry"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSDocumentInquiryService">
+    <wsdl:port name="DocumentInquiryPort" binding="tns:DocumentInquiryBinding">
+      <soap:address location="http://ops.epo.org//soap-services/document-inquiry"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSDocumentRetrievalService">
+    <wsdl:port name="DocumentRetrievalPort" binding="tns:DocumentRetrievalBinding">
+      <soap:address location="http://ops.epo.org//soap-services/document-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSFamilyService">
+    <wsdl:port name="FamilyPort" binding="tns:FamilyBinding">
+      <soap:address location="http://ops.epo.org//soap-services/family-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSFamilyAndBiblioService">
+    <wsdl:port name="FamilyAndBiblioPort" binding="tns:FamilyAndBiblioBinding">
+      <soap:address location="http://ops.epo.org//soap-services/family-and-biblio-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSFamilyAndLegalService">
+    <wsdl:port name="FamilyAndLegalPort" binding="tns:FamilyAndLegalBinding">
+      <soap:address location="http://ops.epo.org//soap-services/family-and-legal-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+
+  <wsdl:service name="OPSFamilyAndLegalAndBiblioService">
+    <wsdl:port name="FamilyAndLegalAndBiblioPort" binding="tns:FamilyAndLegalAndBiblioBinding">
+      <soap:address location="http://ops.epo.org//soap-services/family-and-legal-and-biblio-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSLegalService">
+    <wsdl:port name="LegalPort" binding="tns:LegalBinding">
+      <soap:address location="http://ops.epo.org//soap-services/legal-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSLegalAndBiblioService">
+    <wsdl:port name="LegalAndBiblioPort" binding="tns:LegalAndBiblioBinding">
+      <soap:address location="http://ops.epo.org//soap-services/legal-and-biblio-retrieval"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OPSNumberService">
+    <wsdl:port name="NumberServicePort" binding="tns:NumberServiceBinding">
+      <soap:address location="http://ops.epo.org//soap-services/number-service"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

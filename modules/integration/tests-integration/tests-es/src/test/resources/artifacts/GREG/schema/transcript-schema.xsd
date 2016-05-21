@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    targetNamespace="http://ops.digitalcircuit.wifi/schema/transcript/2005" version="1.0"
+    xmlns="http://ops.digitalcircuit.wifi/schema/transcript/2005"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema" 
+    xmlns:transcript="http://ops.digitalcircuit.wifi/schema/transcript/2005">
+
+
+	
+
+	
+	<xsd:element name="Transcript" type="transcript:DataType" />
+
+	
+	<xsd:complexType name="DataType">
+		<xsd:sequence>
+			<xsd:element name="ManagerDetails" type="transcript:ManagerDetailsType" />
+			<xsd:element name="ProgrammeDetails" type="transcript:ProgrammeDetailsType" />
+			<xsd:element name="StageRecord" type="transcript:StageRecordType" />
+			<xsd:element name="OverallGrades" type="transcript:OverallGradesType" minOccurs="0"/>
+			<xsd:element name="AdditionalFields" type="transcript:AdditionalFieldsType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ManagerDetailsType">
+		<xsd:sequence>
+			
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	
+	<xsd:complexType name="ProgrammeDetailsType">
+		<xsd:sequence>
+			
+			<xsd:element name="GraduationDate" type="xsd:string" /> 
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+	<xsd:complexType name="StageRecordType">
+		<xsd:sequence>
+			<xsd:element name="StageResults" type="transcript:StageResultsType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+	<xsd:complexType name="StageResultsType">
+                <xsd:sequence>
+			<xsd:element name="Stage" type="xsd:string" minOccurs="0"/> 
+			<xsd:element name="ProgrameResults" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	
+	<xsd:complexType name="OverallGradesType">
+		<xsd:sequence>
+			
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+	<xsd:complexType name="MarksType">
+		<xsd:sequence>
+			<xsd:element name="IndividualMark" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="MarkIndicator" type="xsd:string" /> 
+						<xsd:element name="MarkValue" type="xsd:string" />
+                    </xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	
+	<xsd:complexType name="AdditionalFieldsType">
+		<xsd:sequence>
+			<xsd:element name="AdditionalField" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>

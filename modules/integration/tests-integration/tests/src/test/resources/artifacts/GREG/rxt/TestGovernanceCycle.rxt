@@ -1,0 +1,65 @@
+<artifactType type="application/vnd.wso2-testgov+xml" shortName="testGovernance" singularLabel="Test Governance Cycle" pluralLabel="Testing Governance Cycles" hasNamespace="true" iconSet="6">
+    <storagePath>/qa/qa_gov_services/@{details_product}/@{details_version}/@{details_govCycleName}</storagePath>
+    <nameAttribute>details_product</nameAttribute>
+    <ui>
+        <list>
+           <column name="Governance Cycle">
+                <data type="path" value="details_govCycleName" href="/qa/qa_gov_services/@{details_product}/@{details_govCycleName}"/>
+           </column>
+           <column name="Product">
+                <data type="path" value="details_product" href="/qa/qa_gov_services/@{details_product}"/>
+           </column>
+            <column name="Version">
+                <data type="path" value="details_version" href="/qa/qa_gov_services/@{details_product}/@{details_version}"/>
+            </column>   
+           <column name="QA Person">
+                <data type="text" value="details_qa"/>
+           </column> 
+        </list>
+    </ui>
+    <content>
+        <table name="Details">
+		<field type="text">
+		    <name label="QA Governance Cycle Name">GovCycleName</name>
+		</field>
+		<field type="text">
+		    <name label="Produt Name">Product</name>
+		</field>
+		<field type="text">
+		    <name label="Version">Version</name>            
+		</field>
+		<field type="text">
+		    <name label="Governance Cycle Added by">Addedby</name>            
+		</field>
+		<field type="options">
+		    <name label="Responsible QA">QA</name>
+		    <values>
+		        <value>None</value><value>Amal Perera</value><value>Aparna Karunarathna</value><value>Chamara Ariyarathne</value><value>Charitha Kankanamge</value><value>Kalpanie Wanigaratne</value><value>Nirodha Gallage</value><value>Pavithra Madurangi</value><value>Sandapa Handakumbura</value><value>Yumani Ranaweera</value>
+		    </values>
+		</field>
+		<field type="options">
+		    <name label="Responsible QAA">QAA</name>
+		    <values>
+<value>None</value><value>Chamara Silva</value><value>Dharshana Warusavitharana</value><value>Krishantha Samaraweera</value><value>Kishan Navaratne</value><value>Nuwan Wimalasekara</value>
+		    </values>
+		</field>
+		<field type="text">
+		    <name label="Comments">Comments</name>            
+		</field>
+	</table> 
+<table name="Functional Test Cases" columns="3">
+        <subheading>
+            <heading>Feature</heading><heading>URL</heading><heading>Comment</heading>
+        </subheading>
+        <field type="text">
+            <name label="Feature">Feature</name>
+        </field>
+        <field type="text" url="true" path="true">
+            <name label="URL">URL</name>
+        </field>
+        <field type="text-area">
+            <name label="Comment">Comment</name>
+        </field>
+	</table>  
+   </content>
+</artifactType>

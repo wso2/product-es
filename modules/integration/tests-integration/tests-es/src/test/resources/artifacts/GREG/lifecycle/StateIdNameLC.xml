@@ -1,0 +1,158 @@
+<aspect name="StateIdNameLC"
+	class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+	<configuration type="literal">
+		<lifecycle>
+			<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
+				initialstate="Commencement_state.1">
+				<state id="Commencement_state.1">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Requirements Gathered" forEvent="">
+								<!-- <permissions> -->
+								<!-- <permission roles=""/> -->
+								<!-- </permissions> -->
+							</item>
+							<item name="Document Requirements" forEvent="">
+								<!-- <permissions> -->
+								<!-- <permission roles=""/> -->
+								<!-- </permissions> -->
+							</item>
+							<item name="archroleure Finalized" forEvent="">
+								<!-- <permissions> -->
+								<!-- <permission roles=""/> -->
+								<!-- </permissions> -->
+							</item>
+							<item name="Design UML Diagrams" forEvent="">
+								<!-- <permissions> -->
+								<!-- <permission roles=""/> -->
+								<!-- </permissions> -->
+							</item>
+							<item name="High Level Design Completed" forEvent="">
+								<!-- <permissions> -->
+								<!-- <permission roles=""/> -->
+								<!-- </permissions> -->
+							</item>
+							<item name="Completion of Commencement" forEvent="">
+								<!-- <permissions> -->
+								<!-- <permission roles=""/> -->
+								<!-- </permissions> -->
+							</item>
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Creation" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Creation">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Code Completed" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="archrole" />
+								</permissions>
+							</item>
+							<item name="WSDL Created" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="archrole" />
+								</permissions>
+							</item>
+							<item name="QoS Created" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="archrole" />
+								</permissions>
+							</item>
+							<item name="Schema Created" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="archrole" />
+								</permissions>
+							</item>
+							<item name="Services Created" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="archrole" />
+								</permissions>
+							</item>
+							<item name="Completion of Creation" forEvent="Promote,Abort">
+								<permissions>
+									<permission roles="archrole" />
+								</permissions>
+							</item>
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Development" />
+					<transition event="Demote" target="Commencement_state.1" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Development">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Effective Inspection Completed" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="devrole" />
+								</permissions>
+							</item>
+							<item name="Test Cases Passed" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="devrole" />
+								</permissions>
+							</item>
+							<item name="Smoke Test Passed" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="devrole" />
+								</permissions>
+							</item>
+						</data>
+						<data name="transitionPermission">
+							<permission forEvent="Promote" roles="managerrole" />
+							<permission forEvent="Demote" roles="managerrole" />
+							<permission forEvent="Abort" roles="devrole" />
+						</data>
+					</datamodel>
+					<transition event="Promote" target="QAed" />
+					<transition event="Demote" target="Creation" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="QAed">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Service Configuration" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="qarole" />
+								</permissions>
+							</item>
+						</data>
+						<data name="transitionPermission">
+							<permission forEvent="Promote" roles="techoprole" />
+							<permission forEvent="Demote" roles="managerrole" />
+							<permission forEvent="Abort" roles="qarole" />
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Launched" />
+					<transition event="Demote" target="Development" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Launched">
+					<datamodel>
+						<data name="checkItems">
+							<item name="Service Configuration" forEvent="Promote,Demote">
+								<permissions>
+									<permission roles="techoprole" />
+								</permissions>
+							</item>
+						</data>
+						<data name="transitionPermission">
+							<permission forEvent="Promote" roles="techoprole" />
+							<permission forEvent="Demote" roles="techoprole" />
+							<permission forEvent="Abort" roles="techoprole" />
+						</data>
+					</datamodel>
+					<transition event="Promote" target="Obsolete" />
+					<transition event="Demote" target="Development" />
+					<transition event="Abort" target="Halted" />
+				</state>
+				<state id="Obsolete">
+				</state>
+				<state id="Halted">
+				</state>
+			</scxml>
+		</lifecycle>
+	</configuration>
+</aspect>
