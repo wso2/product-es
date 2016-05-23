@@ -1,0 +1,22 @@
+{
+    "overview_name": "lchistorytestservice1234",
+    "overview_provider": "wso2",
+    "overview_context": "/test1234",
+    "overview_version": "1.0.0",
+    "overview_description":"null",
+    "interface_transports":"null",
+    "interface_wadl":"null",
+    "interface_swagger":"null",
+    "security_authenticationType":"None",
+    "docLinks_documentType":"null",
+    "docLinks_url":"null",
+    "docLinks_documentComment":"null",
+    "docLinks_documentType1":"null",
+    "docLinks_url1":"null",
+    "docLinks_documentComment1":"null",
+    "docLinks_documentType2":"null",
+    "docLinks_url2":"null",
+    "docLinks_documentComment2":"null",
+    "addNewAssetButton":"Create",
+    "restservice":"restservice"
+}

@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='utf-8'?><wsdl:definitions name="IClinicalNotes" targetNamespace="http://lemrs.migration.ihc.org/" xmlns:ns1="http://lemrs.migration.ihc.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://lemrs.migration.ihc.org/" xmlns:ns1="http://cmax.medplus.com/services/DocumentsService" xmlns:tns="http://lemrs.migration.ihc.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="getDocumentContentsForHelp2" type="tns:getDocumentContentsForHelp2"></xs:element>
+  <xs:element name="getDocumentContentsForHelp2Response" type="tns:getDocumentContentsForHelp2Response"></xs:element>
+  <xs:element name="getDocumentMetaDataListForHelp2" type="tns:getDocumentMetaDataListForHelp2"></xs:element>
+  <xs:element name="getDocumentMetaDataListForHelp2Response" type="tns:getDocumentMetaDataListForHelp2Response"></xs:element>
+  <xs:complexType name="getDocumentMetaDataListForHelp2">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ChartKey" type="ns1:chartKey"></xs:element>
+      <xs:element minOccurs="0" name="AccountNumber" type="xs:integer"></xs:element>
+      <xs:element name="ReturnObsoleteVersions" type="xs:boolean"></xs:element>
+      <xs:element name="ReturnNativeOnly" type="xs:boolean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getDocumentMetaDataListForHelp2Response">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:ihcDocumentMetadata"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ihcDocumentMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="completionStatus" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="completionStatusDescription" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="createDate" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="createSystem" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="createUserName" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="deleteDate" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="displayAttribute" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="docDate" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="documentKey" type="tns:ihcDocumentKey"></xs:element>
+      <xs:element minOccurs="0" name="documentTypeLabel" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="editDateTime" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="externalDocumentId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="fillerOrderNum" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="format" type="tns:ihcDocumentFormat"></xs:element>
+      <xs:element minOccurs="0" name="hl7Id" type="xs:string"></xs:element>
+      <xs:element name="numPACSReferences" type="xs:int"></xs:element>
+      <xs:element name="obsolete" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="originationDateTime" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="parentHl7Id" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="placerOrderNum" type="xs:string"></xs:element>
+      <xs:element name="signed" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="transcribeDateTime" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="userDefinedId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ihcDocumentKey">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="digest" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="encounterKey" type="tns:ihcEncounterKey"></xs:element>
+      <xs:element name="instanceNumber" type="xs:int"></xs:element>
+      <xs:element name="versionNumber" type="xs:int"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ihcEncounterKey">
+    <xs:sequence>
+      <xs:element name="value" type="xs:long"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getDocumentContentsForHelp2">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Digest" type="xs:string"></xs:element>
+      <xs:element name="InstanceNumber" type="xs:int"></xs:element>
+      <xs:element name="VersionNumber" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="IHCDocumentKey" type="tns:ihcDocumentKey"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getDocumentContentsForHelp2Response">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:ihcDocumentContents"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ihcDocumentContents">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="documentExtension" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="documentKey" type="tns:ihcDocumentKey"></xs:element>
+      <xs:element minOccurs="0" name="help2Documents" type="xs:base64Binary"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ihcDocumentFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CMDM_TIFF_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_TEXT_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_RICH_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_FIELDED_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_JPEG_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_GIF_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_BMP_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_MS_WRITE_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_QTMOVIE_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_AVI_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_MPEG_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_WAV_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_PDF_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_EXT_DISCRETE_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_EFORM"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="IHCLEMRSException" type="tns:IHCLEMRSException"></xs:element>
+  <xs:complexType name="IHCLEMRSException">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserName" nillable="true" type="xs:string"></xs:element>
+</xs:schema>
+<xs:schema targetNamespace="http://cmax.medplus.com/services/DocumentsService" version="1.0" xmlns:tns="http://cmax.medplus.com/services/DocumentsService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="DocumentsServiceException" nillable="true" type="tns:DocumentsServiceException"></xs:element>
+<xs:element name="getDocumentContents" nillable="true" type="tns:getDocumentContents"></xs:element>
+<xs:element name="getDocumentContentsResponse" nillable="true" type="tns:getDocumentContentsResponse"></xs:element>
+<xs:element name="getDocumentMetaDataListForChart" nillable="true" type="tns:getDocumentMetaDataListForChart"></xs:element>
+<xs:element name="getDocumentMetaDataListForChartResponse" nillable="true" type="tns:getDocumentMetaDataListForChartResponse"></xs:element>
+<xs:complexType name="chartKey">
+    <xs:sequence>
+      <xs:element name="patientKey" type="tns:patientKey"></xs:element>
+      <xs:element name="accountNumber" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="patientKey">
+    <xs:sequence>
+      <xs:element name="mrn" type="tns:mrn"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="mrn">
+    <xs:sequence>
+      <xs:element name="value" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="DocumentsServiceException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getDocumentMetaDataListForChartResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:documentMetadata"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="documentMetadata">
+    <xs:sequence>
+      <xs:element name="documentKey" type="tns:documentKey"></xs:element>
+      <xs:element minOccurs="0" name="externalDocumentId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="userDefinedId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="documentTypeLabel" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="format" type="tns:documentFormat"></xs:element>
+      <xs:element name="isSigned" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="createSystem" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="createUserName" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="createDate" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="docDate" type="xs:dateTime"></xs:element>
+      <xs:element name="isObsolete" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="deleteDate" type="xs:dateTime"></xs:element>
+      <xs:element name="numPACSReferences" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="displayAttribute" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="hl7Id" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="parentHl7Id" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="originationDateTime" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="transcribeDateTime" type="xs:dateTime"></xs:element>
+      <xs:element minOccurs="0" name="placerOrderNum" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="fillerOrderNum" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="completionStatus" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="completionStatusDescription" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="editDateTime" type="xs:dateTime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="documentKey">
+    <xs:sequence>
+      <xs:element name="encounterKey" type="tns:encounterKey"></xs:element>
+      <xs:element name="instanceNumber" type="xs:int"></xs:element>
+      <xs:element name="versionNumber" type="xs:int"></xs:element>
+      <xs:element name="digest" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="encounterKey">
+    <xs:sequence>
+      <xs:element name="value" type="xs:long"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getDocumentContentsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:documentContents"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="documentContents">
+    <xs:sequence>
+      <xs:element name="documentKey" type="tns:documentKey"></xs:element>
+      <xs:element name="documentExtension" type="xs:string"></xs:element>
+      <xs:element name="dataHandler" ns1:expectedContentTypes="application/octet-stream" type="xs:base64Binary" xmlns:ns1="http://www.w3.org/2005/05/xmlmime"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getDocumentContents">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="documentKey" type="tns:documentKey"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getDocumentMetaDataListForChart">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="chartKey" type="tns:chartKey"></xs:element>
+      <xs:element name="returnObsoleteVersions" type="xs:boolean"></xs:element>
+      <xs:element name="returnNativeOnly" type="xs:boolean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="documentFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CMDM_TIFF_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_TEXT_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_RICH_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_FIELDED_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_JPEG_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_GIF_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_BMP_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_MS_WRITE_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_QTMOVIE_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_AVI_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_MPEG_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_WAV_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_PDF_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_EXT_DISCRETE_DOC"></xs:enumeration>
+      <xs:enumeration value="CMDM_EFORM"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getDocumentMetaDataListForHelp2">
+    <wsdl:part element="ns1:getDocumentMetaDataListForHelp2" name="parameters">
+    </wsdl:part>
+    <wsdl:part element="ns1:UserName" name="UserName">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDocumentContentsForHelp2Response">
+    <wsdl:part element="ns1:getDocumentContentsForHelp2Response" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IHCLEMRSException">
+    <wsdl:part element="ns1:IHCLEMRSException" name="IHCLEMRSException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDocumentMetaDataListForHelp2Response">
+    <wsdl:part element="ns1:getDocumentMetaDataListForHelp2Response" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDocumentContentsForHelp2">
+    <wsdl:part element="ns1:getDocumentContentsForHelp2" name="parameters">
+    </wsdl:part>
+    <wsdl:part element="ns1:UserName" name="UserName">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IClinicalNotes">
+    <wsdl:operation name="getDocumentMetaDataListForHelp2">
+      <wsdl:input message="ns1:getDocumentMetaDataListForHelp2" name="getDocumentMetaDataListForHelp2">
+    </wsdl:input>
+      <wsdl:output message="ns1:getDocumentMetaDataListForHelp2Response" name="getDocumentMetaDataListForHelp2Response">
+    </wsdl:output>
+      <wsdl:fault message="ns1:IHCLEMRSException" name="IHCLEMRSException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentContentsForHelp2">
+      <wsdl:input message="ns1:getDocumentContentsForHelp2" name="getDocumentContentsForHelp2">
+    </wsdl:input>
+      <wsdl:output message="ns1:getDocumentContentsForHelp2Response" name="getDocumentContentsForHelp2Response">
+    </wsdl:output>
+      <wsdl:fault message="ns1:IHCLEMRSException" name="IHCLEMRSException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

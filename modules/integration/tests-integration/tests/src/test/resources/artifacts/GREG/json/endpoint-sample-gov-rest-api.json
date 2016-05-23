@@ -1,0 +1,13 @@
+{
+
+    "name": "%s",
+
+    "type": "endpoint",
+
+    "version": "1.0.0",
+
+    "address": "https://localhost:9443",
+
+    "environment": "%s"
+
+}

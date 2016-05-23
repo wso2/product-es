@@ -1,0 +1,10 @@
+{
+  "overview_url": "%s",
+  "overview_name": "%s",
+  "overview_version": "%s",
+  "addNewAssetButton": "Create",
+  "schema": "schema",
+  "schema_file": null,
+  "schema_file_name": null,
+  "file_version": null
+}

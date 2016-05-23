@@ -1,0 +1,36 @@
+<aspect name="ESBLifeCycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml"
+                   version="1.0"
+                   initialstate="Development">
+                <state id="Development">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Configurations Completed" forEvent="">
+                            </item>
+                            <item name="Transform Rules Done" forEvent="">
+                            </item>
+                            <item name="Routing Rules Completed" forEvent="">
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.CopyExecutor">
+                                <parameter name="currentEnvironment" value="/_system/dev"/>
+                                <parameter name="targetEnvironment" value="/_system/qa"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Promote" href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?currentEnvironment=/_system/dev/"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Testing"/>
+                </state>
+                <state id="Testing">
+
+                    <transition event="Demote" target="Development"/>
+                </state>
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>

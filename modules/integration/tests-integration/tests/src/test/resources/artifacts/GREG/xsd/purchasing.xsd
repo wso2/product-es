@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://bar.org/purchasing"
+	xmlns:tns="http://bar.org/purchasing">
+	<element name="productQuery">
+		<complexType>
+			<sequence>
+				<element name="queryItem" minOccurs="1"
+					maxOccurs="unbounded" type="tns:queryItemType">
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	<element name="productQueryResult">
+		<complexType>
+			<sequence>
+				<element name="resultItem" maxOccurs="unbounded"
+					minOccurs="1">
+					<complexType>
+						<attribute name="productId"
+							type="string">
+						</attribute>
+						<attribute name="price" type="int">
+						</attribute>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	<complexType name="queryItemType">
+		<attribute name="productId" type="string"></attribute>
+		<attribute name="qty" type="int"></attribute>
+	</complexType>
+
+	<element name="invalidProductId" type="string"></element>
+	<element name="invalidQty" type="int"></element>
+
+
+
+</schema>

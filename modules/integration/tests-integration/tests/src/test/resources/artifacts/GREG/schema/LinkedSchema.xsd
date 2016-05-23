@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:listing4">
+    <xsd:complexType name="Phone2">
+        <xsd:sequence>
+            <xsd:element name="areaCode2" type="xsd:int"/>
+            <xsd:element name="exchange2" type="xsd:int"/>
+            <xsd:element name="number2" type="xsd:int"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

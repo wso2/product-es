@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions name="Axis2ImportedWsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.carbon.wso2.org">
+    <wsdl:documentation>
+        This is a sample service to test axis2 web services
+    </wsdl:documentation>
+<wsdl:types>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://service.carbon.wso2.org">
+            <xs:element name="getTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="echoString">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="s" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="echoStringResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="echoInt">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="x" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="echoIntResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ping">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="s" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="echoIntRequest">
+        <wsdl:part name="parameters" element="ns:echoInt" />
+    </wsdl:message>
+    <wsdl:message name="echoIntResponse">
+        <wsdl:part name="parameters" element="ns:echoIntResponse" />
+    </wsdl:message>
+    <wsdl:message name="PingRequest">
+        <wsdl:part name="parameters" element="ns:Ping" />
+    </wsdl:message>
+    <wsdl:message name="getTimeRequest" />
+    <wsdl:message name="getTimeResponse">
+        <wsdl:part name="parameters" element="ns:getTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="echoStringRequest">
+        <wsdl:part name="parameters" element="ns:echoString" />
+    </wsdl:message>
+    <wsdl:message name="echoStringResponse">
+        <wsdl:part name="parameters" element="ns:echoStringResponse" />
+    </wsdl:message>
+    <wsdl:portType name="Axis2ServicePortType">
+        <wsdl:operation name="echoInt">
+            <wsdl:input message="ns:echoIntRequest" wsaw:Action="urn:echoInt" />
+            <wsdl:output message="ns:echoIntResponse" wsaw:Action="urn:echoIntResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="Ping">
+            <wsdl:input message="ns:PingRequest" wsaw:Action="urn:Ping" />
+        </wsdl:operation>
+        <wsdl:operation name="getTime">
+            <wsdl:input message="ns:getTimeRequest" wsaw:Action="urn:getTime" />
+            <wsdl:output message="ns:getTimeResponse" wsaw:Action="urn:getTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="echoString">
+            <wsdl:input message="ns:echoStringRequest" wsaw:Action="urn:echoString" />
+            <wsdl:output message="ns:echoStringResponse" wsaw:Action="urn:echoStringResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

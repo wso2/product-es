@@ -1,0 +1,48 @@
+<application xmlns="http://research.sun.com/wadl/2006/10">
+    <doc xmlns:jersey="http://jersey.dev.java.net/" 
+    		jersey:generatedBy="Jersey: 1.0-ea-SNAPSHOT 10/02/2008 12:17 PM"/>
+    <resources base="http://localhost:9998/storage/">
+        <resource path="/path/containers">
+            <method name="GET" id="getContainers">
+                <response>
+                    <representation mediaType="application/xml"/>
+                </response>
+            </method>
+            <resource path="{container}">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" name="container"/>
+                <method name="PUT" id="putContainer">
+                    <response>
+                        <representation mediaType="application/xml"/>
+                    </response>
+                </method>
+                <method name="DELETE" id="deleteContainer"/>
+                <method name="GET" id="getContainer">
+                    <request>
+                        <param xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			type="xs:string" style="query" name="search"/>
+                    </request>
+                    <response>
+                        <representation mediaType="application/xml"/>
+                    </response>
+                </method>                
+            </resource>
+        </resource>
+        <resource path="/path/wrappers">
+            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" name="item"/>
+            <method name="PUT" id="putItem">
+                <request>
+                    <representation mediaType="*/*"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+            <method name="DELETE" id="deleteItem"/>
+                <method name="GET" id="getItem">
+                    <response>
+                        <representation mediaType="*/*"/>
+                    </response>
+                </method>
+           </resource>
+    </resources>
+</application>

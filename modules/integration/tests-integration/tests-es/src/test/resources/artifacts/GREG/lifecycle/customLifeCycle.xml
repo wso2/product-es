@@ -1,0 +1,366 @@
+<aspect name="IntergalacticServiceLC"
+        class="org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml"
+                   version="1.0"
+                   initialstate="Commencement">
+                <state id="Commencement">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Requirements Gathered" forEvent="Promote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Document Requirements" forEvent="Promote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Architecture Diagram Finalized" forEvent="Promote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Design UML Diagrams" forEvent="Promote">
+                            </item>
+                            <item name="High Level Design Completed" forEvent="Promote">
+                                <permissions>
+                                    <permission roles="archrole,devrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Completion of Commencement" forEvent="Promote,Abort">
+                                <permissions>
+                                    <permission roles="archrole,devrole"/>
+                                </permissions>
+                            </item>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Promote" roles="managerrole"/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="show_alert">
+                                    <script type="text/javascript">
+                                        show_alert=function()
+                                        {
+                                        alert("Promoted Resource to Creation State!");
+                                        }
+                                    </script>
+                                </console>
+                                <!--server function="show_alert">
+                            <script type="text/javascript">
+                            show_alert=function()
+                            {
+                            alert("Promoted Resource to Creation State!");
+                            }
+                            </script>
+                        </server>-->
+                            </js>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Creation"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="Creation">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Code Completed" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="WSDL Created" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="QoS Created" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Schema Created" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Services Created" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Completion of Creation" forEvent="Promote,Abort">
+                                <permissions>
+                                    <permission roles="archrole"/>
+                                </permissions>
+                            </item>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Promote" roles="managerrole"/>
+                            <permission forEvent="Demote" roles="managerrole"/>
+                            <permission forEvent="Abort" roles="archrole"/>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Promote"
+                                       class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment"
+                                           value="/_system/governance/trunk/{@resourcePath}/{@resourceName}"/>
+                                <parameter name="targetEnvironment"
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="service.mediatype"
+                                           value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype"
+                                           value="application/vnd.wso2.endpoint"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Promote"
+                                href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false%26currentEnvironment=/_system/governance/trunk/"/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="doPromote">
+                                    <script type="text/javascript">
+                                        doPromote = function() {
+                                        window.location =
+                                        unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        alert("Promoted Resource to Creation State!");
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Development"/>
+                    <transition event="Demote" target="Commencement"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="Development">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Effective Inspection Completed" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="devrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Test Cases Passed" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="devrole"/>
+                                </permissions>
+                            </item>
+                            <item name="Smoke Test Passed" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="devrole"/>
+                                </permissions>
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Promote"
+                                       class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment"
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="targetEnvironment"
+                                           value="/_system/governance/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="service.mediatype"
+                                           value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype"
+                                           value="application/vnd.wso2.endpoint"/>
+                            </execution>
+                            <execution forEvent="Demote"
+                                       class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment"
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="targetEnvironment"
+                                           value="/_system/governance/trunk/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="service.mediatype"
+                                           value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype"
+                                           value="application/vnd.wso2.endpoint"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Promote"
+                                href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false%26currentEnvironment=/_system/governance/branches/development/"/>
+                            <ui forEvent="Demote"
+                                href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false%26currentEnvironment=/_system/governance/branches/development/"/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="doPromote">
+                                    <script type="text/javascript">
+                                        doPromote = function() {
+                                        window.location =
+                                        unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        alert("Promoted Resource to Development State!");
+
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+
+                            <js forEvent="Demote">
+                                <console function="doDemote">
+                                    <script type="text/javascript">
+                                        doDemote = function() {
+                                        window.location =
+                                        unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        alert("Demoted Service to Commencement State!");
+
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+                        </data>
+                        <data name="transitionPermission">
+                            <!--clickCommencementCheckListclickCommencementCheckList -->
+                            <permission forEvent="Promote" roles="managerrole"/>
+                            <permission forEvent="Demote" roles="managerrole"/>
+                            <permission forEvent="Abort" roles="devrole"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="QA"/>
+                    <transition event="Demote" target="Commencement"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="QA">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Service Configuration" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="qarole"/>
+                                </permissions>
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Promote"
+                                       class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment"
+                                           value="/_system/governance/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="targetEnvironment"
+                                           value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="service.mediatype"
+                                           value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype"
+                                           value="application/vnd.wso2.endpoint"/>
+                            </execution>
+                            <execution forEvent="Demote"
+                                       class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment"
+                                           value="/_system/governance/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="targetEnvironment"
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="service.mediatype"
+                                           value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype"
+                                           value="application/vnd.wso2.endpoint"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Promote"
+                                href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false%26currentEnvironment=/_system/governance/branches/qa/"/>
+                            <ui forEvent="Demote"
+                                href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false%26currentEnvironment=/_system/governance/branches/qa/"/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="Promote">
+                                <console function="doPromote">
+                                    <script type="text/javascript">
+                                        doPromote = function() {
+                                        window.location =
+                                        unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        alert("Promoted Resource to Development State!");
+
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+                            <js forEvent="Demote">
+                                <console function="doDemote">
+                                    <script type="text/javascript">
+                                        doDemote = function() {
+                                        window.location =
+                                        unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        alert("Demoted Service to Development State!");
+
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Promote" roles="techoprole"/>
+                            <permission forEvent="Demote" roles="managerrole"/>
+                            <permission forEvent="Abort" roles="qarole"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Launched"/>
+                    <transition event="Demote" target="Development"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="Launched">
+                    <datamodel>
+                        <data name="checkItems">
+                            <item name="Service Configuration" forEvent="Promote,Demote">
+                                <permissions>
+                                    <permission roles="techoprole"/>
+                                </permissions>
+                            </item>
+                        </data>
+                        <data name="transitionExecution">
+                            <execution forEvent="Demote"
+                                       class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
+                                <parameter name="currentEnvironment"
+                                           value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="targetEnvironment"
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                <parameter name="service.mediatype"
+                                           value="application/vnd.wso2-service+xml"/>
+                                <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
+                                <parameter name="endpoint.mediatype"
+                                           value="application/vnd.wso2.endpoint"/>
+                            </execution>
+                        </data>
+                        <data name="transitionUI">
+                            <ui forEvent="Demote"
+                                href="../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?preserveOriginal=false%26viewVersion=false%26currentEnvironment=/_system/governance/branches/production/"/>
+                        </data>
+                        <data name="transitionScripts">
+                            <js forEvent="Demote">
+                                <console function="doDemote">
+                                    <script type="text/javascript">
+                                        doDemote = function() {
+                                        window.location =
+                                        unescape("../list/service.jsp?region=region3%26item=governance_list_services_menu");
+                                        alert("Demoted Service to Development State!");
+
+                                        }
+                                    </script>
+                                </console>
+                            </js>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Promote" roles="techoprole"/>
+                            <permission forEvent="Demote" roles="techoprole"/>
+                            <permission forEvent="Abort" roles="techoprole"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Promote" target="Obsolete"/>
+                    <transition event="Demote" target="Development"/>
+                    <transition event="Abort" target="Halted"/>
+                </state>
+                <state id="Obsolete">
+                </state>
+                <state id="Halted">
+                </state>
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>

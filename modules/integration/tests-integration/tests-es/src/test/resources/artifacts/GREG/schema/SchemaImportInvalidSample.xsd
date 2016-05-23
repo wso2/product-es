@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:listing3">
+    <xsd:import namespace="urn:listing4"
+                schemaLocation="https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/GREG/schema/abc.xsd"/>
+    <xsd:complexType name="Phone">
+        <xsd:sequence>
+            <xsd:element name="areaCode" type="xsd:int"/>
+            <xsd:element name="exchange" type="xsd:int"/>
+            <xsd:element name="number" type="xsd:int"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

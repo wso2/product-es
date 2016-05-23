@@ -1,0 +1,9 @@
+<metadata xmlns="http://www.wso2.org/governance/metadata">
+    <overview>
+        <president>/people/123-abc-4567-defghi</president>
+        <name>ACME</name>
+    </overview>
+    <departments>
+        <department1>/departments/QA Automation Department</department1>
+    </departments>
+</metadata>

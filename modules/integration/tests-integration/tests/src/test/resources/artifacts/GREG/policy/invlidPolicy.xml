@@ -1,0 +1,29 @@
+                <wsp:Policy>
+                    <sp:TransportToken>
+                        <wsp:Policy>
+                            <sp:HttpsToken RequireClientCertificate="false" />
+
+                        </wsp:Policy>
+                    </sp:TransportToken>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:Basic256 />
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
+                    <sp:Layout>
+                        <wsp:Policy>
+
+                            <sp:Lax />
+                        </wsp:Policy>
+                    </sp:Layout>
+                    <sp:IncludeTimestamp />
+                </wsp:Policy>
+            </sp:TransportBinding>
+            <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <wsp:Policy>
+                    <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient" />
+
+                </wsp:Policy>
+            </sp:SignedSupportingTokens>
+        </wsp:All>
+    </wsp:ExactlyOne>
