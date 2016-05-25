@@ -31,6 +31,9 @@ import java.io.IOException;
 
 public class FileUploadWithAttachmentUtil {
 
+    private FileUploadWithAttachmentUtil() {
+    }
+
     /**
      * This method uploads a content-type asset (ex: wsdl,policy,wadl,swagger)
      * to a running G-Reg instance

@@ -31,6 +31,9 @@ import javax.ws.rs.core.MediaType;
  */
 public class GovernanceRestApiUtil {
 
+    private GovernanceRestApiUtil() {
+    }
+
     /**
      * @param genericRestClient generic rest client instance
      * @param dataBody          data body for REST request

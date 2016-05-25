@@ -29,6 +29,9 @@ import java.rmi.RemoteException;
 public class VersionUtils {
     private static final Log log = LogFactory.getLog(VersionUtils.class);
 
+    private VersionUtils() {
+    }
+
     public static VersionPath[] deleteAllVersions(ResourceAdminServiceClient resourceAdminClient,
                                                   String path)
             throws ResourceAdminServiceExceptionException, RemoteException {
