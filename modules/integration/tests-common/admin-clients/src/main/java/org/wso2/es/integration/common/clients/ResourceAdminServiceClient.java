@@ -317,7 +317,7 @@ public class ResourceAdminServiceClient {
 
     public VersionPath[] getVersionPaths(String path)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        VersionPath[] versionPaths = null;
+        VersionPath[] versionPaths;
         try {
             VersionsBean vb = resourceAdminServiceStub.getVersionsBean(path);
             versionPaths = vb.getVersionPaths();
@@ -377,7 +377,7 @@ public class ResourceAdminServiceClient {
 
     public boolean restoreVersion(String path)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        boolean status = false;
+        boolean status;
         try {
             status = resourceAdminServiceStub.restoreVersion(path);
 
@@ -393,7 +393,7 @@ public class ResourceAdminServiceClient {
 
     public String getTextContent(String path)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        String content = null;
+        String content;
         try {
             content = resourceAdminServiceStub.getTextContent(path);
         } catch (RemoteException e) {

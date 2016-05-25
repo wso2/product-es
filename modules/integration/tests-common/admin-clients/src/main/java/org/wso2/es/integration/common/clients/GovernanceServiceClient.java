@@ -98,7 +98,6 @@ public class GovernanceServiceClient {
     }
 
     public String getServicePath() throws Exception {
-        String servicePath = null;
         try {
             return addServicesServiceStub.getServicePath();
         } catch (Exception e) {

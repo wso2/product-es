@@ -104,7 +104,7 @@ public class LifecycleUtil {
         boolean result2 = true;
         boolean result3 = true;
         boolean result4 = true;
-        boolean result5 = true;
+        boolean result5;
         boolean result6 = true;
         boolean result7 = true;
         boolean result8 = true;
@@ -221,7 +221,6 @@ public class LifecycleUtil {
                 break;
             }
         }
-        workItems = null;
         return success;
     }
 

@@ -156,7 +156,6 @@ public class ManagementConsoleSubscription {
                 break;
             }
         }
-        workItems = null;
         return success;
     }
 
