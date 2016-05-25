@@ -125,7 +125,7 @@ public class UserManagementClient {
 
     public void updateUserListOfRole(String roleName, String[] addingUsers,
                                      String[] deletingUsers) throws Exception {
-        List<FlaggedName> updatedUserList = new ArrayList<FlaggedName>();
+        List<FlaggedName> updatedUserList = new ArrayList<>();
         if (addingUsers != null) {
             for (String addUser : addingUsers) {
                 FlaggedName fName = new FlaggedName();

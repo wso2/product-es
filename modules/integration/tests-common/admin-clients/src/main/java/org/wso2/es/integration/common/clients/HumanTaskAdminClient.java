@@ -78,7 +78,7 @@ public class HumanTaskAdminClient {
 		if (resultSet == null || resultSet.getRow() == null || resultSet.getRow().length == 0) {
 			return new WorkItem[0];
 		}
-		List<WorkItem> workItems = new LinkedList<WorkItem>();
+		List<WorkItem> workItems = new LinkedList<>();
 		for (TTaskSimpleQueryResultRow row : resultSet.getRow()) {
 			URI id = row.getId();
 			String taskUser = "";

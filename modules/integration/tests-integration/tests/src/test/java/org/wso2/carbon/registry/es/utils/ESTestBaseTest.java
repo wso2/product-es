@@ -40,8 +40,8 @@ public class ESTestBaseTest extends ESIntegrationTest {
     Map<String, String> headerMap;
 
     public ESTestBaseTest() {
-        queryParamMap = new HashMap<String, String>();
-        headerMap = new HashMap<String, String>();
+        queryParamMap = new HashMap<>();
+        headerMap = new HashMap<>();
     }
 
     /**
@@ -134,7 +134,7 @@ public class ESTestBaseTest extends ESIntegrationTest {
                                    String publisherUrl,
                                    String cookieHeader,
                                    GenericRestClient genericRestClient) throws JSONException {
-        Map<String, String> assetTypeParamMap = new HashMap<String, String>();
+        Map<String, String> assetTypeParamMap = new HashMap<>();
         assetTypeParamMap.put("type", assetType);
         return genericRestClient.geneticRestRequestGet
                 (publisherUrl + "/assets/" + assetId
@@ -145,7 +145,7 @@ public class ESTestBaseTest extends ESIntegrationTest {
                                         String publisherUrl,
                                         String cookieHeader,
                                         GenericRestClient genericRestClient) throws JSONException {
-        Map<String, String> assetTypeParamMap = new HashMap<String, String>();
+        Map<String, String> assetTypeParamMap = new HashMap<>();
         assetTypeParamMap.put("type", assetType);
         ClientResponse response =
                 genericRestClient.geneticRestRequestGet
@@ -375,7 +375,7 @@ public class ESTestBaseTest extends ESIntegrationTest {
                                                                                 queryParamMap, "text/html", headerMap, cookieHeader);
         String response = clientResponse.getEntity(String.class);
         String[] dataArray = response.split("data-uuid=");
-        Map<String, String> assocMap = new HashMap<String, String>();
+        Map<String, String> assocMap = new HashMap<>();
         for (int i = 1; i < dataArray.length; i++) {
             String mediaType = null;
             if (dataArray[i].contains("resource-type")) {

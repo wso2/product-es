@@ -118,7 +118,7 @@ public class ESTestCommonUtils {
                 queryParamMap, "text/html", headerMap, cookieHeader);
         String response = clientResponse.getEntity(String.class);
         String[] dataArray = response.split("data-uuid=");
-        Map<String, String> assocMap = new HashMap<String, String>();
+        Map<String, String> assocMap = new HashMap<>();
         for (int i = 1; i < dataArray.length; i++) {
             String mediaType = null;
             if (dataArray[i].contains("application")) {
