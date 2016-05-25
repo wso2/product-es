@@ -140,7 +140,7 @@ public abstract class ESIntegrationTest {
     private void validateServiceUrl(String serviceUrl, Tenant tenant) {
         //if user mode is null can not validate the service url
         if (userMode != null) {
-            if ((userMode == TestUserMode.TENANT_ADMIN || userMode == TestUserMode.TENANT_USER)) {
+            if (userMode == TestUserMode.TENANT_ADMIN || userMode == TestUserMode.TENANT_USER) {
                 Assert.assertTrue(serviceUrl.contains("/t/" + tenant.getDomain() + "/"), "invalid service url for tenant. " + serviceUrl);
             } else {
                 Assert.assertFalse(serviceUrl.contains("/t/"), "Invalid service url for user. " + serviceUrl);

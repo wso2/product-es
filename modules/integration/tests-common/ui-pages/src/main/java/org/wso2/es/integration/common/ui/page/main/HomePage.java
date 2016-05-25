@@ -71,7 +71,7 @@ public class HomePage {
     public HomePage(boolean isTenant, WebDriver driver) throws IOException {
         this.isTenant = isTenant;
         if (this.isTenant) {
-            if (!(driver.getCurrentUrl().contains("loginStatus=true"))) {
+            if (!driver.getCurrentUrl().contains("loginStatus=true")) {
                 throw new IllegalStateException("This is not the home page");
             }
         }
