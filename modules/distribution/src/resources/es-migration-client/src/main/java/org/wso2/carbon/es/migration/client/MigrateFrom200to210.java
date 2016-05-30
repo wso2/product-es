@@ -55,15 +55,15 @@ public class MigrateFrom200to210 implements MigrationClient{
                      + "ms");
         } catch (UserStoreException e) {
             String msg = "Error occurred while searching for tenant admin. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         }catch (RegistryException e) {
             String msg = "Error occurred while performing registry operation. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (XMLStreamException e) {
             String msg = "Error while processing string to xml";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         }
     }

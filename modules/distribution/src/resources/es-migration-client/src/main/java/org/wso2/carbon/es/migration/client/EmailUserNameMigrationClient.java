@@ -135,35 +135,35 @@ public class EmailUserNameMigrationClient {
                      + "ms");
         } catch (UserStoreException e) {
             String msg = "Error occurred while searching for tenant admin. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (RegistryException e) {
             String msg = "Error occurred while performing registry operation. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (XMLStreamException e) {
             String msg = "Error while processing string to xml";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (CarbonException e) {
             String msg = "Error while processing inputstream of registry.xml";
-            log.error(msg,e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (SQLException e) {
             String msg = "Failed to execute the migration script. " + e.getMessage();
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (IOException e) {
             String msg = "Error while processing registry.xml fle";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (NamingException e) {
             String msg = "Error when looking up the Data Source.";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (Exception e) {
             String msg = "Error while migrating.";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         }
     }

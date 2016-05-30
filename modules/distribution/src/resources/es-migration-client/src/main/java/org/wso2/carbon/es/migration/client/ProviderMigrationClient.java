@@ -80,31 +80,31 @@ public class ProviderMigrationClient {
                      + "ms");
         } catch (IOException e) {
             String msg = "Error occurred while performing operations on input source. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (UserStoreException e) {
             String msg = "Error occurred while searching for tenant admin. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (RegistryException e) {
             String msg = "Error occurred while performing registry operation. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (TransformerException e) {
             String msg = "Error occurred while converting DOM objects into xml string. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (SAXException e) {
             String msg = "Error occurred while parsing the xml content into DOM objects. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (ParserConfigurationException e) {
             String msg = "Error occurred while defining document builder. ";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         } catch (XMLStreamException e) {
             String msg = "Error while processing string to xml";
-            log.error(msg, e);
+            log.error(msg);
             throw new EsMigrationException(msg, e);
         }
     }
