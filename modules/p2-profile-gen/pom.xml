@@ -124,6 +124,9 @@
                                 <featureArtifactDef>org.wso2.carbon.store:lifecycle.feature:${carbon.store.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.store:taxonomy.feature:${carbon.store.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.jaggeryjs.modules:handlebars.feature:${handlebars.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:markdown.feature:${markdown.feature.version}
@@ -356,6 +359,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon.store:carbon-metrics.feature:${carbon.store.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.governance:org.wso2.carbon.governance.taxonomy.management.feature:${carbon.governance.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -468,6 +474,15 @@
                                     <id>org.wso2.store.modules.lifecycle.feature.group</id>
                                     <version>${carbon.store.version}</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.store.modules.taxonomy.feature.group</id>
+                                    <version>${carbon.store.version}</version>
+                                </feature>
+                                <!--feature>
+                                    <id></id>
+                                    <version></version>
+                                </feature-->
                                 <!--<feature>
                                     <id>org.wso2.carbon.transport.commons.feature.group</id>
                                     <version>${carbon.commons.version}</version>
@@ -722,6 +737,10 @@
                                 <feature>
                                     <id>org.wso2.store.modules.carbon-metrics.feature.group</id>
                                     <version>${carbon.store.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.governance.taxonomy.management.feature.group</id>
+                                    <version>${carbon.governance.version}</version>
                                 </feature>
                             </features>
                         </configuration>
