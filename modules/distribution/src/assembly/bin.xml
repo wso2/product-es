@@ -196,6 +196,7 @@
                 <include>**/application-authenticators.xml</include>
                 <!-- Replacement for application-authenticators.xml -->
                 <include>**/application-authentication.xml</include>
+		<include>**/Owasp.CsrfGuard.Carbon.properties</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -423,6 +424,11 @@
         <file>
             <source>src/repository/conf/carbon.xml</source>
             <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/conf/security/Owasp.CsrfGuard.Carbon.properties</source>
+            <outputDirectory>${project.artifactId}-${product.es.version}/repository/conf/security</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
