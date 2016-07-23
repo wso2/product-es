@@ -30,7 +30,7 @@ System Requirements
 3. Portal app requires full Javascript enablement of the Web browser
 
 For more details see
-http://docs.wso2.org/wiki/display/ES200/Installation+Prerequisites
+http://docs.wso2.org/wiki/display/ES210/Installation+Prerequisites
 
 Known Issues
 ------------
@@ -155,7 +155,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-http://docs.wso2.org/wiki/display/Carbon410/WSO2+Carbon+Secure+Vault
+http://docs.wso2.org/wiki/display/Carbon445/WSO2+Carbon+Secure+Vault
 
 Training
 --------
@@ -214,4 +214,4 @@ For further details, see the WSO2 Application Server documentation at
 http://docs.wso2.org/wiki/application-server-documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2013 WSO2 Inc.
+(c) Copyright 2016 WSO2 Inc.
