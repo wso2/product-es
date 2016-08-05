@@ -318,11 +318,11 @@ org.wso2.carbon.server.admin.common_4.4.7.jar                                   
 org.wso2.carbon.server.admin.stub_4.4.7.jar                                     bundle         apache2   8268      
 org.wso2.carbon.server.admin.ui_4.4.7.jar                                       bundle         apache2   8267      
 org.wso2.carbon.server.admin_4.4.7.jar                                          bundle         apache2   8266      
-org.wso2.carbon.social.core_2.4.5.jar                                           bundle         apache2   9425      
-org.wso2.carbon.social.db.adapter_2.4.5.jar                                     bundle         apache2   9424      
-org.wso2.carbon.social.sql_2.4.5.jar                                            bundle         apache2   9423      
-org.wso2.carbon.store.jaggery-scxml-executors_2.4.5.jar                         bundle         apache2   9422      
-org.wso2.carbon.store.notifications_2.4.5.jar                                   bundle         apache2   9421      
+org.wso2.carbon.social.core_2.4.6.jar                                           bundle         apache2   9425      
+org.wso2.carbon.social.db.adapter_2.4.6.jar                                     bundle         apache2   9424      
+org.wso2.carbon.social.sql_2.4.6.jar                                            bundle         apache2   9423      
+org.wso2.carbon.store.jaggery-scxml-executors_2.4.6.jar                         bundle         apache2   9422      
+org.wso2.carbon.store.notifications_2.4.6.jar                                   bundle         apache2   9421      
 org.wso2.carbon.tenant.common.stub_4.5.4.jar                                    bundle         apache2   8258      
 org.wso2.carbon.tenant.common_4.5.4.jar                                         bundle         apache2   8257      
 org.wso2.carbon.tenant.deployment_4.5.2.jar                                     bundle         apache2   8869      
