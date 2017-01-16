@@ -1,0 +1,37 @@
+<students>
+	<student>
+		<name>Paul</name>
+		<subjects>
+			<subject>
+				<name>Physics</name>
+			</subject>
+			<subject>
+				<name>Chemistry</name>
+			</subject>
+		</subjects>
+	</student>
+	<student>
+		<name>Alice</name>
+		<subjects>
+			<subject>
+				<name>Maths</name>
+			</subject>
+			<subject>
+				<name>Chemistry</name>
+			</subject>
+		</subjects>
+	</student>
+	<student>
+		<name>Bob</name>
+		<subjects>
+			<subject>
+				<name>Art</name>
+			</subject>
+			<subject>
+				<name>Econ</name>
+			</subject>
+		</subjects>
+	</student>
+</students>
+
+

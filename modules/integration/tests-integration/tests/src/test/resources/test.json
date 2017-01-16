@@ -1,0 +1,270 @@
+{
+  "definition": {
+    "name": "ServiceLifeCycleLC2",
+    "class": "org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle",
+    "configuration": {
+      "lifecycle": {
+        "scxml": {
+          "initialstate": "Development",
+          "state": {
+            "development": {
+              "id": "Development",
+              "datamodel": {
+                "data": [
+                  {
+                    "item": [
+                      {
+                        "name": "Code Completed",
+                        "forEvent": ""
+                      },
+                      {
+                        "name": "WSDL, Schema Created",
+                        "forEvent": ""
+                      },
+                      {
+                        "name": "QoS Created",
+                        "forEvent": "Promote",
+                        "permissions": [{"permission": [{"roles": "manager"}]}]
+                      }
+                    ],
+                    "name": "checkItems"
+                  },
+                  {
+                    "name": "transitionExecution",
+                    "execution": [
+                      {
+                        "parameter": [
+                          {
+                            "name": "currentEnvironment",
+                            "value": "/_system/governance/trunk/{@resourcePath}/{@version}/{@resourceName}"
+                          },
+                          {
+                            "name": "targetEnvironment",
+                            "value": "/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"
+                          },
+                          {
+                            "name": "service.mediatype",
+                            "value": "application/vnd.wso2-service+xml"
+                          },
+                          {
+                            "name": "wsdl.mediatype",
+                            "value": "application/wsdl+xml"
+                          },
+                          {
+                            "name": "endpoint.mediatype",
+                            "value": "application/vnd.wso2.endpoint"
+                          }
+                        ],
+                        "forEvent": "Promote",
+                        "class": "org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor"
+                      }
+                    ]
+                  },
+                  {
+                    "ui": [
+                      {
+                        "forEvent": "Promote",
+                        "href": "../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?currentEnvironment=/_system/governance/trunk/"
+                      }
+                    ],
+                    "name": "transitionUI"
+                  },
+                  {
+                    "name": "transitionPermission",
+                    "permission": [
+                      {
+                        "roles": "admin",
+                        "forEvent": "Promote"
+                      }
+                    ]
+                  },
+                  {
+                    "validation": [
+                      {
+                        "parameter": [
+                          {
+                            "name": "attributes",
+                            "value": "overview_version,overview_description"
+                          }
+                        ],
+                        "forEvent": "Promote",
+                        "class": "org.wso2.carbon.governance.registry.extensions.validators.AttributeExistenceValidator"
+                      }
+                    ],
+                    "name": "transitionValidation"
+                  },
+                  {
+                    "js": [
+                      {
+                        "console": [
+                          {
+                            "script": [
+                              {
+                                "script": "showServiceList = function() { var element = document.getElementById('hidden_media_type'); var mediaType = \"\"; if (element) { mediaType = element.value;} if (mediaType == \"application/vnd.wso2-service+xml\") { location.href = unescape(\"../generic/list.jsp?region=region3%26item=governance_list_service_menu%26key=service%26breadcrumb=Services%26singularLabel=Service%26pluralLabel=Services\"); } }",
+                                "type": "text/javascript"
+                              }
+                            ],
+                            "function": "showServiceList"
+                          }
+                        ],
+                        "forEvent": "Promote"
+                      }
+                    ],
+                    "name": "transitionScripts"
+                  }
+                ]
+              },
+              "transition": [
+                {
+                  "event": "Promote",
+                  "target": "Testing"
+                }
+              ]
+            },
+            "published.to.apistore": {"id": "Published.to.APIStore"},
+            "testing": {
+              "id": "Testing",
+              "datamodel": {
+                "data": [
+                  {
+                    "item": [
+                      {
+                        "name": "Effective Inspection Completed",
+                        "forEvent": "Promote"
+                      },
+                      {
+                        "name": "Test Cases Passed",
+                        "forEvent": ""
+                      },
+                      {
+                        "name": "Smoke Test Passed",
+                        "forEvent": "Promote",
+                        "permissions": [{"permission": [{"roles": "manager"}]}]
+                      }
+                    ],
+                    "name": "checkItems"
+                  },
+                  {
+                    "name": "transitionExecution",
+                    "execution": [
+                      {
+                        "parameter": [
+                          {
+                            "name": "currentEnvironment",
+                            "value": "/_system/governance/branches/testing/{@resourcePath}/{@version}/{@resourceName}"
+                          },
+                          {
+                            "name": "targetEnvironment",
+                            "value": "/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"
+                          },
+                          {
+                            "name": "service.mediatype",
+                            "value": "application/vnd.wso2-service+xml"
+                          },
+                          {
+                            "name": "wsdl.mediatype",
+                            "value": "application/wsdl+xml"
+                          },
+                          {
+                            "name": "endpoint.mediatype",
+                            "value": "application/vnd.wso2.endpoint"
+                          }
+                        ],
+                        "forEvent": "Promote",
+                        "class": "org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor"
+                      },
+                      {
+                        "forEvent": "Demote",
+                        "class": "org.wso2.carbon.governance.registry.extensions.executors.DemoteActionExecutor"
+                      }
+                    ]
+                  },
+                  {
+                    "ui": [
+                      {
+                        "forEvent": "Promote",
+                        "href": "../lifecycles/pre_invoke_aspect_ajaxprocessor.jsp?currentEnvironment=/_system/governance/branches/testing/"
+                      }
+                    ],
+                    "name": "transitionUI"
+                  },
+                  {
+                    "js": [
+                      {
+                        "console": [
+                          {
+                            "script": [
+                              {
+                                "script": "showServiceList = function() { var element = document.getElementById('hidden_media_type'); var mediaType = \"\"; if (element) { mediaType = element.value;} if (mediaType == \"application/vnd.wso2-service+xml\") { location.href = unescape(\"../generic/list.jsp?region=region3%26item=governance_list_service_menu%26key=service%26breadcrumb=Services%26singularLabel=Service%26pluralLabel=Services\"); } }",
+                                "type": "text/javascript"
+                              }
+                            ],
+                            "function": "showServiceList"
+                          }
+                        ],
+                        "forEvent": "Promote"
+                      }
+                    ],
+                    "name": "transitionScripts"
+                  },
+                  {
+                    "name": "transitionPermission",
+                    "permission": [
+                      {
+                        "roles": "admin",
+                        "forEvent": "Promote"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "transition": [
+                {
+                  "event": "Promote",
+                  "target": "Production"
+                },
+                {
+                  "event": "Demote",
+                  "target": "Development"
+                }
+              ]
+            },
+            "production": {
+              "id": "Production",
+              "datamodel": {
+                "data": [
+                  {
+                    "name": "transitionExecution",
+                    "execution": [
+                      {
+                        "forEvent": "Demote",
+                        "class": "org.wso2.carbon.governance.registry.extensions.executors.DemoteActionExecutor"
+                      },
+                      {
+                        "forEvent": "Publish",
+                        "class": "org.wso2.carbon.governance.registry.extensions.executors.apistore.ApiStoreExecutor"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "transition": [
+                {
+                  "event": "Publish",
+                  "target": "Published.to.APIStore"
+                },
+                {
+                  "event": "Demote",
+                  "target": "Testing"
+                }
+              ]
+            }
+          },
+          "xmlns": "http://www.w3.org/2005/07/scxml",
+          "version": "1.0"
+        }
+      },
+      "type": "literal"
+    }
+  }
+}

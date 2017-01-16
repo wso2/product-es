@@ -187,12 +187,46 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">9763</port>
-                    <port type="https">9443</port>
+                    <port type="http">10663</port>
+                    <port type="https">10343</port>
                 </ports>
                 <properties>
 
                 </properties>
+            </instance>
+
+            <instance name="store" type="standalone" nonBlockingTransportEnabled="false">
+
+                <hosts>
+                    <host type="default">localhost</host>
+                </hosts>
+                <ports>
+                    <port type="http">10663</port>
+                    <port type="https">10343</port>
+                </ports>
+                <properties>
+                </properties>
+            </instance>
+            <instance name="publisher" type="standalone" nonBlockingTransportEnabled="false">
+                <hosts>
+                    <host type="default">localhost</host>
+                </hosts>
+                <ports>
+                    <port type="http">10663</port>
+                    <port type="https">10343</port>
+                </ports>
+                <properties>
+                </properties>
+                <!--   <hosts>
+                       <host type="default">localhost</host>
+                   </hosts>
+                   <ports>
+                       <port type="http">10663</port>
+                       <port type="https">10343</port>
+                   </ports>
+                   <properties>
+
+                   </properties>-->
             </instance>
 
         </productGroup>
@@ -205,17 +239,12 @@
             <extentionClasses>
                 <class>
                     <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
-                    <!--<parameter name="-DportOffset" value="0" />-->
+                    <parameter name="-DportOffset" value="900"/>
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
-                    <name>org.wso2.es.integration.common.utils.ESServerExtensionForWait</name>
-                    <!--<parameter name="-DportOffset" value="0" />-->
-                    <!--<parameter name="cmdArg" value="debug 5005" />-->
+                    <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>
                 </class>
-                <!--<class>-->
-                <!--<name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>-->
-                <!--</class>-->
             </extentionClasses>
         </platformExecutionManager>
 

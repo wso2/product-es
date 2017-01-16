@@ -18,19 +18,19 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <parent>
+    <parent>
         <groupId>org.wso2.es</groupId>
         <artifactId>es-integration-tests-common</artifactId>
-        <version>2.0.1-SNAPSHOT</version>
+        <version>2.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
-  </parent>
+    </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>org.wso2.es.integration.common.clients</artifactId>
-  <packaging>jar</packaging>
-  <name>admin-clients</name>
-   
-  <dependencies>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.es.integration.common.clients</artifactId>
+    <packaging>jar</packaging>
+    <name>admin-clients</name>
+
+    <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
@@ -42,8 +42,148 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.wso2.orbit.net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.activities.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.properties.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.handler.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.indexing.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.info.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.profiles.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.relations.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.reporting.stub</artifactId>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>*</artifactId>
+                    <groupId>*</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.registry</groupId>
             <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.search.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.generic.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.services.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.custom.lifecycles.checklist.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.business-process</groupId>
+            <artifactId>org.wso2.carbon.humantask.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.notifications.worklist.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.list.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.lcm.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.application.mgt.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.logging.view.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.reporting.api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.reporting.ui</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.reporting.stub</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>

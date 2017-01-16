@@ -1,0 +1,9 @@
+{
+  "overview_url":"%s",
+  "overview_name":"%s",
+  "overview_version":"%s",
+  "addNewAssetButton":"Create",
+  "policy":"policy",
+  "policy_file":null,
+  "policy_file_name":null
+}

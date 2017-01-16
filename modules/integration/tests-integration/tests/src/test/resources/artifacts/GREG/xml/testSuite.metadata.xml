@@ -1,0 +1,11 @@
+<metadata xmlns="http://www.wso2.org/governance/metadata">
+    <overview>
+        <type>Automated Regression</type>
+        <name>GovernanceTestSuite</name>
+        <version>1.0.0</version>
+        <testSuiteDescription>Regression Tests for Governance API</testSuiteDescription>
+    </overview>
+    <testCases>
+        <entry>Test Case:/test_cases/URITestCase/1.0.0</entry>
+    </testCases>
+</metadata>

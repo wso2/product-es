@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://echo.services.core.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http1="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://echo.services.core.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://echo.services.core.carbon.wso2.org">
+    <wsdl:documentation>echo1</wsdl:documentation>   
+
+    
+</wsdl:definitions>

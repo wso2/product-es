@@ -1,0 +1,5 @@
+{
+  "overview_provider": "wso2",
+  "overview_description":"Add description to update the resource",
+  "soapservice":"soapservice"
+}

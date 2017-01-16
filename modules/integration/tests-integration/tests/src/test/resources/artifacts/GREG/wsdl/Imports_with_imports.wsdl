@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://impl.service.carbon.wso2.org">
+
+<wsdl:import location="https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/clarity-tests/org.wso2.carbon.automation.test.repo/src/main/resources/artifacts/GREG/wsdl/Axis2Service_Wsdl_With_Wsdl_Imports.wsdl" namespace="http://service.carbon.wso2.org">
+</wsdl:import>
+    
+    <wsdl:binding name="Axis2ServiceSoap11Binding" type="ns:Axis2ServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="Ping">
+            <soap:operation soapAction="urn:Ping" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="echoInt">
+            <soap:operation soapAction="urn:echoInt" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTime">
+            <soap:operation soapAction="urn:getTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="echoString">
+            <soap:operation soapAction="urn:echoString" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="Axis2ServiceSoap12Binding" type="ns:Axis2ServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="Ping">
+            <soap12:operation soapAction="urn:Ping" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="echoInt">
+            <soap12:operation soapAction="urn:echoInt" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTime">
+            <soap12:operation soapAction="urn:getTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="echoString">
+            <soap12:operation soapAction="urn:echoString" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="Axis2ServiceHttpBinding" type="ns:Axis2ServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="Ping">
+            <http:operation location="Ping" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="Ping" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="echoInt">
+            <http:operation location="echoInt" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="echoInt" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="echoInt" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTime">
+            <http:operation location="getTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="echoString">
+            <http:operation location="echoString" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="echoString" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="echoString" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Axis2Service">
+        <wsdl:port name="Axis2ServiceHttpSoap11Endpoint" binding="ns:Axis2ServiceSoap11Binding">
+            <soap:address location="http://192.168.122.1:9763/services/Axis2Service.Axis2ServiceHttpSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="Axis2ServiceHttpsSoap11Endpoint" binding="ns:Axis2ServiceSoap11Binding">
+            <soap:address location="https://192.168.122.1:9443/services/Axis2Service.Axis2ServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="Axis2ServiceHttpSoap12Endpoint" binding="ns:Axis2ServiceSoap12Binding">
+            <soap12:address location="http://192.168.122.1:9763/services/Axis2Service.Axis2ServiceHttpSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="Axis2ServiceHttpsSoap12Endpoint" binding="ns:Axis2ServiceSoap12Binding">
+            <soap12:address location="https://192.168.122.1:9443/services/Axis2Service.Axis2ServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="Axis2ServiceHttpEndpoint" binding="ns:Axis2ServiceHttpBinding">
+            <http:address location="http://192.168.122.1:9763/services/Axis2Service.Axis2ServiceHttpEndpoint/" />
+        </wsdl:port>
+        <wsdl:port name="Axis2ServiceHttpsEndpoint" binding="ns:Axis2ServiceHttpBinding">
+            <http:address location="https://192.168.122.1:9443/services/Axis2Service.Axis2ServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

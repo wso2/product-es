@@ -86,7 +86,7 @@ public class ESPasswordRecovery extends BaseUITestCase{
         // waiting for email to receive
         Thread.sleep(10000);
         String message = ESUtil.readEmail(smtpPropertyLocation, EMAIL_PWD, EMAIL, RESET_MAIL_TITLE);
-        String resetUrl = message.split("\r")[5].trim().substring("https://localhost:9443".length());
+        String resetUrl = message.split("\r")[5].trim().substring("https://localhost:10343".length());
         driver.get(baseUrl + resetUrl);
         driver.findElement(By.id("password")).clear();
         driver.findElement(By.id("password")).sendKeys(NEW_PASSWORD);

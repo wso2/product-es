@@ -1,0 +1,19 @@
+<serviceMetaData xmlns="http://www.wso2.org/governance/metadata">
+    <overview>
+        <name>NewBizService</name>
+        <namespace>http://foo.com</namespace>
+        <description>my desc</description>
+    </overview>
+    <serviceLifecycle/>
+    <contacts/>
+    <interface>
+        <wsdlURL>https://svn.wso2.org/repos/wso2/trunk/commons/qa/qa-artifacts/greg/xsd/BizService.wsdl</wsdlURL>
+        <transportProtocols>HTTP</transportProtocols>
+    </interface>
+    <security/>
+    <endpoints/>
+    <docLinks/>
+    <operation xmlns="">Add</operation>
+    <currentName xmlns=""></currentName>
+    <currentNamespace xmlns=""></currentNamespace>
+</serviceMetaData>

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?><wsdl:definitions name="ClinicalNotesImplService" targetNamespace="http://impl.lemrs.migration.ihc.org/" xmlns:ns1="http://lemrs.migration.ihc.org/" xmlns:ns2="http://cxf.apache.org/bindings/xformat" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.lemrs.migration.ihc.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:import location="http://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/GREG/wsdl/IClinicalNotes.wsdl" namespace="http://lemrs.migration.ihc.org/">
+    </wsdl:import>
+  <wsdl:binding name="ClinicalNotesImplServiceSoapBinding" type="ns1:IClinicalNotes">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+    <wsdl:operation name="getDocumentMetaDataListForHelp2">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="getDocumentMetaDataListForHelp2">
+        <soap:header message="ns1:getDocumentMetaDataListForHelp2" part="UserName" use="literal">
+        </soap:header>
+        <soap:body parts="parameters" use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="getDocumentMetaDataListForHelp2Response">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="IHCLEMRSException">
+        <soap:fault name="IHCLEMRSException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentContentsForHelp2">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="getDocumentContentsForHelp2">
+        <soap:header message="ns1:getDocumentContentsForHelp2" part="UserName" use="literal">
+        </soap:header>
+        <soap:body parts="parameters" use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="getDocumentContentsForHelp2Response">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="IHCLEMRSException">
+        <soap:fault name="IHCLEMRSException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ClinicalNotesImplService">
+    <wsdl:port binding="tns:ClinicalNotesImplServiceSoapBinding" name="ClinicalNotesImplPort">
+      <soap:address location="http://lpv-ideaappdev01:9133/lemrs-webservices/services/clinicalNotesService"></soap:address>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

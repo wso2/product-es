@@ -1,0 +1,73 @@
+<artifactType hasNamespace="true" iconSet="9" pluralLabel="Events" shortName="events" singularLabel="Event" type="application/vnd.wso2-events+xml">
+        <storagePath>/events/@{details_name}</storagePath>
+        <nameAttribute>details_name</nameAttribute>
+        <ui>
+            <list>
+                <column name="Name">
+                    <data href="@{storagePath}" type="path" value="details_name"/>
+               </column>          
+                <column name="Description">
+                    <data href="@{storagePath}" type="path" value="rules_description"/>
+                </column>
+            </list>
+        </ui>
+        <content>
+            <table name="Details">
+                <field required="true" type="text">
+                    <name>Name</name>
+                </field>
+                <field required="true" type="text">
+                    <name>Date</name>
+                </field>
+                <field required="true" type="text">
+                    <name>Venue</name>
+                </field>
+            </table>
+            <table name="Rules">
+                <field type="options">
+                    <name>Gender</name>
+                    <values>
+                        <value>male</value>
+                        <value>female</value>
+                    </values>
+                </field>
+                <field type="text-area" required="true">
+                    <name>Description</name>
+                </field>
+                <field type="text">
+                    <name>Auther</name>
+                </field>
+            </table>
+            <table name="Participants">
+                <subheading>
+                    <heading>House</heading><heading>Name</heading>
+                </subheading>
+                <field maxoccurs="unbounded" type="option-text">
+                    <name label="Contact">Contact</name>
+                    <values>
+                        <value>Titans</value><value>Legions</value><value>Cloud Bots</value><value>Wild Boars</value>
+                    </values>
+                </field>
+            </table>
+            <table name="Service Lifecycle">
+                <field type="options">
+                    <name label="Lifecycle Name">Lifecycle Name</name>
+                    <values class="org.wso2.carbon.governance.services.ui.utils.LifecycleListPopulator">
+                </values></field>
+            </table>
+            <table name="SLA" columns="3">
+                <subheading>
+                    <heading>Document Type</heading><heading>URL</heading><heading>Comment</heading>
+                </subheading>
+                <field path="true" type="text" url="true">
+                    <name>SLA</name>
+                </field>
+                <field path="true" type="text" url="true">
+                    <name>SLA1</name>
+                </field>
+                <field path="true" type="text" url="true">
+                    <name>SLA2</name>
+                </field>
+            </table>
+        </content>
+    </artifactType>

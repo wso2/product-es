@@ -14,8 +14,7 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -27,7 +26,7 @@
     <groupId>org.wso2.es</groupId>
     <artifactId>wso2es-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.1.1-SNAPSHOT</version>
     <name>WSO2 Enterprise Store</name>
     <url>http://wso2.com/products/enterprise-store</url>
     <description>WSO2 Enterprise Store</description>
@@ -226,6 +225,222 @@
     </build>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.application.mgt.stub</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.reporting.ui</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.reporting.stub</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.reporting.api</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.logging.view.stub</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.properties.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.handler.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.indexing.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.info.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.profiles.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.relations.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.reporting.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.search.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.generic.stub</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.services.stub</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.custom.lifecycles.checklist.stub</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.business-process</groupId>
+                <artifactId>org.wso2.carbon.humantask.stub</artifactId>
+                <version>${carbon.business.process.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.notifications.worklist.stub</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.list.stub</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.lcm.stub</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.activities.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.client</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.api</artifactId>
+                <version>${carbon.governance.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.core</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.business-process</groupId>
+                <artifactId>org.wso2.carbon.humantask.stub</artifactId>
+                <version>${carbon.business.process.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.net.sf.jasperreports</groupId>
+                <artifactId>jasperreports</artifactId>
+                <version>${jasperreports.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jettison.wso2</groupId>
+                <artifactId>jettison</artifactId>
+                <version>${orbit.version.jettison}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wink</groupId>
+                <artifactId>wink-client</artifactId>
+                <version>${org.apache.wink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json.wso2</groupId>
+                <artifactId>json</artifactId>
+                <version>${org.json.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.ws.rs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jettison</groupId>
+                <artifactId>jettison</artifactId>
+                <version>${version.jettison}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.activities</artifactId>
+                <version>${carbon.registry.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>org.jacoco.agent</artifactId>
+                <version>${jacoco.agent.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>rhino.wso2</groupId>
                 <artifactId>js</artifactId>
@@ -665,23 +880,26 @@
         <project.scm.id>github-scm</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <carbon.kernel.version>4.4.1</carbon.kernel.version>
-        <carbon.social.version>2.3.8</carbon.social.version>
-        <carbon.store.version>2.3.8</carbon.store.version>
+        <carbon.kernel.version>4.4.7</carbon.kernel.version>
+        <carbon.social.version>2.4.6</carbon.social.version>
+        <carbon.store.version>2.4.6</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
-        <product.es.version>2.0.1-SNAPSHOT</product.es.version>
+        <product.es.version>2.1.1-SNAPSHOT</product.es.version>
 
-        <test.framework.version>4.4.2</test.framework.version>
+        <test.framework.version>4.4.3</test.framework.version>
         <automation.utils.version>4.4.2</automation.utils.version>
         <ciphertool.version>1.0.0-wso2v3</ciphertool.version>
 
         <!--repo versions-->
-        <carbon.commons.version>4.4.6</carbon.commons.version>
-        <carbon.registry.version>4.4.8</carbon.registry.version>
-        <carbon.governance.version>4.5.8</carbon.governance.version>
-        <carbon.deployment.version>4.5.2</carbon.deployment.version>
-        <carbon.identity.version>4.5.6</carbon.identity.version>
-        <carbon.multitenancy.version>4.4.1</carbon.multitenancy.version>
+        <carbon.commons.version>4.5.4</carbon.commons.version>
+        <carbon.registry.version>4.6.0</carbon.registry.version>
+        <carbon.governance.version>4.7.1</carbon.governance.version>
+        <carbon.deployment.version>4.7.0</carbon.deployment.version>
+        <carbon.identity.framework.version>5.2.0</carbon.identity.framework.version>
+        <identity.application.auth.basic.auth.version>5.1.1</identity.application.auth.basic.auth.version>
+        <identity.auth.saml2.version>5.1.3</identity.auth.saml2.version>
+        <identity.inbound.auth.saml.version>5.1.1</identity.inbound.auth.saml.version>
+        <carbon.multitenancy.version>4.5.2</carbon.multitenancy.version>
 
         <operadriver.version>0.8.1</operadriver.version>
 
@@ -712,15 +930,15 @@
         <el.api.version>2.2</el.api.version>
         <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
-        <jaggery.feature.version>0.11.1</jaggery.feature.version>
-        <caramel.feature.version>1.4.0</caramel.feature.version>
-        <handlebars.feature.version>1.4.0</handlebars.feature.version>
-        <markdown.feature.version>1.4.0</markdown.feature.version>
-        <carbon.feature.version>1.4.0</carbon.feature.version>
-        <process.feature.version>1.4.0</process.feature.version>
-        <uuid.feature.version>1.4.0</uuid.feature.version>
-        <sso.feature.version>1.4.0</sso.feature.version>
-        <jaggery-test.feature.version>1.4.0</jaggery-test.feature.version>
+        <jaggery.feature.version>0.12.6</jaggery.feature.version>
+        <caramel.feature.version>1.5.5</caramel.feature.version>
+        <handlebars.feature.version>1.5.5</handlebars.feature.version>
+        <markdown.feature.version>1.5.5</markdown.feature.version>
+        <carbon.feature.version>1.5.5</carbon.feature.version>
+        <process.feature.version>1.5.5</process.feature.version>
+        <uuid.feature.version>1.5.5</uuid.feature.version>
+        <sso.feature.version>1.5.5</sso.feature.version>
+        <jaggery-test.feature.version>1.5.5</jaggery-test.feature.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
         <axis2-transports.wso2.version>1.1.0-wso2v12</axis2-transports.wso2.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
@@ -732,5 +950,16 @@
         <commons-io.version>2.2</commons-io.version>
         <google.guava.version>16.0.1</google.guava.version>
         <testng.version>6.8.5</testng.version>
+        <carbon.metrics.version>1.2.1</carbon.metrics.version>
+        <jasperreports.wso2.version>6.1.1.wso2v1</jasperreports.wso2.version>
+        <carbon.business.process.version>4.4.7</carbon.business.process.version>
+
+        <org.apache.wink.version>1.4</org.apache.wink.version>
+        <org.json.wso2.version>2.0.0.wso2v1</org.json.wso2.version>
+        <resteasy.version>3.0.2.Final</resteasy.version>
+        <javax.ws.rs.version>2.0.1</javax.ws.rs.version>
+        <version.jettison>1.3</version.jettison>
+        <orbit.version.jettison>1.3.4.wso2v1</orbit.version.jettison>
+        <jacoco.agent.version>0.7.6.201602180812</jacoco.agent.version>
     </properties>
 </project>

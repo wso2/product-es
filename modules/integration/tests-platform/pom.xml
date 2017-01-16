@@ -21,7 +21,7 @@
     <parent>
         <artifactId>wso2es-integration</artifactId>
         <groupId>org.wso2.es</groupId>
-        <version>2.0.1-SNAPSHOT</version>
+        <version>2.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,7 +30,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>tests</module>
     </modules>
 
 </project>

@@ -1,0 +1,47 @@
+<artifactType type="application/vnd.wso2-rules+xml" shortName="sportsRules" singularLabel="Rule" pluralLabel="Rules" hasNamespace="true" iconSet="5">
+    <storagePath>/trunk/rules/@{details_event}/@{name}</storagePath>
+    <nameAttribute>details_author</nameAttribute>
+    <ui>
+        <list>
+           <column name="Name">
+                <data type="path" value="details_author" href="@{storagePath}"/>
+            </column>
+           <column name="Event">
+                <data type="path" value="details_event" href="/trunk/rules/@{details_event}"/>
+           </column>
+            <column name="Rule">
+                <data type="path" value="details_date" href="/trunk/rules/@{details_date}"/>
+            </column>            
+        </list>
+    </ui>
+    <!--relationships>
+        <association type="usedBy" source="@{interface_wsdlURL}"/>
+        <dependency target="@{interface_wsdlURL}"/>
+    </relationships-->
+    <content>
+        <table name="Details">
+        <field type="text" required="true">
+            <name label="Author">Author</name>
+        </field>
+        <field type="text" required="true">
+            <name label="Event">Event</name>
+        </field>
+        <field type="text">
+            <name label="Date">Date</name>            
+        </field>
+	<field type="text" required="true">
+            <name label="Applies To">AppliesTo</name>
+        </field>
+        <field type="text-area" required="true">
+            <name label="Rule Content">RuleContent</name>
+        </field>
+    </table>
+
+    <!--table name="Service Lifecycle">
+        <field type="options">
+            <name label="Lifecycle Name" >Lifecycle Name</name>
+            <values class="org.wso2.carbon.governance.services.ui.utils.LifecycleListPopulator"/>
+        </field>
+    </table-->    
+   </content>
+</artifactType>

@@ -1,0 +1,50 @@
+<artifactType type="application/vnd.wso2-esbendpoint+xml" shortName="esbendpoints" singularLabel="ESB Endpoint" pluralLabel="ESB Endpoints" hasNamespace="false" iconSet="9">
+    <storagePath>/trunk/endpoints/esb-endpoints/endpoint-rxts/@{overview_version}/@{name}</storagePath>
+    <nameAttribute>overview_name</nameAttribute>
+    <lifecycle>ServiceLifeCycle</lifecycle>
+    <ui>
+        <list>
+            <column name="Name">
+                <data type="path" value="overview_name" href="@{storagePath}"/>
+            </column>
+            <column name="Version">
+                <data type="path" value="overview_version" href="@{storagePath}"/>
+            </column>
+        </list>
+    </ui>
+    <content>
+        <table name="Overview">
+            <field type="text" required="true" readonly="true" validate="^(?=.*\S).+$">
+                <name>Name</name>
+            </field>
+            <field type="text" required="true" readonly="true" validate="^\d+\.\d+\.\d+$">
+                <name>Version</name>
+            </field>
+            <field type="options">
+                <name label="Endpoint Type">Endpoint Type</name>
+                <values>
+                    <value>    </value>
+                    <value>HTTP</value>
+                    <value>Address</value>
+                </values>
+            </field>
+            <field type="text" default="30" tooltip="Enter a number" validate="^[0-9]*$">
+                <name>Timeout in seconds</name>
+            </field>
+        </table>
+        <table name="Endpoints">
+            <subheading>
+                <heading>Environments</heading>
+                <heading>URL</heading>
+            </subheading>
+            <field type="option-text" maxoccurs="unbounded">
+                <name label="Endpoint">Endpoint</name>
+                <values>
+                    <value>ABC</value>
+                    <value>DEF</value>
+                    <value>XYZ</value>
+                </values>
+            </field>
+        </table>
+    </content>
+</artifactType>

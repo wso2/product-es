@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://foo.com" xmlns:p="http://bar.org/purchasing"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BizService"
+	targetNamespace="http://foo.com">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://foo.com"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import namespace="http://bar.org/purchasing"
+				schemaLocation="../xsd/purchasing.xsd">
+			</xsd:import>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="queryRequest">
+		<wsdl:part name="parameters" element="p:productQuery" />
+	</wsdl:message>
+	<wsdl:message name="queryResponse">
+		<wsdl:part name="parameters" element="p:productQueryResult" />
+	</wsdl:message>
+	<wsdl:message name="queryInvalidProductId">
+		<wsdl:part name="NewPart" element="p:invalidProductId" />
+	</wsdl:message>
+	<wsdl:message name="queryInvalidQty">
+		<wsdl:part name="NewPart" element="p:invalidQty" />
+	</wsdl:message>
+	<wsdl:portType name="BizService">
+		<wsdl:operation name="query">
+			<wsdl:input message="tns:queryRequest" />
+			<wsdl:output message="tns:queryResponse" />
+			<wsdl:fault name="f01"
+				message="tns:queryInvalidProductId">
+			</wsdl:fault>
+			<wsdl:fault name="f02" message="tns:queryInvalidQty"></wsdl:fault>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BizServiceSOAP" type="tns:BizService">
+
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="query">
+			<soap:operation soapAction="http://foo.com/query" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="f01">
+				<soap:fault use="literal" name="f01" />
+			</wsdl:fault>
+			<wsdl:fault name="f02">
+				<soap:fault use="literal" name="f02" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BizService">
+		<wsdl:port binding="tns:BizServiceSOAP" name="BizServiceSOAP">
+			<soap:address
+				location="http://localhost:8080/axis2/services/BizService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

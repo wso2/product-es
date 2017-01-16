@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://services.samples/xsd"
+        attributeFormDefault="unqualified" elementFormDefault="unqualified"
+        targetNamespace="http://services.samples/xsd" xmlns:ax211="http://services.samples/xsd">
+    <complexType name="PlaceOrder">
+        <sequence>
+            <element minOccurs="0" name="price" type="double"/>
+            <element minOccurs="0" name="quantity" type="int"/>
+            <element minOccurs="0" name="symbol" nillable="true" type="string"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="GetQuoteResponse">
+        <sequence>
+            <element minOccurs="0" name="change" type="double"/>
+            <element minOccurs="0" name="earnings" type="double"/>
+            <element minOccurs="0" name="high" type="double"/>
+            <element minOccurs="0" name="last" type="double"/>
+            <element minOccurs="0" name="lastTradeTimestamp" nillable="true" type="string"/>
+            <element minOccurs="0" name="low" type="double"/>
+            <element minOccurs="0" name="marketCap" type="double"/>
+
+            <element minOccurs="0" name="name" nillable="true" type="string"/>
+            <element minOccurs="0" name="open" type="double"/>
+            <element minOccurs="0" name="peRatio" type="double"/>
+            <element minOccurs="0" name="percentageChange" type="double"/>
+            <element minOccurs="0" name="prevClose" type="double"/>
+            <element minOccurs="0" name="symbol" nillable="true" type="string"/>
+            <element minOccurs="0" name="volume" type="int"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="GetQuote">
+        <sequence>
+            <element minOccurs="0" name="symbol" nillable="true" type="string"/>
+        </sequence>
+    </complexType>
+    <complexType name="GetMarketActivity">
+        <sequence>
+            <element maxOccurs="unbounded" minOccurs="0" name="symbols" nillable="true"
+                     type="string"/>
+        </sequence>
+
+    </complexType>
+    <complexType name="GetMarketActivityResponse">
+        <sequence>
+            <element maxOccurs="unbounded" minOccurs="0" name="quotes" nillable="true"
+                     type="ax211:GetQuoteResponse"/>
+        </sequence>
+    </complexType>
+    <complexType name="GetFullQuote">
+        <sequence>
+            <element minOccurs="0" name="symbol" nillable="true" type="string"/>
+
+        </sequence>
+    </complexType>
+    <complexType name="GetFullQuoteResponse">
+        <sequence>
+            <element maxOccurs="unbounded" minOccurs="0" name="tradeHistory" nillable="true"
+                     type="ax211:TradingDay"/>
+        </sequence>
+    </complexType>
+    <complexType name="TradingDay">
+        <sequence>
+
+            <element minOccurs="0" name="day" type="int"/>
+            <element minOccurs="0" name="quote" nillable="true" type="ax211:GetQuoteResponse"/>
+        </sequence>
+    </complexType>
+</schema>

@@ -1,0 +1,10 @@
+<metadata xmlns="http://www.wso2.org/governance/metadata">
+    <testMethods>
+        <entry>Test Method:/test_methods/testURIList/1.0.0</entry>
+    </testMethods>
+    <overview>
+        <name>URITestCase</name>
+        <version>1.0.0</version>
+        <testCaseDescription>All Tests for URIs</testCaseDescription>
+    </overview>
+</metadata>

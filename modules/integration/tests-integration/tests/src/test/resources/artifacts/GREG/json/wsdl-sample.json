@@ -1,0 +1,10 @@
+{
+  "overview_url": "%s",
+  "overview_name": "%s",
+  "overview_version": "%s",
+  "addNewAssetButton": "Create",
+  "wsdl_file": null,
+  "wsdl_file_name": null,
+  "file_version": null,
+  "wsdl": "wsdl"
+}
