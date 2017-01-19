@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.es.migration.EsMigrationException;
+import org.wso2.carbon.es.migration.client.MigrateData;
 import org.wso2.carbon.es.migration.client.MigrateFrom200to210;
 import org.wso2.carbon.es.migration.util.Constants;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -53,9 +54,9 @@ public class EsMigrationServiceComponent {
     private static final Log log = LogFactory.getLog(EsMigrationServiceComponent.class);
 
     protected void activate(ComponentContext context) {
+        String migrateVersion = System.getProperty("migrateStore");
+        boolean isDataMigrationNeeded = Boolean.parseBoolean(System.getProperty("migrateData"));
 
-        String migrateVersion = null;
-        migrateVersion = System.getProperty("migrateStore");
         try {
             if (migrateVersion != null) {
                 switch (migrateVersion) {
@@ -70,11 +71,15 @@ public class EsMigrationServiceComponent {
                                   "version and try again.");
                         break;
                 }
+            }
 
+            if (isDataMigrationNeeded) {
+                MigrateData migrateData = new MigrateData();
+                migrateData.databaseMigration();
+                migrateData.cleanOldResources();
             }
         } catch (EsMigrationException e) {
-            log.error("ES Migration  exception occurred while migrating. "
-                      + e.getMessage(), e);
+            log.error("ES Migration  exception occurred while migrating. " + e.getMessage(), e);
         }
     }
 

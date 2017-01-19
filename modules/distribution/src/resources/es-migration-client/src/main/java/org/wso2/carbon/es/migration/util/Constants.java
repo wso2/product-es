@@ -51,5 +51,12 @@ public class Constants {
     //registry path for store.json file at config registry
     public static final String STORE_CONFIG_PATH = "/store/configs/store.json";
 
+    public static final String PUBLISHER_CONFIG_PATH = "/publisher/configs/publisher.json";
+    public static final String LOGIN_PERMISSION = "\"/permission/admin/login\":";
+
+    public static final String PERMISSION_ACTION = "[\"ui.execute\"]";
+    public static final String LOGIN_SCRIPT = "\"/permission/admin/login\":[\"ui.execute\"]";
+    public static final String USER_PERMISSION_FIX_SCRIPT = "/migration-scripts/user_permission_fix.sql";
+
 
 }
