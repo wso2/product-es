@@ -112,6 +112,35 @@ public class MigrationDatabaseCreator {
     }
 
     /**
+     * Execute user permission fix script.
+     *
+     * @throws SQLException
+     * @throws IOException
+     */
+    public void executeUserPermissionFixScript() throws SQLException, IOException {
+        try {
+            conn = umDataSource.getConnection();
+            if (conn != null) {
+                conn.setAutoCommit(false);
+                statement = conn.createStatement();
+                executeSQLScript(Constants.USER_PERMISSION_FIX_SCRIPT);
+                conn.commit();
+            }
+            if (log.isTraceEnabled()) {
+                log.trace("Migration script executed successfully.");
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                log.error("Failed to close database connection.", e);
+            }
+        }
+    }
+
+    /**
      * executes content in SQL script
      *
      * @throws IOException,SQLException
