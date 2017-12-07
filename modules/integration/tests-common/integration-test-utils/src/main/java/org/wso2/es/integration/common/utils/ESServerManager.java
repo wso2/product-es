@@ -34,7 +34,7 @@ public class ESServerManager {
     private CarbonServerManager carbonServer;
     private String carbonZip;
     private int portOffset;
-    private Map<String, String> commandMap = new HashMap<String, String>();
+    private Map<String, String> commandMap = new HashMap<>();
     private static final Log log = LogFactory.getLog(TestServerManager.class);
     private String carbonHome;
 

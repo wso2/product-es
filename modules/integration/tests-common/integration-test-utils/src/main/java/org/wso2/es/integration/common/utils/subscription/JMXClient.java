@@ -60,7 +60,7 @@ public class JMXClient implements NotificationListener {
                                       RMIServerPort + "/jndi/rmi://" +
                                       NetworkUtils.getLocalHostname() + ":" +
                                       RMIRegistryPort + "/jmxrmi");
-            Hashtable<String, String[]> hashT = new Hashtable<String, String[]>();
+            Hashtable<String, String[]> hashT = new Hashtable<>();
             String[] credentials = new String[]{userName, password};
             hashT.put("jmx.remote.credentials", credentials);
             jmxc = JMXConnectorFactory.connect(url, hashT);
@@ -90,7 +90,7 @@ public class JMXClient implements NotificationListener {
                                       RMIServerPort + "/jndi/rmi://" +
                                       NetworkUtils.getLocalHostname() + ":" +
                                       RMIRegistryPort + "/jmxrmi");
-            Hashtable<String, String[]> hashT = new Hashtable<String, String[]>();
+            Hashtable<String, String[]> hashT = new Hashtable<>();
             String[] credentials = new String[]{userName, password};
             hashT.put("jmx.remote.credentials", credentials);
             jmxc = JMXConnectorFactory.connect(url, hashT);

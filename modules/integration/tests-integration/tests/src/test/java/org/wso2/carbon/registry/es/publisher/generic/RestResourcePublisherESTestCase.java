@@ -64,8 +64,8 @@ public class RestResourcePublisherESTestCase extends ESTestBaseTest {
     public void init() throws Exception {
         super.init(userMode);
         genericRestClient = new GenericRestClient();
-        queryParamMap = new HashMap<String, String>();
-        headerMap = new HashMap<String, String>();
+        queryParamMap = new HashMap<>();
+        headerMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation()
                        + "artifacts" + File.separator + "GREG" + File.separator;
         publisherUrl = publisherContext.getContextUrls()

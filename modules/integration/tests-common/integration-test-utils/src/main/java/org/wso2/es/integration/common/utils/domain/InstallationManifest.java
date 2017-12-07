@@ -32,7 +32,7 @@ public class InstallationManifest {
     private Map<String,ResourcePackage> packages;
 
     public InstallationManifest() {
-        this.packages = new HashMap<String, ResourcePackage>(); //new ArrayList<ResourcePackage>();
+        this.packages = new HashMap<>(); //new ArrayList<ResourcePackage>();
     }
 
     /**

@@ -58,8 +58,8 @@ public class GenericRestClient {
 
     public static void main(String[] args) throws JSONException {
         GenericRestClient genericRestClient = new GenericRestClient();
-        Map<String, String> queryParamMap = new HashMap<String, String>();
-        Map<String, String> headerMap = new HashMap<String, String>();
+        Map<String, String> queryParamMap = new HashMap<>();
+        Map<String, String> headerMap = new HashMap<>();
         genericRestClient.setKeysForRestClient();
         JSONObject obj = new JSONObject(genericRestClient.
                 geneticRestRequestPost("https://localhost:9443/publisher/apis/authenticate/",
