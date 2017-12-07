@@ -66,7 +66,7 @@ public class ListMetaDataServiceClient {
 
     public ServiceBean listServices(String criteria)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        ServiceBean serviceBean = null;
+        ServiceBean serviceBean;
         try {
             serviceBean = listMetadataServiceStub.listservices(criteria);
 
@@ -83,7 +83,7 @@ public class ListMetaDataServiceClient {
 
 
     public WSDLBean listWSDLs() throws RemoteException, ResourceAdminServiceExceptionException {
-        WSDLBean wsdlBean = null;
+        WSDLBean wsdlBean;
         try {
             wsdlBean = listMetadataServiceStub.listwsdls();
         } catch (RemoteException e) {
@@ -99,7 +99,7 @@ public class ListMetaDataServiceClient {
 
     public PolicyBean listPolicies()
             throws RemoteException, ResourceAdminServiceExceptionException {
-        PolicyBean policyBean = null;
+        PolicyBean policyBean;
         try {
             policyBean = listMetadataServiceStub.listpolicies();
 
@@ -114,7 +114,7 @@ public class ListMetaDataServiceClient {
     }
 
     public SchemaBean listSchemas() throws RemoteException, ResourceAdminServiceExceptionException {
-        SchemaBean schemaBean = null;
+        SchemaBean schemaBean;
         try {
             schemaBean = listMetadataServiceStub.listschema();
         } catch (RemoteException e) {

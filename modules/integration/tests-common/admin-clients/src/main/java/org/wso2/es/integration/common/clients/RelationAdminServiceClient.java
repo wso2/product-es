@@ -48,7 +48,7 @@ public class RelationAdminServiceClient {
 
     public DependenciesBean getDependencies(String path)
             throws RemoteException, AddAssociationRegistryExceptionException {
-        DependenciesBean dependenciesBean = null;
+        DependenciesBean dependenciesBean;
         try {
             dependenciesBean = relationAdminServiceStub.getDependencies(path);
         } catch (RemoteException e) {

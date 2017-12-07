@@ -105,7 +105,7 @@ public class ManifestManager {
         String destination = null;
         File sourceFile;
         File destinationFile;
-        boolean success = false;
+        boolean success;
         try {
             source = resource.getSrc();
             destination = resource.getDest();

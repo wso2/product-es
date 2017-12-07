@@ -64,7 +64,7 @@ public class InfoServiceAdminClient {
 
     public SubscriptionBean subscribe(String path, String endpoint, String eventName,
                                       String sessionId) throws RemoteException {
-        SubscriptionBean bean = null;
+        SubscriptionBean bean;
         try {
             bean = infoAdminServiceStub.subscribe(path, endpoint, eventName, sessionId);
         } catch (RemoteException remoteException) {
