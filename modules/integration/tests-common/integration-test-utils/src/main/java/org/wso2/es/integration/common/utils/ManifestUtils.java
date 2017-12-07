@@ -54,7 +54,8 @@ public class ManifestUtils {
             log.error("Unable to read the installation manifest file at " + manifestPath, e);
             throw new IOException("Unable to read the installation manifest file.");
         } finally {
-            reader.close();
+            if (reader != null)
+                reader.close();
         }
         return manifest;
     }
