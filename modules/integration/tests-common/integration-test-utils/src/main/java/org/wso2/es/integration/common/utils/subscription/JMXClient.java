@@ -155,7 +155,7 @@ public class JMXClient implements NotificationListener {
         Calendar startTime = Calendar.getInstance();
         try {
             while (!isSuccess()) {
-                if (((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < 60000) {
+                if (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis() < 60000) {
                     Thread.sleep(1000);
                 } else {
                     break;

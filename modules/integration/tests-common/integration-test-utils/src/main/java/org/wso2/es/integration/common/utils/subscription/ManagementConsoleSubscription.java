@@ -151,7 +151,7 @@ public class ManagementConsoleSubscription {
         WorkItem[] workItems = WorkItemClient.getWorkItems(humanTaskAdminClient);
 
         for (WorkItem workItem : workItems) {
-            if ((workItem.getPresentationSubject().toString()).contains(path + " was updated.")) {
+            if (workItem.getPresentationSubject().toString().contains(path + " was updated.")) {
                 success = true;
                 break;
             }

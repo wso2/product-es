@@ -216,7 +216,7 @@ public class LifecycleUtil {
         WorkItem[] workItems = WorkItemClient.getWorkItems(humanTaskAdminClient);
         for (WorkItem workItem : workItems) {
             // search for the correct notification
-            if ((workItem.getPresentationSubject().toString()).contains(type)) {
+            if (workItem.getPresentationSubject().toString().contains(type)) {
                 success = true;
                 break;
             }

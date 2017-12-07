@@ -40,7 +40,7 @@ public class LoginPage {
         this.driver = driver;
 
         // Check that we're on the right page.
-        if (!(driver.getCurrentUrl().contains("login.jsp"))) {
+        if (!driver.getCurrentUrl().contains("login.jsp")) {
             // Alternatively, we could navigate to the login page, perhaps logging out first
             throw new IllegalStateException("This is not the login page");
         }
@@ -51,7 +51,7 @@ public class LoginPage {
         this.isCloudEnvironment = isCloudEnvironment;
         // Check that we're on the right page.
         if (this.isCloudEnvironment) {
-            if (!(driver.getCurrentUrl().contains("home/index.html"))) {
+            if (!driver.getCurrentUrl().contains("home/index.html")) {
                 // Alternatively, we could navigate to the login page, perhaps logging out first
                 throw new IllegalStateException("This is not the cloud login page");
             }
