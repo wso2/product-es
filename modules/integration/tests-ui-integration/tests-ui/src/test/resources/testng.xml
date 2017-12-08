@@ -69,6 +69,7 @@
             <class name="org.wso2.es.ui.integration.test.common.ESPublishToStore"/>
             <class name="org.wso2.es.ui.integration.test.common.ESRBACAsReviewerTestCase"/>
             <class name="org.wso2.es.ui.integration.test.common.ESRBACAsStoreUserTestCase"/>
+            <class name="org.wso2.es.ui.integration.test.common.ESXSSTestCase"/>
         </classes>
 
     </test>
