@@ -36,6 +36,9 @@ public class ManifestUtils {
 
     private static final Log log = LogFactory.getLog(ManifestUtils.class);
 
+    private ManifestUtils() {
+    }
+
     /**
      * Reads the manifest file and then converts the JSON content to an instance of the InstallationManifest
      * DAO

@@ -37,6 +37,9 @@ public class ManagementConsoleSubscription {
     private static String userName;
     private static String userNameWithoutDomain;
 
+    private ManagementConsoleSubscription() {
+    }
+
     /**
      * Subscribe for management console notifications and receive the
      * notification

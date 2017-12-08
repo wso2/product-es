@@ -33,6 +33,9 @@ import java.util.Date;
 public class WorkItemClient {
     private static Log log = LogFactory.getLog(WorkItemClient.class);
 
+    private WorkItemClient() {
+    }
+
     /**
      * get the existing management console notifications
      *

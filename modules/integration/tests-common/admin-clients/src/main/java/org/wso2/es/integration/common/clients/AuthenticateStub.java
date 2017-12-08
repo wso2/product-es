@@ -29,6 +29,9 @@ import org.wso2.carbon.utils.CarbonUtils;
 public class AuthenticateStub {
     private static final Log log = LogFactory.getLog(AuthenticateStub.class);
 
+    private AuthenticateStub() {
+    }
+
     /**
      * Stub authentication method
      *
